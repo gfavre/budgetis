@@ -88,8 +88,12 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "budgetis.accounting",
+    "budgetis.annotations",
+    "budgetis.bdi_import",
+    "budgetis.budgets",
+    "budgetis.exports",
     "budgetis.users",
-    # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

@@ -83,6 +83,7 @@ indent_size = 2
 indent_size = 2
 
 [tool.ruff]
+ignore = ["COM812"]
 target-version = "py312"
 # Exclude a variety of commonly ignored directories.
 extend-exclude = [
