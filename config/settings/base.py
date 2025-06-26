@@ -89,7 +89,6 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "budgetis.accounting",
-    "budgetis.annotations",
     "budgetis.bdi_import",
     "budgetis.budgets",
     "budgetis.exports",
@@ -338,3 +337,4 @@ STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
