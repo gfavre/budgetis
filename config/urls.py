@@ -8,6 +8,7 @@ from django.urls import path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 
+
 urlpatterns = [
     path("", login_required(TemplateView.as_view(template_name="pages/home.html")), name="home"),
     path(

@@ -1,10 +1,11 @@
-# ruff: noqa: ERA001, E501
+# ruff: noqa: ERA001
 """Base settings to build other settings files upon."""
 
 import ssl
 from pathlib import Path
 
 import environ
+
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # budgetis/

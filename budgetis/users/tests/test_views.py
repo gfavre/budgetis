@@ -19,6 +19,7 @@ from budgetis.users.views import UserRedirectView
 from budgetis.users.views import UserUpdateView
 from budgetis.users.views import user_detail_view
 
+
 pytestmark = pytest.mark.django_db
 
 

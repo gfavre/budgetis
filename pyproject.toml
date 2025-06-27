@@ -83,7 +83,6 @@ indent_size = 2
 indent_size = 2
 
 [tool.ruff]
-ignore = ["COM812"]
 target-version = "py312"
 # Exclude a variety of commonly ignored directories.
 extend-exclude = [
@@ -157,6 +156,8 @@ ignore = [
           # of types for comparison.
           # Deactivated because it can make the code slow:
           # https://github.com/astral-sh/ruff/issues/7871
+  "PLC0415",  # Allow function-scope imports when necessary
+  "COM812",
 ]
 # The fixes in extend-unsafe-fixes will require
 # provide the `--unsafe-fixes` flag when fixing.
@@ -171,11 +172,9 @@ section-order = [
   "future",
   "standard-library",
   "third-party",
-  "django",
   "first-party",
   "local-folder"
 ]
-known-django = ["django"]
 known-first-party = ["budgetis"]
 known-local-folder = ["config", "tests"]
 combine-as-imports = true
