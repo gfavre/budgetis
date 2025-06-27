@@ -326,3 +326,4 @@ dump.rdb
 budgetis/media/
 
 .pytest_cache/
+.env
