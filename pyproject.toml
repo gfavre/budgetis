@@ -166,6 +166,20 @@ extend-unsafe-fixes = [
 
 [tool.ruff.lint.isort]
 force-single-line = true
+lines-after-imports = 2
+section-order = [
+  "future",
+  "standard-library",
+  "third-party",
+  "django",
+  "first-party",
+  "local-folder"
+]
+known-django = ["django"]
+known-first-party = ["budgetis"]
+known-local-folder = ["config", "tests"]
+combine-as-imports = true
+split-on-trailing-comma = true
 
 [dependency-groups]
 dev = [
