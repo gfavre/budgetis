@@ -5,12 +5,16 @@ import typing
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 
 if typing.TYPE_CHECKING:
     from allauth.socialaccount.models import SocialLogin
     from django.http import HttpRequest
 
     from budgetis.users.models import User
+
+
+from budgetis.users.models import AuthorizedEmail
 
 
 class AccountAdapter(DefaultAccountAdapter):
@@ -46,3 +50,16 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
                 if last_name := data.get("last_name"):
                     user.name += f" {last_name}"
         return user
+
+    def pre_social_login(
+        self,
+        request: HttpRequest,
+        sociallogin: SocialLogin,
+    ) -> None:
+        """
+        Deny login if the user's email is not in the AuthorizedEmail list.
+        """
+        email = sociallogin.user.email
+        if not AuthorizedEmail.objects.filter(email__iexact=email).exists():
+            msg = f"The email {email} is not authorized to log in."
+            raise PermissionDenied(msg)

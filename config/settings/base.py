@@ -84,6 +84,7 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.mfa",
     "allauth.socialaccount",
+    "allauth.socialaccount.providers.microsoft",
     "django_celery_beat",
 ]
 
@@ -106,7 +107,6 @@ MIGRATION_MODULES = {"sites": "budgetis.contrib.sites.migrations"}
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
@@ -312,7 +312,7 @@ CELERY_TASK_SEND_SENT_EVENT = True
 CELERY_WORKER_HIJACK_ROOT_LOGGER = False
 # django-allauth
 # ------------------------------------------------------------------------------
-ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
+ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", False)
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_LOGIN_METHODS = {"email"}
 # https://docs.allauth.org/en/latest/account/configuration.html
@@ -329,6 +329,24 @@ ACCOUNT_FORMS = {"signup": "budgetis.users.forms.UserSignupForm"}
 SOCIALACCOUNT_ADAPTER = "budgetis.users.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_FORMS = {"signup": "budgetis.users.forms.UserSocialSignupForm"}
+
+SOCIALACCOUNT_PROVIDERS = {
+    "microsoft": {
+        "APP": {
+            "client_id": env.str("MS_CLIENT_ID"),
+            "secret": env.str("MS_SECRET"),
+            "settings": {
+                "tenant": "organizations",
+            },
+        },
+        "AUTH_PARAMS": {
+            "tenant": env.str("MS_TENANT_ID"),
+        },
+        "SCOPE": ["User.Read"],
+    },
+}
+
+
 # django-compressor
 # ------------------------------------------------------------------------------
 # https://django-compressor.readthedocs.io/en/latest/quickstart/#installation

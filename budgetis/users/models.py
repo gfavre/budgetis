@@ -1,7 +1,8 @@
-
 from typing import ClassVar
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.db.models import CharField
 from django.db.models import EmailField
 from django.urls import reverse
@@ -37,3 +38,18 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"pk": self.id})
+
+
+class AuthorizedEmail(models.Model):
+    email = models.EmailField(unique=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        editable=False,
+        related_name="authorized_emails_created",
+    )
+
+    def __str__(self) -> str:
+        return self.email

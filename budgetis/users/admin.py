@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .forms import UserAdminChangeForm
 from .forms import UserAdminCreationForm
+from .models import AuthorizedEmail
 from .models import User
 
 if settings.DJANGO_ADMIN_FORCE_ALLAUTH:
@@ -17,6 +18,7 @@ if settings.DJANGO_ADMIN_FORCE_ALLAUTH:
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
+    actions = None  # Removes the "delete selected" action
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
     fieldsets = (
@@ -48,3 +50,23 @@ class UserAdmin(auth_admin.UserAdmin):
             },
         ),
     )
+
+    def has_delete_permission(self, request, obj=None) -> bool:
+        # Disable deletion of users from the admin
+        return False
+
+    def delete_model(self, request, obj):
+        # In case delete is somehow triggered elsewhere
+        obj.is_active = False
+        obj.save()
+
+
+@admin.register(AuthorizedEmail)
+class AuthorizedEmailAdmin(admin.ModelAdmin):
+    list_display = ("email", "created_by")
+    readonly_fields = ("created_by",)
+
+    def save_model(self, request, obj, form, change):
+        if not change and not obj.created_by:
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)

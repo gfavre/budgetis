@@ -1,5 +1,6 @@
 # ruff: noqa: E501
 from .base import *  # noqa: F403
+from .base import AUTHENTICATION_BACKENDS
 from .base import INSTALLED_APPS
 from .base import MIDDLEWARE
 from .base import env
@@ -30,7 +31,8 @@ CACHES = {
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env(
-    "DJANGO_EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend",
+    "DJANGO_EMAIL_BACKEND",
+    default="django.core.mail.backends.console.EmailBackend",
 )
 
 # WhiteNoise
@@ -71,3 +73,7 @@ CELERY_TASK_ALWAYS_EAGER = True
 CELERY_TASK_EAGER_PROPAGATES = True
 # Your stuff...
 # ------------------------------------------------------------------------------
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    *AUTHENTICATION_BACKENDS,
+]
