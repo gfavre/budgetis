@@ -17,6 +17,7 @@ dependencies = [
     "django-model-utils>=5.0.0",
     "django-redis>=6.0.0",
     "hiredis>=3.2.1",
+    "pandas>=2.3.0",
     "pillow>=11.2.1",
     "python-dotenv>=1.1.1",
     "python-slugify>=8.0.4",
@@ -158,6 +159,7 @@ ignore = [
           # https://github.com/astral-sh/ruff/issues/7871
   "PLC0415",  # Allow function-scope imports when necessary
   "COM812",
+  "G004", # Use of f-strings in logging calls
 ]
 # The fixes in extend-unsafe-fixes will require
 # provide the `--unsafe-fixes` flag when fixing.
@@ -206,6 +208,6 @@ dev = [
 prod = [
     "django-anymail[postmark]>=13.0",
     "gunicorn>=23.0.0",
-    "psycopg[c]>=3.2.9",
+    "psycopg[binary]>=3.2.9",
     "sentry-sdk>=2.31.0",
 ]

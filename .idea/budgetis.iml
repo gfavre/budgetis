@@ -14,6 +14,7 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
+    <orderEntry type="jdk" jdkName="Python 3.12 virtualenv at ~/Documents/Projets/budgetis/.venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">
@@ -30,6 +31,7 @@
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/budgetis/templates" />
+        <option value="$MODULE_DIR$/budgetis/bdi_import/templates" />
       </list>
     </option>
   </component>
