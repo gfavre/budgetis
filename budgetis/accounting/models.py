@@ -4,6 +4,44 @@ from django.db import models
 from budgetis.common.models import TimeStampedModel
 
 
+FUNDING_REQUEST_GTE = 500
+DEPRECIATION_GTE = 600
+DEPRECIATION_LT = 700
+
+
+class MetaGroup(TimeStampedModel):
+    """
+    Represents a meta group of accounts (e.g. 1, 2, 3).
+    """
+
+    id = models.BigAutoField(primary_key=True)
+    code = models.SmallIntegerField(db_index=True, unique=True)
+    label = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ("code",)
+
+    def __str__(self) -> str:
+        return f"{self.code} - {self.label}"
+
+
+class SuperGroup(TimeStampedModel):
+    """
+    Represents a super group of accounts (e.g. 41, 42, 43).
+    """
+
+    id = models.BigAutoField(primary_key=True)
+    code = models.SmallIntegerField(db_index=True, unique=True)
+    label = models.CharField(max_length=100)
+    metagroup = models.ForeignKey(MetaGroup, on_delete=models.SET_NULL, null=True, related_name="supergroups")
+
+    class Meta:
+        ordering = ("code",)
+
+    def __str__(self) -> str:
+        return f"{self.code} - {self.label}"
+
+
 class AccountGroup(TimeStampedModel):
     """
     Represents a group of accounts (e.g., PCO, ADA).
@@ -11,8 +49,12 @@ class AccountGroup(TimeStampedModel):
     """
 
     id = models.BigAutoField(primary_key=True)
-    code = models.CharField(max_length=3, unique=True)
+    code = models.SmallIntegerField(db_index=True, unique=True)
     label = models.CharField(max_length=100)
+    supergroup = models.ForeignKey(SuperGroup, on_delete=models.SET_NULL, null=True, related_name="groups")
+
+    class Meta:
+        ordering = ("code",)
 
     def __str__(self) -> str:
         return f"{self.code} - {self.label}"
@@ -29,7 +71,6 @@ class GroupResponsibility(models.Model):
         related_name="responsibilities",
     )
     year = models.PositiveIntegerField()
-    municipal_name = models.CharField(max_length=100)
     responsible = models.ForeignKey(
         get_user_model(),
         on_delete=models.SET_NULL,
@@ -39,9 +80,12 @@ class GroupResponsibility(models.Model):
 
     class Meta:
         unique_together = ("group", "year")
+        ordering = ("group__code", "year")
+        verbose_name = "Responsable"
+        verbose_name_plural = "Responsables"
 
     def __str__(self) -> str:
-        return f"{self.year} - {self.group.code} - {self.municipal_name}"
+        return f"{self.year} - {self.group.code} - {self.responsible.trigram if self.responsible else 'Unknown'}"
 
 
 class Account(TimeStampedModel):
@@ -62,7 +106,7 @@ class Account(TimeStampedModel):
     sub_account = models.SmallIntegerField(null=True, blank=True)
 
     label = models.CharField(max_length=255)
-    group = models.ForeignKey(AccountGroup, on_delete=models.CASCADE)
+    group = models.ForeignKey(AccountGroup, on_delete=models.SET_NULL, null=True, related_name="accounts")
     is_budget = models.BooleanField(
         default=False,
     )  # True = Budget, False = Actual account
@@ -74,6 +118,7 @@ class Account(TimeStampedModel):
         choices=EXPECTED_TYPES,
         default="charges",
     )
+    # visible_in_report = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ("year", "function", "nature", "sub_account", "is_budget")
@@ -82,13 +127,30 @@ class Account(TimeStampedModel):
             models.Index(fields=["year", "nature"]),
             models.Index(fields=["function", "nature", "sub_account"]),
         ]
+        ordering = ("year", "nature", "function", "nature", "sub_account")
 
     @property
     def full_code(self) -> str:
         """
         Returns the full code as 'function.nature', zero-padded to 3 digits.
         """
-        return f"{self.function}.{self.nature}{('.' + self.sub_account) if self.sub_account else ''}"
+        return f"{self.function}.{self.nature}{('.' + str(self.sub_account)) if self.sub_account else ''}"
+
+    @property
+    def is_funding_request(self) -> bool:
+        """
+        Funding request: Préavis municipal
+        :return: Boolean indicating if the account is a funding request.
+        """
+        return FUNDING_REQUEST_GTE <= self.nature < DEPRECIATION_GTE
+
+    @property
+    def is_depreciation(self) -> bool:
+        """
+        Depreciation: Amortissement
+        :return: Boolean indicating if the account is a depreciation account.
+        """
+        return DEPRECIATION_GTE <= self.nature < DEPRECIATION_LT
 
     def __str__(self) -> str:
         suffix = " (Budget)" if self.is_budget else ""

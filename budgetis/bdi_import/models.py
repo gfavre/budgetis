@@ -6,12 +6,12 @@ from budgetis.common.models import TimeStampedModel
 
 class AccountImportLog(TimeStampedModel):
     """
-    Logs each CSV account import (budget or actual) for traceability.
+    Logs each CSV/XLSX account import (budget or actual) for traceability.
     """
 
     year = models.PositiveIntegerField()
     is_budget = models.BooleanField()
-    csv_path = models.TextField()
+    file_path = models.TextField()
     launched_by = models.ForeignKey(
         get_user_model(),
         on_delete=models.SET_NULL,

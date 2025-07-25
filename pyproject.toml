@@ -17,6 +17,7 @@ dependencies = [
     "django-model-utils>=5.0.0",
     "django-redis>=6.0.0",
     "hiredis>=3.2.1",
+    "openpyxl>=3.1.5",
     "pandas>=2.3.0",
     "pillow>=11.2.1",
     "python-dotenv>=1.1.1",
@@ -160,6 +161,8 @@ ignore = [
   "PLC0415",  # Allow function-scope imports when necessary
   "COM812",
   "G004", # Use of f-strings in logging calls
+  "ERA001", # commented-out code
+  "TRY003", # Use of bare except
 ]
 # The fixes in extend-unsafe-fixes will require
 # provide the `--unsafe-fixes` flag when fixing.

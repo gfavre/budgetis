@@ -147,6 +147,7 @@ dependencies = [
     { name = "django-model-utils" },
     { name = "django-redis" },
     { name = "hiredis" },
+    { name = "openpyxl" },
     { name = "pandas" },
     { name = "pillow" },
     { name = "python-dotenv" },
@@ -184,7 +185,7 @@ dev = [
 prod = [
     { name = "django-anymail" },
     { name = "gunicorn" },
-    { name = "psycopg", extra = ["c"] },
+    { name = "psycopg", extra = ["binary"] },
     { name = "sentry-sdk" },
 ]
 
@@ -202,6 +203,7 @@ requires-dist = [
     { name = "django-model-utils", specifier = ">=5.0.0" },
     { name = "django-redis", specifier = ">=6.0.0" },
     { name = "hiredis", specifier = ">=3.2.1" },
+    { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pandas", specifier = ">=2.3.0" },
     { name = "pillow", specifier = ">=11.2.1" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
@@ -239,7 +241,7 @@ dev = [
 prod = [
     { name = "django-anymail", extras = ["postmark"], specifier = ">=13.0" },
     { name = "gunicorn", specifier = ">=23.0.0" },
-    { name = "psycopg", extras = ["c"], specifier = ">=3.2.9" },
+    { name = "psycopg", extras = ["binary"], specifier = ">=3.2.9" },
     { name = "sentry-sdk", specifier = ">=2.31.0" },
 ]
 
@@ -800,6 +802,15 @@ wheels = [
 ]
 
 [[package]]
+name = "et-xmlfile"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d3/38/af70d7ab1ae9d4da450eeec1fa3918940a5fafb9055e934af8d6eb0c2313/et_xmlfile-2.0.0.tar.gz", hash = "sha256:dab3f4764309081ce75662649be815c4c9081e88f0837825f90fd28317d4da54", size = 17234, upload-time = "2024-10-25T17:25:40.039Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl", hash = "sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa", size = 18059, upload-time = "2024-10-25T17:25:39.051Z" },
+]
+
+[[package]]
 name = "executing"
 version = "2.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1213,6 +1224,18 @@ wheels = [
 ]
 
 [[package]]
+name = "openpyxl"
+version = "3.1.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "et-xmlfile" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/3d/f9/88d94a75de065ea32619465d2f77b29a0469500e99012523b91cc4141cd1/openpyxl-3.1.5.tar.gz", hash = "sha256:cf0e3cf56142039133628b5acffe8ef0c12bc902d2aadd3e0fe5878dc08d1050", size = 186464, upload-time = "2024-06-28T14:03:44.161Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c0/da/977ded879c29cbd04de313843e76868e6e13408a94ed6b987245dc7c8506/openpyxl-3.1.5-py2.py3-none-any.whl", hash = "sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2", size = 250910, upload-time = "2024-06-28T14:03:41.161Z" },
+]
+
+[[package]]
 name = "packaging"
 version = "25.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1389,9 +1412,6 @@ wheels = [
 binary = [
     { name = "psycopg-binary", marker = "implementation_name != 'pypy'" },
 ]
-c = [
-    { name = "psycopg-c", marker = "implementation_name != 'pypy'" },
-]
 
 [[package]]
 name = "psycopg-binary"
@@ -1421,12 +1441,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/45/6b/6f1164ea1634c87956cdb6db759e0b8c5827f989ee3cdff0f5c70e8331f2/psycopg_binary-3.2.9-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:f0d5b3af045a187aedbd7ed5fc513bd933a97aaff78e61c3745b330792c4345b", size = 3477477, upload-time = "2025-05-13T16:08:51.166Z" },
     { url = "https://files.pythonhosted.org/packages/7b/1d/bf54cfec79377929da600c16114f0da77a5f1670f45e0c3af9fcd36879bc/psycopg_binary-3.2.9-cp313-cp313-win_amd64.whl", hash = "sha256:2290bc146a1b6a9730350f695e8b670e1d1feb8446597bed0bbe7c3c30e0abcb", size = 2928009, upload-time = "2025-05-13T16:08:53.67Z" },
 ]
-
-[[package]]
-name = "psycopg-c"
-version = "3.2.9"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/83/7f/6147cb842081b0b32692bf5a0fdf58e9ac95418ebac1184d4431ec44b85f/psycopg_c-3.2.9.tar.gz", hash = "sha256:8c9f654f20c6c56bddc4543a3caab236741ee94b6732ab7090b95605502210e2", size = 609538, upload-time = "2025-05-13T16:11:19.856Z" }
 
 [[package]]
 name = "ptyprocess"

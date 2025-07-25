@@ -4,8 +4,6 @@ from decimal import Decimal
 import pandas as pd
 
 from budgetis.accounting.models import Account
-from budgetis.accounting.models import AccountGroup
-from budgetis.accounting.models import GroupResponsibility
 
 
 # The account code string (e.g., '170.301' or '170.301.2')
@@ -14,6 +12,13 @@ MAX_PARTS = 3
 FUNCTION_PART = 0
 NATURE_PART = 1
 SUBACCOUNT_PART = 2
+
+ACCOUNT_NUMBER_COLUMN = "CPT_NUM_CPT"
+ACCOUNT_LABEL_COLUMN = "CPT_LIB"
+ACCOUNT_TOTAL_COLUMN = "Solde"  # Positive: charges, Negative: Revenues
+ACCOUNT_CHARGES_COLUMN = "SLDE_DEB"
+ACCOUNT_REVENUES_COLUMN = "SLDE_CRE"
+ACCOUNT_GROUP_CODE_COLUMN = "CPT_COD_CLAS"
 
 logger = logging.getLogger(__name__)
 
@@ -41,54 +46,51 @@ def parse_account_code(code: str) -> tuple[int, int, int | None]:
     return function, nature, sub_account
 
 
-def import_accounts_from_csv(csv_path: str, year: int, *, is_budget: bool, dry_run: bool = False) -> None:
+def import_accounts_from_dataframe(
+    account_rows: pd.DataFrame, year: int, *, is_budget: bool, dry_run: bool = False
+) -> None:
     """
     Imports account data from a CSV file and updates or creates Account, AccountGroup,
     and GroupResponsibility objects accordingly.
 
     Args:
-        csv_path (str): Path to the CSV file.
+        account_rows (Panda Dataframe): the dataframe to import.
         year (int): Target fiscal year.
         is_budget (bool): Whether the data represents a budget or actual accounts.
         dry_run (bool): If True, data is parsed and validated but not saved to the DB.
     """
-    logger.info(f"Starting import from {csv_path} for year {year}. Dry-run: {dry_run}")
-    account_rows = pd.read_csv(csv_path, dtype=str)
+    logger.info(f"Starting import from dataframe for year {year}. Dry-run: {dry_run}")
+
     account_rows = account_rows.fillna("").applymap(lambda x: x.strip() if isinstance(x, str) else x)
-
     for _, row in account_rows.iterrows():
-        group_code = row["groupe"]
-        group_label = row["nom du groupe"]
-        municipal_name = row["responsable"]
-        full_code = row["code"]
-        label = row["intitulé"]
-        charges = Decimal(row["charges"].replace("'", "") or "0")
-        revenues = Decimal(row["produits"].replace("'", "") or "0")
+        raw_number = row.get(ACCOUNT_NUMBER_COLUMN, "").strip()
+        label = row.get(ACCOUNT_LABEL_COLUMN, "").strip()
 
-        function, nature, sub_account = parse_account_code(full_code)
+        if not raw_number or not label:
+            continue
 
-        if charges and revenues:
-            expected_type = "both"
-        elif charges:
-            expected_type = "charges"
-        elif revenues:
+        try:
+            function, nature, sub_account = parse_account_code(raw_number)
+        except ValueError:
+            logger.exception(f"Skipping row due to parsing error. Row data: {row.to_dict()}")
+            continue
+
+        total = Decimal(row.get(ACCOUNT_TOTAL_COLUMN, 0))
+        if total < 0:
+            revenues = Decimal(-total)
+            charges = Decimal(0)
             expected_type = "revenues"
         else:
+            revenues = Decimal(0)
+            charges = Decimal(total)
             expected_type = "charges"
 
         logger.info(
             f"[{'DRY' if dry_run else 'REAL'}] "
-            f"{year} - {group_code} - {function}.{nature}"
+            f"{year} - {function}.{nature}"
             f"{'.' + str(sub_account) if sub_account else ''} - {label}"
         )
-
         if not dry_run:
-            group, _ = AccountGroup.objects.get_or_create(code=group_code, defaults={"label": group_label})
-
-            GroupResponsibility.objects.get_or_create(
-                group=group, year=year, defaults={"municipal_name": municipal_name, "responsible": None}
-            )
-
             Account.objects.update_or_create(
                 year=year,
                 function=function,
@@ -97,7 +99,6 @@ def import_accounts_from_csv(csv_path: str, year: int, *, is_budget: bool, dry_r
                 is_budget=is_budget,
                 defaults={
                     "label": label,
-                    "group": group,
                     "charges": charges,
                     "revenues": revenues,
                     "expected_type": expected_type,

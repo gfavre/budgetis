@@ -25,6 +25,9 @@ class User(AbstractUser):
     email = EmailField(_("email address"), unique=True)
     username = None  # type: ignore[assignment]
 
+    is_municipal = models.BooleanField(default=False)
+    trigram = models.CharField(max_length=3, blank=True)
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
@@ -38,6 +41,16 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"pk": self.id})
+
+    def __str__(self) -> str:
+        if self.name:
+            return self.name
+        # fallback : first name + last name (s'ils existent et ne sont pas None)
+        if getattr(self, "first_name", None) or getattr(self, "last_name", None):
+            return f"{self.first_name or ''} {self.last_name or ''}".strip()
+        if self.trigram:
+            return self.trigram
+        return self.email
 
 
 class AuthorizedEmail(models.Model):
