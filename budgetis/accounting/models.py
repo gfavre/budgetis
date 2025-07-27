@@ -49,7 +49,7 @@ class AccountGroup(TimeStampedModel):
     """
 
     id = models.BigAutoField(primary_key=True)
-    code = models.SmallIntegerField(db_index=True, unique=True)
+    code = models.CharField(max_length=5, db_index=True, unique=True)
     label = models.CharField(max_length=100)
     supergroup = models.ForeignKey(SuperGroup, on_delete=models.SET_NULL, null=True, related_name="groups")
 

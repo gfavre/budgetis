@@ -43,11 +43,13 @@ class User(AbstractUser):
         return reverse("users:detail", kwargs={"pk": self.id})
 
     def __str__(self) -> str:
+        output = ""
         if self.name:
-            return self.name
-        # fallback : first name + last name (s'ils existent et ne sont pas None)
-        if getattr(self, "first_name", None) or getattr(self, "last_name", None):
-            return f"{self.first_name or ''} {self.last_name or ''}".strip()
+            output += self.name
+        elif getattr(self, "first_name", None) or getattr(self, "last_name", None):
+            output += f"{self.first_name or ''} {self.last_name or ''}".strip()
+        if output and self.trigram:
+            return output + f" ({self.trigram})"
         if self.trigram:
             return self.trigram
         return self.email
