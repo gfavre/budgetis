@@ -6,7 +6,142 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-28 06:48+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: budgetis/accounting/apps.py:7
+msgid "Accounting"
+msgstr ""
+
+#: budgetis/accounting/models.py:24
+msgid "Meta Group"
+msgstr ""
+
+#: budgetis/accounting/models.py:25
+msgid "Meta Groups"
+msgstr ""
+
+#: budgetis/accounting/models.py:43
+msgid "Super Group"
+msgstr ""
+
+#: budgetis/accounting/models.py:44
+msgid "Super Groups"
+msgstr ""
+
+#: budgetis/accounting/models.py:63
+msgid "Account Group"
+msgstr ""
+
+#: budgetis/accounting/models.py:64
+msgid "Account Groups"
+msgstr ""
+
+#: budgetis/accounting/models.py:91
+msgid "Responsible"
+msgstr ""
+
+#: budgetis/accounting/models.py:92
+msgid "Responsibles"
+msgstr ""
+
+#: budgetis/accounting/models.py:138
+msgid "Account"
+msgstr ""
+
+#: budgetis/accounting/models.py:139
+msgid "Accounts"
+msgstr ""
+
+#: budgetis/accounting/models.py:191
+msgid "Account Comment"
+msgstr ""
+
+#: budgetis/accounting/models.py:192
+msgid "Account Comments"
+msgstr ""
+
+#: budgetis/bdi_import/apps.py:8
+msgid "BDI Import"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:8
+msgid "Year"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:10
+msgid "Nature"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:15
+msgid "Accounts list file"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:15
+msgid "Upload a CSV or XSLX file with account data."
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:26
+msgid "Please upload a CSV or XLSX file."
+msgstr ""
+
+#: budgetis/templates/allauth/layouts/entrance.html:13
+#: budgetis/templates/base.html:97
+msgid "Sign In"
+msgstr ""
+
+#: budgetis/templates/base.html:74
+msgid "Import from BDI"
+msgstr ""
+
+#: budgetis/templates/base.html:77
+msgid "My Profile"
+msgstr ""
+
+#: budgetis/templates/base.html:81
+msgid "Admin"
+msgstr ""
+
+#: budgetis/templates/base.html:86
+msgid "Sign Out"
+msgstr ""
+
+#: budgetis/templates/base.html:92
+msgid "Sign Up"
+msgstr ""
+
+#: budgetis/users/admin.py:27
+msgid "Personal info"
+msgstr ""
+
+#: budgetis/users/admin.py:29
+msgid "Permissions"
+msgstr ""
+
+#: budgetis/users/admin.py:40
+msgid "Important dates"
+msgstr ""
+
+#: budgetis/users/apps.py:9
+msgid "Users"
+msgstr ""
+
+#: budgetis/users/forms.py:27 budgetis/users/tests/test_forms.py:35
+msgid "This email has already been taken."
+msgstr ""
+
+#: budgetis/users/models.py:22
+msgid "Name of User"
+msgstr ""
+
+#: budgetis/users/models.py:25
+msgid "email address"
+msgstr ""
+
+#: budgetis/users/tests/test_views.py:73 budgetis/users/views.py:25
+msgid "Information successfully updated"
+msgstr ""

@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from budgetis.common.models import TimeStampedModel
 
@@ -20,6 +21,8 @@ class MetaGroup(TimeStampedModel):
 
     class Meta:
         ordering = ("code",)
+        verbose_name = _("Meta Group")
+        verbose_name_plural = _("Meta Groups")
 
     def __str__(self) -> str:
         return f"{self.code} - {self.label}"
@@ -37,6 +40,8 @@ class SuperGroup(TimeStampedModel):
 
     class Meta:
         ordering = ("code",)
+        verbose_name = _("Super Group")
+        verbose_name_plural = _("Super Groups")
 
     def __str__(self) -> str:
         return f"{self.code} - {self.label}"
@@ -55,6 +60,8 @@ class AccountGroup(TimeStampedModel):
 
     class Meta:
         ordering = ("code",)
+        verbose_name = _("Account Group")
+        verbose_name_plural = _("Account Groups")
 
     def __str__(self) -> str:
         return f"{self.code} - {self.label}"
@@ -81,8 +88,8 @@ class GroupResponsibility(models.Model):
     class Meta:
         unique_together = ("group", "year")
         ordering = ("group__code", "year")
-        verbose_name = "Responsable"
-        verbose_name_plural = "Responsables"
+        verbose_name = _("Responsible")
+        verbose_name_plural = _("Responsibles")
 
     def __str__(self) -> str:
         return f"{self.year} - {self.group.code} - {self.responsible.trigram if self.responsible else 'Unknown'}"
@@ -128,6 +135,8 @@ class Account(TimeStampedModel):
             models.Index(fields=["function", "nature", "sub_account"]),
         ]
         ordering = ("year", "nature", "function", "nature", "sub_account")
+        verbose_name = _("Account")
+        verbose_name_plural = _("Accounts")
 
     @property
     def full_code(self) -> str:
@@ -176,6 +185,11 @@ class AccountComment(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
+
+    class Meta:
+        ordering = ("account__year", "account__nature", "account__function", "created_at")
+        verbose_name = _("Account Comment")
+        verbose_name_plural = _("Account Comments")
 
     def __str__(self) -> str:
         return f"Comment by {self.author or 'Unknown'} on {self.account}"

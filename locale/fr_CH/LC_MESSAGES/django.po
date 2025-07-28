@@ -1,0 +1,300 @@
+# Translations for the Budgetis project
+# Copyright (C) 2025 Gregory Favre
+# Gregory Favre <g.favre@genolier.ch>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-28 06:48+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.6\n"
+
+#: budgetis/accounting/apps.py:7
+msgid "Accounting"
+msgstr "Comptabilité"
+
+#: budgetis/accounting/models.py:24
+msgid "Meta Group"
+msgstr "Groupe de premier niveau"
+
+#: budgetis/accounting/models.py:25
+msgid "Meta Groups"
+msgstr "Groupes de premier niveau"
+
+#: budgetis/accounting/models.py:43
+msgid "Super Group"
+msgstr "Groupe de second niveau"
+
+#: budgetis/accounting/models.py:44
+msgid "Super Groups"
+msgstr "Groupes de second niveau"
+
+#: budgetis/accounting/models.py:63
+msgid "Account Group"
+msgstr "Groupe de compte"
+
+#: budgetis/accounting/models.py:64
+msgid "Account Groups"
+msgstr "Groupes de compte"
+
+#: budgetis/accounting/models.py:91
+msgid "Responsible"
+msgstr "Responsable"
+
+#: budgetis/accounting/models.py:92
+msgid "Responsibles"
+msgstr "Responsables"
+
+#: budgetis/accounting/models.py:138
+msgid "Account"
+msgstr "Compte"
+
+#: budgetis/accounting/models.py:139
+msgid "Accounts"
+msgstr "Comptes"
+
+#: budgetis/accounting/models.py:191
+msgid "Account Comment"
+msgstr "Commentaire sur le compte"
+
+#: budgetis/accounting/models.py:192
+msgid "Account Comments"
+msgstr "Commentaires sur le compte"
+
+#: budgetis/bdi_import/apps.py:8
+msgid "BDI Import"
+msgstr "Import BDI"
+
+#: budgetis/bdi_import/forms.py:8
+msgid "Year"
+msgstr "Année"
+
+#: budgetis/bdi_import/forms.py:10
+msgid "Nature"
+msgstr "Nature"
+
+#: budgetis/bdi_import/forms.py:15
+msgid "Accounts list file"
+msgstr "Fichier de liste des comptes"
+
+#: budgetis/bdi_import/forms.py:15
+msgid "Upload a CSV or XSLX file with account data."
+msgstr "Télécharger un fichier CSV ou XSLX contenant les données du compte."
+
+#: budgetis/bdi_import/forms.py:26
+msgid "Please upload a CSV or XLSX file."
+msgstr "Veuillez télécharger un fichier CSV ou XLSX."
+
+#: budgetis/templates/allauth/layouts/entrance.html:13
+#: budgetis/templates/base.html:97
+msgid "Sign In"
+msgstr "S'identifier"
+
+#: budgetis/templates/base.html:74
+msgid "Import from BDI"
+msgstr "Importation de BDI"
+
+#: budgetis/templates/base.html:77
+msgid "My Profile"
+msgstr "Mon Profil"
+
+#: budgetis/templates/base.html:81
+msgid "Admin"
+msgstr "Admin"
+
+#: budgetis/templates/base.html:86
+msgid "Sign Out"
+msgstr "Se déconnecter"
+
+#: budgetis/templates/base.html:92
+msgid "Sign Up"
+msgstr "S'inscrire"
+
+#: budgetis/users/admin.py:27
+msgid "Personal info"
+msgstr "Personal info"
+
+#: budgetis/users/admin.py:29
+msgid "Permissions"
+msgstr "Permissions"
+
+#: budgetis/users/admin.py:40
+msgid "Important dates"
+msgstr "Dates importantes"
+
+#: budgetis/users/apps.py:9
+msgid "Users"
+msgstr "Utilisateurs"
+
+#: budgetis/users/forms.py:27 budgetis/users/tests/test_forms.py:35
+msgid "This email has already been taken."
+msgstr "Cette adresse e-mail est déjà utilisée."
+
+#: budgetis/users/models.py:22
+msgid "Name of User"
+msgstr "Nom de l'utilisateur"
+
+#: budgetis/users/models.py:25
+msgid "email address"
+msgstr "adresse e-mail"
+
+#: budgetis/users/tests/test_views.py:73 budgetis/users/views.py:25
+msgid "Information successfully updated"
+msgstr "Informations mises à jour avec succès"
+
+#~ msgid "This account is inactive."
+#~ msgstr "Ce compte est inactif."
+
+#~ msgid "The following e-mail addresses are associated with your account:"
+#~ msgstr "Les adresses e-mail suivantes sont associées à votre compte :"
+
+#~ msgid "Verified"
+#~ msgstr "Vérifié"
+
+#~ msgid "Unverified"
+#~ msgstr "Non vérifié"
+
+#~ msgid "Primary"
+#~ msgstr "Primaire"
+
+#~ msgid "Make Primary"
+#~ msgstr "Changer Primaire"
+
+#~ msgid "Re-send Verification"
+#~ msgstr "Renvoyer vérification"
+
+#~ msgid "Remove"
+#~ msgstr "Supprimer"
+
+#~ msgid "Warning:"
+#~ msgstr "Avertissement:"
+
+#~ msgid "You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc."
+#~ msgstr "Vous n'avez actuellement aucune adresse e-mail configurée. Vous devriez ajouter une adresse e-mail pour reçevoir des notifications, réinitialiser votre mot de passe, etc."
+
+#~ msgid "Add E-mail Address"
+#~ msgstr "Ajouter une adresse e-mail"
+
+#~ msgid "Add E-mail"
+#~ msgstr "Ajouter e-mail"
+
+#~ msgid "Do you really want to remove the selected e-mail address?"
+#~ msgstr "Voulez-vous vraiment supprimer l'adresse e-mail sélectionnée ?"
+
+#~ msgid "Confirm E-mail Address"
+#~ msgstr "Confirmez votre adresse email"
+
+#, python-format
+#~ msgid "Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail address for user %(user_display)s."
+#~ msgstr "Veuillez confirmer que <a href=\"mailto:%(email)s\">%(email)s</a> est un e-mail adresse de l'utilisateur %(user_display)s."
+
+#~ msgid "Confirm"
+#~ msgstr "Confirm"
+
+#, python-format
+#~ msgid "This e-mail confirmation link expired or is invalid. Please <a href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+#~ msgstr "Ce lien de confirmation par e-mail a expiré ou n'est pas valide. Veuillez<a href=\"%(email_url)s\">émettre une nouvelle demande de confirmation par e-mail</a>."
+
+#~ msgid "Please sign in with one of your existing third party accounts:"
+#~ msgstr "Veuillez vous connecter avec l'un de vos comptes tiers existants :"
+
+#, python-format
+#~ msgid "Or, <a href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account and sign in below:"
+#~ msgstr "Ou, <a href=\"%(signup_url)s\">créez</a> un compte %(site_name)s et connectez-vous ci-dessous :"
+
+#~ msgid "or"
+#~ msgstr "ou"
+
+#, python-format
+#~ msgid "If you have not created an account yet, then please <a href=\"%(signup_url)s\">sign up</a> first."
+#~ msgstr "Si vous n'avez pas encore créé de compte, veuillez d'abord <a href=\"%(signup_url)s\">vous inscrire</a>."
+
+#~ msgid "Forgot Password?"
+#~ msgstr "Mot de passe oublié?"
+
+#~ msgid "Are you sure you want to sign out?"
+#~ msgstr "Êtes-vous certain de vouloir vous déconnecter?"
+
+#~ msgid "Change Password"
+#~ msgstr "Changer le mot de passe"
+
+#~ msgid "Password Reset"
+#~ msgstr "Réinitialisation du mot de passe"
+
+#~ msgid "Forgotten your password? Enter your e-mail address below, and we'll send you an e-mail allowing you to reset it."
+#~ msgstr "Mot de passe oublié? Entrez votre adresse e-mail ci-dessous, et nous vous enverrons un e-mail vous permettant de le réinitialiser."
+
+#~ msgid "Reset My Password"
+#~ msgstr "Réinitialiser mon mot de passe"
+
+#~ msgid "Please contact us if you have any trouble resetting your password."
+#~ msgstr "Veuillez nous contacter si vous rencontrez des difficultés pour réinitialiservotre mot de passe."
+
+#~ msgid "We have sent you an e-mail. Please contact us if you do not receive it within a few minutes."
+#~ msgstr "Nous vous avons envoyé un e-mail. Veuillez nous contacter si vous ne le recevez pas d'ici quelques minutes."
+
+#~ msgid "Bad Token"
+#~ msgstr "Token Invalide"
+
+#, python-format
+#~ msgid "The password reset link was invalid, possibly because it has already been used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</a>."
+#~ msgstr "Le lien de réinitialisation du mot de passe n'était pas valide, peut-être parce qu'il a déjà été utilisé. Veuillez faire une <a href=\"%(passwd_reset_url)s\"> nouvelle demande de réinitialisation de mot de passe</a>."
+
+#~ msgid "change password"
+#~ msgstr "changer le mot de passe"
+
+#~ msgid "Your password is now changed."
+#~ msgstr "Votre mot de passe est maintenant modifié."
+
+#~ msgid "Set Password"
+#~ msgstr "Définir le mot de passe"
+
+#~ msgid "Signup"
+#~ msgstr "S'inscrire"
+
+#, python-format
+#~ msgid "Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+#~ msgstr "Vous avez déjà un compte? Alors veuillez <a href=\"%(login_url)s\">vous connecter</a>."
+
+#~ msgid "Sign Up Closed"
+#~ msgstr "Inscriptions closes"
+
+#~ msgid "We are sorry, but the sign up is currently closed."
+#~ msgstr "Désolé, mais l'inscription est actuellement fermée."
+
+#~ msgid "Verify Your E-mail Address"
+#~ msgstr "Vérifiez votre adresse e-mail"
+
+#~ msgid "We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes."
+#~ msgstr "Nous vous avons envoyé un e-mail pour vérification. Suivez le lien fourni pour finalisez le processus d'inscription. Veuillez nous contacter si vous ne le recevez pas d'ici quelques minutes."
+
+#~ msgid ""
+#~ "This part of the site requires us to verify that\n"
+#~ "you are who you claim to be. For this purpose, we require that you\n"
+#~ "verify ownership of your e-mail address. "
+#~ msgstr ""
+#~ "Cette partie du site nous oblige à vérifier que\n"
+#~ "vous êtes qui vous prétendez être. Nous vous demandons donc de\n"
+#~ "vérifier la propriété de votre adresse e-mail."
+
+#~ msgid ""
+#~ "We have sent an e-mail to you for\n"
+#~ "verification. Please click on the link inside this e-mail. Please\n"
+#~ "contact us if you do not receive it within a few minutes."
+#~ msgstr ""
+#~ "Nous vous avons envoyé un e-mail pour\n"
+#~ "vérification. Veuillez cliquer sur le lien contenu dans cet e-mail. Veuillez nous\n"
+#~ "contacter si vous ne le recevez pas d'ici quelques minutes."
+
+#, python-format
+#~ msgid "<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-mail address</a>."
+#~ msgstr "<strong>Remarque :</strong> vous pouvez toujours <a href=\"%(email_url)s\">changer votre e-adresse e-mail</a>."
