@@ -22,6 +22,7 @@ urlpatterns = [
     path("users/", include("budgetis.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     path("bdi/", include("budgetis.bdi_import.urls", namespace="bdi_import")),
+    path("accounting/", include("budgetis.accounting.urls", namespace="accounting")),
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]

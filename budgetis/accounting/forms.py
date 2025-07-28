@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django import forms
 from django.contrib.admin import widgets as admin_widgets
 
@@ -56,3 +58,18 @@ class MetaGroupForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
             self.fields["supergroups"].initial = self.instance.supergroups.all()
+
+
+class AccountFilterForm(forms.Form):
+    year = forms.ChoiceField(label="Year")
+    only_responsible = forms.BooleanField(
+        label="Show only my accounts",
+        required=False,
+        initial=True,
+    )
+
+    def __init__(self, *args, **kwargs):
+        current_year = datetime.now(tz=...).date()
+        years = [(str(y), str(y)) for y in range(current_year - 5, current_year + 1)]
+        super().__init__(*args, **kwargs)
+        self.fields["year"].choices = years

@@ -32,6 +32,7 @@
       <list>
         <option value="$MODULE_DIR$/budgetis/templates" />
         <option value="$MODULE_DIR$/budgetis/bdi_import/templates" />
+        <option value="$MODULE_DIR$/budgetis/accounting/templates" />
       </list>
     </option>
   </component>
