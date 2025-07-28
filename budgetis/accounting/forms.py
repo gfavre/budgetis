@@ -69,7 +69,7 @@ class AccountFilterForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        current_year = datetime.now(tz=...).date()
+        current_year = datetime.now().date().year  # noqa: DTZ005
         years = [(str(y), str(y)) for y in range(current_year - 5, current_year + 1)]
         super().__init__(*args, **kwargs)
         self.fields["year"].choices = years
