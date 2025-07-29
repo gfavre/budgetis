@@ -163,6 +163,7 @@ ignore = [
   "G004", # Use of f-strings in logging calls
   "ERA001", # commented-out code
   "TRY003", # Use of bare except
+  "TID252", # import relative modules
 ]
 # The fixes in extend-unsafe-fixes will require
 # provide the `--unsafe-fixes` flag when fixing.

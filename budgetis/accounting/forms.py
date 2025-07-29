@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django import forms
 from django.contrib.admin import widgets as admin_widgets
+from django.utils.translation import gettext_lazy as _
 
 from .models import Account
 from .models import AccountGroup
@@ -61,9 +62,9 @@ class MetaGroupForm(forms.ModelForm):
 
 
 class AccountFilterForm(forms.Form):
-    year = forms.ChoiceField(label="Year")
+    year = forms.ChoiceField(label=_("Year"))
     only_responsible = forms.BooleanField(
-        label="Show only my accounts",
+        label=_("Show only my accounts"),
         required=False,
         initial=True,
     )

@@ -1,0 +1,11 @@
+{% load money %}
+
+<div class="mb-3 border p-2">
+  <h4 class="bg-light p-2">
+    {{ code }} {{ label }}
+    <span class="float-end text-muted">
+      Charges: {{ data.total_charges|format_money }} CHF · Produits: {{ data.total_revenues|format_money }} CHF
+    </span>
+  </h4>
+  {% include "accounting/partials/account_table.html" with accounts=data.accounts %}
+</div>

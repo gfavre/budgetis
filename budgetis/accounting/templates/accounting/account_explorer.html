@@ -1,15 +1,36 @@
 {% extends "base.html" %}
 
-{% load crispy_forms_tags %}
+{% load i18n %}
 
 {% block main %}
-  <form method="get"
-        hx-get="{% url 'accounting:account-explorer' %}"
-        h
-        x-target="#account-list"
-        hx-swap="outerHTML"
-        hx-trigger="change delay:300ms from:input, change from:select">
-    {% crispy form %}
+  <form method="get" id="account-form">
+    <div class="mb-3">
+      <label for="id_year" class="form-label">{{ form.year.label }}</label>
+      <select name="year"
+              id="id_year"
+              class="form-select"
+              hx-get="{% url 'accounting:account-partial' %}"
+              hx-target="#account-list"
+              hx-swap="outerHTML"
+              hx-trigger="change">
+        {% for val, label in form.fields.year.choices %}
+          <option value="{{ val }}" {% if request.GET.year == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-check mb-3">
+      <input type="checkbox"
+             name="only_responsible"
+             id="id_only_responsible"
+             class="form-check-input"
+             value="on"
+             {% if request.GET.only_responsible %}checked{% endif %}
+             hx-get="{% url 'accounting:account-partial' %}"
+             hx-target="#account-list"
+             hx-swap="outerHTML"
+             hx-trigger="change" />
+      <label for="id_only_responsible" class="form-check-label">{{ form.only_responsible.label }}</label>
+    </div>
   </form>
-  <div id="account-list">{% include "accounting/partials/account_list.html" with grouped=accounts_by_group %}</div>
+  <div id="account-list">{% include "accounting/partials/account_list.html" with grouped=grouped %}</div>
 {% endblock main %}

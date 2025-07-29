@@ -1,0 +1,22 @@
+{% load money %}
+
+<table class="table table-sm table-striped">
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Libellé</th>
+      <th class="text-end">Charges</th>
+      <th class="text-end">Produits</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for account in accounts %}
+      <tr>
+        <td>{{ account.full_code }}</td>
+        <td>{{ account.label }}</td>
+        <td class="text-end">{{ account.charges|format_money }}</td>
+        <td class="text-end">{{ account.revenues|format_money }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
