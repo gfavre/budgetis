@@ -90,7 +90,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "budgetis.accounting",
     "budgetis.bdi_import",
-    "budgetis.budgets",
+    "budgetis.finance",
     "budgetis.exports",
     "budgetis.users",
 ]
