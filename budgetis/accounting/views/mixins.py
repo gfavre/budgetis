@@ -29,6 +29,16 @@ class AccountExplorerMixin:
         Build nested structure: MetaGroup > SuperGroup > AccountGroup > Accounts
         with totals and labels.
         """
+        if not accounts:
+            return OrderedDict()
+
+        year = accounts[0].year
+
+        responsibilities = {
+            r.group_id: r.responsible
+            for r in GroupResponsibility.objects.filter(year=year).select_related("responsible")
+        }
+
         raw_structure: dict[int, dict] = {}
 
         for account in accounts:
@@ -66,6 +76,7 @@ class AccountExplorerMixin:
                     "accounts": [],
                     "total_charges": Decimal(0),
                     "total_revenues": Decimal(0),
+                    "responsible": responsibilities.get(group.id),
                 },
             )
 

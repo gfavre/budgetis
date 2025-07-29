@@ -107,25 +107,28 @@ class Account(TimeStampedModel):
     ]
     id = models.BigAutoField(primary_key=True)
 
-    year = models.PositiveIntegerField(db_index=True)
-    function = models.SmallIntegerField(db_index=True)
-    nature = models.SmallIntegerField(db_index=True)
-    sub_account = models.SmallIntegerField(null=True, blank=True)
+    year = models.PositiveIntegerField(verbose_name=_("Year"), db_index=True)
+    function = models.CharField(verbose_name=_("Function"), db_index=True)
+    nature = models.CharField(verbose_name=_("Nature"), db_index=True)
+    sub_account = models.CharField(verbose_name=_("Subaccount"), blank=True)
 
-    label = models.CharField(max_length=255)
-    group = models.ForeignKey(AccountGroup, on_delete=models.SET_NULL, null=True, related_name="accounts")
+    label = models.CharField(verbose_name=_("Label"), max_length=255)
+    group = models.ForeignKey(
+        AccountGroup, on_delete=models.SET_NULL, verbose_name=_("Group"), null=True, related_name="accounts"
+    )
     is_budget = models.BooleanField(
         default=False,
     )  # True = Budget, False = Actual account
 
-    charges = models.DecimalField(max_digits=15, decimal_places=2)
-    revenues = models.DecimalField(max_digits=15, decimal_places=2)
+    charges = models.DecimalField(verbose_name=_("Charges"), max_digits=15, decimal_places=2)
+    revenues = models.DecimalField(verbose_name=_("Revenues"), max_digits=15, decimal_places=2)
     expected_type = models.CharField(
+        verbose_name=_("Expected type"),
         max_length=10,
         choices=EXPECTED_TYPES,
         default="charges",
     )
-    # visible_in_report = models.BooleanField(default=True)
+    visible_in_report = models.BooleanField(verbose_name=_("Visible in report"), default=True)
 
     class Meta:
         unique_together = ("year", "function", "nature", "sub_account", "is_budget")
@@ -134,7 +137,7 @@ class Account(TimeStampedModel):
             models.Index(fields=["year", "nature"]),
             models.Index(fields=["function", "nature", "sub_account"]),
         ]
-        ordering = ("year", "nature", "function", "nature", "sub_account")
+        ordering = ("function", "nature", "sub_account", "year")
         verbose_name = _("Account")
         verbose_name_plural = _("Accounts")
 

@@ -7,14 +7,39 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-28 06:48+0200\n"
+"POT-Creation-Date: 2025-07-29 22:45+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: budgetis/accounting/apps.py:7
+#: budgetis/accounting/admin.py:40
+msgid "Code"
+msgstr ""
+
+#: budgetis/accounting/admin.py:44
+msgid "Hide accounts in report"
+msgstr ""
+
+#: budgetis/accounting/admin.py:48
+msgid "Display accounts in report"
+msgstr ""
+
+#: budgetis/accounting/apps.py:8 budgetis/templates/base.html:71
 msgid "Accounting"
+msgstr ""
+
+#: budgetis/accounting/forms.py:65 budgetis/accounting/models.py:110
+#: budgetis/bdi_import/forms.py:8
+msgid "Year"
+msgstr ""
+
+#: budgetis/accounting/forms.py:67
+msgid "Show only my accounts"
+msgstr ""
+
+#: budgetis/accounting/forms.py:76
+msgid "- Select year -"
 msgstr ""
 
 #: budgetis/accounting/models.py:24
@@ -49,32 +74,70 @@ msgstr ""
 msgid "Responsibles"
 msgstr ""
 
-#: budgetis/accounting/models.py:138
+#: budgetis/accounting/models.py:111
+msgid "Function"
+msgstr ""
+
+#: budgetis/accounting/models.py:112 budgetis/bdi_import/forms.py:10
+msgid "Nature"
+msgstr ""
+
+#: budgetis/accounting/models.py:113
+msgid "Subaccount"
+msgstr ""
+
+#: budgetis/accounting/models.py:115
+#: budgetis/accounting/templates/accounting/partials/account_table.html:7
+msgid "Label"
+msgstr ""
+
+#: budgetis/accounting/models.py:117
+msgid "Group"
+msgstr ""
+
+#: budgetis/accounting/models.py:123
+#: budgetis/accounting/templates/accounting/partials/account_table.html:8
+msgid "Charges"
+msgstr ""
+
+#: budgetis/accounting/models.py:124
+msgid "Revenues"
+msgstr ""
+
+#: budgetis/accounting/models.py:126
+msgid "Expected type"
+msgstr ""
+
+#: budgetis/accounting/models.py:131
+msgid "Visible in report"
+msgstr ""
+
+#: budgetis/accounting/models.py:141
 msgid "Account"
 msgstr ""
 
-#: budgetis/accounting/models.py:139
+#: budgetis/accounting/models.py:142
 msgid "Accounts"
 msgstr ""
 
-#: budgetis/accounting/models.py:191
+#: budgetis/accounting/models.py:194
 msgid "Account Comment"
 msgstr ""
 
-#: budgetis/accounting/models.py:192
+#: budgetis/accounting/models.py:195
 msgid "Account Comments"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/account_table.html:6
+msgid "Nbr"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/account_table.html:9
+msgid "Products"
 msgstr ""
 
 #: budgetis/bdi_import/apps.py:8
 msgid "BDI Import"
-msgstr ""
-
-#: budgetis/bdi_import/forms.py:8
-msgid "Year"
-msgstr ""
-
-#: budgetis/bdi_import/forms.py:10
-msgid "Nature"
 msgstr ""
 
 #: budgetis/bdi_import/forms.py:15
@@ -90,27 +153,27 @@ msgid "Please upload a CSV or XLSX file."
 msgstr ""
 
 #: budgetis/templates/allauth/layouts/entrance.html:13
-#: budgetis/templates/base.html:97
+#: budgetis/templates/base.html:98
 msgid "Sign In"
 msgstr ""
 
-#: budgetis/templates/base.html:74
+#: budgetis/templates/base.html:75
 msgid "Import from BDI"
 msgstr ""
 
-#: budgetis/templates/base.html:77
+#: budgetis/templates/base.html:78
 msgid "My Profile"
 msgstr ""
 
-#: budgetis/templates/base.html:81
+#: budgetis/templates/base.html:82
 msgid "Admin"
 msgstr ""
 
-#: budgetis/templates/base.html:86
+#: budgetis/templates/base.html:87
 msgid "Sign Out"
 msgstr ""
 
-#: budgetis/templates/base.html:92
+#: budgetis/templates/base.html:93
 msgid "Sign Up"
 msgstr ""
 

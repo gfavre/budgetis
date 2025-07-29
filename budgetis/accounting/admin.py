@@ -1,7 +1,14 @@
 from django.contrib import admin
+from django.db.models import CharField
+from django.db.models import F
 from django.db.models import Q
+from django.db.models import Value
+from django.db.models.functions import Cast
+from django.db.models.functions import Coalesce
+from django.db.models.functions import Concat
 from django.utils.html import format_html
 from django.utils.html import format_html_join
+from django.utils.translation import gettext_lazy as _
 
 from .forms import AccountGroupForm
 from .forms import MetaGroupForm
@@ -17,14 +24,48 @@ from .models import SuperGroup
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
     list_display = (
-        "full_code",
+        "full_code_display",
+        "label",
         "year",
         "is_budget",
+        "report_status",
         "updated_at",
     )
-    list_filter = ("year", "is_budget", "group", "updated_at")
+    list_filter = ("year", "is_budget", "visible_in_report", "updated_at")
     search_fields = ("label",)
     date_hierarchy = "updated_at"
+    actions = ["hide_from_report", "show_in_report"]
+    ordering = ()  # Important: prevent default ordering
+
+    @admin.display(ordering="full_code_sort", description=_("Code"))
+    def full_code_display(self, obj):
+        return obj.full_code
+
+    @admin.action(description=_("Hide accounts in report"))
+    def hide_from_report(self, request, queryset):
+        queryset.update(visible_in_report=False)
+
+    @admin.action(description=_("Display accounts in report"))
+    def show_in_report(self, request, queryset):
+        queryset.update(visible_in_report=True)
+
+    @admin.display(description="Rapport")
+    def report_status(self, obj):
+        if obj.visible_in_report:
+            return "✔️"
+        return format_html('<span style="color: red; text-decoration: line-through;">❌ Masqué</span>')
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(
+            full_code_sort=Concat(
+                Cast(F("function"), output_field=CharField()),
+                Value("."),
+                Cast(F("nature"), output_field=CharField()),
+                Value("."),
+                Cast(Coalesce(F("sub_account"), Value("")), output_field=CharField()),
+            )
+        )
 
     def get_search_results(self, request, queryset, search_term):
         # base search

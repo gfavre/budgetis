@@ -1,12 +1,12 @@
-{% load money %}
+{% load money i18n %}
 
 <table class="table table-sm table-striped">
   <thead>
     <tr>
-      <th>Code</th>
-      <th>Libellé</th>
-      <th class="text-end">Charges</th>
-      <th class="text-end">Produits</th>
+      <th>{% trans "Nbr" %}</th>
+      <th>{% trans "Label" %}</th>
+      <th class="text-end">{% trans "Charges" %}</th>
+      <th class="text-end">{% trans "Products" %}</th>
     </tr>
   </thead>
   <tbody>
