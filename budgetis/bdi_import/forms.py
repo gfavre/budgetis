@@ -1,7 +1,16 @@
 from datetime import date
 
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import HTML
+from crispy_forms.layout import Column
+from crispy_forms.layout import Fieldset
+from crispy_forms.layout import Layout
+from crispy_forms.layout import Row
+from crispy_forms.layout import Submit
 from django import forms
 from django.utils.translation import gettext_lazy as _
+
+from budgetis.finance.models import AvailableYear
 
 
 class AccountImportForm(forms.Form):
@@ -11,6 +20,17 @@ class AccountImportForm(forms.Form):
         choices=[("budget", "Budget"), ("actual", "Comptes")],
         widget=forms.RadioSelect,
     )
+    source_year = forms.ModelChoiceField(
+        label=_("Copy settings from"),
+        required=False,
+        queryset=AvailableYear.objects.none(),  # défini dynamiquement dans __init__
+        help_text=_("Select the year from which to copy settings (if any)."),
+    )
+    copy_responsibles = forms.BooleanField(label=_("Copy responsibles"), required=False, initial=True)
+    copy_labels = forms.BooleanField(label=_("Copy account labels"), required=False, initial=True)
+    copy_visibility = forms.BooleanField(label=_("Copy visibility"), required=False, initial=True)
+    copy_comments = forms.BooleanField(label=_("Copy comments"), required=False, initial=True)
+
     account_file = forms.FileField(
         label=_("Accounts list file"), help_text=_("Upload a CSV or XSLX file with account data.")
     )
@@ -18,6 +38,34 @@ class AccountImportForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["year"].initial = date.today().year  # noqa: DTZ011
+        self.fields["source_year"].queryset = AvailableYear.objects.order_by("-year")
+
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Fieldset(
+                _("Import target"),
+                Row(
+                    Column("year", css_class="col-md-4"),
+                    Column("is_budget", css_class="col-md-8"),
+                ),
+            ),
+            Fieldset(
+                _("Copy settings from another year"),
+                "source_year",
+                "copy_responsibles",
+                "copy_labels",
+                "copy_visibility",
+                "copy_comments",
+            ),
+            Fieldset(
+                _("Account file"),
+                "account_file",
+            ),
+            HTML("<hr>"),
+            Submit("submit", _("Import"), css_class="btn btn-primary"),
+        )
 
     def clean_file(self):
         uploaded_file = self.cleaned_data["account_file"]

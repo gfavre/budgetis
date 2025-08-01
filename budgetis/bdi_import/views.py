@@ -5,9 +5,9 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
+# from django.shortcuts import redirect
 from .forms import AccountImportForm
 from .models import AccountImportLog
-from .tasks import import_accounts_task
 
 
 class AccountImportView(FormView):
@@ -27,22 +27,19 @@ class AccountImportView(FormView):
         with NamedTemporaryFile(delete=False, suffix=extension) as tmp:
             for chunk in account_file.chunks():
                 tmp.write(chunk)
-            tmp_path = tmp.name
             log = AccountImportLog.objects.create(
                 year=year,
                 is_budget=is_budget,
-                file_path=tmp_path,
                 launched_by=self.request.user,
                 dry_run=False,
-                status="pending",
+                file=account_file,
+                source_year=form.cleaned_data.get("source_year"),
+                copy_responsibles=form.cleaned_data.get("copy_responsibles"),
+                copy_labels=form.cleaned_data.get("copy_labels"),
+                copy_visibility=form.cleaned_data.get("copy_visibility"),
+                copy_comments=form.cleaned_data.get("copy_comments"),
             )
-        import_accounts_task.delay(
-            file_path=tmp_path,
-            year=year,
-            is_budget=is_budget,
-            dry_run=False,
-            log_id=log.id,
-        )
+            log.save()
 
         messages.success(self.request, "Import lancé en arrière-plan.")
         return super().form_valid(form)

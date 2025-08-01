@@ -1,3 +1,5 @@
+from contextlib import suppress
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -100,11 +102,11 @@ class Account(TimeStampedModel):
     Represents a specific account based on its full code structure.
     """
 
-    EXPECTED_TYPES = [
-        ("charges", "Charges only"),
-        ("revenues", "Revenues only"),
-        ("both", "Both charges and revenues"),
-    ]
+    class ExpectedType(models.TextChoices):
+        CHARGE = "charges", _("Charges only")
+        REVENUE = "revenues", _("Revenues only")
+        BOTH = "both", _("Both charges and revenues")
+
     id = models.BigAutoField(primary_key=True)
 
     year = models.PositiveIntegerField(verbose_name=_("Year"), db_index=True)
@@ -125,8 +127,8 @@ class Account(TimeStampedModel):
     expected_type = models.CharField(
         verbose_name=_("Expected type"),
         max_length=10,
-        choices=EXPECTED_TYPES,
-        default="charges",
+        choices=ExpectedType.choices,
+        default=ExpectedType.CHARGE,
     )
     visible_in_report = models.BooleanField(verbose_name=_("Visible in report"), default=True)
 
@@ -163,6 +165,12 @@ class Account(TimeStampedModel):
         :return: Boolean indicating if the account is a depreciation account.
         """
         return DEPRECIATION_GTE <= self.nature < DEPRECIATION_LT
+
+    def save(self, *args, **kwargs):
+        if self.group is None:
+            with suppress(AccountGroup.DoesNotExist):
+                self.group = AccountGroup.objects.get(code=self.function)
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         suffix = " (Budget)" if self.is_budget else ""
