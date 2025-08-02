@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-29 22:45+0200\n"
+"POT-Creation-Date: 2025-08-01 08:17+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -34,8 +34,9 @@ msgstr "Afficher les comptes dans le rapport"
 msgid "Accounting"
 msgstr "Comptabilité"
 
-#: budgetis/accounting/forms.py:65 budgetis/accounting/models.py:110
-#: budgetis/bdi_import/forms.py:8
+#: budgetis/accounting/forms.py:65 budgetis/accounting/models.py:112
+#: budgetis/bdi_import/forms.py:17 budgetis/bdi_import/models.py:15
+#: budgetis/finance/models.py:10
 msgid "Year"
 msgstr "Année"
 
@@ -43,93 +44,106 @@ msgstr "Année"
 msgid "Show only my accounts"
 msgstr "Afficher uniquement mes comptes"
 
-#: budgetis/accounting/forms.py:76
+#: budgetis/accounting/forms.py:75
 msgid "- Select year -"
 msgstr "- Sélectionnez l'année -"
 
-#: budgetis/accounting/models.py:24
+#: budgetis/accounting/models.py:26
 msgid "Meta Group"
 msgstr "Groupe de premier niveau"
 
-#: budgetis/accounting/models.py:25
+#: budgetis/accounting/models.py:27
 msgid "Meta Groups"
 msgstr "Groupes de premier niveau"
 
-#: budgetis/accounting/models.py:43
+#: budgetis/accounting/models.py:45
 msgid "Super Group"
 msgstr "Groupe de second niveau"
 
-#: budgetis/accounting/models.py:44
+#: budgetis/accounting/models.py:46
 msgid "Super Groups"
 msgstr "Groupes de second niveau"
 
-#: budgetis/accounting/models.py:63
+#: budgetis/accounting/models.py:65
 msgid "Account Group"
 msgstr "Groupe de compte"
 
-#: budgetis/accounting/models.py:64
+#: budgetis/accounting/models.py:66
 msgid "Account Groups"
 msgstr "Groupes de compte"
 
-#: budgetis/accounting/models.py:91
+#: budgetis/accounting/models.py:93
 msgid "Responsible"
 msgstr "Responsable"
 
-#: budgetis/accounting/models.py:92
+#: budgetis/accounting/models.py:94
 msgid "Responsibles"
 msgstr "Responsables"
 
-#: budgetis/accounting/models.py:111
+#: budgetis/accounting/models.py:106
+msgid "Charges only"
+msgstr "Seulement les charges"
+
+#: budgetis/accounting/models.py:107
+msgid "Revenues only"
+msgstr "Seulement les produits"
+
+#: budgetis/accounting/models.py:108
+msgid "Both charges and revenues"
+msgstr "Charges et produits"
+
+#: budgetis/accounting/models.py:113
 msgid "Function"
 msgstr "Fonction"
 
-#: budgetis/accounting/models.py:112 budgetis/bdi_import/forms.py:10
+#: budgetis/accounting/models.py:114 budgetis/bdi_import/forms.py:19
 msgid "Nature"
 msgstr "Nature"
 
-#: budgetis/accounting/models.py:113
+#: budgetis/accounting/models.py:115
 msgid "Subaccount"
 msgstr "Sous-compte"
 
-#: budgetis/accounting/models.py:115
+#: budgetis/accounting/models.py:117
 #: budgetis/accounting/templates/accounting/partials/account_table.html:7
 msgid "Label"
 msgstr "Désignation"
 
-#: budgetis/accounting/models.py:117
+#: budgetis/accounting/models.py:119
 msgid "Group"
 msgstr "Groupe"
 
-#: budgetis/accounting/models.py:123
+#: budgetis/accounting/models.py:125
 #: budgetis/accounting/templates/accounting/partials/account_table.html:8
+#: budgetis/bdi_import/models.py:63
 msgid "Charges"
 msgstr "Charges"
 
-#: budgetis/accounting/models.py:124
+#: budgetis/accounting/models.py:126 budgetis/bdi_import/models.py:64
 msgid "Revenues"
 msgstr "Revenus"
 
-#: budgetis/accounting/models.py:126
+#: budgetis/accounting/models.py:128
 msgid "Expected type"
 msgstr "Type attendu"
 
-#: budgetis/accounting/models.py:131
+#: budgetis/accounting/models.py:133
 msgid "Visible in report"
 msgstr "Visible dans le rapport"
 
-#: budgetis/accounting/models.py:141
+#: budgetis/accounting/models.py:143
 msgid "Account"
 msgstr "Compte"
 
-#: budgetis/accounting/models.py:142
+#: budgetis/accounting/models.py:144
 msgid "Accounts"
 msgstr "Comptes"
 
-#: budgetis/accounting/models.py:194
+#: budgetis/accounting/models.py:202
 msgid "Account Comment"
 msgstr "Commentaire sur le compte"
 
-#: budgetis/accounting/models.py:195
+#: budgetis/accounting/models.py:203
 msgid "Account Comments"
 msgstr "Commentaires sur le compte"
 
@@ -145,17 +159,181 @@ msgstr "Produits"
 msgid "BDI Import"
 msgstr "Import BDI"
 
-#: budgetis/bdi_import/forms.py:15
+#: budgetis/bdi_import/forms.py:24
+msgid "Copy settings from"
+msgstr "Copier les paramètres de"
+
+#: budgetis/bdi_import/forms.py:27
+msgid "Select the year from which to copy settings (if any)."
+msgstr "Sélectionnez l'année à partir de laquelle vous souhaitez copier les paramètres (le cas échéant)."
+
+#: budgetis/bdi_import/forms.py:29 budgetis/bdi_import/models.py:44
+msgid "Copy responsibles"
+msgstr "Copier les responsables"
+
+#: budgetis/bdi_import/forms.py:30
+msgid "Copy account labels"
+msgstr "Copier les libellés de comptes"
+
+#: budgetis/bdi_import/forms.py:31 budgetis/bdi_import/models.py:46
+msgid "Copy visibility"
+msgstr "Copier la visibilité"
+
+#: budgetis/bdi_import/forms.py:32 budgetis/bdi_import/models.py:47
+msgid "Copy comments"
+msgstr "Copier les commentaires"
+
+#: budgetis/bdi_import/forms.py:35
 msgid "Accounts list file"
 msgstr "Fichier de liste des comptes"
 
-#: budgetis/bdi_import/forms.py:15
+#: budgetis/bdi_import/forms.py:35
 msgid "Upload a CSV or XSLX file with account data."
 msgstr "Télécharger un fichier CSV ou XSLX contenant les données du compte."
 
-#: budgetis/bdi_import/forms.py:26
+#: budgetis/bdi_import/forms.py:48
+msgid "Import target"
+msgstr "Cible d'importation"
+
+#: budgetis/bdi_import/forms.py:55
+msgid "Copy settings from another year"
+msgstr "Copier les paramètres d'une autre année"
+
+#: budgetis/bdi_import/forms.py:63
+msgid "Account file"
+msgstr "Fichier de comptes"
+
+#: budgetis/bdi_import/forms.py:67
+msgid "Import"
+msgstr "Importer"
+
+#: budgetis/bdi_import/forms.py:74
 msgid "Please upload a CSV or XLSX file."
 msgstr "Veuillez télécharger un fichier CSV ou XLSX."
+
+#: budgetis/bdi_import/models.py:10
+msgid "Pending"
+msgstr "En attente"
+
+#: budgetis/bdi_import/models.py:11
+msgid "Started"
+msgstr "Commencé"
+
+#: budgetis/bdi_import/models.py:12
+msgid "Success"
+msgstr "Succès"
+
+#: budgetis/bdi_import/models.py:13
+msgid "Failed"
+msgstr "Échoué"
+
+#: budgetis/bdi_import/models.py:16
+msgid "Is budget"
+msgstr "Est un budget"
+
+#: budgetis/bdi_import/models.py:17
+msgid "Import file"
+msgstr "Importer fichier"
+
+#: budgetis/bdi_import/models.py:24
+msgid "Launched by"
+msgstr "Lancé par"
+
+#: budgetis/bdi_import/models.py:27
+msgid "Dry run"
+msgstr "Essai à blanc"
+
+#: budgetis/bdi_import/models.py:32
+msgid "Status"
+msgstr "Statut"
+
+#: budgetis/bdi_import/models.py:35
+msgid "Message"
+msgstr "Message"
+
+#: budgetis/bdi_import/models.py:42
+msgid "Source year"
+msgstr "Année source"
+
+#: budgetis/bdi_import/models.py:45
+msgid "Copy labels"
+msgstr "Copier les libellés"
+
+#: budgetis/bdi_import/models.py:50
+msgid "Account import log"
+msgstr "Journal d'importation des comptes"
+
+#: budgetis/bdi_import/models.py:51
+msgid "Account import logs"
+msgstr "Journaux d'importation de comptes"
+
+#: budgetis/bdi_import/models.py:55 budgetis/finance/models.py:7
+msgid "Budget"
+msgstr "Budget"
+
+#: budgetis/bdi_import/models.py:55
+msgid "Actual"
+msgstr "Compte"
+
+#: budgetis/bdi_import/models.py:61
+msgid "Account code"
+msgstr "Code du compte"
+
+#: budgetis/bdi_import/models.py:62
+msgid "Account label"
+msgstr "Désignation du compte"
+
+#: budgetis/bdi_import/models.py:65
+msgid "Total (signed)"
+msgstr "Total (signé)"
+
+#: budgetis/bdi_import/models.py:71
+msgid "Import log"
+msgstr "Registre des imports"
+
+#: budgetis/bdi_import/models.py:76
+msgid "Mapped field"
+msgstr "Champ mappé"
+
+#: budgetis/bdi_import/models.py:80
+msgid "Excel column name"
+msgstr "Nom de la colonne Excel"
+
+#: budgetis/bdi_import/models.py:85
+msgid "Derived from total column"
+msgstr "Dérivé de la colonne \"total\""
+
+#: budgetis/bdi_import/models.py:86
+msgid "Use positive/negative values from 'total' column to infer charges/revenues."
+msgstr "Utiliser les valeurs positives/négatives de la colonne \"total\" pour déduire les charges/recettes."
+
+#: budgetis/bdi_import/models.py:91
+msgid "Column mapping"
+msgstr "Correspondances des colonnes"
+
+#: budgetis/bdi_import/models.py:92
+msgid "Column mappings"
+msgstr "Correspondances des colonnes"
+
+#: budgetis/finance/models.py:8
+msgid "Comptes"
+msgstr "Comptes"
+
+#: budgetis/finance/models.py:11
+msgid "Type"
+msgstr "Type"
+
+#: budgetis/finance/models.py:12
+msgid "Created at"
+msgstr "Créé à"
+
+#: budgetis/finance/models.py:15
+msgid "Available year"
+msgstr "Année disponible"
+
+#: budgetis/finance/models.py:16
+msgid "Available years"
+msgstr "Années disponibles"
 
 #: budgetis/templates/allauth/layouts/entrance.html:13
 #: budgetis/templates/base.html:98

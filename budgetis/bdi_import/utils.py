@@ -3,6 +3,15 @@ from pathlib import Path
 import pandas as pd
 
 
+def detect_first_data_row(df: pd.DataFrame, min_fields: int = 3) -> int:
+    for idx, row in df.iterrows():
+        nonempty = row.dropna().astype(str).str.strip()
+        if (nonempty != "").sum() >= min_fields:
+            return idx
+    msg = "No usable header row found."
+    raise ValueError(msg)
+
+
 def load_account_dataframe(path: str) -> pd.DataFrame:
     """
     Load a CSV or XLSX file into a cleaned DataFrame (string values only).

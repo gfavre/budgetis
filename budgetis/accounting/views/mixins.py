@@ -103,7 +103,7 @@ class AccountExplorerMixin:
                 for ag_code in sorted(sg_data["groups"].keys()):
                     ag_data = sg_data["groups"][ag_code]
                     ag_data["accounts"] = sorted(
-                        ag_data["accounts"], key=lambda a: (a.function, a.nature, a.sub_account or 0)
+                        ag_data["accounts"], key=lambda a: (a.function, a.nature, a.sub_account or "")
                     )
                     sorted_ag[ag_code] = ag_data
 

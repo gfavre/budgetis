@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-29 22:45+0200\n"
+"POT-Creation-Date: 2025-08-01 08:17+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,8 +29,9 @@ msgstr ""
 msgid "Accounting"
 msgstr ""
 
-#: budgetis/accounting/forms.py:65 budgetis/accounting/models.py:110
-#: budgetis/bdi_import/forms.py:8
+#: budgetis/accounting/forms.py:65 budgetis/accounting/models.py:112
+#: budgetis/bdi_import/forms.py:17 budgetis/bdi_import/models.py:15
+#: budgetis/finance/models.py:10
 msgid "Year"
 msgstr ""
 
@@ -38,93 +39,106 @@ msgstr ""
 msgid "Show only my accounts"
 msgstr ""
 
-#: budgetis/accounting/forms.py:76
+#: budgetis/accounting/forms.py:75
 msgid "- Select year -"
 msgstr ""
 
-#: budgetis/accounting/models.py:24
+#: budgetis/accounting/models.py:26
 msgid "Meta Group"
 msgstr ""
 
-#: budgetis/accounting/models.py:25
+#: budgetis/accounting/models.py:27
 msgid "Meta Groups"
 msgstr ""
 
-#: budgetis/accounting/models.py:43
+#: budgetis/accounting/models.py:45
 msgid "Super Group"
 msgstr ""
 
-#: budgetis/accounting/models.py:44
+#: budgetis/accounting/models.py:46
 msgid "Super Groups"
 msgstr ""
 
-#: budgetis/accounting/models.py:63
+#: budgetis/accounting/models.py:65
 msgid "Account Group"
 msgstr ""
 
-#: budgetis/accounting/models.py:64
+#: budgetis/accounting/models.py:66
 msgid "Account Groups"
 msgstr ""
 
-#: budgetis/accounting/models.py:91
+#: budgetis/accounting/models.py:93
 msgid "Responsible"
 msgstr ""
 
-#: budgetis/accounting/models.py:92
+#: budgetis/accounting/models.py:94
 msgid "Responsibles"
 msgstr ""
 
-#: budgetis/accounting/models.py:111
-msgid "Function"
+#: budgetis/accounting/models.py:106
+msgid "Charges only"
 msgstr ""
 
-#: budgetis/accounting/models.py:112 budgetis/bdi_import/forms.py:10
-msgid "Nature"
+#: budgetis/accounting/models.py:107
+msgid "Revenues only"
+msgstr ""
+
+#: budgetis/accounting/models.py:108
+msgid "Both charges and revenues"
 msgstr ""
 
 #: budgetis/accounting/models.py:113
-msgid "Subaccount"
+msgid "Function"
+msgstr ""
+
+#: budgetis/accounting/models.py:114 budgetis/bdi_import/forms.py:19
+msgid "Nature"
 msgstr ""
 
 #: budgetis/accounting/models.py:115
+msgid "Subaccount"
+msgstr ""
+
+#: budgetis/accounting/models.py:117
 #: budgetis/accounting/templates/accounting/partials/account_table.html:7
 msgid "Label"
 msgstr ""
 
-#: budgetis/accounting/models.py:117
+#: budgetis/accounting/models.py:119
 msgid "Group"
 msgstr ""
 
-#: budgetis/accounting/models.py:123
+#: budgetis/accounting/models.py:125
 #: budgetis/accounting/templates/accounting/partials/account_table.html:8
+#: budgetis/bdi_import/models.py:63
 msgid "Charges"
 msgstr ""
 
-#: budgetis/accounting/models.py:124
+#: budgetis/accounting/models.py:126 budgetis/bdi_import/models.py:64
 msgid "Revenues"
 msgstr ""
 
-#: budgetis/accounting/models.py:126
+#: budgetis/accounting/models.py:128
 msgid "Expected type"
 msgstr ""
 
-#: budgetis/accounting/models.py:131
+#: budgetis/accounting/models.py:133
 msgid "Visible in report"
 msgstr ""
 
-#: budgetis/accounting/models.py:141
+#: budgetis/accounting/models.py:143
 msgid "Account"
 msgstr ""
 
-#: budgetis/accounting/models.py:142
+#: budgetis/accounting/models.py:144
 msgid "Accounts"
 msgstr ""
 
-#: budgetis/accounting/models.py:194
+#: budgetis/accounting/models.py:202
 msgid "Account Comment"
 msgstr ""
 
-#: budgetis/accounting/models.py:195
+#: budgetis/accounting/models.py:203
 msgid "Account Comments"
 msgstr ""
 
@@ -140,16 +154,181 @@ msgstr ""
 msgid "BDI Import"
 msgstr ""
 
-#: budgetis/bdi_import/forms.py:15
+#: budgetis/bdi_import/forms.py:24
+msgid "Copy settings from"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:27
+msgid "Select the year from which to copy settings (if any)."
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:29 budgetis/bdi_import/models.py:44
+msgid "Copy responsibles"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:30
+msgid "Copy account labels"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:31 budgetis/bdi_import/models.py:46
+msgid "Copy visibility"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:32 budgetis/bdi_import/models.py:47
+msgid "Copy comments"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:35
 msgid "Accounts list file"
 msgstr ""
 
-#: budgetis/bdi_import/forms.py:15
+#: budgetis/bdi_import/forms.py:35
 msgid "Upload a CSV or XSLX file with account data."
 msgstr ""
 
-#: budgetis/bdi_import/forms.py:26
+#: budgetis/bdi_import/forms.py:48
+msgid "Import target"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:55
+msgid "Copy settings from another year"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:63
+msgid "Account file"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:67
+msgid "Import"
+msgstr ""
+
+#: budgetis/bdi_import/forms.py:74
 msgid "Please upload a CSV or XLSX file."
+msgstr ""
+
+#: budgetis/bdi_import/models.py:10
+msgid "Pending"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:11
+msgid "Started"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:12
+msgid "Success"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:13
+msgid "Failed"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:16
+msgid "Is budget"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:17
+msgid "Import file"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:24
+msgid "Launched by"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:27
+msgid "Dry run"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:32
+msgid "Status"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:35
+msgid "Message"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:42
+msgid "Source year"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:45
+msgid "Copy labels"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:50
+msgid "Account import log"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:51
+msgid "Account import logs"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:55 budgetis/finance/models.py:7
+msgid "Budget"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:55
+msgid "Actual"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:61
+msgid "Account code"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:62
+msgid "Account label"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:65
+msgid "Total (signed)"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:71
+msgid "Import log"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:76
+msgid "Mapped field"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:80
+msgid "Excel column name"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:85
+msgid "Derived from total column"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:86
+msgid ""
+"Use positive/negative values from 'total' column to infer charges/revenues."
+msgstr ""
+
+#: budgetis/bdi_import/models.py:91
+msgid "Column mapping"
+msgstr ""
+
+#: budgetis/bdi_import/models.py:92
+msgid "Column mappings"
+msgstr ""
+
+#: budgetis/finance/models.py:8
+msgid "Comptes"
+msgstr ""
+
+#: budgetis/finance/models.py:11
+msgid "Type"
+msgstr ""
+
+#: budgetis/finance/models.py:12
+msgid "Created at"
+msgstr ""
+
+#: budgetis/finance/models.py:15
+msgid "Available year"
+msgstr ""
+
+#: budgetis/finance/models.py:16
+msgid "Available years"
 msgstr ""
 
 #: budgetis/templates/allauth/layouts/entrance.html:13

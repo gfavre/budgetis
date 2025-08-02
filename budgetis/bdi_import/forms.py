@@ -35,10 +35,10 @@ class AccountImportForm(forms.Form):
         label=_("Accounts list file"), help_text=_("Upload a CSV or XSLX file with account data.")
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, edit_log=None, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.fields["year"].initial = date.today().year  # noqa: DTZ011
-        self.fields["source_year"].queryset = AvailableYear.objects.order_by("-year")
 
         self.helper = FormHelper()
         self.helper.form_method = "post"
@@ -66,6 +66,29 @@ class AccountImportForm(forms.Form):
             HTML("<hr>"),
             Submit("submit", _("Import"), css_class="btn btn-primary"),
         )
+
+        if edit_log:
+            self.fields["account_file"].required = False
+            self.fields["account_file"].widget = forms.HiddenInput()
+            self.fields["account_file"].label = _("File already uploaded")
+
+            for fieldset in self.helper.layout:
+                if isinstance(fieldset, Fieldset) and "account_file" in fieldset.fields:
+                    # Remplacer le champ "account_file" par un bloc HTML affichant le fichier
+                    fieldset.fields = [
+                        HTML(
+                            f"""
+                                <div class="mb-3">
+                                  <label class="form-label fw-bold">{_("Uploaded file")}</label>
+                                  <div class="form-control bg-light">
+                                    <i class="bi bi-file-earmark-text me-2"></i>
+                                    {edit_log.file.name.split("/")[-1]} ({edit_log.file.size / 1024:.1f} KB)
+                                  </div>
+                                </div>
+                                """
+                        )
+                    ]
+        self.fields["source_year"].queryset = AvailableYear.objects.order_by("-year")
 
     def clean_file(self):
         uploaded_file = self.cleaned_data["account_file"]
