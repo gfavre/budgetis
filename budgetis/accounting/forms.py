@@ -1,8 +1,8 @@
-from datetime import datetime
-
 from django import forms
 from django.contrib.admin import widgets as admin_widgets
 from django.utils.translation import gettext_lazy as _
+
+from budgetis.finance.models import AvailableYear
 
 from .models import Account
 from .models import AccountGroup
@@ -70,8 +70,7 @@ class AccountFilterForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        current_year = datetime.now().date().year  # noqa: DTZ005
         super().__init__(*args, **kwargs)
         self.fields["year"].choices = [("", _("- Select year -"))] + [
-            (str(y), str(y)) for y in reversed(range(current_year - 5, current_year + 1))
+            (str(y), str(y)) for y in AvailableYear.objects.values_list("year", flat=True).distinct().order_by("-year")
         ]

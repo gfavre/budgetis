@@ -3,6 +3,8 @@ import logging
 from celery import shared_task
 from django.utils.translation import gettext as _
 
+from budgetis.finance.models import AvailableYear
+
 from .importers import import_accounts_from_dataframe
 from .models import AccountImportLog
 from .utils import load_account_dataframe
@@ -62,6 +64,11 @@ def import_accounts_task(log_id: int):
         log.save(update_fields=["status", "message"])
         logger.exception(f"[Import] Unexpected failure for {log}")
         raise
+
+    AvailableYear.objects.get_or_create(
+        year=log.year,
+        type=(log.is_budget and AvailableYear.YearType.BUDGET) or AvailableYear.YearType.ACTUAL,
+    )
 
     log.status = AccountImportLog.Status.SUCCESS
     log.message = "Import completed successfully."
