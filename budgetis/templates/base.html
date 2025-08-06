@@ -42,6 +42,7 @@
       <!-- Your stuff: Third-party javascript libraries go here -->
       <!-- place project specific Javascript in this file -->
       <script src="https://unpkg.com/htmx.org@1.9.12" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
       {% compress js %}
         <script defer src="{% static 'js/project.js' %}"></script>
       {% endcompress %}
@@ -133,7 +134,7 @@
       window.addEventListener('DOMContentLoaded', () => {
         /* Run whatever you want */
       });
-    </script>
+</script>
       {% endcomment %}
     {% endblock inline_javascript %}
   </body>

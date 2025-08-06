@@ -20,7 +20,16 @@
     {% for account in accounts %}
       <tr>
         <td class="text-nowrap">{{ account.full_code }}</td>
-        <td>{{ account.label }}</td>
+        <td>
+          <a href="{% url 'accounting:account-history' account.id %}"
+             class="account-history-link"
+             hx-get="{% url 'accounting:account-history' account.id %}"
+             hx-target="#accountHistoryModal .modal-content"
+             hx-trigger="click"
+             hx-swap="innerHTML"
+             data-bs-toggle="modal"
+             data-bs-target="#accountHistoryModal">{{ account.label }}</a>
+        </td>
         <td class="text-end">{{ account.charges|format_money }}</td>
         <td class="text-end">{{ account.revenues|format_money }}</td>
         <td class="text-end">{{ account.budget_charges|format_money }}</td>
