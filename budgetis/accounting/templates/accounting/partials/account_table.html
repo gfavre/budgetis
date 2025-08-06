@@ -30,8 +30,30 @@
              data-bs-toggle="modal"
              data-bs-target="#accountHistoryModal">{{ account.label }}</a>
         </td>
-        <td class="text-end">{{ account.charges|format_money }}</td>
-        <td class="text-end">{{ account.revenues|format_money }}</td>
+        <td class="text-end">
+          {{ account.charges|format_money }}
+          {% with diff=account.charges|percent_diff:account.budget_charges %}
+            {% if diff != "" %}
+              <small class="{% if diff > 0 %}text-danger{% elif diff < 0 %}text-success{% endif %}">
+                (
+                {% if diff > 0 %}+{% endif %}
+                {{ diff }}&nbsp;%)
+              </small>
+            {% endif %}
+          {% endwith %}
+        </td>
+        <td class="text-end">
+          {{ account.revenues|format_money }}
+          {% with diff=account.revenues|percent_diff:account.budget_revenues %}
+            {% if diff != "" %}
+              <small class="{% if diff > 0 %}text-success{% elif diff < 0 %}text-danger{% endif %}">
+                (
+                {% if diff > 0 %}+{% endif %}
+                {{ diff }}&nbsp;%)
+              </small>
+            {% endif %}
+          {% endwith %}
+        </td>
         <td class="text-end">{{ account.budget_charges|format_money }}</td>
         <td class="text-end">{{ account.budget_revenues|format_money }}</td>
       </tr>
@@ -41,8 +63,30 @@
     <!-- Ligne d'en-tête style "190 Service informatique" avec totaux -->
     <tr class="table-secondary fw-bold">
       <td colspan="2">{{ code }} {{ label }}</td>
-      <td class="text-end">{{ data.total_charges|format_money }}</td>
-      <td class="text-end">{{ data.total_revenues|format_money }}</td>
+      <td class="text-end">
+        {{ data.total_charges|format_money }}
+        {% with diff=data.total_charges|percent_diff:data.budget_total_charges %}
+          {% if diff != "" %}
+            <small class="{% if diff > 0 %}text-danger{% elif diff < 0 %}text-success{% endif %}">
+              (
+              {% if diff > 0 %}+{% endif %}
+              {{ diff }}&nbsp;%)
+            </small>
+          {% endif %}
+        {% endwith %}
+      </td>
+      <td class="text-end">
+        {{ data.total_revenues|format_money }}
+        {% with diff=data.total_revenues|percent_diff:data.budget_total_revenues %}
+          {% if diff != "" %}
+            <small class="{% if diff > 0 %}text-success{% elif diff < 0 %}text-danger{% endif %}">
+              (
+              {% if diff > 0 %}+{% endif %}
+              {{ diff }}&nbsp;%)
+            </small>
+          {% endif %}
+        {% endwith %}
+      </td>
       <td class="text-end">{{ data.budget_total_charges|format_money }}</td>
       <td class="text-end">{{ data.budget_total_revenues|format_money }}</td>
     </tr>

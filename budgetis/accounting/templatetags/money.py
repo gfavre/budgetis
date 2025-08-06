@@ -34,3 +34,13 @@ def format_money(value: float | Decimal | None) -> str:
     # Always 2 digits after the dot
     frac_str = f"{frac_part:.2f}"[1:]  # Get ".xx"
     return f"{int_str}{frac_str}"
+
+
+@register.filter
+def percent_diff(actual, budget):
+    try:
+        if budget == 0:
+            return ""
+        return round(((actual - budget) / budget) * 100, 1)
+    except (TypeError, ZeroDivisionError):
+        return ""
