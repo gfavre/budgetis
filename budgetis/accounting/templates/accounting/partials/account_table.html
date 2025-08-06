@@ -1,22 +1,41 @@
-{% load money i18n %}
+{% load money %}
 
-<table class="table table-sm table-striped">
+<table class="table table-bordered align-middle mb-0">
   <thead>
-    <tr>
-      <th>{% trans "Nbr" %}</th>
-      <th>{% trans "Label" %}</th>
-      <th class="text-end">{% trans "Charges" %}</th>
-      <th class="text-end">{% trans "Products" %}</th>
+    <!-- Ligne d'en-tête colonnes -->
+    <tr class="table-light text-center">
+      <th rowspan="2" class="text-start">N°</th>
+      <th rowspan="2" class="text-start">Désignation</th>
+      <th colspan="2">Comptes {{ year }}</th>
+      <th colspan="2">Budget {{ year }}</th>
+    </tr>
+    <tr class="table-light text-center">
+      <th>Charges</th>
+      <th>Produits</th>
+      <th>Charges</th>
+      <th>Produits</th>
     </tr>
   </thead>
   <tbody>
     {% for account in accounts %}
       <tr>
-        <td>{{ account.full_code }}</td>
+        <td class="text-nowrap">{{ account.full_code }}</td>
         <td>{{ account.label }}</td>
         <td class="text-end">{{ account.charges|format_money }}</td>
         <td class="text-end">{{ account.revenues|format_money }}</td>
+        <td class="text-end">{{ account.budget_charges|format_money }}</td>
+        <td class="text-end">{{ account.budget_revenues|format_money }}</td>
       </tr>
     {% endfor %}
   </tbody>
+  <tfoot>
+    <!-- Ligne d'en-tête style "190 Service informatique" avec totaux -->
+    <tr class="table-secondary fw-bold">
+      <td colspan="2">{{ code }} {{ label }}</td>
+      <td class="text-end">{{ data.total_charges|format_money }}</td>
+      <td class="text-end">{{ data.total_revenues|format_money }}</td>
+      <td class="text-end">{{ data.budget_total_charges|format_money }}</td>
+      <td class="text-end">{{ data.budget_total_revenues|format_money }}</td>
+    </tr>
+  </tfoot>
 </table>

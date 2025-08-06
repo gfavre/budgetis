@@ -22,7 +22,35 @@ class AccountExplorerMixin:
             )
             qs = qs.filter(group__in=group_ids)
 
-        return list(qs)
+        actual_accounts = list(qs)
+
+        # Prepare keys for matching with budget accounts
+        account_keys = {(a.function, a.nature, a.sub_account): a for a in actual_accounts}
+
+        # Get corresponding budget accounts
+        budget_accounts = Account.objects.filter(
+            year=year,
+            is_budget=True,
+            function__in=[k[0] for k in account_keys],
+            nature__in=[k[1] for k in account_keys],
+        )
+
+        # Map budget accounts back to actual accounts
+        for b in budget_accounts:
+            key = (b.function, b.nature, b.sub_account)
+            actual = account_keys.get(key)
+            if actual:
+                actual.budget_charges = b.charges
+                actual.budget_revenues = b.revenues
+
+        # Default values if no match
+        for a in actual_accounts:
+            if not hasattr(a, "budget_charges"):
+                a.budget_charges = Decimal("0.00")
+            if not hasattr(a, "budget_revenues"):
+                a.budget_revenues = Decimal("0.00")
+
+        return actual_accounts
 
     def build_grouped_structure(self, accounts: list[Account]) -> OrderedDict:
         """
@@ -69,6 +97,7 @@ class AccountExplorerMixin:
                 },
             )
 
+            # ajout dans ag = sg["groups"].setdefault(...)
             ag = sg["groups"].setdefault(
                 ag_key,
                 {
@@ -76,6 +105,8 @@ class AccountExplorerMixin:
                     "accounts": [],
                     "total_charges": Decimal(0),
                     "total_revenues": Decimal(0),
+                    "budget_total_charges": Decimal(0),
+                    "budget_total_revenues": Decimal(0),
                     "responsible": responsibilities.get(group.id),
                 },
             )
@@ -83,6 +114,8 @@ class AccountExplorerMixin:
             ag["accounts"].append(account)
             ag["total_charges"] += account.charges
             ag["total_revenues"] += account.revenues
+            ag["budget_total_charges"] += account.budget_charges
+            ag["budget_total_revenues"] += account.budget_revenues
 
         return self.sort_grouped_structure(raw_structure)
 

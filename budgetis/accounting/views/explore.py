@@ -40,4 +40,4 @@ class AccountPartialView(LoginRequiredMixin, AccountExplorerMixin, FormView):
         accounts = self.get_accounts(self.request.user, year, only_responsible=only)
         grouped = self.build_grouped_structure(accounts)
 
-        return self.render_to_response(self.get_context_data(form=form, grouped=grouped))
+        return self.render_to_response(self.get_context_data(form=form, grouped=grouped, year=year))
