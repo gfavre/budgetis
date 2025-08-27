@@ -11,6 +11,7 @@
 <script>
   (() => {
     const ctx = document.getElementById("accountHistoryChart");
+    const commentsByYear = {{ comments_by_year|safe }};
 
     new Chart(ctx, {
       type: "line",
@@ -48,9 +49,24 @@
           tooltip: {
             callbacks: {
               label: function(context) {
-                return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} CHF`;
-              }
-            }
+          let year = context.label;
+          let datasetLabel = context.dataset.label.toLowerCase(); // "comptes" ou "budget"
+          let lines = [
+            `${context.dataset.label}: ${context.parsed.y.toLocaleString()} CHF`
+          ];
+
+          // Ajouter les commentaires
+          if (commentsByYear[year] && commentsByYear[year][datasetLabel]) {
+            lines.push("Commentaires:");   // titre
+            commentsByYear[year][datasetLabel].forEach(c => {
+              lines.push(`- ${c}`);       // chaque commentaire sur sa ligne
+            });
+          }
+          return lines; // ✅ tableau → chaque élément = nouvelle ligne
+        }
+      }
+
+
           },
           legend: {
             position: "bottom",
@@ -67,7 +83,7 @@
           y: {
             beginAtZero: true,
             ticks: {
-              callback: function(value) {
+              callback: function (value) {
                 return value.toLocaleString() + " CHF";
               }
             }

@@ -1,7 +1,10 @@
+import json
+
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 
 from ..models import Account
+from ..models import AccountComment
 
 
 def account_history_modal(request, account_id):
@@ -13,10 +16,19 @@ def account_history_modal(request, account_id):
         nature=account.nature,
         sub_account=account.sub_account,
     ).order_by("year")
+    comments = AccountComment.objects.filter(
+        account__function=account.function, account__nature=account.nature, account__sub_account=account.sub_account
+    ).select_related("account")
 
     years = sorted(set(a.year for a in qs))  # noqa: C401
     comptes = []
     budgets = []
+
+    comments_by_year = {}
+    for c in comments:
+        year = c.account.year
+        key = "budget" if c.account.is_budget else "comptes"
+        comments_by_year.setdefault(year, {}).setdefault(key, []).append(c.content)
 
     for year in years:
         actual = next((a for a in qs if a.year == year and not a.is_budget), None)
@@ -33,5 +45,6 @@ def account_history_modal(request, account_id):
             "years": years,
             "comptes": comptes,
             "budgets": budgets,
+            "comments_by_year": json.dumps(comments_by_year),
         },
     )
