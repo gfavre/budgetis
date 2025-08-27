@@ -1,6 +1,8 @@
 from collections import OrderedDict
 from decimal import Decimal
 
+from django.db.models import Count
+
 from ..models import Account
 from ..models import GroupResponsibility
 
@@ -10,11 +12,15 @@ class AccountExplorerMixin:
         """
         Return queryset of accounts for given year, filtered by responsibility if needed.
         """
-        qs = Account.objects.filter(
-            year=year,
-            is_budget=False,
-            group__isnull=False,
-        ).select_related("group__supergroup__metagroup")
+        qs = (
+            Account.objects.filter(
+                year=year,
+                is_budget=False,
+                group__isnull=False,
+            )
+            .select_related("group__supergroup__metagroup")
+            .annotate(comment_count=Count("comments"))
+        )
 
         if only_responsible:
             group_ids = GroupResponsibility.objects.filter(year=year, responsible=user).values_list(
@@ -33,7 +39,7 @@ class AccountExplorerMixin:
             is_budget=True,
             function__in=[k[0] for k in account_keys],
             nature__in=[k[1] for k in account_keys],
-        )
+        ).annotate(comment_count=Count("comments"))
 
         # Map budget accounts back to actual accounts
         for b in budget_accounts:
@@ -42,6 +48,8 @@ class AccountExplorerMixin:
             if actual:
                 actual.budget_charges = b.charges
                 actual.budget_revenues = b.revenues
+                actual.budget_id = b.id
+                actual.budget_comment_count = b.comment_count
 
         # Default values if no match
         for a in actual_accounts:
@@ -49,6 +57,10 @@ class AccountExplorerMixin:
                 a.budget_charges = Decimal("0.00")
             if not hasattr(a, "budget_revenues"):
                 a.budget_revenues = Decimal("0.00")
+            if not hasattr(a, "budget_id"):
+                a.budget_id = None
+            if not hasattr(a, "budget_comment_count"):
+                a.budget_comment_count = 0
 
         return actual_accounts
 

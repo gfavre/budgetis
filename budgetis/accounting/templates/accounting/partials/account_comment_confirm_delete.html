@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h5 class="modal-title">Supprimer le commentaire</h5>
+  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+<div class="modal-body">
+  <p>Voulez-vous vraiment supprimer ce commentaire&nbsp;?</p>
+  <blockquote class="blockquote">
+    {{ object.content }}
+  </blockquote>
+</div>
+<div class="modal-footer">
+  <form method="post"
+        hx-post="{{ request.path }}"
+        hx-target="#accountCommentsModal .modal-content"
+        hx-swap="innerHTML">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Supprimer</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+  </form>
+</div>

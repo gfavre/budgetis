@@ -32,29 +32,39 @@
         </td>
         <td class="text-end">
           {{ account.charges|format_money }}
-          {% with diff=account.charges|percent_diff:account.budget_charges %}
-            {% if diff != "" %}
-              <small class="{% if diff > 0 %}text-danger{% elif diff < 0 %}text-success{% endif %}">
-                (
-                {% if diff > 0 %}+{% endif %}
-                {{ diff }}&nbsp;%)
-              </small>
-            {% endif %}
-          {% endwith %}
+          {% with diff=account.charges|percent_diff:account.budget_charges %}{{ diff|percent_diff_display }}{% endwith %}
+          <button class="btn btn-sm btn-link"
+                  title="Commentaires"
+                  hx-get="{% url 'accounting:account-comments' account.id 'charges' %}"
+                  hx-target="#accountCommentsModal .modal-content"
+                  data-bs-toggle="modal"
+                  data-bs-target="#accountCommentsModal">
+            <span id="comment-icon-{{ account.id }}"
+                  class="{% if account.comment_count %}text-primary{% else %}text-muted{% endif %}">
+              <i class="bi bi-chat-left-text"></i>
+            </span>
+          </button>
         </td>
         <td class="text-end">
           {{ account.revenues|format_money }}
-          {% with diff=account.revenues|percent_diff:account.budget_revenues %}
-            {% if diff != "" %}
-              <small class="{% if diff > 0 %}text-success{% elif diff < 0 %}text-danger{% endif %}">
-                (
-                {% if diff > 0 %}+{% endif %}
-                {{ diff }}&nbsp;%)
-              </small>
-            {% endif %}
-          {% endwith %}
+          {% with diff=account.revenues|percent_diff:account.budget_revenues %}{{ diff|percent_diff_display }}{% endwith %}
         </td>
-        <td class="text-end">{{ account.budget_charges|format_money }}</td>
+        <td class="text-end">
+          {{ account.budget_charges|format_money }}
+          {% if account.budget_id %}
+            <button class="btn btn-sm btn-link"
+                    title="Commentaires"
+                    hx-get="{% url 'accounting:account-comments' account.budget_id 'budget_charges' %}"
+                    hx-target="#accountCommentsModal .modal-content"
+                    data-bs-toggle="modal"
+                    data-bs-target="#accountCommentsModal">
+              <span id="comment-icon-{{ account.budget_id }}"
+                    class="{% if account.budget_comment_count %}text-primary{% else %}text-muted{% endif %}">
+                <i class="bi bi-chat-left-text"></i>
+              </span>
+            </button>
+          {% endif %}
+        </td>
         <td class="text-end">{{ account.budget_revenues|format_money }}</td>
       </tr>
     {% endfor %}
@@ -65,26 +75,12 @@
       <td colspan="2">{{ code }} {{ label }}</td>
       <td class="text-end">
         {{ data.total_charges|format_money }}
-        {% with diff=data.total_charges|percent_diff:data.budget_total_charges %}
-          {% if diff != "" %}
-            <small class="{% if diff > 0 %}text-danger{% elif diff < 0 %}text-success{% endif %}">
-              (
-              {% if diff > 0 %}+{% endif %}
-              {{ diff }}&nbsp;%)
-            </small>
-          {% endif %}
-        {% endwith %}
+        {% with diff=data.total_charges|percent_diff:data.budget_total_charges %}{{ diff|percent_diff_display }}{% endwith %}
       </td>
       <td class="text-end">
         {{ data.total_revenues|format_money }}
         {% with diff=data.total_revenues|percent_diff:data.budget_total_revenues %}
-          {% if diff != "" %}
-            <small class="{% if diff > 0 %}text-success{% elif diff < 0 %}text-danger{% endif %}">
-              (
-              {% if diff > 0 %}+{% endif %}
-              {{ diff }}&nbsp;%)
-            </small>
-          {% endif %}
+          {{ diff|percent_diff_display }}
         {% endwith %}
       </td>
       <td class="text-end">{{ data.budget_total_charges|format_money }}</td>

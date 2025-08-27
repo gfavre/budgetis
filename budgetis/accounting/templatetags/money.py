@@ -3,6 +3,7 @@ from decimal import Decimal
 from decimal import InvalidOperation
 
 from django import template
+from django.utils.safestring import mark_safe
 
 
 register = template.Library()
@@ -44,3 +45,36 @@ def percent_diff(actual, budget):
         return round(((actual - budget) / budget) * 100, 1)
     except (TypeError, ZeroDivisionError):
         return ""
+
+
+@register.filter
+def percent_diff_display(diff: float) -> str:
+    """
+    Return an HTML snippet showing the percentage diff with color and sign.
+
+    Args:
+        diff (float): The percentage difference (may be positive, negative, or 0).
+
+    Returns:
+        str: HTML string with colored <small> element, or empty string if diff is "" or None.
+    """
+    if diff in ("", None):
+        return ""
+
+    try:
+        diff_val = float(diff)
+    except (ValueError, TypeError):
+        return ""
+
+    if diff_val > 0:
+        css_class = "text-danger"
+        sign = "+"
+    elif diff_val < 0:
+        css_class = "text-success"
+        sign = ""
+    else:
+        css_class = "text-muted"
+        sign = ""
+
+    html = f'<small class="{css_class} text-nowrap">({sign}{diff_val:.1f}&nbsp;%)</small>'
+    return mark_safe(html)  # noqa: S308

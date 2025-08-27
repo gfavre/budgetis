@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from budgetis.finance.models import AvailableYear
 
 from .models import Account
+from .models import AccountComment
 from .models import AccountGroup
 from .models import MetaGroup
 from .models import SuperGroup
@@ -74,3 +75,12 @@ class AccountFilterForm(forms.Form):
         self.fields["year"].choices = [("", _("- Select year -"))] + [
             (str(y), str(y)) for y in AvailableYear.objects.values_list("year", flat=True).distinct().order_by("-year")
         ]
+
+
+class AccountCommentForm(forms.ModelForm):
+    class Meta:
+        model = AccountComment
+        fields = ["content"]
+        widgets = {
+            "content": forms.Textarea(attrs={"rows": 3, "class": "form-control"}),
+        }
