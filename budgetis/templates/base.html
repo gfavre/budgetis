@@ -26,6 +26,7 @@
       <!-- Your stuff: Third-party CSS libraries go here -->
       <!-- This file stores project-specific CSS -->
       {% compress css %}
+        <link href="{% static 'css/theme.css' %}" rel="stylesheet" />
         <link href="{% static 'css/project.css' %}" rel="stylesheet" />
       {% endcompress %}
     {% endblock css %}
@@ -43,6 +44,7 @@
       <!-- place project specific Javascript in this file -->
       <script src="https://unpkg.com/htmx.org@1.9.12" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>
       {% compress js %}
         <script defer src="{% static 'js/project.js' %}"></script>
       {% endcompress %}

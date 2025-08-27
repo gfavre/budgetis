@@ -1,0 +1,74 @@
+<!-- ruff: noqa: H021 -->
+{% extends "base.html" %}
+
+{% load static i18n %}
+
+{% block content %}
+  <div style="display:flex;gap:12px;align-items:center;margin:10px 0">
+    <label>
+      {% trans "Year" %}:
+      <input id="year"
+             type="number"
+             min="2000"
+             max="2100"
+             value="{{ default_year }}" />
+    </label>
+    <label>
+      <input id="is_budget" type="checkbox" />
+      {% trans "Budget" %}
+    </label>
+    <button id="reload">{% trans "Reload" %}</button>
+  </div>
+  <div id="chart" style="width:100%;height:70vh"></div>
+  <!-- noqa: H021 -->
+  <script type="module">
+  const $ = (q) => document.querySelector(q);
+
+  async function fetchBuckets() {
+    const params = new URLSearchParams({
+      year: $("#year").value,
+    });
+    const resp = await fetch("{% url 'finance:data_buckets' %}?" + params.toString(), {
+      headers: { "X-Requested-With": "fetch" },
+    });
+    if (!resp.ok) return null;
+    return resp.json();
+  }
+
+  async function drawBuckets() {
+    const data = await fetchBuckets(); // <- endpoint 'data_buckets' qui appelle la fonction ci-dessus
+    if (!data) return;
+
+    const trace = {
+      type: "sankey",
+      arrangement: "fixed",          // <-- empêche le tri automatique
+      node: {
+        label: data.nodes.map(n => n.name),
+        color: data.node_colors,
+        x: data.node_x,
+        y: data.node_y,
+        pad: 14,
+        thickness: 22,
+        line: { width: 0 }   // no borders → proxies truly invisible
+      },
+      link: {
+        source: data.links.map(l => l.source),
+        target: data.links.map(l => l.target),
+        value: data.links.map(l => l.value),
+        color: data.link_colors
+      },
+    };
+
+    Plotly.newPlot(
+      "chart",
+      [trace],
+      { title: "{{ _('Income → Budget') }}", font: { size: 13 }, margin: { l: 40, r: 40, t: 40, b: 40 }, annotations: data.annotations },
+      { responsive: true },
+    );
+  }
+
+  // Hook to your existing UI if needed:
+  document.getElementById("reload").addEventListener("click", drawBuckets);
+  window.addEventListener("load", drawBuckets);
+  </script>
+{% endblock content %}

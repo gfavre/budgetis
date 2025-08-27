@@ -43,6 +43,7 @@
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,  // <-- souvent nécessaire dans un modal
         plugins: {
           tooltip: {
             callbacks: {
@@ -72,6 +73,13 @@
             }
           }
         }
+      }
+    });
+
+    // Fix for Bootstrap modal resize issue
+    document.addEventListener("shown.bs.modal", function (event) {
+      if (event.target.querySelector("#accountHistoryChart")) {
+        chart.resize();
       }
     });
   })();
