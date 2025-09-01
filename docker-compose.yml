@@ -1,4 +1,7 @@
 version: "3.9"
+networks:
+  budgetis:
+    external: false
 
 services:
   web:
@@ -19,6 +22,8 @@ services:
     depends_on:
       - db
       - redis
+    networks:
+      - budgetis
 
   celery:
     build:

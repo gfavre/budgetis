@@ -1,5 +1,9 @@
 version: "3.9"
 
+networks:
+  budgetis:
+    external: false
+
 services:
   traefik:
     image: traefik:v3.1
@@ -17,6 +21,8 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "letsencrypt:/letsencrypt"
+    networks:
+      - budgetis
 
   web:
     labels:
@@ -24,6 +30,8 @@ services:
       - "traefik.http.routers.budgetis.rule=Host(`budgetis.genolier.ch`)"
       - "traefik.http.routers.budgetis.entrypoints=websecure"
       - "traefik.http.routers.budgetis.tls.certresolver=letsencrypt"
+    networks:
+      - budgetis
 
 volumes:
   letsencrypt:
