@@ -1,17 +1,11 @@
-version: "3.9"
-
-networks:
-  budgetis:
-    external: false
-
 services:
   traefik:
     image: traefik:v3.1
     command:
       - "--api.dashboard=true"
       - "--providers.docker=true"
-      - "--entrypoints.websecure.address=:443"
       - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.email=ton.email@genolier.ch"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
@@ -33,16 +27,31 @@ services:
       - "traefik.http.routers.budgetis.entrypoints=websecure"
       - "traefik.http.routers.budgetis.tls.certresolver=letsencrypt"
 
-      # Router HTTP (redirige vers HTTPS)
+      # Router HTTP -> HTTPS
       - "traefik.http.routers.budgetis_http.rule=Host(`budgetis.genolier.ch`)"
       - "traefik.http.routers.budgetis_http.entrypoints=web"
       - "traefik.http.routers.budgetis_http.middlewares=redirect-to-https"
 
-      # Middleware de redirection
+      # Middleware
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+    networks:
+      - budgetis
 
+  celery:
+    labels:
+      - "traefik.enable=false"
+    networks:
+      - budgetis
+
+  celery-beat:
+    labels:
+      - "traefik.enable=false"
     networks:
       - budgetis
 
 volumes:
   letsencrypt:
+
+networks:
+  budgetis:
+    external: false
