@@ -40,6 +40,8 @@ services:
     depends_on:
       - db
       - redis
+    networks:
+      - budgetis
 
   celery-beat:
     build:
@@ -55,10 +57,11 @@ services:
       - DJANGO_SETTINGS_MODULE=config.settings.production
       - POSTGRES_DB=budgetis
       - POSTGRES_USER= budgetis
-
     depends_on:
       - db
       - redis
+    networks:
+      - budgetis
 
   db:
     image: postgres:15
@@ -68,9 +71,13 @@ services:
       POSTGRES_PASSWORD: changeme
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - budgetis
 
   redis:
     image: redis:7
+    networks:
+      - budgetis
 
 volumes:
   postgres_data:
