@@ -27,9 +27,20 @@ services:
   web:
     labels:
       - "traefik.enable=true"
+
+      # Router HTTPS
       - "traefik.http.routers.budgetis.rule=Host(`budgetis.genolier.ch`)"
       - "traefik.http.routers.budgetis.entrypoints=websecure"
       - "traefik.http.routers.budgetis.tls.certresolver=letsencrypt"
+
+      # Router HTTP (redirige vers HTTPS)
+      - "traefik.http.routers.budgetis_http.rule=Host(`budgetis.genolier.ch`)"
+      - "traefik.http.routers.budgetis_http.entrypoints=web"
+      - "traefik.http.routers.budgetis_http.middlewares=redirect-to-https"
+
+      # Middleware de redirection
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
     networks:
       - budgetis
 
