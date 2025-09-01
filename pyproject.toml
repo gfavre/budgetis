@@ -24,6 +24,7 @@ dependencies = [
     "python-slugify>=8.0.4",
     "rcssmin==1.1.2",
     "redis>=6.2.0",
+    "sentry-sdk>=2.31.0",
     "uvicorn-worker>=0.3.0",
     "uvicorn[standard]>=0.34.3",
     "whitenoise>=6.9.0",

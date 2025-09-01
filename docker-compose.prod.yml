@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  traefik:
+    image: traefik:v3.1
+    command:
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.address=:80"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=ton.email@genolier.ch"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "letsencrypt:/letsencrypt"
+
+  web:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.budgetis.rule=Host(`budgetis.genolier.ch`)"
+      - "traefik.http.routers.budgetis.entrypoints=websecure"
+      - "traefik.http.routers.budgetis.tls.certresolver=letsencrypt"
+
+volumes:
+  letsencrypt:
