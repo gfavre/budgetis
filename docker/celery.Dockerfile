@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir uv
 WORKDIR /app
 
 COPY pyproject.toml uv.lock ./
-RUN uv pip install --system --no-cache .
+RUN uv pip install --system --no-cache --group prod .
 
 COPY . .
 

@@ -151,6 +151,7 @@ dependencies = [
     { name = "openpyxl" },
     { name = "pandas" },
     { name = "pillow" },
+    { name = "psycopg", extra = ["binary"] },
     { name = "python-dotenv" },
     { name = "python-slugify" },
     { name = "rcssmin" },
@@ -174,7 +175,6 @@ dev = [
     { name = "ipdb" },
     { name = "mypy" },
     { name = "pre-commit" },
-    { name = "psycopg", extra = ["binary"] },
     { name = "pytest" },
     { name = "pytest-django" },
     { name = "pytest-sugar" },
@@ -185,9 +185,7 @@ dev = [
     { name = "werkzeug", extra = ["watchdog"] },
 ]
 prod = [
-    { name = "django-anymail" },
     { name = "gunicorn" },
-    { name = "psycopg", extra = ["binary"] },
     { name = "sentry-sdk" },
 ]
 
@@ -209,6 +207,7 @@ requires-dist = [
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pandas", specifier = ">=2.3.0" },
     { name = "pillow", specifier = ">=11.2.1" },
+    { name = "psycopg", extras = ["binary"], specifier = ">=3.2.9" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "python-slugify", specifier = ">=8.0.4" },
     { name = "rcssmin", specifier = "==1.1.2" },
@@ -232,7 +231,6 @@ dev = [
     { name = "ipdb", specifier = ">=0.13.13" },
     { name = "mypy", specifier = ">=1.16.1" },
     { name = "pre-commit", specifier = ">=4.2.0" },
-    { name = "psycopg", extras = ["binary"], specifier = ">=3.2.9" },
     { name = "pytest", specifier = ">=8.4.1" },
     { name = "pytest-django", specifier = ">=4.11.1" },
     { name = "pytest-sugar", specifier = ">=1.0.0" },
@@ -243,9 +241,7 @@ dev = [
     { name = "werkzeug", extras = ["watchdog"], specifier = ">=3.1.3" },
 ]
 prod = [
-    { name = "django-anymail", extras = ["postmark"], specifier = ">=13.0" },
     { name = "gunicorn", specifier = ">=23.0.0" },
-    { name = "psycopg", extras = ["binary"], specifier = ">=3.2.9" },
     { name = "sentry-sdk", specifier = ">=2.31.0" },
 ]
 
