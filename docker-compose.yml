@@ -68,7 +68,6 @@ services:
     environment:
       POSTGRES_DB: budgetis
       POSTGRES_USER: budgetis
-      POSTGRES_PASSWORD: changeme
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
