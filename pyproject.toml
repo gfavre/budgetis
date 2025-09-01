@@ -10,6 +10,7 @@ dependencies = [
     "crispy-bootstrap5>=2025.6",
     "django>=5.2.3,<6.0",
     "django-allauth[mfa]>=65.9.0",
+    "django-anymail[postmark]>=13.0",
     "django-celery-beat>=2.8.1",
     "django-compressor>=4.5.1",
     "django-crispy-forms>=2.4",
