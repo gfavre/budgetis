@@ -3,10 +3,16 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.shortcuts import redirect
 from django.urls import include
 from django.urls import path
+from django.urls import reverse_lazy
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+
+
+def direct_ms_login(request):
+    return redirect(reverse_lazy("microsoft_login"))
 
 
 urlpatterns = [
@@ -20,6 +26,7 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
     path("users/", include("budgetis.users.urls", namespace="users")),
+    path("accounts/login/", direct_ms_login, name="account_login"),
     path("accounts/", include("allauth.urls")),
     path("bdi/", include("budgetis.bdi_import.urls", namespace="bdi_import")),
     path("accounting/", include("budgetis.accounting.urls", namespace="accounting")),

@@ -7,15 +7,22 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 
+from budgetis.users.models import User
+
 
 if typing.TYPE_CHECKING:
     from allauth.socialaccount.models import SocialLogin
     from django.http import HttpRequest
 
-    from budgetis.users.models import User
-
 
 from budgetis.users.models import AuthorizedEmail
+
+
+class MunicipalSocialAccountAdapter(DefaultSocialAccountAdapter):
+    def is_open_for_signup(self, request, sociallogin):
+        # Refuser toute création automatique
+        email = sociallogin.user.email
+        return User.objects.filter(email=email).exists()
 
 
 class AccountAdapter(DefaultAccountAdapter):
