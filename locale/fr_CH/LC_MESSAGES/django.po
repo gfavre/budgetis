@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-01 08:17+0200\n"
+"POT-Creation-Date: 2025-09-03 20:15+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -30,17 +30,19 @@ msgstr "Masquer les comptes dans le rapport"
 msgid "Display accounts in report"
 msgstr "Afficher les comptes dans le rapport"
 
-#: budgetis/accounting/apps.py:8 budgetis/templates/base.html:71
+#: budgetis/accounting/apps.py:8 budgetis/templates/base.html:93
 msgid "Accounting"
 msgstr "Comptabilité"
 
-#: budgetis/accounting/forms.py:65 budgetis/accounting/models.py:112
+#: budgetis/accounting/forms.py:66 budgetis/accounting/models.py:112
 #: budgetis/bdi_import/forms.py:17 budgetis/bdi_import/models.py:15
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:12
 #: budgetis/finance/models.py:10
+#: budgetis/finance/templates/finance/sankey.html:9
 msgid "Year"
 msgstr "Année"
 
-#: budgetis/accounting/forms.py:67
+#: budgetis/accounting/forms.py:68
 msgid "Show only my accounts"
 msgstr "Afficher uniquement mes comptes"
 
@@ -105,7 +107,6 @@ msgid "Subaccount"
 msgstr "Sous-compte"
 
 #: budgetis/accounting/models.py:117
-#: budgetis/accounting/templates/accounting/partials/account_table.html:7
 msgid "Label"
 msgstr "Désignation"
 
@@ -113,13 +114,13 @@ msgstr "Désignation"
 msgid "Group"
 msgstr "Groupe"
 
-#: budgetis/accounting/models.py:125
-#: budgetis/accounting/templates/accounting/partials/account_table.html:8
-#: budgetis/bdi_import/models.py:63
+#: budgetis/accounting/models.py:125 budgetis/bdi_import/models.py:63
+#: budgetis/finance/utils.py:117
 msgid "Charges"
 msgstr "Charges"
 
 #: budgetis/accounting/models.py:126 budgetis/bdi_import/models.py:64
+#: budgetis/finance/utils.py:116
 msgid "Revenues"
 msgstr "Revenus"
 
@@ -147,27 +148,23 @@ msgstr "Commentaire sur le compte"
 msgid "Account Comments"
 msgstr "Commentaires sur le compte"
 
-#: budgetis/accounting/templates/accounting/partials/account_table.html:6
-msgid "Nbr"
-msgstr "N°"
-
-#: budgetis/accounting/templates/accounting/partials/account_table.html:9
-msgid "Products"
-msgstr "Produits"
-
 #: budgetis/bdi_import/apps.py:8
 msgid "BDI Import"
 msgstr "Import BDI"
 
 #: budgetis/bdi_import/forms.py:24
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
 msgid "Copy settings from"
 msgstr "Copier les paramètres de"
 
 #: budgetis/bdi_import/forms.py:27
 msgid "Select the year from which to copy settings (if any)."
-msgstr "Sélectionnez l'année à partir de laquelle vous souhaitez copier les paramètres (le cas échéant)."
+msgstr ""
+"Sélectionnez l'année à partir de laquelle vous souhaitez copier les "
+"paramètres (le cas échéant)."
 
 #: budgetis/bdi_import/forms.py:29 budgetis/bdi_import/models.py:44
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:33
 msgid "Copy responsibles"
 msgstr "Copier les responsables"
 
@@ -176,10 +173,12 @@ msgid "Copy account labels"
 msgstr "Copier les libellés de comptes"
 
 #: budgetis/bdi_import/forms.py:31 budgetis/bdi_import/models.py:46
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:41
 msgid "Copy visibility"
 msgstr "Copier la visibilité"
 
 #: budgetis/bdi_import/forms.py:32 budgetis/bdi_import/models.py:47
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:45
 msgid "Copy comments"
 msgstr "Copier les commentaires"
 
@@ -207,7 +206,15 @@ msgstr "Fichier de comptes"
 msgid "Import"
 msgstr "Importer"
 
-#: budgetis/bdi_import/forms.py:74
+#: budgetis/bdi_import/forms.py:73
+msgid "File already uploaded"
+msgstr "Fichier déjà téléchargé"
+
+#: budgetis/bdi_import/forms.py:82
+msgid "Uploaded file"
+msgstr "Fichier téléchargé"
+
+#: budgetis/bdi_import/forms.py:97
 msgid "Please upload a CSV or XLSX file."
 msgstr "Veuillez télécharger un fichier CSV ou XLSX."
 
@@ -256,6 +263,7 @@ msgid "Source year"
 msgstr "Année source"
 
 #: budgetis/bdi_import/models.py:45
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:37
 msgid "Copy labels"
 msgstr "Copier les libellés"
 
@@ -267,11 +275,15 @@ msgstr "Journal d'importation des comptes"
 msgid "Account import logs"
 msgstr "Journaux d'importation de comptes"
 
-#: budgetis/bdi_import/models.py:55 budgetis/finance/models.py:7
+#: budgetis/bdi_import/models.py:55
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:20
+#: budgetis/finance/builders.py:75 budgetis/finance/models.py:7
+#: budgetis/finance/templates/finance/sankey.html:18
 msgid "Budget"
 msgstr "Budget"
 
 #: budgetis/bdi_import/models.py:55
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:22
 msgid "Actual"
 msgstr "Compte"
 
@@ -304,8 +316,11 @@ msgid "Derived from total column"
 msgstr "Dérivé de la colonne \"total\""
 
 #: budgetis/bdi_import/models.py:86
-msgid "Use positive/negative values from 'total' column to infer charges/revenues."
-msgstr "Utiliser les valeurs positives/négatives de la colonne \"total\" pour déduire les charges/recettes."
+msgid ""
+"Use positive/negative values from 'total' column to infer charges/revenues."
+msgstr ""
+"Utiliser les valeurs positives/négatives de la colonne \"total\" pour "
+"déduire les charges/recettes."
 
 #: budgetis/bdi_import/models.py:91
 msgid "Column mapping"
@@ -315,13 +330,92 @@ msgstr "Correspondances des colonnes"
 msgid "Column mappings"
 msgstr "Correspondances des colonnes"
 
-#: budgetis/finance/models.py:8
-msgid "Comptes"
-msgstr "Comptes"
+#: budgetis/bdi_import/tasks.py:28
+msgid "The import file could not be found."
+msgstr "Le fichier d'importation n'a pas été trouvé."
 
+#: budgetis/bdi_import/tasks.py:58
+msgid "Import failed: "
+msgstr "L'importation a échoué : "
+
+#: budgetis/bdi_import/tasks.py:63
+msgid "Unexpected error: "
+msgstr "Erreur inattendue : "
+
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:9
+msgid "Import Settings"
+msgstr "Paramètres d'importation"
+
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:16
 #: budgetis/finance/models.py:11
 msgid "Type"
 msgstr "Type"
+
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:51
+msgid "Edit import settings"
+msgstr "Modifier les paramètres d'importation"
+
+#: budgetis/bdi_import/views.py:160
+msgid "Column mapping saved. Import will now be launched."
+msgstr ""
+"Le mappage des colonnes est sauvegardé. L'importation va maintenant être "
+"lancée."
+
+#: budgetis/core/apps.py:8
+msgid "Core"
+msgstr "Core"
+
+#: budgetis/core/models.py:7
+msgid "Logo"
+msgstr "Logo"
+
+#: budgetis/core/models.py:8
+msgid "Commune name"
+msgstr "Nom de la commune"
+
+#: budgetis/core/models.py:10
+msgid "Gradient start color"
+msgstr "Couleur de départ dégradée"
+
+#: budgetis/core/models.py:13
+msgid "Couleur hexadécimale pour le haut du dégradé (ex. #2f6ee2)."
+msgstr "Couleur hexadécimale pour le haut du dégradé (ex. #2f6ee2)."
+
+#: budgetis/core/models.py:16
+msgid "Gradient end color"
+msgstr "Couleur finale dégradée"
+
+#: budgetis/core/models.py:19
+msgid "Couleur hexadécimale pour le bas du dégradé (ex. #4caf50)."
+msgstr "Couleur hexadécimale pour le bas du dégradé (ex. #4caf50)."
+
+#: budgetis/core/models.py:23 budgetis/core/models.py:24
+msgid "Site configuration"
+msgstr "Configuration du site"
+
+#: budgetis/finance/builders.py:70
+msgid "Impôts"
+msgstr "Impôts"
+
+#: budgetis/finance/builders.py:71
+msgid "Revenus aléatoires"
+msgstr "Revenus aléatoires"
+
+#: budgetis/finance/builders.py:72
+msgid "Taxes"
+msgstr "Taxes"
+
+#: budgetis/finance/builders.py:73
+msgid "Locations"
+msgstr "Emplacements"
+
+#: budgetis/finance/builders.py:74
+msgid "Autres revenus"
+msgstr "Autres revenus"
+
+#: budgetis/finance/models.py:8
+msgid "Comptes"
+msgstr "Comptes"
 
 #: budgetis/finance/models.py:12
 msgid "Created at"
@@ -335,40 +429,48 @@ msgstr "Année disponible"
 msgid "Available years"
 msgstr "Années disponibles"
 
+#: budgetis/finance/templates/finance/sankey.html:20
+msgid "Reload"
+msgstr "Rafraichir"
+
+#: budgetis/finance/templates/finance/sankey.html:65
+msgid "Income → Budget"
+msgstr "Revenus → Budget"
+
 #: budgetis/templates/allauth/layouts/entrance.html:13
-#: budgetis/templates/base.html:98
+#: budgetis/templates/base.html:120
 msgid "Sign In"
 msgstr "S'identifier"
 
-#: budgetis/templates/base.html:75
+#: budgetis/templates/base.html:97
 msgid "Import from BDI"
 msgstr "Importation de BDI"
 
-#: budgetis/templates/base.html:78
+#: budgetis/templates/base.html:100
 msgid "My Profile"
 msgstr "Mon Profil"
 
-#: budgetis/templates/base.html:82
+#: budgetis/templates/base.html:104
 msgid "Admin"
 msgstr "Admin"
 
-#: budgetis/templates/base.html:87
+#: budgetis/templates/base.html:109
 msgid "Sign Out"
 msgstr "Se déconnecter"
 
-#: budgetis/templates/base.html:93
+#: budgetis/templates/base.html:115
 msgid "Sign Up"
 msgstr "S'inscrire"
 
-#: budgetis/users/admin.py:27
+#: budgetis/users/admin.py:30
 msgid "Personal info"
 msgstr "Personal info"
 
-#: budgetis/users/admin.py:29
+#: budgetis/users/admin.py:32
 msgid "Permissions"
 msgstr "Permissions"
 
-#: budgetis/users/admin.py:40
+#: budgetis/users/admin.py:43
 msgid "Important dates"
 msgstr "Dates importantes"
 
@@ -376,9 +478,21 @@ msgstr "Dates importantes"
 msgid "Users"
 msgstr "Utilisateurs"
 
-#: budgetis/users/forms.py:27 budgetis/users/tests/test_forms.py:35
-msgid "This email has already been taken."
-msgstr "Cette adresse e-mail est déjà utilisée."
+#: budgetis/users/forms.py:25
+msgid "Password"
+msgstr "Mot de passe"
+
+#: budgetis/users/forms.py:30
+msgid "Password confirmation"
+msgstr "Confirmation du mot de passe"
+
+#: budgetis/users/forms.py:48
+msgid "Password is required for admins."
+msgstr "Le mot de passe est requis pour les administrateurs."
+
+#: budgetis/users/forms.py:50
+msgid "Passwords don't match."
+msgstr "Les mots de passe ne correspondent pas."
 
 #: budgetis/users/models.py:22
 msgid "Name of User"
@@ -388,9 +502,19 @@ msgstr "Nom de l'utilisateur"
 msgid "email address"
 msgstr "adresse e-mail"
 
+#: budgetis/users/tests/test_forms.py:35
+msgid "This email has already been taken."
+msgstr "Cette adresse e-mail est déjà utilisée."
+
 #: budgetis/users/tests/test_views.py:73 budgetis/users/views.py:25
 msgid "Information successfully updated"
 msgstr "Informations mises à jour avec succès"
+
+#~ msgid "Nbr"
+#~ msgstr "N°"
+
+#~ msgid "Products"
+#~ msgstr "Produits"
 
 #~ msgid "This account is inactive."
 #~ msgstr "Ce compte est inactif."
@@ -419,8 +543,14 @@ msgstr "Informations mises à jour avec succès"
 #~ msgid "Warning:"
 #~ msgstr "Avertissement:"
 
-#~ msgid "You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc."
-#~ msgstr "Vous n'avez actuellement aucune adresse e-mail configurée. Vous devriez ajouter une adresse e-mail pour reçevoir des notifications, réinitialiser votre mot de passe, etc."
+#~ msgid ""
+#~ "You currently do not have any e-mail address set up. You should really "
+#~ "add an e-mail address so you can receive notifications, reset your "
+#~ "password, etc."
+#~ msgstr ""
+#~ "Vous n'avez actuellement aucune adresse e-mail configurée. Vous devriez "
+#~ "ajouter une adresse e-mail pour reçevoir des notifications, réinitialiser "
+#~ "votre mot de passe, etc."
 
 #~ msgid "Add E-mail Address"
 #~ msgstr "Ajouter une adresse e-mail"
@@ -435,29 +565,46 @@ msgstr "Informations mises à jour avec succès"
 #~ msgstr "Confirmez votre adresse email"
 
 #, python-format
-#~ msgid "Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail address for user %(user_display)s."
-#~ msgstr "Veuillez confirmer que <a href=\"mailto:%(email)s\">%(email)s</a> est un e-mail adresse de l'utilisateur %(user_display)s."
+#~ msgid ""
+#~ "Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-"
+#~ "mail address for user %(user_display)s."
+#~ msgstr ""
+#~ "Veuillez confirmer que <a href=\"mailto:%(email)s\">%(email)s</a> est un "
+#~ "e-mail adresse de l'utilisateur %(user_display)s."
 
 #~ msgid "Confirm"
 #~ msgstr "Confirm"
 
 #, python-format
-#~ msgid "This e-mail confirmation link expired or is invalid. Please <a href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
-#~ msgstr "Ce lien de confirmation par e-mail a expiré ou n'est pas valide. Veuillez<a href=\"%(email_url)s\">émettre une nouvelle demande de confirmation par e-mail</a>."
+#~ msgid ""
+#~ "This e-mail confirmation link expired or is invalid. Please <a "
+#~ "href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+#~ msgstr ""
+#~ "Ce lien de confirmation par e-mail a expiré ou n'est pas valide. "
+#~ "Veuillez<a href=\"%(email_url)s\">émettre une nouvelle demande de "
+#~ "confirmation par e-mail</a>."
 
 #~ msgid "Please sign in with one of your existing third party accounts:"
 #~ msgstr "Veuillez vous connecter avec l'un de vos comptes tiers existants :"
 
 #, python-format
-#~ msgid "Or, <a href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account and sign in below:"
-#~ msgstr "Ou, <a href=\"%(signup_url)s\">créez</a> un compte %(site_name)s et connectez-vous ci-dessous :"
+#~ msgid ""
+#~ "Or, <a href=\"%(signup_url)s\">sign up</a> for a %(site_name)s account "
+#~ "and sign in below:"
+#~ msgstr ""
+#~ "Ou, <a href=\"%(signup_url)s\">créez</a> un compte %(site_name)s et "
+#~ "connectez-vous ci-dessous :"
 
 #~ msgid "or"
 #~ msgstr "ou"
 
 #, python-format
-#~ msgid "If you have not created an account yet, then please <a href=\"%(signup_url)s\">sign up</a> first."
-#~ msgstr "Si vous n'avez pas encore créé de compte, veuillez d'abord <a href=\"%(signup_url)s\">vous inscrire</a>."
+#~ msgid ""
+#~ "If you have not created an account yet, then please <a "
+#~ "href=\"%(signup_url)s\">sign up</a> first."
+#~ msgstr ""
+#~ "Si vous n'avez pas encore créé de compte, veuillez d'abord <a "
+#~ "href=\"%(signup_url)s\">vous inscrire</a>."
 
 #~ msgid "Forgot Password?"
 #~ msgstr "Mot de passe oublié?"
@@ -471,24 +618,41 @@ msgstr "Informations mises à jour avec succès"
 #~ msgid "Password Reset"
 #~ msgstr "Réinitialisation du mot de passe"
 
-#~ msgid "Forgotten your password? Enter your e-mail address below, and we'll send you an e-mail allowing you to reset it."
-#~ msgstr "Mot de passe oublié? Entrez votre adresse e-mail ci-dessous, et nous vous enverrons un e-mail vous permettant de le réinitialiser."
+#~ msgid ""
+#~ "Forgotten your password? Enter your e-mail address below, and we'll send "
+#~ "you an e-mail allowing you to reset it."
+#~ msgstr ""
+#~ "Mot de passe oublié? Entrez votre adresse e-mail ci-dessous, et nous vous "
+#~ "enverrons un e-mail vous permettant de le réinitialiser."
 
 #~ msgid "Reset My Password"
 #~ msgstr "Réinitialiser mon mot de passe"
 
 #~ msgid "Please contact us if you have any trouble resetting your password."
-#~ msgstr "Veuillez nous contacter si vous rencontrez des difficultés pour réinitialiservotre mot de passe."
+#~ msgstr ""
+#~ "Veuillez nous contacter si vous rencontrez des difficultés pour "
+#~ "réinitialiservotre mot de passe."
 
-#~ msgid "We have sent you an e-mail. Please contact us if you do not receive it within a few minutes."
-#~ msgstr "Nous vous avons envoyé un e-mail. Veuillez nous contacter si vous ne le recevez pas d'ici quelques minutes."
+#~ msgid ""
+#~ "We have sent you an e-mail. Please contact us if you do not receive it "
+#~ "within a few minutes."
+#~ msgstr ""
+#~ "Nous vous avons envoyé un e-mail. Veuillez nous contacter si vous ne le "
+#~ "recevez pas d'ici quelques minutes."
 
 #~ msgid "Bad Token"
 #~ msgstr "Token Invalide"
 
 #, python-format
-#~ msgid "The password reset link was invalid, possibly because it has already been used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</a>."
-#~ msgstr "Le lien de réinitialisation du mot de passe n'était pas valide, peut-être parce qu'il a déjà été utilisé. Veuillez faire une <a href=\"%(passwd_reset_url)s\"> nouvelle demande de réinitialisation de mot de passe</a>."
+#~ msgid ""
+#~ "The password reset link was invalid, possibly because it has already been "
+#~ "used.  Please request a <a href=\"%(passwd_reset_url)s\">new password "
+#~ "reset</a>."
+#~ msgstr ""
+#~ "Le lien de réinitialisation du mot de passe n'était pas valide, peut-être "
+#~ "parce qu'il a déjà été utilisé. Veuillez faire une <a "
+#~ "href=\"%(passwd_reset_url)s\"> nouvelle demande de réinitialisation de "
+#~ "mot de passe</a>."
 
 #~ msgid "change password"
 #~ msgstr "changer le mot de passe"
@@ -496,15 +660,16 @@ msgstr "Informations mises à jour avec succès"
 #~ msgid "Your password is now changed."
 #~ msgstr "Votre mot de passe est maintenant modifié."
 
-#~ msgid "Set Password"
-#~ msgstr "Définir le mot de passe"
-
 #~ msgid "Signup"
 #~ msgstr "S'inscrire"
 
 #, python-format
-#~ msgid "Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
-#~ msgstr "Vous avez déjà un compte? Alors veuillez <a href=\"%(login_url)s\">vous connecter</a>."
+#~ msgid ""
+#~ "Already have an account? Then please <a href=\"%(login_url)s\">sign in</"
+#~ "a>."
+#~ msgstr ""
+#~ "Vous avez déjà un compte? Alors veuillez <a href=\"%(login_url)s\">vous "
+#~ "connecter</a>."
 
 #~ msgid "Sign Up Closed"
 #~ msgstr "Inscriptions closes"
@@ -515,8 +680,14 @@ msgstr "Informations mises à jour avec succès"
 #~ msgid "Verify Your E-mail Address"
 #~ msgstr "Vérifiez votre adresse e-mail"
 
-#~ msgid "We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes."
-#~ msgstr "Nous vous avons envoyé un e-mail pour vérification. Suivez le lien fourni pour finalisez le processus d'inscription. Veuillez nous contacter si vous ne le recevez pas d'ici quelques minutes."
+#~ msgid ""
+#~ "We have sent an e-mail to you for verification. Follow the link provided "
+#~ "to finalize the signup process. Please contact us if you do not receive "
+#~ "it within a few minutes."
+#~ msgstr ""
+#~ "Nous vous avons envoyé un e-mail pour vérification. Suivez le lien fourni "
+#~ "pour finalisez le processus d'inscription. Veuillez nous contacter si "
+#~ "vous ne le recevez pas d'ici quelques minutes."
 
 #~ msgid ""
 #~ "This part of the site requires us to verify that\n"
@@ -533,9 +704,14 @@ msgstr "Informations mises à jour avec succès"
 #~ "contact us if you do not receive it within a few minutes."
 #~ msgstr ""
 #~ "Nous vous avons envoyé un e-mail pour\n"
-#~ "vérification. Veuillez cliquer sur le lien contenu dans cet e-mail. Veuillez nous\n"
+#~ "vérification. Veuillez cliquer sur le lien contenu dans cet e-mail. "
+#~ "Veuillez nous\n"
 #~ "contacter si vous ne le recevez pas d'ici quelques minutes."
 
 #, python-format
-#~ msgid "<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-mail address</a>."
-#~ msgstr "<strong>Remarque :</strong> vous pouvez toujours <a href=\"%(email_url)s\">changer votre e-adresse e-mail</a>."
+#~ msgid ""
+#~ "<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change "
+#~ "your e-mail address</a>."
+#~ msgstr ""
+#~ "<strong>Remarque :</strong> vous pouvez toujours <a "
+#~ "href=\"%(email_url)s\">changer votre e-adresse e-mail</a>."
