@@ -96,6 +96,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "budgetis.accounting",
     "budgetis.bdi_import",
+    "budgetis.core",
     "budgetis.finance",
     "budgetis.exports",
     "budgetis.users",
@@ -202,6 +203,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "budgetis.users.context_processors.allauth_settings",
+                "budgetis.core.context_processors.site_config",
             ],
         },
     },
@@ -338,7 +340,7 @@ ACCOUNT_FORMS = {"signup": "budgetis.users.forms.UserSignupForm"}
 SOCIALACCOUNT_ADAPTER = "budgetis.users.adapters.MunicipalSocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_FORMS = {"signup": "budgetis.users.forms.UserSocialSignupForm"}
-
+SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_PROVIDERS = {
     "microsoft": {
         "APP": {

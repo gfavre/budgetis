@@ -133,12 +133,15 @@
 }
 
 body {
+
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+
   margin: 0;
   font-family: var(--bs-body-font-family);
   font-size: var(--bs-body-font-size);
   font-weight: var(--bs-body-font-weight);
   line-height: var(--bs-body-line-height);
-  color: var(--bs-body-color);
+  color: var(--text-main);
   text-align: var(--bs-body-text-align);
   background-color: var(--bs-body-bg);
   -webkit-text-size-adjust: 100%;
@@ -3206,7 +3209,6 @@ textarea.form-control-lg {
   }
 }
 .btn:hover {
-  color: #69707a;
   text-decoration: none;
 }
 .btn-check:focus + .btn, .btn:focus {
@@ -3219,25 +3221,33 @@ textarea.form-control-lg {
 }
 
 .btn-primary {
+  background-color: var(--brand-color-alt);
+  border-color: var(--brand-color-alt);
   color: #fff;
-  background-color: #0061f2;
-  border-color: #0061f2;
 }
-.btn-primary:hover {
-  color: #fff;
-  background-color: #0052ce;
-  border-color: #004ec2;
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--brand-color);
+  border-color: var(--brand-color);
 }
+
+
 .btn-check:focus + .btn-primary, .btn-primary:focus {
   color: #fff;
   background-color: #0052ce;
   border-color: #004ec2;
   box-shadow: 0 0 0 0.25rem rgba(38, 121, 244, 0.5);
 }
-.btn-check:checked + .btn-primary, .btn-check:active + .btn-primary, .btn-primary:active, .btn-primary.active, .show > .btn-primary.dropdown-toggle {
+.btn-check:checked + .btn-primary,
+.btn-check:active + .btn-primary,
+.btn-primary:active, .btn-primary.active,
+:not(.btn-check)+.btn:active,
+.show > .btn-primary.dropdown-toggle {
   color: #fff;
-  background-color: #004ec2;
-  border-color: #0049b6;
+
+    background-color: color-mix(in srgb, var(--brand-color) 90%, black);
+  border-color: color-mix(in srgb, var(--brand-color) 90%, black);
 }
 .btn-check:checked + .btn-primary:focus, .btn-check:active + .btn-primary:focus, .btn-primary:active:focus, .btn-primary.active:focus, .show > .btn-primary.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.25rem rgba(38, 121, 244, 0.5);

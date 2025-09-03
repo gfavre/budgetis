@@ -14,3 +14,11 @@
 .chart-canvas {
   height: 300px;
 }
+.main-container {
+  background: var(--background-light);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 1200px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}

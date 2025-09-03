@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% load static i18n socialaccount %}
+
+{% block extra_style %}
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px 30px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    .logo {
+      max-height: 200px;
+      max-width: 200px;
+      height: auto;
+      width: auto;
+      margin: auto;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 10px 0;
+      font-size: 1.6rem;
+    }
+
+    p {
+      font-size: 1rem;
+      margin: 15px 0 25px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.2s ease;
+    }
+  </style>
+{% endblock extra_style %}
+{% block body %}
+  <div class="card">
+    {% if logo %}
+      <img src="{{ logo.url }}"
+           alt="{{ config.commune_name }} logo"
+           class="logo" />
+    {% endif %}
+    <h1>{{ config.commune_name }}</h1>
+    <p>Bienvenue sur la plateforme d’exploration des comptes et budgets de la commune.</p>
+    <a href="{% provider_login_url 'microsoft' %}?process=login"
+       class="btn btn-primary"
+       style="display: inline-block;
+              padding: 10px 20px;
+              border-radius: 5px;
+              text-decoration: none;
+              margin-top: 20px">Connexion</a>
+  </div>
+{% endblock body %}

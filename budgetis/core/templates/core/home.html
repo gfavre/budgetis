@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% load static i18n %}
+
+{% block title %}
+  Tableau de bord - Budgetis - {{ config.commune_name }}
+{% endblock title %}
+{% block extra_style %}
+  <style>
+    h1 {
+      text-align: center;
+      margin: 2rem 0;
+      color: #2f6ee2;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .card-tile {
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card-tile:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card-icon {
+      font-size: 2.5rem;
+      color: #2f6ee2;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+{% endblock extra_style %}
+{% block content %}
+  <h1>Bienvenue – {{ config.commune_name }}</h1>
+  <div class="dashboard-grid">
+    <a class="card card-body text-center card-tile shadow-sm"
+       href="{% url 'accounting:account-explorer' %}">
+      <i class="bi bi-diagram-3 card-icon"></i>
+      <h2>Comptes par fonction</h2>
+    </a>
+    {% comment %}
+        <a class="card card-body text-center card-tile shadow-sm" href="{% url 'accounting:natures' %}">
+      <i class="bi bi-collection card-icon"></i>
+            <h2>Comptes par nature</h2>
+        </a>
+        <a class="card card-body text-center card-tile shadow-sm" href="{% url 'budget:overview' %}">
+      <i class="bi bi-cash-stack card-icon"></i>
+            <h2>Budget</h2>
+        </a>
+    {% endcomment %}
+    <a class="card card-body text-center card-tile shadow-sm"
+       href="{% url 'finance:index' %}">
+      <i class="bi bi-bar-chart-line card-icon"></i>
+      <h2>Analyses & rapports</h2>
+    </a>
+  </div>
+{% endblock content %}

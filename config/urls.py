@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth.decorators import login_required
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.shortcuts import redirect
 from django.urls import include
@@ -16,7 +15,7 @@ def direct_ms_login(request):
 
 
 urlpatterns = [
-    path("", login_required(TemplateView.as_view(template_name="pages/home.html")), name="home"),
+    path("", include("budgetis.core.urls")),
     path(
         "about/",
         TemplateView.as_view(template_name="pages/about.html"),
