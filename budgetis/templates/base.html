@@ -29,37 +29,10 @@
       <!-- This file stores project-specific CSS -->
       <style>
         :root {
-          --gradient-start: {
-              {
-              config.gradient_start
-            }
-          }
-
-          ;
-
-          --gradient-end: {
-              {
-              config.gradient_end
-            }
-          }
-
-          ;
-
-          --brand-color: {
-              {
-              config.gradient_start
-            }
-          }
-
-          ;
-
-          --brand-color-alt: {
-              {
-              config.gradient_end
-            }
-          }
-
-          ;
+          --gradient-start: {{ config.gradient_start }};
+          --gradient-end: {{config.gradient_end}};
+          --brand-color: {{ config.gradient_start }};
+          --brand-color-alt: {{ config.gradient_end }};
           --text-main: #333;
           --background-light: #f8f9fa;
         }
