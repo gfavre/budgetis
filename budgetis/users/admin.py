@@ -19,12 +19,15 @@ if settings.DJANGO_ADMIN_FORCE_ALLAUTH:
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
-    actions = None  # Removes the "delete selected" action
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
+    list_display = ["email", "name", "trigram", "is_municipal", "is_superuser"]
+    search_fields = ["email", "name", "trigram"]
+    ordering = ["id"]
+
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("name", "is_municipal", "trigram")}),
+        (_("Personal info"), {"fields": ("name", "trigram", "is_municipal")}),
         (
             _("Permissions"),
             {
@@ -39,27 +42,30 @@ class UserAdmin(auth_admin.UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_display = ["email", "name", "is_superuser"]
-    search_fields = ["name"]
-    ordering = ["id"]
+
+    # add form : sans mot de passe pour municipaux
     add_fieldsets = (
         (
             None,
             {
                 "classes": ("wide",),
-                "fields": ("email", "password1", "password2"),
+                "fields": ("email", "name", "trigram", "is_municipal", "is_staff", "is_superuser"),
             },
         ),
     )
 
-    def has_delete_permission(self, request, obj=None) -> bool:
-        # Disable deletion of users from the admin
-        return False
+    def save_model(self, request, obj: User, form, change):
+        """Met un mot de passe inutilisable pour municipaux créés dans l’admin."""
+        if not change:
+            if obj.is_municipal and not obj.is_superuser and not obj.is_staff:
+                obj.set_unusable_password()
+        super().save_model(request, obj, form, change)
+
+    def has_delete_permission(self, request, obj=None):
+        return True
 
     def delete_model(self, request, obj):
-        # In case delete is somehow triggered elsewhere
-        obj.is_active = False
-        obj.save()
+        obj.delete()
 
 
 @admin.register(AuthorizedEmail)
