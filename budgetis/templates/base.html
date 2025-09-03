@@ -43,17 +43,7 @@
       {% endcompress %}
       <style>
         body {
-          background: linear-gradient(135deg, {
-              {
-              config.gradient_start
-            }
-          }
-
-          , {
-            {
-            config.gradient_end
-          }
-        });
+          background: linear-gradient(135deg, {{ config.gradient_start }}, {{ config.gradient_end }});
         }
       </style>
       {% block extra_style %}
