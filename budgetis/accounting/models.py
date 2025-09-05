@@ -166,6 +166,12 @@ class Account(TimeStampedModel):
         """
         return DEPRECIATION_GTE <= self.nature < DEPRECIATION_LT
 
+    @property
+    def absolute_value(self):
+        if self.charges:
+            return abs(self.charges)
+        return abs(self.revenues)
+
     def save(self, *args, **kwargs):
         if self.group is None:
             with suppress(AccountGroup.DoesNotExist):

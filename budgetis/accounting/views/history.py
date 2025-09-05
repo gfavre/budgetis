@@ -34,8 +34,8 @@ def account_history_modal(request, account_id):
         actual = next((a for a in qs if a.year == year and not a.is_budget), None)
         budget = next((a for a in qs if a.year == year and a.is_budget), None)
 
-        comptes.append(float(actual.charges or 0) if actual else 0)
-        budgets.append(float(budget.charges or 0) if budget else 0)
+        comptes.append(float(actual.absolute_value or 0) if actual else 0)
+        budgets.append(float(budget.absolute_value or 0) if budget else 0)
 
     return render(
         request,
