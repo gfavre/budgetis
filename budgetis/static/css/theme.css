@@ -3235,8 +3235,8 @@ textarea.form-control-lg {
 
 .btn-check:focus + .btn-primary, .btn-primary:focus {
   color: #fff;
-  background-color: #0052ce;
-  border-color: #004ec2;
+  background-color: var(--brand-color);
+  border-color: var(--brand-color);
   box-shadow: 0 0 0 0.25rem rgba(38, 121, 244, 0.5);
 }
 .btn-check:checked + .btn-primary,
@@ -3254,8 +3254,8 @@ textarea.form-control-lg {
 }
 .btn-primary:disabled, .btn-primary.disabled {
   color: #fff;
-  background-color: #0061f2;
-  border-color: #0061f2;
+ var(--brand-color-alt)
+ var(--brand-color-alt)
 }
 
 .btn-secondary {
