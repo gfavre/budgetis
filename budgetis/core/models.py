@@ -33,6 +33,8 @@ class SiteConfiguration(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         cache.delete("site_configuration")  # purge cache
+        for s in (16, 32, 180):
+            cache.delete(f"views.decorators.cache.cache_page.favicon_view.{s}")
 
     @classmethod
     def get_cached(cls):
