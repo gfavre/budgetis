@@ -15,7 +15,17 @@
     <meta name="description"
           content="Gestion des comptes et du budget communal" />
     <meta name="author" content="Gregory Favre" />
-    <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
+    <link rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="{% url 'favicon' size=32 %}" />
+    <link rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="{% url 'favicon' size=16 %}" />
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="{% url 'favicon' size=180 %}" />
     {% block css %}
       <!-- Latest compiled and minified Bootstrap CSS -->
       <link rel="stylesheet"
