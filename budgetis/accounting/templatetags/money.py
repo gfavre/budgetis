@@ -48,7 +48,7 @@ def percent_diff(actual, budget):
 
 
 @register.filter
-def percent_diff_display(diff: float) -> str:
+def percent_diff_display(diff: float, is_revenue: bool = False) -> str:  # noqa: FBT001
     """
     Return an HTML snippet showing the percentage diff with color and sign.
 
@@ -67,10 +67,10 @@ def percent_diff_display(diff: float) -> str:
         return ""
 
     if diff_val > 0:
-        css_class = "text-danger"
         sign = "+"
+        css_class = "text-success" if is_revenue else "text-danger"
     elif diff_val < 0:
-        css_class = "text-success"
+        css_class = "text-danger" if is_revenue else "text-success"
         sign = ""
     else:
         css_class = "text-muted"

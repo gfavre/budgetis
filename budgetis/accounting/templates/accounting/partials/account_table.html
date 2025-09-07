@@ -47,7 +47,9 @@
         </td>
         <td class="text-end">
           {{ account.revenues|format_money }}
-          {% with diff=account.revenues|percent_diff:account.budget_revenues %}{{ diff|percent_diff_display }}{% endwith %}
+          {% with diff=account.revenues|percent_diff:account.budget_revenues %}
+            {{ diff|percent_diff_display:True }}
+          {% endwith %}
         </td>
         <td class="text-end">
           {{ account.budget_charges|format_money }}
