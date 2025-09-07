@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 
 from budgetis.accounting.models import Account
 
-from .builders import build_income_buckets_to_budget
+from .builders import build_income_budget_canton_intercos_commune
 
 
 class SankeyDataView(View):
@@ -30,7 +30,7 @@ class SankeyDataView(View):
 
         year = int(year_str)
         qs = Account.objects.filter(year=year, is_budget=False)
-        data: dict[str, Any] = build_income_buckets_to_budget(qs)
+        data: dict[str, Any] = build_income_budget_canton_intercos_commune(qs)
         return JsonResponse(data, safe=False)
 
 

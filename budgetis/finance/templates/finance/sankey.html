@@ -36,35 +36,43 @@
   }
 
   async function drawBuckets() {
-    const data = await fetchBuckets(); // <- endpoint 'data_buckets' qui appelle la fonction ci-dessus
+    const data = await fetchBuckets();
     if (!data) return;
 
     const trace = {
       type: "sankey",
-      arrangement: "fixed",          // <-- empêche le tri automatique
+      arrangement: "snap",
       node: {
         label: data.nodes.map(n => n.name),
         color: data.node_colors,
-        x: data.node_x,
-        y: data.node_y,
         pad: 14,
         thickness: 22,
-        line: { width: 0 }   // no borders → proxies truly invisible
+        line: { width: 0.5, color: "rgba(0,0,0,0.25)" },
+        labelfont: { size: 18, color: "#111" },   // texte plus grand
+          hoverinfo: "none",   // <- empêche l’affichage du hover des nœuds
+
+
       },
       link: {
         source: data.links.map(l => l.source),
         target: data.links.map(l => l.target),
         value: data.links.map(l => l.value),
-        color: data.link_colors
+        color: data.link_colors,
+          hovertemplate: "%{value:' .0f} CHF<extra></extra>",  // <- seulement le montant formaté
+
       },
     };
 
     Plotly.newPlot(
       "chart",
       [trace],
-      { title: "{{ _('Income → Budget') }}", font: { size: 13 }, margin: { l: 40, r: 40, t: 40, b: 40 }, annotations: data.annotations },
-      { responsive: true },
+      {
+        title: "{{ _('Revenus → Budget') }}",
+        font: { size: 16, family: "var(--bs-body-font-family)" },
+      },
+      { responsive: true }
     );
+
   }
 
   // Hook to your existing UI if needed:

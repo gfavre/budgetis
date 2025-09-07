@@ -407,7 +407,7 @@ msgstr "Taxes"
 
 #: budgetis/finance/builders.py:73
 msgid "Locations"
-msgstr "Emplacements"
+msgstr "Locations"
 
 #: budgetis/finance/builders.py:74
 msgid "Autres revenus"
