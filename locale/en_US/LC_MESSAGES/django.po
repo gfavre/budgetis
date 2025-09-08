@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-03 20:15+0200\n"
+"POT-Creation-Date: 2025-09-08 07:11+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "Display accounts in report"
 msgstr ""
 
-#: budgetis/accounting/apps.py:8 budgetis/templates/base.html:93
+#: budgetis/accounting/apps.py:8 budgetis/templates/base.html:103
 msgid "Accounting"
 msgstr ""
 
@@ -70,6 +70,7 @@ msgid "Account Groups"
 msgstr ""
 
 #: budgetis/accounting/models.py:93
+#: budgetis/accounting/templates/accounting/partials/account_group_block.html:3
 msgid "Responsible"
 msgstr ""
 
@@ -135,12 +136,28 @@ msgstr ""
 msgid "Accounts"
 msgstr ""
 
-#: budgetis/accounting/models.py:202
+#: budgetis/accounting/models.py:208
 msgid "Account Comment"
 msgstr ""
 
-#: budgetis/accounting/models.py:203
+#: budgetis/accounting/models.py:209
 msgid "Account Comments"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/account_comments_list.html:4
+msgid "Comments"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/account_comments_list.html:6
+#: budgetis/bdi_import/models.py:55
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:20
+#: budgetis/finance/models.py:7
+#: budgetis/finance/templates/finance/sankey.html:18
+msgid "Budget"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/account_comments_list.html:6
+msgid "Actuals"
 msgstr ""
 
 #: budgetis/bdi_import/apps.py:8
@@ -269,13 +286,6 @@ msgid "Account import logs"
 msgstr ""
 
 #: budgetis/bdi_import/models.py:55
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:20
-#: budgetis/finance/builders.py:75 budgetis/finance/models.py:7
-#: budgetis/finance/templates/finance/sankey.html:18
-msgid "Budget"
-msgstr ""
-
-#: budgetis/bdi_import/models.py:55
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:22
 msgid "Actual"
 msgstr ""
@@ -354,52 +364,112 @@ msgstr ""
 msgid "Core"
 msgstr ""
 
-#: budgetis/core/models.py:7
+#: budgetis/core/models.py:11
 msgid "Logo"
 msgstr ""
 
-#: budgetis/core/models.py:8
+#: budgetis/core/models.py:12
 msgid "Commune name"
 msgstr ""
 
-#: budgetis/core/models.py:10
+#: budgetis/core/models.py:14
 msgid "Gradient start color"
 msgstr ""
 
-#: budgetis/core/models.py:13
+#: budgetis/core/models.py:17
 msgid "Couleur hexadécimale pour le haut du dégradé (ex. #2f6ee2)."
 msgstr ""
 
-#: budgetis/core/models.py:16
+#: budgetis/core/models.py:20
 msgid "Gradient end color"
 msgstr ""
 
-#: budgetis/core/models.py:19
+#: budgetis/core/models.py:23
 msgid "Couleur hexadécimale pour le bas du dégradé (ex. #4caf50)."
 msgstr ""
 
-#: budgetis/core/models.py:23 budgetis/core/models.py:24
+#: budgetis/core/models.py:27 budgetis/core/models.py:28
 msgid "Site configuration"
 msgstr ""
 
-#: budgetis/finance/builders.py:70
+#: budgetis/finance/builders.py:311
 msgid "Impôts"
 msgstr ""
 
-#: budgetis/finance/builders.py:71
-msgid "Revenus aléatoires"
+#: budgetis/finance/builders.py:312
+msgid "Impôts aléatoires"
 msgstr ""
 
-#: budgetis/finance/builders.py:72
+#: budgetis/finance/builders.py:313
 msgid "Taxes"
 msgstr ""
 
-#: budgetis/finance/builders.py:73
+#: budgetis/finance/builders.py:314
 msgid "Locations"
 msgstr ""
 
-#: budgetis/finance/builders.py:74
+#: budgetis/finance/builders.py:315 budgetis/finance/builders.py:339
+msgid "Intérêts"
+msgstr ""
+
+#: budgetis/finance/builders.py:316
 msgid "Autres revenus"
+msgstr ""
+
+#: budgetis/finance/builders.py:325
+msgid "Ménage communal"
+msgstr ""
+
+#: budgetis/finance/builders.py:326
+msgid "Canton"
+msgstr ""
+
+#: budgetis/finance/builders.py:327
+msgid "Intercommunalités"
+msgstr ""
+
+#: budgetis/finance/builders.py:328
+msgid "Commune"
+msgstr ""
+
+#: budgetis/finance/builders.py:329
+msgid "Sécurité sociale"
+msgstr ""
+
+#: budgetis/finance/builders.py:330
+msgid "Péréquation"
+msgstr ""
+
+#: budgetis/finance/builders.py:331
+msgid "Police"
+msgstr ""
+
+#: budgetis/finance/builders.py:334
+msgid "Transports région"
+msgstr ""
+
+#: budgetis/finance/builders.py:335
+msgid "Associations"
+msgstr ""
+
+#: budgetis/finance/builders.py:336
+msgid "Autres intercommunalités"
+msgstr ""
+
+#: budgetis/finance/builders.py:337
+msgid "Salaires"
+msgstr ""
+
+#: budgetis/finance/builders.py:338
+msgid "Biens & services"
+msgstr ""
+
+#: budgetis/finance/builders.py:340
+msgid "Aides & subventions"
+msgstr ""
+
+#: budgetis/finance/builders.py:450
+msgid "Résultat de trésorerie"
 msgstr ""
 
 #: budgetis/finance/models.py:8
@@ -422,32 +492,32 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
-#: budgetis/finance/templates/finance/sankey.html:65
-msgid "Income → Budget"
+#: budgetis/finance/templates/finance/sankey.html:70
+msgid "Revenus → Budget"
 msgstr ""
 
 #: budgetis/templates/allauth/layouts/entrance.html:13
-#: budgetis/templates/base.html:120
+#: budgetis/templates/base.html:130
 msgid "Sign In"
 msgstr ""
 
-#: budgetis/templates/base.html:97
+#: budgetis/templates/base.html:107
 msgid "Import from BDI"
 msgstr ""
 
-#: budgetis/templates/base.html:100
+#: budgetis/templates/base.html:110
 msgid "My Profile"
 msgstr ""
 
-#: budgetis/templates/base.html:104
+#: budgetis/templates/base.html:114
 msgid "Admin"
 msgstr ""
 
-#: budgetis/templates/base.html:109
+#: budgetis/templates/base.html:119
 msgid "Sign Out"
 msgstr ""
 
-#: budgetis/templates/base.html:115
+#: budgetis/templates/base.html:125
 msgid "Sign Up"
 msgstr ""
 

@@ -2,10 +2,8 @@ from datetime import date
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import HTML
-from crispy_forms.layout import Column
 from crispy_forms.layout import Fieldset
 from crispy_forms.layout import Layout
-from crispy_forms.layout import Row
 from crispy_forms.layout import Submit
 from django import forms
 from django.utils.translation import gettext_lazy as _
@@ -46,10 +44,8 @@ class AccountImportForm(forms.Form):
         self.helper.layout = Layout(
             Fieldset(
                 _("Import target"),
-                Row(
-                    Column("year", css_class="col-md-4"),
-                    Column("is_budget", css_class="col-md-8"),
-                ),
+                "year",
+                "is_budget",
             ),
             Fieldset(
                 _("Copy settings from another year"),

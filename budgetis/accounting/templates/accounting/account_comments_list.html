@@ -1,5 +1,17 @@
+{% load i18n %}
+
 <div class="modal-header">
-  <h5 class="modal-title">Commentaires – {{ account.full_code }} ({{ kind|capfirst }})</h5>
+  <h5 class="modal-title">
+    {% trans "Comments" %} –
+    {{ account.full_code }} {{ account.label }} |
+    <mark>
+      {% if account.is_budget %}
+        {% trans "Budget" %}
+      {% else %}
+        {% trans "Actuals" %}
+      {% endif %}
+    {{ account.year }}</mark>
+  </h5>
   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 <div class="modal-body">

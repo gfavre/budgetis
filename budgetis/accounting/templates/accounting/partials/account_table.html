@@ -1,4 +1,4 @@
-{% load money %}
+{% load money i18n %}
 
 <table class="table table-bordered align-middle mb-0">
   <thead>
@@ -40,7 +40,7 @@
                   data-bs-toggle="modal"
                   data-bs-target="#accountCommentsModal">
             <span id="comment-icon-{{ account.id }}"
-                  class="{% if account.comment_count %}text-primary{% else %}text-muted{% endif %}">
+                  class="{% if not account.comment_count %}text-muted{% endif %}">
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
@@ -61,7 +61,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#accountCommentsModal">
               <span id="comment-icon-{{ account.budget_id }}"
-                    class="{% if account.budget_comment_count %}text-primary{% else %}text-muted{% endif %}">
+                    class="{% if not account.budget_comment_count %}text-muted{% endif %}">
                 <i class="bi bi-chat-left-text"></i>
               </span>
             </button>
@@ -73,7 +73,7 @@
   </tbody>
   <tfoot>
     <!-- Ligne d'en-tête style "190 Service informatique" avec totaux -->
-    <tr class="table-secondary fw-bold">
+    <tr class="table-primary fw-bold">
       <td colspan="2">{{ code }} {{ label }}</td>
       <td class="text-end">
         {{ data.total_charges|format_money }}

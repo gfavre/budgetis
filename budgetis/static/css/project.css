@@ -1,4 +1,74 @@
-/* These styles are generated from project.scss. */
+body, html {
+  min-height: 100vh;
+}
+
+body > .container {
+  padding-bottom: 2rem; /* espace garanti */
+
+}
+
+a {
+  color: var(--brand-color-alt);
+}
+
+a:hover {
+  color: color-mix(in srgb, var(--brand-color-alt) 80%, black);
+}
+
+fieldset {
+  padding: 0 1rem;
+  margin: 1.5rem 0;
+  border: 1px solid var(--brand-color-alt);
+  border-radius: .5rem;
+}
+
+legend {
+  float: none;
+  display: inline-block;
+  width: auto;
+  padding: 0 .5rem;
+  margin-top: -0.75rem;
+  background-color: var(--background-light);
+  margin-bottom: 0.5rem;
+  margin-left: 1rem; /* décalage (genre tab) */
+  font-weight: 500;
+  font-variant: small-caps;
+  font-size: 1rem;
+  color: var(--brand-color-alt);
+}
+
+fieldset * {
+  border: none; /* pas de bordures pour les inputs internes */
+  box-shadow: none;
+}
+
+fieldset fieldset {
+  padding: 0
+}
+
+fieldset fieldset legend {
+  margin-left: 0;
+  padding: 0;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--brand-color-alt);
+}
+
+.form-check-input:checked {
+  background-color: var(--brand-color-alt);
+  border-color: var(--brand-color-alt);
+}
+
+.form-select {
+  background-color: var(--background-light);
+  border-color: var(--brand-color-alt);
+}
+
+.form-select:focus {
+  border-color: var(--brand-color-alt);
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--brand-color-alt) 30%, transparent);
+}
 
 .alert-debug {
   color: black;
@@ -11,14 +81,107 @@
   background-color: #f2dede;
   border-color: #eed3d7;
 }
+
 .chart-canvas {
   height: 300px;
 }
+
 .main-container {
   background: var(--background-light);
   border-radius: 12px;
   padding: 2rem;
   margin: 2rem auto;
   max-width: 1200px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.navbar {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid color-mix(in srgb, var(--brand-color-alt) 50%, black);
+  align-items: center;
+}
+
+.navbar-brand,
+.navbar .nav-link {
+  align-items: center;
+  font-size: 1rem;
+  border-bottom: 3px solid transparent; /* réserve la place de la barre */
+  line-height: 1;
+}
+
+
+.navbar-brand {
+  padding-top: 0;
+  padding-bottom: 0;
+  font-weight: 600;
+  margin-right: 1rem; /* espace avant les liens */
+}
+
+@media (min-width: 1200px) {
+  .navbar-brand {
+    border-right: 1px solid rgba(0, 0, 0, 0.15);
+    padding-right: 1rem;
+  }
+}
+
+.navbar-brand img {
+  height: 22px; /* ajuste selon ton logo */
+  margin-right: 0.4rem;
+  display: block;
+}
+
+
+.navbar .nav-link {
+  display: inline-flex;
+  align-items: center;
+
+  color: var(--brand-color-alt);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  margin-right: 1.5rem; /* espace entre les liens */
+
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.navbar .nav-link i {
+  font-size: 0.8rem;
+  line-height: 1.1;
+}
+
+.navbar .nav-link i::before {
+  margin-right: 0.2rem; /* espace appliqué au glyphe */
+}
+
+.navbar .nav-link.active {
+  color: var(--brand-color-alt);
+  border-bottom-color: var(--brand-color-alt);
+  background: transparent; /* pas de fond plein */
+}
+
+.navbar .nav-link:hover {
+  border-bottom-color: color-mix(in srgb, var(--brand-color-alt) 60%, white);
+}
+
+.table, .dataTable-table {
+  border-color: color-mix(in srgb, var(--brand-color-alt) 20%, black 1%);
+}
+
+.table-primary {
+  --bs-table-bg: color-mix(in srgb, var(--brand-color) 20%, white 50%);
+  border-color: color-mix(in srgb, var(--brand-color) 30%, black 5%);
+}
+
+.table-light {
+  --bs-table-bg: color-mix(in srgb, var(--brand-color-alt) 15%, white);
+  border-color: color-mix(in srgb, var(--brand-color-alt) 20%, black 5%);
+
+}
+
+.btn-link {
+  color: var(--brand-color-alt);
+}
+
+.btn-link:hover {
+  color: color-mix(in srgb, var(--brand-color-alt) 80%, black);
 }

@@ -2,6 +2,24 @@
 
 {% load i18n crispy_forms_tags %}
 
+{% block extra_style %}
+  <style>
+h2 {
+    background: color-mix(in srgb, var(--brand-color-alt) 20%, white);
+  border-left: 5px solid var(--brand-color-alt);
+    padding: 0.6rem 0.6rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+
+}
+
+h3 {
+      margin: 1.5rem 0 1rem;
+  color: var(--brand-color-alt);
+}
+
+  </style>
+{% endblock extra_style %}
 {% block main %}
   <form method="post"
         hx-post="{% url 'accounting:account-partial' %}"

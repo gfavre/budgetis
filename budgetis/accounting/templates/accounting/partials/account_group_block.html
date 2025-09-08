@@ -1,4 +1,6 @@
-<div class="mb-3 border p-2">
-  {% include "accounting/partials/account_table.html" with accounts=data.accounts code=code label=label data=data %}
-  <p class="text-end text-muted mb-0">Responsable : {{ data.responsible.trigram|default:"N/A" }}</p>
-</div>
+{% load i18n %}
+
+{% include "accounting/partials/account_table.html" with accounts=data.accounts code=code label=label data=data %}
+<p class="text-end  mb-5 mt-2">
+  {% trans "Responsible" %} : <strong>{{ data.responsible.trigram|default:"N/A" }}</strong>
+</p>
