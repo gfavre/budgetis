@@ -116,6 +116,7 @@ input[type="checkbox"] {
   padding-bottom: 0;
   font-weight: 600;
   margin-right: 1rem; /* espace avant les liens */
+  padding-top: 5px;
 }
 
 @media (min-width: 1200px) {
