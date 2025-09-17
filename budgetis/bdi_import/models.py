@@ -56,7 +56,7 @@ class AccountImportLog(TimeStampedModel):
         return f"{self.year} - {kind} import ({self.created_at:%Y-%m-%d %H:%M})"
 
 
-class ColumnMapping(models.Model):
+class ColumnMapping(TimeStampedModel):
     class Field(models.TextChoices):
         CODE = "code", _("Account code")
         LABEL = "label", _("Account label")
@@ -90,6 +90,7 @@ class ColumnMapping(models.Model):
         unique_together = ("log", "field")
         verbose_name = _("Column mapping")
         verbose_name_plural = _("Column mappings")
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"{self.get_field_display()} ← {self.column_name}"

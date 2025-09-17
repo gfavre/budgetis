@@ -594,6 +594,9 @@ msgstr "Cette adresse e-mail est déjà utilisée."
 msgid "Information successfully updated"
 msgstr "Informations mises à jour avec succès"
 
+msgid "Action"
+msgstr "Action"
+
 #~ msgid "Sign Up"
 #~ msgstr "S'inscrire"
 

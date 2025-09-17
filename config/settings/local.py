@@ -77,3 +77,4 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     *AUTHENTICATION_BACKENDS,
 ]
+COMPRESS_ENABLED = False
