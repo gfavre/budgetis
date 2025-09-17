@@ -7,6 +7,8 @@ from budgetis.accounting.models import Account
 from budgetis.accounting.models import AccountComment
 from budgetis.accounting.models import GroupResponsibility
 
+from .utils import safe_decimal
+
 
 # The account code string (e.g., '170.301' or '170.301.2')
 MIN_PARTS = 2
@@ -33,7 +35,8 @@ def parse_account_code(code: str) -> tuple[str, str, str]:
     Raises:
         ValueError: If the input format is invalid or cannot be parsed as integers.
     """
-    parts = code.strip().split(".")
+    cleaned_code = code.strip().replace(",", ".")
+    parts = cleaned_code.split(".")
     if not (MIN_PARTS <= len(parts) <= MAX_PARTS):
         message = f"Invalid account code: {code}"
         raise ValueError(message)
@@ -78,12 +81,12 @@ def process_account_row(row, column_map, derived_from_total):
         return None
 
     if derived_from_total:
-        total = Decimal(row.get(column_map.get("total", ""), 0))
+        total = safe_decimal(row.get(column_map.get("total", ""), 0))
         charges = total if total > 0 else Decimal(0)
         revenues = -total if total < 0 else Decimal(0)
     else:
-        charges = Decimal(row.get(column_map.get("charges", ""), 0))
-        revenues = abs(Decimal(row.get(column_map.get("revenues", ""), 0)))
+        charges = safe_decimal(row.get(column_map.get("charges", ""), 0))
+        revenues = abs(safe_decimal(row.get(column_map.get("revenues", ""), 0)))
 
     expected_type = (
         Account.ExpectedType.BOTH

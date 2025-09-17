@@ -2,7 +2,6 @@ from contextlib import suppress
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-import pandas as pd
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -16,7 +15,8 @@ from .forms import AccountImportForm
 from .models import AccountImportLog
 from .models import ColumnMapping
 from .tasks import import_accounts_task
-from .utils import detect_first_data_row
+from .utils import find_first_significant_content_row
+from .utils import load_dataframe_with_header
 
 
 class AccountImportView(FormView):
@@ -99,40 +99,23 @@ class AccountMappingView(View):
     def get(self, request, log_id):
         log = get_object_or_404(AccountImportLog, pk=log_id)
         path = log.file.path
-        is_xlsx = path.endswith(".xlsx")
 
-        # 1. Charger sans header pour détecter la vraie ligne d'entête
-        raw_df = pd.read_excel(path, sheet_name=0, header=None) if is_xlsx else pd.read_csv(path, header=None)
-        header_row = detect_first_data_row(raw_df)
+        try:
+            uploaded_df = load_dataframe_with_header(path)
+            data_start_idx = find_first_significant_content_row(uploaded_df)
+            preview_rows = uploaded_df.iloc[data_start_idx : data_start_idx + 10]
 
-        # 2. Recharger avec le header détecté
-        headed_df = (
-            pd.read_excel(path, sheet_name=0, header=header_row) if is_xlsx else pd.read_csv(path, header=header_row)
-        )
+            context = {
+                "log": log,
+                "columns": list(uploaded_df.columns),
+                "preview_rows": preview_rows.to_dict(orient="records"),
+                "field_choices": ColumnMapping.Field.choices,
+            }
+            return render(request, self.template_name, context)
 
-        # 3. Détecter première ligne significative (≥ 3 valeurs non vides / non nulles / ≠ "0")
-        def is_significant(val: str) -> bool:
-            return val.strip().lower() not in {"", "0", "0.0", "nan"}
-
-        def find_first_significant_content_row(df: pd.DataFrame, min_valid_fields: int = 5) -> int:
-            for idx, row in df.iterrows():
-                str_values = row.dropna().astype(str)
-                if sum(is_significant(v) for v in str_values) >= min_valid_fields:
-                    return idx
-            msg = "No sufficiently filled data row found."
-            raise ValueError(msg)
-
-        data_start_idx = find_first_significant_content_row(headed_df)
-
-        preview_rows = headed_df.iloc[data_start_idx : data_start_idx + 10]
-
-        context = {
-            "log": log,
-            "columns": list(headed_df.columns),
-            "preview_rows": preview_rows.to_dict(orient="records"),
-            "field_choices": ColumnMapping.Field.choices,
-        }
-        return render(request, self.template_name, context)
+        except ValueError as exc:
+            messages.error(request, _("Could not process the uploaded file: %(error)s") % {"error": str(exc)})
+            return redirect("bdi_import:account-import")
 
     def post(self, request, log_id):
         log = get_object_or_404(AccountImportLog, pk=log_id)
