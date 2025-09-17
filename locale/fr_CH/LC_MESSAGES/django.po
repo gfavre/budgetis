@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-08 07:11+0200\n"
+"POT-Creation-Date: 2025-09-17 10:24+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -30,12 +30,12 @@ msgstr "Masquer les comptes dans le rapport"
 msgid "Display accounts in report"
 msgstr "Afficher les comptes dans le rapport"
 
-#: budgetis/accounting/apps.py:8 budgetis/templates/base.html:103
+#: budgetis/accounting/apps.py:8 budgetis/templates/base.html:109
 msgid "Accounting"
 msgstr "Comptabilité"
 
 #: budgetis/accounting/forms.py:66 budgetis/accounting/models.py:112
-#: budgetis/bdi_import/forms.py:17 budgetis/bdi_import/models.py:15
+#: budgetis/bdi_import/forms.py:15 budgetis/bdi_import/models.py:15
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:12
 #: budgetis/finance/models.py:10
 #: budgetis/finance/templates/finance/sankey.html:9
@@ -75,7 +75,7 @@ msgid "Account Groups"
 msgstr "Groupes de compte"
 
 #: budgetis/accounting/models.py:93
-#: budgetis/accounting/templates/accounting/partials/account_group_block.html:3
+#: budgetis/accounting/templates/accounting/partials/account_group_block.html:5
 msgid "Responsible"
 msgstr "Responsable"
 
@@ -99,7 +99,7 @@ msgstr "Charges et produits"
 msgid "Function"
 msgstr "Fonction"
 
-#: budgetis/accounting/models.py:114 budgetis/bdi_import/forms.py:19
+#: budgetis/accounting/models.py:114 budgetis/bdi_import/forms.py:17
 msgid "Nature"
 msgstr "Nature"
 
@@ -149,11 +149,11 @@ msgstr "Commentaire sur le compte"
 msgid "Account Comments"
 msgstr "Commentaires sur le compte"
 
-#: budgetis/accounting/templates/accounting/account_comments_list.html:4
+#: budgetis/accounting/templates/accounting/account_comments_list.html:5
 msgid "Comments"
 msgstr "Commentaires"
 
-#: budgetis/accounting/templates/accounting/account_comments_list.html:6
+#: budgetis/accounting/templates/accounting/account_comments_list.html:9
 #: budgetis/bdi_import/models.py:55
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:20
 #: budgetis/finance/models.py:7
@@ -161,7 +161,7 @@ msgstr "Commentaires"
 msgid "Budget"
 msgstr "Budget"
 
-#: budgetis/accounting/templates/accounting/account_comments_list.html:6
+#: budgetis/accounting/templates/accounting/account_comments_list.html:11
 msgid "Actuals"
 msgstr "Comptes"
 
@@ -169,69 +169,69 @@ msgstr "Comptes"
 msgid "BDI Import"
 msgstr "Import BDI"
 
-#: budgetis/bdi_import/forms.py:24
+#: budgetis/bdi_import/forms.py:22
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
 msgid "Copy settings from"
 msgstr "Copier les paramètres de"
 
-#: budgetis/bdi_import/forms.py:27
+#: budgetis/bdi_import/forms.py:25
 msgid "Select the year from which to copy settings (if any)."
 msgstr ""
 "Sélectionnez l'année à partir de laquelle vous souhaitez copier les "
 "paramètres (le cas échéant)."
 
-#: budgetis/bdi_import/forms.py:29 budgetis/bdi_import/models.py:44
+#: budgetis/bdi_import/forms.py:27 budgetis/bdi_import/models.py:44
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:33
 msgid "Copy responsibles"
 msgstr "Copier les responsables"
 
-#: budgetis/bdi_import/forms.py:30
+#: budgetis/bdi_import/forms.py:28
 msgid "Copy account labels"
 msgstr "Copier les libellés de comptes"
 
-#: budgetis/bdi_import/forms.py:31 budgetis/bdi_import/models.py:46
+#: budgetis/bdi_import/forms.py:29 budgetis/bdi_import/models.py:46
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:41
 msgid "Copy visibility"
 msgstr "Copier la visibilité"
 
-#: budgetis/bdi_import/forms.py:32 budgetis/bdi_import/models.py:47
+#: budgetis/bdi_import/forms.py:30 budgetis/bdi_import/models.py:47
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:45
 msgid "Copy comments"
 msgstr "Copier les commentaires"
 
-#: budgetis/bdi_import/forms.py:35
+#: budgetis/bdi_import/forms.py:33
 msgid "Accounts list file"
 msgstr "Fichier de liste des comptes"
 
-#: budgetis/bdi_import/forms.py:35
+#: budgetis/bdi_import/forms.py:33
 msgid "Upload a CSV or XSLX file with account data."
 msgstr "Télécharger un fichier CSV ou XSLX contenant les données du compte."
 
-#: budgetis/bdi_import/forms.py:48
+#: budgetis/bdi_import/forms.py:46
 msgid "Import target"
 msgstr "Cible d'importation"
 
-#: budgetis/bdi_import/forms.py:55
+#: budgetis/bdi_import/forms.py:51
 msgid "Copy settings from another year"
 msgstr "Copier les paramètres d'une autre année"
 
-#: budgetis/bdi_import/forms.py:63
+#: budgetis/bdi_import/forms.py:59
 msgid "Account file"
 msgstr "Fichier de comptes"
 
-#: budgetis/bdi_import/forms.py:67
+#: budgetis/bdi_import/forms.py:63
 msgid "Import"
 msgstr "Importer"
 
-#: budgetis/bdi_import/forms.py:73
+#: budgetis/bdi_import/forms.py:69
 msgid "File already uploaded"
 msgstr "Fichier déjà téléchargé"
 
-#: budgetis/bdi_import/forms.py:82
+#: budgetis/bdi_import/forms.py:78
 msgid "Uploaded file"
 msgstr "Fichier téléchargé"
 
-#: budgetis/bdi_import/forms.py:97
+#: budgetis/bdi_import/forms.py:93
 msgid "Please upload a CSV or XLSX file."
 msgstr "Veuillez télécharger un fichier CSV ou XLSX."
 
@@ -365,7 +365,25 @@ msgstr "Type"
 msgid "Edit import settings"
 msgstr "Modifier les paramètres d'importation"
 
-#: budgetis/bdi_import/views.py:160
+#: budgetis/bdi_import/utils.py:53
+#, python-format
+msgid ""
+"Unsupported file extension: %(extension)s. Supported extensions are .csv "
+"and .xlsx."
+msgstr ""
+"Extension de fichier non prise en charge : %(extension)s. Les extensions "
+"prises en charge sont .csv et .xlsx."
+
+#: budgetis/bdi_import/utils.py:106
+msgid "No sufficiently filled data row found."
+msgstr "Aucune ligne de données suffisamment remplie n'a été trouvée."
+
+#: budgetis/bdi_import/views.py:117
+#, python-format
+msgid "Could not process the uploaded file: %(error)s"
+msgstr "Impossible de traiter le fichier téléchargé : %(error)s"
+
+#: budgetis/bdi_import/views.py:143
 msgid "Column mapping saved. Import will now be launched."
 msgstr ""
 "Le mappage des colonnes est sauvegardé. L'importation va maintenant être "
@@ -409,7 +427,7 @@ msgstr "Impôts"
 
 #: budgetis/finance/builders.py:312
 msgid "Impôts aléatoires"
-msgstr ""
+msgstr "Impôts aléatoires"
 
 #: budgetis/finance/builders.py:313
 msgid "Taxes"
@@ -421,7 +439,7 @@ msgstr "Locations"
 
 #: budgetis/finance/builders.py:315 budgetis/finance/builders.py:339
 msgid "Intérêts"
-msgstr ""
+msgstr "Intérêts"
 
 #: budgetis/finance/builders.py:316
 msgid "Autres revenus"
@@ -429,63 +447,59 @@ msgstr "Autres revenus"
 
 #: budgetis/finance/builders.py:325
 msgid "Ménage communal"
-msgstr ""
+msgstr "Ménage communal"
 
 #: budgetis/finance/builders.py:326
 msgid "Canton"
-msgstr ""
+msgstr "Canton"
 
 #: budgetis/finance/builders.py:327
 msgid "Intercommunalités"
-msgstr ""
+msgstr "Intercommunalités"
 
 #: budgetis/finance/builders.py:328
-#, fuzzy
-#| msgid "Commune name"
 msgid "Commune"
-msgstr "Nom de la commune"
+msgstr "Commune"
 
 #: budgetis/finance/builders.py:329
 msgid "Sécurité sociale"
-msgstr ""
+msgstr "Sécurité sociale"
 
 #: budgetis/finance/builders.py:330
 msgid "Péréquation"
-msgstr ""
+msgstr "Péréquation"
 
 #: budgetis/finance/builders.py:331
 msgid "Police"
-msgstr ""
+msgstr "Police"
 
 #: budgetis/finance/builders.py:334
 msgid "Transports région"
-msgstr ""
+msgstr "Transports région"
 
 #: budgetis/finance/builders.py:335
-#, fuzzy
-#| msgid "Locations"
 msgid "Associations"
-msgstr "Locations"
+msgstr "Associations"
 
 #: budgetis/finance/builders.py:336
 msgid "Autres intercommunalités"
-msgstr ""
+msgstr "Autres intercommunalités"
 
 #: budgetis/finance/builders.py:337
 msgid "Salaires"
-msgstr ""
+msgstr "Salaires"
 
 #: budgetis/finance/builders.py:338
 msgid "Biens & services"
-msgstr ""
+msgstr "Biens et services"
 
 #: budgetis/finance/builders.py:340
 msgid "Aides & subventions"
-msgstr ""
+msgstr "Aides et subventions"
 
 #: budgetis/finance/builders.py:450
 msgid "Résultat de trésorerie"
-msgstr ""
+msgstr "Résultat de trésorerie"
 
 #: budgetis/finance/models.py:8
 msgid "Comptes"
@@ -512,29 +526,25 @@ msgid "Revenus → Budget"
 msgstr "Revenus → Allocations"
 
 #: budgetis/templates/allauth/layouts/entrance.html:13
-#: budgetis/templates/base.html:130
+#: budgetis/templates/base.html:146
 msgid "Sign In"
 msgstr "S'identifier"
 
-#: budgetis/templates/base.html:107
+#: budgetis/templates/base.html:116
 msgid "Import from BDI"
 msgstr "Importation de BDI"
 
-#: budgetis/templates/base.html:110
-msgid "My Profile"
-msgstr "Mon Profil"
-
-#: budgetis/templates/base.html:114
+#: budgetis/templates/base.html:127
 msgid "Admin"
 msgstr "Admin"
 
-#: budgetis/templates/base.html:119
+#: budgetis/templates/base.html:134
+msgid "My Profile"
+msgstr "Mon Profil"
+
+#: budgetis/templates/base.html:140
 msgid "Sign Out"
 msgstr "Déconnexion"
-
-#: budgetis/templates/base.html:125
-msgid "Sign Up"
-msgstr "S'inscrire"
 
 #: budgetis/users/admin.py:30
 msgid "Personal info"
@@ -583,6 +593,9 @@ msgstr "Cette adresse e-mail est déjà utilisée."
 #: budgetis/users/tests/test_views.py:73 budgetis/users/views.py:25
 msgid "Information successfully updated"
 msgstr "Informations mises à jour avec succès"
+
+#~ msgid "Sign Up"
+#~ msgstr "S'inscrire"
 
 #~ msgid "Nbr"
 #~ msgstr "N°"
