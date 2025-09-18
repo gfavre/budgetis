@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-17 10:24+0200\n"
+"POT-Creation-Date: 2025-09-18 07:12+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -408,84 +408,100 @@ msgstr ""
 msgid "Site configuration"
 msgstr ""
 
-#: budgetis/finance/builders.py:311
-msgid "Impôts"
+#: budgetis/finance/builders.py:114
+msgid "Municipal household"
 msgstr ""
 
-#: budgetis/finance/builders.py:312
-msgid "Impôts aléatoires"
-msgstr ""
-
-#: budgetis/finance/builders.py:313
-msgid "Taxes"
-msgstr ""
-
-#: budgetis/finance/builders.py:314
-msgid "Locations"
-msgstr ""
-
-#: budgetis/finance/builders.py:315 budgetis/finance/builders.py:339
-msgid "Intérêts"
-msgstr ""
-
-#: budgetis/finance/builders.py:316
-msgid "Autres revenus"
-msgstr ""
-
-#: budgetis/finance/builders.py:325
-msgid "Ménage communal"
-msgstr ""
-
-#: budgetis/finance/builders.py:326
+#: budgetis/finance/builders.py:115
 msgid "Canton"
 msgstr ""
 
-#: budgetis/finance/builders.py:327
-msgid "Intercommunalités"
+#: budgetis/finance/builders.py:116
+msgid "Intercommunalities"
 msgstr ""
 
-#: budgetis/finance/builders.py:328
+#: budgetis/finance/builders.py:117
 msgid "Commune"
 msgstr ""
 
-#: budgetis/finance/builders.py:329
-msgid "Sécurité sociale"
+#: budgetis/finance/builders.py:119
+msgid "Social security"
 msgstr ""
 
-#: budgetis/finance/builders.py:330
-msgid "Péréquation"
+#: budgetis/finance/builders.py:120
+msgid "Equalization"
 msgstr ""
 
-#: budgetis/finance/builders.py:331
+#: budgetis/finance/builders.py:121
 msgid "Police"
 msgstr ""
 
-#: budgetis/finance/builders.py:334
-msgid "Transports région"
+#: budgetis/finance/builders.py:125
+msgid "Regional transports"
 msgstr ""
 
-#: budgetis/finance/builders.py:335
+#: budgetis/finance/builders.py:126
 msgid "Associations"
 msgstr ""
 
-#: budgetis/finance/builders.py:336
-msgid "Autres intercommunalités"
+#: budgetis/finance/builders.py:127
+msgid "Other intercommunalities"
 msgstr ""
 
-#: budgetis/finance/builders.py:337
-msgid "Salaires"
+#: budgetis/finance/builders.py:129
+msgid "Wages"
 msgstr ""
 
-#: budgetis/finance/builders.py:338
-msgid "Biens & services"
+#: budgetis/finance/builders.py:130
+msgid "Goods and services"
 msgstr ""
 
-#: budgetis/finance/builders.py:340
-msgid "Aides & subventions"
+#: budgetis/finance/builders.py:131
+msgid "Interests"
 msgstr ""
 
-#: budgetis/finance/builders.py:450
-msgid "Résultat de trésorerie"
+#: budgetis/finance/builders.py:132
+msgid "Aids and subsidies"
+msgstr ""
+
+#: budgetis/finance/builders.py:134
+msgid "Taxes (general)"
+msgstr ""
+
+#: budgetis/finance/builders.py:135
+msgid "Random taxes"
+msgstr ""
+
+#: budgetis/finance/builders.py:136
+msgid "Levies (usage-based)"
+msgstr ""
+
+#: budgetis/finance/builders.py:137
+msgid "Rentals"
+msgstr ""
+
+#: budgetis/finance/builders.py:138
+msgid "Other revenues"
+msgstr ""
+
+#: budgetis/finance/builders.py:140
+msgid "Cash result"
+msgstr ""
+
+#: budgetis/finance/builders.py:141
+msgid "Result"
+msgstr ""
+
+#: budgetis/finance/builders.py:142
+msgid "Amortizations"
+msgstr ""
+
+#: budgetis/finance/builders.py:143
+msgid "Fund allocations"
+msgstr ""
+
+#: budgetis/finance/builders.py:144
+msgid "Profit"
 msgstr ""
 
 #: budgetis/finance/models.py:8

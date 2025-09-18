@@ -76,7 +76,109 @@ COLOR_RANDOM = "#5B8DEF"
 COLOR_TAXES = "#F59E0B"
 COLOR_RENTALS = "#2BB673"
 COLOR_OTHERS = "#6B7280"
-COLOR_BUDGET = "#111827"
+
+# --- Budget (hub central) ---
+COLOR_BUDGET = "#111827"  # gris foncé
+COLOR_BUDGET_LINKS = "#9CA3AF"  # gris neutre
+
+# --- Canton ---
+COLOR_CANTON = "#15803D"
+COLOR_CANTON_LINKS = "#4ADE80"
+
+COLOR_CANTON_SOCIAL = "#86EFAC"
+COLOR_CANTON_EQUALIZATION = "#4ADE80"
+COLOR_CANTON_POLICE = "#22C55E"
+
+# --- Intercommunalités ---
+COLOR_INTERCOS = "#6D28D9"
+COLOR_INTERCOS_LINKS = "#C4B5FD"
+
+COLOR_INTERCOS_AISGE = "#A78BFA"
+COLOR_INTERCOS_APEC = "#C4B5FD"
+COLOR_INTERCOS_TRANSPORTS = "#DDD6FE"
+COLOR_INTERCOS_OTHER = "#EDE9FE"
+
+# --- Commune ---
+COLOR_COMMUNE = "#D97706"
+COLOR_COMMUNE_LINKS = "#FCD34D"
+
+COLOR_COMMUNE_WAGES = "#FDE68A"
+COLOR_COMMUNE_GOODS = "#FCD34D"
+COLOR_COMMUNE_INTERESTS = "#FBBF24"
+COLOR_COMMUNE_AIDS = "#F59E0B"
+
+# --- Résultat ---
+COLOR_RESULT = "#374151"
+
+LABEL_HOUSEHOLD = _("Municipal household")
+LABEL_CANTON = _("Canton")
+LABEL_INTERCOMMUNALITIES = _("Intercommunalities")
+LABEL_COMMUNE = _("Commune")
+
+LABEL_SOCIAL = _("Social security")
+LABEL_EQUALIZATION = _("Equalization")
+LABEL_POLICE = _("Police")
+
+LABEL_AISGE = "AISGE"  # acronym stays the same
+LABEL_APEC = "APEC"
+LABEL_TRANSPORTS = _("Regional transports")
+LABEL_ASSOCIATIONS = _("Associations")
+LABEL_INTERCOS_OTHER = _("Other intercommunalities")
+
+LABEL_WAGES = _("Wages")
+LABEL_GOODS = _("Goods and services")
+LABEL_INTERESTS = _("Interests")
+LABEL_AIDS = _("Aids and subsidies")
+
+LABEL_TAXES_GENERAL = _("Taxes (general)")
+LABEL_TAXES_RANDOM = _("Random taxes")
+LABEL_TAXES_USAGE = _("Levies (usage-based)")
+LABEL_RENTALS = _("Rentals")
+LABEL_REVENUES_OTHER = _("Other revenues")
+
+LABEL_RESULT = _("Cash result")
+LABEL_RESULT_HUB = _("Result")
+LABEL_AMORT = _("Amortizations")
+LABEL_FUNDS = _("Fund allocations")
+LABEL_PROFIT = _("Profit")
+
+# Canton keys
+KEY_SOCIAL = "social"
+KEY_EQUALIZATION = "equalization"
+KEY_POLICE = "police"
+KEY_TOTAL = "total"
+
+# Intercommunalities keys
+KEY_AISGE = "aisge"
+KEY_APEC = "apec"
+KEY_TRANSPORTS = "transports_region"
+KEY_INTERCOS_OTHER = "other_intercommunalities"
+
+# Commune keys
+KEY_WAGES = "wages"
+KEY_GOODS = "goods_services"
+KEY_INTERESTS = "interests"
+KEY_AIDS = "aids"
+
+# Revenue bucket keys (from nature ranges)
+KEY_IMPOTS = "taxes_general"
+KEY_RANDOMS = "random_taxes"
+KEY_LEVIES = "levies_usage"
+KEY_RENTALS = "rentals"
+KEY_INTERESTS_REV = "interests_revenues"
+KEY_OTHERS_REV = "other_revenues"
+KEY_RESULT = "result"
+
+KEY_AMORT = "amortizations"
+KEY_FUNDS = "fund_allocations"
+KEY_PROFIT = "profit"
+
+
+NODE_HOUSEHOLD = "household"
+NODE_CANTON = "canton"
+NODE_INTERCOS = "intercommunities"
+NODE_COMMUNE = "commune"
+NODE_RESULT = "result"
 
 
 def to_rounded_float(val, q: str = "0.01") -> float:
@@ -173,9 +275,9 @@ def _fmt_chf_short(value: Decimal) -> str:
     """Return CHF amount with K/M suffix."""
     v = value.copy_abs()
     if v >= Decimal("1000000"):
-        n = (v / Decimal("1000000")).quantize(Decimal("0.001"), rounding=ROUND_HALF_UP)
+        n = (v / Decimal("1000000")).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
         return f"CHF{n}M"
-    n = (v / Decimal("1000")).quantize(Decimal("0.001"), rounding=ROUND_HALF_UP)
+    n = (v / Decimal("1000")).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
     return f"CHF{n}K"
 
 
@@ -186,19 +288,19 @@ def _compute_bucket_sums(qs: QuerySet[Account]) -> dict[str, Decimal]:
         v=Sum("revenues")
     )["v"] or Decimal("0")
     randoms = base.filter(nature__in=IMPOTS_NATURE_EXCLUDE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
-    taxes = base.filter(nature__range=TAXES_NATURE_RANGE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
+    levies = base.filter(nature__range=TAXES_NATURE_RANGE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
     rentals = base.filter(nature__in=RENTALS_NATURE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
     interests = base.filter(nature__in=INTERESTS_NATURE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
     others = base.exclude(nature__range=IMPOTS_NATURE_RANGE).exclude(nature__range=TAXES_NATURE_RANGE).exclude(
         nature__in=RENTALS_NATURE + INTERESTS_NATURE
     ).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
     return {
-        "impots": impots,
-        "randoms": randoms,
-        "taxes": taxes,
-        "rentals": rentals,
-        "interests": interests,
-        "others": others,
+        KEY_IMPOTS: impots,
+        KEY_RANDOMS: randoms,
+        KEY_LEVIES: levies,
+        KEY_RENTALS: rentals,
+        KEY_INTERESTS_REV: interests,
+        KEY_OTHERS_REV: others,
     }
 
 
@@ -215,10 +317,10 @@ def compute_canton_breakdown(qs: QuerySet) -> dict[str, Decimal]:
     police = sum_amount_for_codes(qs, [POLICE], field="charges")
     total = social + pereq + police
     return {
-        "social": max(Decimal("0"), social),
-        "perequation": max(Decimal("0"), pereq),
-        "police": max(Decimal("0"), police),
-        "total": max(Decimal("0"), total),
+        KEY_SOCIAL: max(Decimal("0"), social),
+        KEY_EQUALIZATION: max(Decimal("0"), pereq),
+        KEY_POLICE: max(Decimal("0"), police),
+        KEY_TOTAL: max(Decimal("0"), total),
     }
 
 
@@ -253,11 +355,11 @@ def compute_intercos(qs: QuerySet[Account]) -> dict:
     total = aisge + apec + trans + autres
 
     return {
-        "aisge": max(Decimal("0"), aisge),
-        "apec": max(Decimal("0"), apec),
-        "transports_region": max(Decimal("0"), trans),
-        "autres": max(Decimal("0"), autres),
-        "total": max(Decimal("0"), total),
+        KEY_AISGE: max(Decimal("0"), aisge),
+        KEY_APEC: max(Decimal("0"), apec),
+        KEY_TRANSPORTS: max(Decimal("0"), trans),
+        KEY_INTERCOS_OTHER: max(Decimal("0"), autres),
+        KEY_TOTAL: max(Decimal("0"), total),
     }
 
 
@@ -273,31 +375,68 @@ def compute_commune_breakdown(qs: QuerySet[Account]) -> dict:
     def rng(a: int, b: int) -> Decimal:
         return qs.filter(nature__range=(a, b)).aggregate(v=Sum("charges"))["v"] or Decimal("0")
 
-    salaires = rng(*WAGES_NATURE_RANGE)
-    biens = rng(*GOODS_NATURE_RANGE)
-    interets = rng(*INTERESTS_NATURE_RANGE)
+    wages = rng(*WAGES_NATURE_RANGE)
+    goods = rng(*GOODS_NATURE_RANGE)
+    interests = rng(*INTERESTS_NATURE_RANGE)
 
-    # Aides: base
     q_aides_base = Q(nature__range=AIDS_NATURE_RANGE)
-
-    # Exclure les lignes AISGE en .366 (dans ta liste AISGE : '510.366', '520.366')
     aisge_366_codes = codes_with_nature(AISGE, 366)
     q_excl_aisge_366 = q_from_codes(qs, aisge_366_codes) if aisge_366_codes else Q()
-
-    aides = sum_field(qs, q_aides_base & ~q_excl_aisge_366, "charges")
-
-    total = salaires + biens + interets + aides
+    aids = sum_field(qs, q_aides_base & ~q_excl_aisge_366, "charges")
+    total = wages + goods + interests + aids
 
     return {
-        "salaires": max(Decimal("0"), salaires),
-        "biens": max(Decimal("0"), biens),
-        "interets": max(Decimal("0"), interets),
-        "aides": max(Decimal("0"), aides),
-        "total": max(Decimal("0"), total),
+        KEY_WAGES: max(Decimal("0"), wages),
+        KEY_GOODS: max(Decimal("0"), goods),
+        KEY_INTERESTS: max(Decimal("0"), interests),
+        KEY_AIDS: max(Decimal("0"), aids),
+        KEY_TOTAL: max(Decimal("0"), total),
     }
 
 
-def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict:  # noqa: PLR0915, PLR0912, C901
+def _node_label(label: str, val: Decimal) -> str:
+    return f"<sub>{label}</sub><br>{_fmt_chf_short(val)}" if val > 0 else label
+
+
+def _push_node(
+    idx: dict[str, int],
+    labels: list[str],
+    nodes: list[dict[str, str]],
+    node_colors: list[str],
+    key: str,
+    label: str,
+    value: Decimal,
+    color: str,
+) -> None:
+    """
+    Append a node with a stable key and a formatted label; update color & index map.
+    """
+    value = Decimal("0") if value is None else Decimal(str(value))
+    name = _node_label(str(label), value)
+    idx[key] = len(labels)
+    labels.append(name)
+    nodes.append({"name": name})
+    node_colors.append(color)
+
+
+def _add_link(
+    idx: dict[str, int],
+    links: list[dict[str, float]],
+    link_colors: list[str],
+    src_key: str,
+    dst_key: str,
+    value: Decimal,
+    color: str,
+) -> None:
+    """
+    Add a link if value > 0, using stable node keys.
+    """
+    if value and value > 0:
+        links.append({"source": idx[src_key], "target": idx[dst_key], "value": float(value)})
+        link_colors.append(color)
+
+
+def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict:  # noqa: PLR0915
     """
     Sankey auto-layout with index mapping (no magic numbers).
 
@@ -307,162 +446,143 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
       - Commune -> (Salaires, Biens & services, Intérêts, Aides & subventions)
     """
     rev = _compute_bucket_sums(qs)
+    canton = compute_canton_breakdown(qs)
+    inter = compute_intercos(qs)
+    commune = compute_commune_breakdown(qs)
+
     left = [
-        ("impots", _("Impôts"), COLOR_IMPOTS),
-        ("randoms", _("Impôts aléatoires"), COLOR_RANDOM),
-        ("taxes", _("Taxes"), COLOR_TAXES),
-        ("rentals", _("Locations"), COLOR_RENTALS),
-        ("interests", _("Intérêts"), COLOR_OTHERS),
-        ("others", _("Autres revenus"), COLOR_OTHERS),
+        (KEY_IMPOTS, LABEL_TAXES_GENERAL, COLOR_IMPOTS),
+        (KEY_RANDOMS, LABEL_TAXES_RANDOM, COLOR_RANDOM),
+        (KEY_LEVIES, LABEL_TAXES_USAGE, COLOR_TAXES),
+        (KEY_RENTALS, LABEL_RENTALS, COLOR_RENTALS),
+        (KEY_INTERESTS_REV, LABEL_INTERESTS, COLOR_OTHERS),
+        (KEY_OTHERS_REV, LABEL_REVENUES_OTHER, COLOR_OTHERS),
     ]
     left_vals = [max(Decimal("0"), rev[k]) for k, _lbl, _c in left]
+    total_left = sum(left_vals)
+    total_canton = max(Decimal("0"), canton[KEY_TOTAL])
+    total_inter = max(Decimal("0"), inter[KEY_TOTAL])
+    total_commune = max(Decimal("0"), commune[KEY_TOTAL])
 
-    canton = compute_canton_breakdown(qs)  # keys: social, perequation, police, total
-    inter = compute_intercos(qs)  # keys: aisge, apec, transports_region, autres, total
-    commune = compute_commune_breakdown(qs)  # keys: salaires, biens, interets, aides, total
+    # --- build nodes (use stable keys, render labels with values)
+    idx: dict[str, int] = {}
+    labels: list[str] = []
+    nodes: list[dict[str, str]] = []
+    node_colors: list[str] = []
+    links: list[dict[str, float]] = []
+    link_colors: list[str] = []
 
-    labels = [lbl for _k, lbl, _c in left] + [
-        str(_("Ménage communal")),
-        str(_("Canton")),
-        str(_("Intercommunalités")),
-        str(_("Commune")),
-        str(_("Sécurité sociale")),
-        str(_("Péréquation")),
-        str(_("Police")),
-        "AISGE",
-        "APEC",
-        str(_("Transports région")),
-        str(_("Associations")),
-        str(_("Autres intercommunalités")),
-        str(_("Salaires")),
-        str(_("Biens & services")),
-        str(_("Intérêts")),
-        str(_("Aides & subventions")),
-    ]
-    idx = {label: i for i, label in enumerate(labels)}
+    # Left revenue nodes
+    for i, (k, lbl, col) in enumerate(left):
+        _push_node(idx, labels, nodes, node_colors, k, lbl, left_vals[i], col)
 
-    node_colors = [
-        *[c for _k, _l, c in left],
-        COLOR_BUDGET,
-        "#2F855A",  # Canton
-        "#1E3A8A",  # Intercommunalités
-        "#CA8A04",  # Commune
-        "#86EFAC",
-        "#6EE7B7",
-        "#34D399",  # Canton leaves
-        "#A78BFA",
-        "#C4B5FD",
-        "#DDD6FE",
-        "#E9D5FF",
-        "#EDE9FE",  # Intercos leaves (+ Autres)
-        "#FDE68A",
-        "#FCD34D",
-        "#FBBF24",
-        "#F59E0B",  # Commune leaves
-    ]
+    # Hubs
+    _push_node(idx, labels, nodes, node_colors, NODE_HOUSEHOLD, LABEL_HOUSEHOLD, total_left, COLOR_BUDGET)
+    _push_node(idx, labels, nodes, node_colors, NODE_CANTON, LABEL_CANTON, total_canton, COLOR_CANTON)
+    _push_node(idx, labels, nodes, node_colors, NODE_INTERCOS, LABEL_INTERCOMMUNALITIES, total_inter, COLOR_INTERCOS)
+    _push_node(idx, labels, nodes, node_colors, NODE_COMMUNE, LABEL_COMMUNE, total_commune, COLOR_COMMUNE)
 
-    nodes = [{"name": s} for s in labels]
-    links, link_colors = [], []
+    # Canton leaves
+    _push_node(idx, labels, nodes, node_colors, KEY_SOCIAL, LABEL_SOCIAL, canton[KEY_SOCIAL], COLOR_CANTON_SOCIAL)
+    _push_node(
+        idx,
+        labels,
+        nodes,
+        node_colors,
+        KEY_EQUALIZATION,
+        LABEL_EQUALIZATION,
+        canton[KEY_EQUALIZATION],
+        COLOR_CANTON_EQUALIZATION,
+    )
+    _push_node(idx, labels, nodes, node_colors, KEY_POLICE, LABEL_POLICE, canton[KEY_POLICE], COLOR_CANTON_POLICE)
 
-    # Revenus -> Budget
-    for i, (_k, _lbl, col) in enumerate(left):
-        val = float(left_vals[i])
-        if val > 0:
-            links.append({"source": i, "target": idx["Ménage communal"], "value": val})
-            link_colors.append(col)
-
-    # Budget -> hubs (sum of leaves)
-    if canton["total"] > 0:
-        links.append({"source": idx["Ménage communal"], "target": idx["Canton"], "value": float(canton["total"])})
-        link_colors.append(COLOR_BUDGET)
-    if inter["total"] > 0:
-        links.append(
-            {"source": idx["Ménage communal"], "target": idx["Intercommunalités"], "value": float(inter["total"])}
-        )
-        link_colors.append(COLOR_BUDGET)
-    if commune["total"] > 0:
-        links.append({"source": idx["Ménage communal"], "target": idx["Commune"], "value": float(commune["total"])})
-        link_colors.append(COLOR_BUDGET)
-
-    # Canton -> leaves
-    if canton["social"] > 0:
-        links.append({"source": idx["Canton"], "target": idx["Sécurité sociale"], "value": float(canton["social"])})
-        link_colors.append("#86EFAC")
-    if canton["perequation"] > 0:
-        links.append({"source": idx["Canton"], "target": idx["Péréquation"], "value": float(canton["perequation"])})
-        link_colors.append("#6EE7B7")
-    if canton["police"] > 0:
-        links.append({"source": idx["Canton"], "target": idx["Police"], "value": float(canton["police"])})
-        link_colors.append("#34D399")
-
-    # Intercommunalités -> leaves (incl. 'Autres intercommunalités')
-    if inter["aisge"] > 0:
-        links.append({"source": idx["Intercommunalités"], "target": idx["AISGE"], "value": float(inter["aisge"])})
-        link_colors.append("#A78BFA")
-    if inter["apec"] > 0:
-        links.append({"source": idx["Intercommunalités"], "target": idx["APEC"], "value": float(inter["apec"])})
-        link_colors.append("#C4B5FD")
-    if inter["transports_region"] > 0:
-        links.append(
-            {
-                "source": idx["Intercommunalités"],
-                "target": idx["Transports région"],
-                "value": float(inter["transports_region"]),
-            }
-        )
-        link_colors.append("#DDD6FE")
-
-    if inter["autres"] > 0:
-        links.append(
-            {
-                "source": idx["Intercommunalités"],
-                "target": idx["Autres intercommunalités"],
-                "value": float(inter["autres"]),
-            }
-        )
-        link_colors.append("#EDE9FE")
-
-    # Commune -> leaves
-    if commune["salaires"] > 0:
-        links.append({"source": idx["Commune"], "target": idx["Salaires"], "value": float(commune["salaires"])})
-        link_colors.append("#FDE68A")
-    if commune["biens"] > 0:
-        links.append({"source": idx["Commune"], "target": idx["Biens & services"], "value": float(commune["biens"])})
-        link_colors.append("#FCD34D")
-    if commune["interets"] > 0:
-        links.append({"source": idx["Commune"], "target": idx["Intérêts"], "value": float(commune["interets"])})
-        link_colors.append("#FBBF24")
-    if commune["aides"] > 0:
-        links.append(
-            {"source": idx["Commune"], "target": idx["Aides & subventions"], "value": float(commune["aides"])}
-        )
-        link_colors.append("#F59E0B")
-
-    # Après avoir ajouté tous les liens
-    total_in = sum(link["value"] for link in links if link["target"] == idx["Ménage communal"])
-    total_out = sum(
-        link["value"] for link in links if link["source"] in (idx["Canton"], idx["Intercommunalités"], idx["Commune"])
+    # Intercos leaves
+    _push_node(idx, labels, nodes, node_colors, KEY_AISGE, LABEL_AISGE, inter[KEY_AISGE], COLOR_INTERCOS_AISGE)
+    _push_node(idx, labels, nodes, node_colors, KEY_APEC, LABEL_APEC, inter[KEY_APEC], COLOR_INTERCOS_APEC)
+    _push_node(
+        idx,
+        labels,
+        nodes,
+        node_colors,
+        KEY_TRANSPORTS,
+        LABEL_TRANSPORTS,
+        inter[KEY_TRANSPORTS],
+        COLOR_INTERCOS_TRANSPORTS,
+    )
+    _push_node(
+        idx,
+        labels,
+        nodes,
+        node_colors,
+        KEY_INTERCOS_OTHER,
+        LABEL_INTERCOS_OTHER,
+        inter[KEY_INTERCOS_OTHER],
+        COLOR_INTERCOS_OTHER,
     )
 
-    reste = total_in - total_out
+    # Commune leaves
+    _push_node(idx, labels, nodes, node_colors, KEY_WAGES, LABEL_WAGES, commune[KEY_WAGES], COLOR_COMMUNE_WAGES)
+    _push_node(idx, labels, nodes, node_colors, KEY_GOODS, LABEL_GOODS, commune[KEY_GOODS], COLOR_COMMUNE_GOODS)
+    _push_node(
+        idx,
+        labels,
+        nodes,
+        node_colors,
+        KEY_INTERESTS,
+        LABEL_INTERESTS,
+        commune[KEY_INTERESTS],
+        COLOR_COMMUNE_INTERESTS,
+    )
+    _push_node(idx, labels, nodes, node_colors, KEY_AIDS, LABEL_AIDS, commune[KEY_AIDS], COLOR_COMMUNE_AIDS)
 
-    if abs(reste) > MIN_VAL:  # seuil pour éviter les artefacts
-        labels.append(str(_("Résultat de trésorerie")))
-        idx["Résultat de trésorerie"] = len(labels) - 1
-        nodes.append({"name": labels[-1]})
-        node_colors.append("#374151")  # gris foncé
-        links.append(
-            {
-                "source": idx["Ménage communal"],
-                "target": idx["Résultat de trésorerie"],
-                "value": to_rounded_float(reste),
-            }
-        )
-        link_colors.append("#374151")
+    for i, (k, _lbl, col) in enumerate(left):
+        _add_link(idx, links, link_colors, k, NODE_HOUSEHOLD, left_vals[i], col)
+
+    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_CANTON, total_canton, COLOR_BUDGET_LINKS)
+    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_INTERCOS, total_inter, COLOR_BUDGET_LINKS)
+    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_COMMUNE, total_commune, COLOR_BUDGET_LINKS)
+
+    _add_link(idx, links, link_colors, NODE_CANTON, KEY_SOCIAL, canton[KEY_SOCIAL], COLOR_CANTON_LINKS)
+    _add_link(idx, links, link_colors, NODE_CANTON, KEY_EQUALIZATION, canton[KEY_EQUALIZATION], COLOR_CANTON_LINKS)
+    _add_link(idx, links, link_colors, NODE_CANTON, KEY_POLICE, canton[KEY_POLICE], COLOR_CANTON_LINKS)
+
+    _add_link(idx, links, link_colors, NODE_INTERCOS, KEY_AISGE, inter[KEY_AISGE], COLOR_INTERCOS_LINKS)
+    _add_link(idx, links, link_colors, NODE_INTERCOS, KEY_APEC, inter[KEY_APEC], COLOR_INTERCOS_LINKS)
+    _add_link(idx, links, link_colors, NODE_INTERCOS, KEY_TRANSPORTS, inter[KEY_TRANSPORTS], COLOR_INTERCOS_LINKS)
+    _add_link(
+        idx, links, link_colors, NODE_INTERCOS, KEY_INTERCOS_OTHER, inter[KEY_INTERCOS_OTHER], COLOR_INTERCOS_LINKS
+    )
+
+    _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_WAGES, commune[KEY_WAGES], COLOR_COMMUNE_LINKS)
+    _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_GOODS, commune[KEY_GOODS], COLOR_COMMUNE_LINKS)
+    _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_INTERESTS, commune[KEY_INTERESTS], COLOR_COMMUNE_LINKS)
+    _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_AIDS, commune[KEY_AIDS], COLOR_COMMUNE_LINKS)
+
+    # --- result
+    total_out = total_canton + total_inter + total_commune
+    remainder = total_left - total_out
+    if abs(remainder) > MIN_VAL:
+        amort_val = Decimal(0)  # TODO: calcul réel
+        funds_val = Decimal(0)  # TODO: calcul réel
+        profit_val = remainder - amort_val - funds_val
+
+        # Hub résultat
+        _push_node(idx, labels, nodes, node_colors, NODE_RESULT, LABEL_RESULT_HUB, remainder, COLOR_RESULT)
+
+        # Leaves
+        _push_node(idx, labels, nodes, node_colors, KEY_AMORT, LABEL_AMORT, amort_val, COLOR_RESULT)
+        _push_node(idx, labels, nodes, node_colors, KEY_FUNDS, LABEL_FUNDS, funds_val, COLOR_RESULT)
+        _push_node(idx, labels, nodes, node_colors, KEY_PROFIT, LABEL_PROFIT, profit_val, COLOR_RESULT)
+
+        # Liens
+        _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_RESULT, remainder, COLOR_BUDGET_LINKS)
+        _add_link(idx, links, link_colors, NODE_RESULT, KEY_AMORT, amort_val, COLOR_RESULT)
+        _add_link(idx, links, link_colors, NODE_RESULT, KEY_FUNDS, funds_val, COLOR_RESULT)
+        _add_link(idx, links, link_colors, NODE_RESULT, KEY_PROFIT, profit_val, COLOR_RESULT)
 
     return {
-        "nodes": nodes,
-        "links": links,
+        "nodes": nodes,  # [{"name": "Label<br>CHF…"}, ...]
+        "links": links,  # [{"source": i, "target": j, "value": ...}, ...]
         "link_colors": link_colors,
         "node_colors": node_colors,
     }
