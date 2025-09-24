@@ -84,6 +84,7 @@ DJANGO_APPS = [
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
+    "axes",
     "crispy_forms",
     "crispy_bootstrap5",
     "allauth",
@@ -114,6 +115,7 @@ MIGRATION_MODULES = {"sites": "budgetis.contrib.sites.migrations"}
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesBackend",
     "django.contrib.auth.backends.ModelBackend",  # pour le superadmin
     "allauth.account.auth_backends.AuthenticationBackend",  # pour allauth
 ]
@@ -123,6 +125,11 @@ AUTH_USER_MODEL = "users.User"
 LOGIN_REDIRECT_URL = reverse_lazy("home")
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = "account_login"
+
+AXES_FAILURE_LIMIT = 5  # 5 tentatives avant blocage
+AXES_COOLOFF_TIME = 1  # 1 heure de blocage
+AXES_LOCKOUT_CALLABLE = None  # possibilité de personnaliser
+
 
 # PASSWORDS
 # ------------------------------------------------------------------------------
@@ -148,6 +155,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
+    "axes.middleware.AxesMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

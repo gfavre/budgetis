@@ -34,6 +34,20 @@ services:
 
       # Middleware
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+      # Rate limiting global
+      - "traefik.http.middlewares.global-ratelimit.ratelimit.average=60"
+      - "traefik.http.middlewares.global-ratelimit.ratelimit.burst=200"
+      - "traefik.http.middlewares.global-ratelimit.ratelimit.period=1m"
+
+      # Rate limiting for login
+      - "traefik.http.routers.login.rule=Path(`/admin/login/`)"
+      - "traefik.http.routers.login.entrypoints=websecure"
+      - "traefik.http.routers.login.middlewares=login-ratelimit@docker"
+      - "traefik.http.services.login.loadbalancer.server.port=8000"
+      - "traefik.http.middlewares.login-ratelimit.ratelimit.average=5"
+      - "traefik.http.middlewares.login-ratelimit.ratelimit.burst=10"
+      - "traefik.http.middlewares.login-ratelimit.ratelimit.period=1m"
     networks:
       - budgetis
 
