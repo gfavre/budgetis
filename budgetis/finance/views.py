@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import TemplateView
@@ -11,7 +12,7 @@ from budgetis.accounting.models import Account
 from .builders import build_income_budget_canton_intercos_commune
 
 
-class SankeyDataView(View):
+class SankeyDataView(LoginRequiredMixin, View):
     """
     Return Sankey data (nodes/links) as JSON for the requested parameters.
 
@@ -45,7 +46,7 @@ class SankeyView(TemplateView):
         return context
 
 
-class SankeySimpleValuesView(View):
+class SankeySimpleValuesView(LoginRequiredMixin, View):
     """
     Return the five bucket values in a fixed order for the Sankey.
     Order (top→bottom):

@@ -3,6 +3,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -19,7 +20,7 @@ from .utils import find_first_significant_content_row
 from .utils import load_dataframe_with_header
 
 
-class AccountImportView(FormView):
+class AccountImportView(LoginRequiredMixin, FormView):
     template_name = "bdi_import/account_import.html"
     form_class = AccountImportForm
     success_url = reverse_lazy("bdi_import:account-import")
@@ -93,7 +94,7 @@ class AccountImportView(FormView):
         return redirect("bdi_import:account-mapping", log_id=log.id)
 
 
-class AccountMappingView(View):
+class AccountMappingView(LoginRequiredMixin, View):
     template_name = "bdi_import/account_mapping.html"
 
     def get(self, request, log_id):

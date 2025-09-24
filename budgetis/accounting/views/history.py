@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 
@@ -7,6 +8,7 @@ from ..models import Account
 from ..models import AccountComment
 
 
+@login_required
 def account_history_modal(request, account_id):
     account = get_object_or_404(Account, id=account_id)
 
