@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-18 07:12+0200\n"
+"POT-Creation-Date: 2025-09-30 08:57+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -367,12 +367,12 @@ msgstr ""
 msgid "No sufficiently filled data row found."
 msgstr ""
 
-#: budgetis/bdi_import/views.py:117
+#: budgetis/bdi_import/views.py:118
 #, python-format
 msgid "Could not process the uploaded file: %(error)s"
 msgstr ""
 
-#: budgetis/bdi_import/views.py:143
+#: budgetis/bdi_import/views.py:144
 msgid "Column mapping saved. Import will now be launched."
 msgstr ""
 
@@ -408,99 +408,99 @@ msgstr ""
 msgid "Site configuration"
 msgstr ""
 
-#: budgetis/finance/builders.py:114
+#: budgetis/finance/builders.py:113
 msgid "Municipal household"
 msgstr ""
 
-#: budgetis/finance/builders.py:115
+#: budgetis/finance/builders.py:114
 msgid "Canton"
 msgstr ""
 
-#: budgetis/finance/builders.py:116
+#: budgetis/finance/builders.py:115
 msgid "Intercommunalities"
 msgstr ""
 
-#: budgetis/finance/builders.py:117
+#: budgetis/finance/builders.py:116
 msgid "Commune"
 msgstr ""
 
-#: budgetis/finance/builders.py:119
+#: budgetis/finance/builders.py:118
 msgid "Social security"
 msgstr ""
 
-#: budgetis/finance/builders.py:120
+#: budgetis/finance/builders.py:119
 msgid "Equalization"
 msgstr ""
 
-#: budgetis/finance/builders.py:121
+#: budgetis/finance/builders.py:120
 msgid "Police"
 msgstr ""
 
-#: budgetis/finance/builders.py:125
+#: budgetis/finance/builders.py:124
 msgid "Regional transports"
 msgstr ""
 
-#: budgetis/finance/builders.py:126
+#: budgetis/finance/builders.py:125
 msgid "Associations"
 msgstr ""
 
-#: budgetis/finance/builders.py:127
+#: budgetis/finance/builders.py:126
 msgid "Other intercommunalities"
 msgstr ""
 
-#: budgetis/finance/builders.py:129
+#: budgetis/finance/builders.py:128
 msgid "Wages"
 msgstr ""
 
-#: budgetis/finance/builders.py:130
+#: budgetis/finance/builders.py:129
 msgid "Goods and services"
 msgstr ""
 
-#: budgetis/finance/builders.py:131
+#: budgetis/finance/builders.py:130
 msgid "Interests"
 msgstr ""
 
-#: budgetis/finance/builders.py:132
+#: budgetis/finance/builders.py:131
 msgid "Aids and subsidies"
 msgstr ""
 
-#: budgetis/finance/builders.py:134
+#: budgetis/finance/builders.py:133
 msgid "Taxes (general)"
 msgstr ""
 
-#: budgetis/finance/builders.py:135
+#: budgetis/finance/builders.py:134
 msgid "Random taxes"
 msgstr ""
 
-#: budgetis/finance/builders.py:136
+#: budgetis/finance/builders.py:135
 msgid "Levies (usage-based)"
 msgstr ""
 
-#: budgetis/finance/builders.py:137
+#: budgetis/finance/builders.py:136
 msgid "Rentals"
 msgstr ""
 
-#: budgetis/finance/builders.py:138
+#: budgetis/finance/builders.py:137
 msgid "Other revenues"
 msgstr ""
 
-#: budgetis/finance/builders.py:140
+#: budgetis/finance/builders.py:139
 msgid "Cash result"
 msgstr ""
 
-#: budgetis/finance/builders.py:141
+#: budgetis/finance/builders.py:140
 msgid "Result"
 msgstr ""
 
-#: budgetis/finance/builders.py:142
+#: budgetis/finance/builders.py:141
 msgid "Amortizations"
 msgstr ""
 
-#: budgetis/finance/builders.py:143
+#: budgetis/finance/builders.py:142
 msgid "Fund allocations"
 msgstr ""
 
-#: budgetis/finance/builders.py:144
+#: budgetis/finance/builders.py:143
 msgid "Profit"
 msgstr ""
 
@@ -547,6 +547,14 @@ msgstr ""
 
 #: budgetis/templates/base.html:140
 msgid "Sign Out"
+msgstr ""
+
+#: budgetis/users/adapters.py:70
+msgid "This account has been disabled."
+msgstr ""
+
+#: budgetis/users/adapters.py:78
+msgid "This email address is not authorized to log in."
 msgstr ""
 
 #: budgetis/users/admin.py:30

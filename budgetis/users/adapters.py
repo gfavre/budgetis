@@ -6,6 +6,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
+from django.utils.translation import gettext_lazy as _
 
 from budgetis.users.models import User
 
@@ -18,25 +19,16 @@ if typing.TYPE_CHECKING:
 from budgetis.users.models import AuthorizedEmail
 
 
-class MunicipalSocialAccountAdapter(DefaultSocialAccountAdapter):
-    def is_open_for_signup(self, request, sociallogin):
-        # Refuser toute création automatique
-        email = sociallogin.user.email
-        return User.objects.filter(email=email).exists()
-
-
 class AccountAdapter(DefaultAccountAdapter):
     def is_open_for_signup(self, request: HttpRequest) -> bool:
         return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
 
 
-class SocialAccountAdapter(DefaultSocialAccountAdapter):
-    def is_open_for_signup(
-        self,
-        request: HttpRequest,
-        sociallogin: SocialLogin,
-    ) -> bool:
-        return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
+class MunicipalSocialAccountAdapter(DefaultSocialAccountAdapter):
+    def is_open_for_signup(self, request, sociallogin):
+        # Refuser toute création automatique
+        email = sociallogin.user.email
+        return AuthorizedEmail.objects.filter(email__iexact=email).exists()
 
     def populate_user(
         self,
@@ -57,17 +49,32 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
                 user.name = first_name
                 if last_name := data.get("last_name"):
                     user.name += f" {last_name}"
+            else:
+                # fallback to the part before @ in the email
+                local_part = user.email.split("@")[0]
+                user.name = local_part.replace(".", " ").replace("_", " ").title()
         return user
 
-    def pre_social_login(
-        self,
-        request: HttpRequest,
-        sociallogin: SocialLogin,
-    ) -> None:
+    def pre_social_login(self, request: HttpRequest, sociallogin: SocialLogin) -> None:
         """
-        Deny login if the user's email is not in the AuthorizedEmail list.
+        Auto-connects social login to an existing user if emails match.
+        Denies login if email is not authorized or user is inactive.
         """
         email = sociallogin.user.email
-        if not AuthorizedEmail.objects.filter(email__iexact=email).exists():
-            msg = f"The email {email} is not authorized to log in."
-            raise PermissionDenied(msg)
+
+        if sociallogin.is_existing:
+            return
+
+        try:
+            user = User.objects.get(email__iexact=email)
+            if not user.is_active:
+                msg = _("This account has been disabled.")
+                raise PermissionDenied(msg)
+            # Connect this  account to the existing user
+            sociallogin.connect(request, user)
+
+        except User.DoesNotExist as err:
+            # Only allow login if the email is pre-authorized
+            if not AuthorizedEmail.objects.filter(email__iexact=email).exists():
+                msg = _("This email address is not authorized to log in.")
+                raise PermissionDenied(msg) from err
