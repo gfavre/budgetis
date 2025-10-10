@@ -10,8 +10,28 @@ from ..models import GroupResponsibility
 class AccountExplorerMixin:
     def get_accounts(self, user, year: int, *, only_responsible: bool) -> list[Account]:
         """
-        Return queryset of accounts for given year, filtered by responsibility if needed.
+        Return queryset of accounts for a given year, filtered by responsibility if needed.
+        Includes fallback to budget accounts if no actuals exist.
         """
+        group_ids = self._get_group_ids(user, year, only_responsible)
+        actual_accounts = self._get_actual_accounts(year, group_ids)
+
+        if not actual_accounts:
+            return self._get_budget_fallback(year, group_ids)
+
+        self._attach_budget_data(year, actual_accounts)
+        self._ensure_budget_defaults(actual_accounts)
+        return actual_accounts
+
+    # ---- Internal helpers ---------------------------------------------------
+
+    def _get_group_ids(self, user, year: int, only_responsible: bool) -> list[int]:  # noqa: FBT001
+        if not only_responsible:
+            return []
+        return list(GroupResponsibility.objects.filter(year=year, responsible=user).values_list("group_id", flat=True))
+
+    def _get_actual_accounts(self, year: int, group_ids: list[int]) -> list[Account]:
+        """Fetch actual (non-budget) accounts for the given year and optional group filter."""
         qs = (
             Account.objects.filter(
                 year=year,
@@ -21,38 +41,56 @@ class AccountExplorerMixin:
             .select_related("group__supergroup__metagroup")
             .annotate(comment_count=Count("comments"))
         )
+        if group_ids:
+            qs = qs.filter(group__in=group_ids)
+        return list(qs)
 
-        if only_responsible:
-            group_ids = GroupResponsibility.objects.filter(year=year, responsible=user).values_list(
-                "group_id", flat=True
+    def _get_budget_fallback(self, year: int, group_ids: list[int]) -> list[Account]:
+        """If no actual accounts exist, return budget accounts with zeroed actual values."""
+        qs = (
+            Account.objects.filter(
+                year=year,
+                is_budget=True,
+                group__isnull=False,
             )
+            .select_related("group__supergroup__metagroup")
+            .annotate(comment_count=Count("comments"))
+        )
+        if group_ids:
             qs = qs.filter(group__in=group_ids)
 
-        actual_accounts = list(qs)
+        accounts = list(qs)
+        for b in accounts:
+            b.budget_charges = b.charges
+            b.budget_revenues = b.revenues
+            b.budget_id = b.id
+            b.budget_comment_count = b.comment_count  # type: ignore[attr-defined]
+            b.charges = Decimal("0.00")
+            b.revenues = Decimal("0.00")
+        return accounts
 
-        # Prepare keys for matching with budget accounts
+    def _attach_budget_data(self, year: int, actual_accounts: list[Account]) -> None:
+        """Attach corresponding budget data to actual accounts."""
         account_keys = {(a.function, a.nature, a.sub_account): a for a in actual_accounts}
-
-        # Get corresponding budget accounts
-        budget_accounts = Account.objects.filter(
+        budget_qs = Account.objects.filter(
             year=year,
             is_budget=True,
             function__in=[k[0] for k in account_keys],
             nature__in=[k[1] for k in account_keys],
         ).annotate(comment_count=Count("comments"))
 
-        # Map budget accounts back to actual accounts
-        for b in budget_accounts:
+        for b in budget_qs:
             key = (b.function, b.nature, b.sub_account)
             actual = account_keys.get(key)
             if actual:
                 actual.budget_charges = b.charges
                 actual.budget_revenues = b.revenues
                 actual.budget_id = b.id
-                actual.budget_comment_count = b.comment_count
+                actual.budget_comment_count = b.comment_count  # type: ignore[attr-defined]
 
-        # Default values if no match
-        for a in actual_accounts:
+    def _ensure_budget_defaults(self, accounts: list[Account]) -> None:
+        """Ensure each account has budget-related attributes even if unmatched."""
+        for a in accounts:
             if not hasattr(a, "budget_charges"):
                 a.budget_charges = Decimal("0.00")
             if not hasattr(a, "budget_revenues"):
@@ -61,8 +99,6 @@ class AccountExplorerMixin:
                 a.budget_id = None
             if not hasattr(a, "budget_comment_count"):
                 a.budget_comment_count = 0
-
-        return actual_accounts
 
     def build_grouped_structure(self, accounts: list[Account]) -> OrderedDict:
         """

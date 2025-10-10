@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 08:57+0200\n"
+"POT-Creation-Date: 2025-10-10 06:24+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +31,7 @@ msgstr ""
 
 #: budgetis/accounting/forms.py:66 budgetis/accounting/models.py:112
 #: budgetis/bdi_import/forms.py:15 budgetis/bdi_import/models.py:15
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:12
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:22
 #: budgetis/finance/models.py:10
 #: budgetis/finance/templates/finance/sankey.html:9
 msgid "Year"
@@ -150,7 +150,7 @@ msgstr ""
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:9
 #: budgetis/bdi_import/models.py:55
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:20
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
 #: budgetis/finance/models.py:7
 #: budgetis/finance/templates/finance/sankey.html:18
 msgid "Budget"
@@ -165,7 +165,7 @@ msgid "BDI Import"
 msgstr ""
 
 #: budgetis/bdi_import/forms.py:22
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:35
 msgid "Copy settings from"
 msgstr ""
 
@@ -174,7 +174,7 @@ msgid "Select the year from which to copy settings (if any)."
 msgstr ""
 
 #: budgetis/bdi_import/forms.py:27 budgetis/bdi_import/models.py:44
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:33
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:39
 msgid "Copy responsibles"
 msgstr ""
 
@@ -183,12 +183,12 @@ msgid "Copy account labels"
 msgstr ""
 
 #: budgetis/bdi_import/forms.py:29 budgetis/bdi_import/models.py:46
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:41
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:47
 msgid "Copy visibility"
 msgstr ""
 
 #: budgetis/bdi_import/forms.py:30 budgetis/bdi_import/models.py:47
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:45
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:51
 msgid "Copy comments"
 msgstr ""
 
@@ -273,7 +273,7 @@ msgid "Source year"
 msgstr ""
 
 #: budgetis/bdi_import/models.py:45
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:37
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:43
 msgid "Copy labels"
 msgstr ""
 
@@ -286,7 +286,7 @@ msgid "Account import logs"
 msgstr ""
 
 #: budgetis/bdi_import/models.py:55
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:22
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
 msgid "Actual"
 msgstr ""
 
@@ -343,17 +343,34 @@ msgstr ""
 msgid "Unexpected error: "
 msgstr ""
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:9
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:17
+#, python-format
+msgid "Map columns to fields for %(logname)s"
+msgstr ""
+
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:19
 msgid "Import Settings"
 msgstr ""
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:16
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:26
 #: budgetis/finance/models.py:11
 msgid "Type"
 msgstr ""
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:51
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:57
 msgid "Edit import settings"
+msgstr ""
+
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:72
+msgid "Ignore"
+msgstr ""
+
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:95
+msgid "Derive charges/revenues from total column (signed)"
+msgstr ""
+
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:97
+msgid "Launch Import"
 msgstr ""
 
 #: budgetis/bdi_import/utils.py:53
@@ -549,11 +566,11 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
-#: budgetis/users/adapters.py:70
+#: budgetis/users/adapters.py:71
 msgid "This account has been disabled."
 msgstr ""
 
-#: budgetis/users/adapters.py:78
+#: budgetis/users/adapters.py:79
 msgid "This email address is not authorized to log in."
 msgstr ""
 

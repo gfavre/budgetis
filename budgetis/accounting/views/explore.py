@@ -36,7 +36,6 @@ class AccountPartialView(LoginRequiredMixin, AccountExplorerMixin, FormView):
     def form_valid(self, form):
         year = int(form.cleaned_data["year"])
         only = bool(form.cleaned_data.get("only_responsible"))
-
         accounts = self.get_accounts(self.request.user, year, only_responsible=only)
         grouped = self.build_grouped_structure(accounts)
 

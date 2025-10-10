@@ -186,3 +186,34 @@ input[type="checkbox"] {
 .btn-link:hover {
   color: color-mix(in srgb, var(--brand-color-alt) 80%, black);
 }
+.btn-outline-primary{
+  color: var(--brand-color-alt);
+  border-color: var(--brand-color-alt);
+}
+.btn-outline-primary:hover{
+  background-color: color-mix(in srgb, var(--brand-color-alt) 80%, black);;
+  border-color: color-mix(in srgb, var(--brand-color-alt) 80%, black);;
+}
+
+.btn-outline-secondary{
+  color: var(--brand-color);
+  border-color: var(--brand-color);
+}
+.btn-outline-secondary:hover{
+  background-color: color-mix(in srgb, var(--brand-color) 80%, black);;
+  border-color: color-mix(in srgb, var(--brand-color) 80%, black);;
+}
+
+.btn-check:checked + .btn-outline-secondary:focus, .btn-check:active + .btn-outline-secondary:focus,
+.btn-outline-secondary:active:focus, .btn-outline-secondary.active:focus,
+.btn-outline-secondary.dropdown-toggle.show:focus {
+  box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--brand-color) 30%, transparent)!important;
+
+}
+
+.card:not([class*=bg-]) .card-header {
+    color: var(--brand-color-alt);
+}
+.bg-secondary {
+    background-color: var(--brand-color-alt) !important;
+}

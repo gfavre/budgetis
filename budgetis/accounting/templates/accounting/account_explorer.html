@@ -20,7 +20,7 @@ h3 {
 
   </style>
 {% endblock extra_style %}
-{% block main %}
+{% block content %}
   <form method="post"
         hx-post="{% url 'accounting:account-partial' %}"
         hx-target="#account-list"
@@ -30,4 +30,4 @@ h3 {
   </form>
   <hr />
   <div id="account-list">{% include "accounting/partials/account_list.html" with grouped=grouped %}</div>
-{% endblock main %}
+{% endblock content %}

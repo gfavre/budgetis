@@ -151,8 +151,8 @@
           </div>
         </nav>
       </div>
-      <div class="container">
-        {% if messages %}
+      {% if messages %}
+        <div class="container">
           {% for message in messages %}
             <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
               {{ message }}
@@ -161,16 +161,18 @@
                       data-bs-dismiss="alert"
                       aria-label="Close"></button>
             </div>
-          {% endfor %}
-        {% endif %}
-        <main class="main-container">
-          {% block main %}
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block main %}
+        <div class="container">
+          <main class="main-container">
             {% block content %}
               <p>Use this document as a way to quick start any new project.</p>
             {% endblock content %}
-          {% endblock main %}
-        </main>
-      </div>
+          </main>
+        </div>
+      {% endblock main %}
     {% endblock body %}
     <!-- /container -->
     {% block modal %}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-30 08:57+0200\n"
+"POT-Creation-Date: 2025-10-10 06:24+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -36,7 +36,7 @@ msgstr "Comptabilité"
 
 #: budgetis/accounting/forms.py:66 budgetis/accounting/models.py:112
 #: budgetis/bdi_import/forms.py:15 budgetis/bdi_import/models.py:15
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:12
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:22
 #: budgetis/finance/models.py:10
 #: budgetis/finance/templates/finance/sankey.html:9
 msgid "Year"
@@ -155,7 +155,7 @@ msgstr "Commentaires"
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:9
 #: budgetis/bdi_import/models.py:55
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:20
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
 #: budgetis/finance/models.py:7
 #: budgetis/finance/templates/finance/sankey.html:18
 msgid "Budget"
@@ -170,7 +170,7 @@ msgid "BDI Import"
 msgstr "Import BDI"
 
 #: budgetis/bdi_import/forms.py:22
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:35
 msgid "Copy settings from"
 msgstr "Copier les paramètres de"
 
@@ -181,7 +181,7 @@ msgstr ""
 "paramètres (le cas échéant)."
 
 #: budgetis/bdi_import/forms.py:27 budgetis/bdi_import/models.py:44
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:33
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:39
 msgid "Copy responsibles"
 msgstr "Copier les responsables"
 
@@ -190,12 +190,12 @@ msgid "Copy account labels"
 msgstr "Copier les libellés de comptes"
 
 #: budgetis/bdi_import/forms.py:29 budgetis/bdi_import/models.py:46
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:41
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:47
 msgid "Copy visibility"
 msgstr "Copier la visibilité"
 
 #: budgetis/bdi_import/forms.py:30 budgetis/bdi_import/models.py:47
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:45
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:51
 msgid "Copy comments"
 msgstr "Copier les commentaires"
 
@@ -280,7 +280,7 @@ msgid "Source year"
 msgstr "Année source"
 
 #: budgetis/bdi_import/models.py:45
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:37
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:43
 msgid "Copy labels"
 msgstr "Copier les libellés"
 
@@ -293,7 +293,7 @@ msgid "Account import logs"
 msgstr "Journaux d'importation de comptes"
 
 #: budgetis/bdi_import/models.py:55
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:22
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
 msgid "Actual"
 msgstr "Compte"
 
@@ -352,18 +352,35 @@ msgstr "L'importation a échoué : "
 msgid "Unexpected error: "
 msgstr "Erreur inattendue : "
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:9
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:17
+#, python-format
+msgid "Map columns to fields for %(logname)s"
+msgstr "Associer les colonnes aux champs pour %(logname)s"
+
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:19
 msgid "Import Settings"
 msgstr "Paramètres d'importation"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:16
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:26
 #: budgetis/finance/models.py:11
 msgid "Type"
 msgstr "Type"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:51
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:57
 msgid "Edit import settings"
 msgstr "Modifier les paramètres d'importation"
+
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:72
+msgid "Ignore"
+msgstr "Ignorer"
+
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:95
+msgid "Derive charges/revenues from total column (signed)"
+msgstr "Dériver les charges/recettes de la colonne \"total\" (signé)"
+
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:97
+msgid "Launch Import"
+msgstr "Lancer l'importation"
 
 #: budgetis/bdi_import/utils.py:53
 #, python-format
@@ -562,11 +579,11 @@ msgstr "Mon Profil"
 msgid "Sign Out"
 msgstr "Déconnexion"
 
-#: budgetis/users/adapters.py:70
+#: budgetis/users/adapters.py:71
 msgid "This account has been disabled."
 msgstr "Ce compte a été désactivé."
 
-#: budgetis/users/adapters.py:78
+#: budgetis/users/adapters.py:79
 msgid "This email address is not authorized to log in."
 msgstr "Cette adresse e-mail n'est pas autorisée à se connecter."
 

@@ -3,86 +3,100 @@
 {% load crispy_forms_tags i18n %}
 {% load get_item money booleans %}
 
-{% block content %}
-  <h2 class="mb-4">Map columns to fields for {{ log }}</h2>
-  <div class="card mb-4">
-    <div class="card-header fw-bold">{{ _("Import Settings") }}</div>
-    <div class="card-body">
-      <div class="row mb-2">
-        <div class="col-sm-4 text-muted">{{ _("Year") }}</div>
-        <div class="col-sm-8">{{ log.year }}</div>
-      </div>
-      <div class="row mb-2">
-        <div class="col-sm-4 text-muted">{{ _("Type") }}</div>
-        <div class="col-sm-8">
-          <span class="badge bg-secondary">
-            {% if log.is_budget %}
-              {{ _("Budget") }}
-            {% else %}
-              {{ _("Actual") }}
-            {% endif %}
-          </span>
+{% block extra_style %}
+  <style>
+  .main-container {
+    max-width: 100%;
+  }
+  </style>
+{% endblock extra_style %}
+{% block main %}
+  <div class="container-fluid">
+    <main class="main-container">
+      <h2 class="mb-4">{% blocktrans with logname=log %}Map columns to fields for {{ logname }}{% endblocktrans %}</h2>
+      <div class="card mb-4">
+        <div class="card-header fw-bold">{% trans "Import Settings" %}</div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm-4 text-muted">{% trans "Year" %}</div>
+            <div class="col-sm-8">{{ log.year }}</div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-4 text-muted">{% trans "Type" %}</div>
+            <div class="col-sm-8">
+              <span class="badge bg-secondary">
+                {% if log.is_budget %}
+                  {% trans "Budget" %}
+                {% else %}
+                  {% trans "Actual" %}
+                {% endif %}
+              </span>
+            </div>
+          </div>
+          {% if log.source_year %}
+            <div class="row mb-2">
+              <div class="col-sm-4 text-muted">{% trans "Copy settings from" %}</div>
+              <div class="col-sm-8">{{ log.source_year }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-sm-4 text-muted">{% trans "Copy responsibles" %}</div>
+              <div class="col-sm-8">{{ log.copy_responsibles|checkmark }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-sm-4 text-muted">{% trans "Copy labels" %}</div>
+              <div class="col-sm-8">{{ log.copy_labels|checkmark }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-sm-4 text-muted">{% trans "Copy visibility" %}</div>
+              <div class="col-sm-8">{{ log.copy_visibility|checkmark }}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-sm-4 text-muted">{% trans "Copy comments" %}</div>
+              <div class="col-sm-8">{{ log.copy_comments|checkmark }}</div>
+            </div>
+          {% endif %}
+          <a href="{% url 'bdi_import:account-import' %}?edit={{ log.id }}"
+             class="btn btn-outline-primary">{% trans "Edit import settings" %}</a>
         </div>
       </div>
-      {% if log.source_year %}
-        <div class="row mb-2">
-          <div class="col-sm-4 text-muted">{{ _("Copy settings from") }}</div>
-          <div class="col-sm-8">{{ log.source_year }}</div>
+      <form method="post">
+        {% csrf_token %}
+        <table class="table table-bordered align-middle">
+          <thead class="align-middle text-center">
+            <tr>
+              {% for col in columns %}
+                <th class="p-1">
+                  <div class="d-flex flex-column align-items-stretch">
+                    <select name="column_map[{{ col }}]" class="form-select form-select-sm mb-1">
+                      <option value="">({% trans "Ignore" %})</option>
+                      {% for val, label in field_choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+                    </select>
+                    <small class="text-muted text-break">{{ col }}</small>
+                  </div>
+                </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in preview_rows %}
+              <tr>
+                {% for col in columns %}<td>{{ row|get_item:col }}</td>{% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="form-check mt-4">
+          <input class="form-check-input"
+                 type="checkbox"
+                 name="derived_from_total"
+                 id="derived_from_total" />
+          <label class="form-check-label" for="derived_from_total">
+            {% trans "Derive charges/revenues from total column (signed)" %}
+          </label>
         </div>
-        <div class="row mb-2">
-          <div class="col-sm-4 text-muted">{{ _("Copy responsibles") }}</div>
-          <div class="col-sm-8">{{ log.copy_responsibles|checkmark }}</div>
-        </div>
-        <div class="row mb-2">
-          <div class="col-sm-4 text-muted">{{ _("Copy labels") }}</div>
-          <div class="col-sm-8">{{ log.copy_labels|checkmark }}</div>
-        </div>
-        <div class="row mb-2">
-          <div class="col-sm-4 text-muted">{{ _("Copy visibility") }}</div>
-          <div class="col-sm-8">{{ log.copy_visibility|checkmark }}</div>
-        </div>
-        <div class="row mb-2">
-          <div class="col-sm-4 text-muted">{{ _("Copy comments") }}</div>
-          <div class="col-sm-8">{{ log.copy_comments|checkmark }}</div>
-        </div>
-      {% endif %}
-    </div>
-    <a href="{% url 'bdi_import:account-import' %}?edit={{ log.id }}"
-       class="btn btn-outline-secondary">{{ _("Edit import settings") }}</a>
+        <button type="submit" class="btn btn-primary mt-4">{% trans "Launch Import" %}</button>
+      </form>
+    </main>
   </div>
-  <form method="post">
-    {% csrf_token %}
-    <table class="table table-bordered align-middle">
-      <thead class="align-middle text-center">
-        <tr>
-          {% for col in columns %}
-            <th class="p-1">
-              <div class="d-flex flex-column align-items-stretch">
-                <select name="column_map[{{ col }}]" class="form-select form-select-sm mb-1">
-                  <option value="">(Ignore)</option>
-                  {% for val, label in field_choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
-                </select>
-                <small class="text-muted text-break">{{ col }}</small>
-              </div>
-            </th>
-          {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in preview_rows %}
-          <tr>
-            {% for col in columns %}<td>{{ row|get_item:col }}</td>{% endfor %}
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <div class="form-check mt-4">
-      <input class="form-check-input"
-             type="checkbox"
-             name="derived_from_total"
-             id="derived_from_total" />
-      <label class="form-check-label" for="derived_from_total">Derive charges/revenues from total column (signed)</label>
-    </div>
-    <button type="submit" class="btn btn-primary mt-4">Launch Import</button>
-  </form>
-{% endblock content %}
+  <div class="container"></div>
+{% endblock main %}
