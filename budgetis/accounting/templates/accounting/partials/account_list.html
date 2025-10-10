@@ -2,6 +2,12 @@
 
 <!-- DEBUG: loaded partial -->
 <div id="account-list">
+  {% if last_import_text %}
+    <p class="text-muted small mb-3">
+      <i class="bi bi-clock-history"></i>
+      {{ last_import_text }}
+    </p>
+  {% endif %}
   {% for mg_code, mg in grouped.items %}
     <h2>{{ mg_code }} {{ mg.label }}</h2>
     {% for sg_code, sg in mg.supergroups.items %}

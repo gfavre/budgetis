@@ -33,8 +33,14 @@ class AccountPartialView(LoginRequiredMixin, AccountExplorerMixin, FormView):
     form_class = AccountFilterForm
     template_name = "accounting/partials/account_list.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["last_import_text"] = self.get_last_import_info(context.get("year", None))
+        return context
+
     def form_valid(self, form):
         year = int(form.cleaned_data["year"])
+
         only = bool(form.cleaned_data.get("only_responsible"))
         accounts = self.get_accounts(self.request.user, year, only_responsible=only)
         grouped = self.build_grouped_structure(accounts)

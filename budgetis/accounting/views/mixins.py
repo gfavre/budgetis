@@ -2,6 +2,10 @@ from collections import OrderedDict
 from decimal import Decimal
 
 from django.db.models import Count
+from django.utils import formats
+from django.utils.translation import gettext_lazy as _
+
+from budgetis.bdi_import.models import AccountImportLog
 
 from ..models import Account
 from ..models import GroupResponsibility
@@ -195,3 +199,31 @@ class AccountExplorerMixin:
             sorted_structure[mg_code] = mg_data
 
         return sorted_structure
+
+    def get_last_import_info(self, year: int) -> str:
+        """
+        Return a human-readable string with the last import dates for budget and actual accounts.
+        Example: "Dernier import : 12 janvier 2025 (budget)  •  8 août 2026 (comptes)"
+        """
+
+        def _get_date(is_budget: bool) -> str | None:  # noqa: FBT001
+            log = (
+                AccountImportLog.objects.filter(year=year, is_budget=is_budget, status="success")
+                .order_by("-created_at")
+                .first()
+            )
+            return formats.date_format(log.created_at, "j F Y") if log else None
+
+        budget_date = _get_date(True)  # noqa: FBT003
+        actual_date = _get_date(False)  # noqa: FBT003
+
+        if not budget_date and not actual_date:
+            return ""
+        parts = []
+        if budget_date:
+            budget_lbl = _("budget")
+            parts.append(f"{budget_date} ({budget_lbl})")
+        if actual_date:
+            actual_lbl = _("actuals")
+            parts.append(f"{actual_date} ({actual_lbl})")
+        return _("Last import:") + " " + "  •  ".join(parts)
