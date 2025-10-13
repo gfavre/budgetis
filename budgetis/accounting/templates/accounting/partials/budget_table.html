@@ -35,19 +35,35 @@
         <!-- budget courant -->
         <td class="text-end">
           {{ account.charges|format_money }}
-          {% if account.charges_pct is not None %}
-            <div class="{% if account.charges_pct > 0 %}text-danger{% elif account.charges_pct < 0 %}text-success{% endif %} small">
-              {{ account.charges_pct|floatformat:1 }} %
-            </div>
-          {% endif %}
+          {% with diff=account.charges|percent_diff:account.prev_budget_charges %}{{ diff|percent_diff_display }}{% endwith %}
+          <button class="btn btn-sm btn-link"
+                  title="Commentaires"
+                  hx-get="{% url 'accounting:account-comments' account.id 'charges' %}"
+                  hx-target="#accountCommentsModal .modal-content"
+                  data-bs-toggle="modal"
+                  data-bs-target="#accountCommentsModal">
+            <span id="comment-icon-{{ account.id }}"
+                  class="{% if not account.comment_count %}text-muted{% endif %}">
+              <i class="bi bi-chat-left-text"></i>
+            </span>
+          </button>
         </td>
         <td class="text-end">
           {{ account.revenues|format_money }}
-          {% if account.revenues_pct is not None %}
-            <div class="{% if account.revenues_pct > 0 %}text-success{% elif account.revenues_pct < 0 %}text-danger{% endif %} small">
-              {{ account.revenues_pct|floatformat:1 }} %
-            </div>
-          {% endif %}
+          {% with diff=account.revenues|percent_diff:account.prev_budget_revenues %}
+            {{ diff|percent_diff_display:True }}
+          {% endwith %}
+          <button class="btn btn-sm btn-link"
+                  title="Commentaires"
+                  hx-get="{% url 'accounting:account-comments' account.id 'charges' %}"
+                  hx-target="#accountCommentsModal .modal-content"
+                  data-bs-toggle="modal"
+                  data-bs-target="#accountCommentsModal">
+            <span id="comment-icon-{{ account.id }}"
+                  class="{% if not account.comment_count %}text-muted{% endif %}">
+              <i class="bi bi-chat-left-text"></i>
+            </span>
+          </button>
         </td>
         <!-- budget -1 -->
         <td class="text-end text-muted">{{ account.prev_budget_charges|format_money }}</td>
