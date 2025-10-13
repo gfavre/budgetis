@@ -1,19 +1,25 @@
 from django.urls import path
 
+# from .views.budget_compare import BudgetComparisonView
 from .views.comments import AccountCommentCreateView
 from .views.comments import AccountCommentDeleteView
 from .views.comments import AccountCommentEditView
 from .views.comments import AccountCommentsView
 from .views.explore import AccountExplorerView
 from .views.explore import AccountPartialView
+from .views.explore import BudgetExplorerView
+from .views.explore import BudgetPartialView
 from .views.history import account_history_modal
 
 
 app_name = "accounting"
 
 urlpatterns = [
-    path("explorer/", AccountExplorerView.as_view(), name="account-explorer"),
-    path("explorer/partial/", AccountPartialView.as_view(), name="account-partial"),
+    path("accounts/", AccountExplorerView.as_view(), name="account-explorer"),
+    path("accounts/partial/", AccountPartialView.as_view(), name="account-partial"),
+    # Budgets
+    path("budgets/", BudgetExplorerView.as_view(), name="budget-explorer"),
+    path("budgets/partial/", BudgetPartialView.as_view(), name="budget-partial"),
     path("history/<int:account_id>/", account_history_modal, name="account-history"),
     path(
         "comments/<int:pk>/edit/",
@@ -35,4 +41,5 @@ urlpatterns = [
         AccountCommentsView.as_view(),
         name="account-comments",
     ),
+    ##path("budget/compare/", BudgetComparisonView.as_view(), name="budget-compare"),
 ]

@@ -1,0 +1,61 @@
+{% load money i18n %}
+
+<table class="table table-bordered align-middle mb-0">
+  <thead>
+    <tr class="table-light text-center">
+      <th rowspan="2" class="text-start">N°</th>
+      <th rowspan="2" class="text-start">Désignation</th>
+      <th colspan="2">Budget {{ year }}</th>
+      <th colspan="2">Budget {{ previous_year }}</th>
+      <th colspan="2">Comptes {{ actuals_year }}</th>
+    </tr>
+    <tr class="table-light text-center">
+      <th>Charges</th>
+      <th>Produits</th>
+      <th>Charges</th>
+      <th>Produits</th>
+      <th>Charges</th>
+      <th>Produits</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for account in accounts %}
+      <tr>
+        <td class="text-nowrap">{{ account.full_code }}</td>
+        <td>
+          <a href="{% url 'accounting:account-history' account.id %}"
+             class="account-history-link"
+             hx-get="{% url 'accounting:account-history' account.id %}"
+             hx-target="#accountHistoryModal .modal-content"
+             hx-trigger="click"
+             hx-swap="innerHTML"
+             data-bs-toggle="modal"
+             data-bs-target="#accountHistoryModal">{{ account.label }}</a>
+        </td>
+        <!-- budget courant -->
+        <td class="text-end">
+          {{ account.charges|format_money }}
+          {% if account.charges_pct is not None %}
+            <div class="{% if account.charges_pct > 0 %}text-danger{% elif account.charges_pct < 0 %}text-success{% endif %} small">
+              {{ account.charges_pct|floatformat:1 }} %
+            </div>
+          {% endif %}
+        </td>
+        <td class="text-end">
+          {{ account.revenues|format_money }}
+          {% if account.revenues_pct is not None %}
+            <div class="{% if account.revenues_pct > 0 %}text-success{% elif account.revenues_pct < 0 %}text-danger{% endif %} small">
+              {{ account.revenues_pct|floatformat:1 }} %
+            </div>
+          {% endif %}
+        </td>
+        <!-- budget -1 -->
+        <td class="text-end text-muted">{{ account.prev_budget_charges|format_money }}</td>
+        <td class="text-end text-muted">{{ account.prev_budget_revenues|format_money }}</td>
+        <!-- comptes -2 -->
+        <td class="text-end text-muted small">{{ account.actual_charges|format_money }}</td>
+        <td class="text-end text-muted small">{{ account.actual_revenues|format_money }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

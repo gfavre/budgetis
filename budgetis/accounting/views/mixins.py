@@ -11,7 +11,58 @@ from ..models import Account
 from ..models import GroupResponsibility
 
 
-class AccountExplorerMixin:
+class BaseExplorerLogicMixin:
+    """
+    Shared ORM and helper logic between AccountExplorerMixin and BudgetExplorerMixin.
+    """
+
+    # ---------- ORM helpers -------------------------------------------------
+
+    def _get_accounts_queryset(self, *, year: int, is_budget: bool, group_ids: list[int] | None = None):
+        """Return filtered queryset of Account, with proper selects and annotations."""
+        qs = (
+            Account.objects.filter(
+                year=year,
+                is_budget=is_budget,
+                group__isnull=False,
+            )
+            .select_related("group__supergroup__metagroup")
+            .annotate(comment_count=Count("comments"))
+        )
+        if group_ids:
+            qs = qs.filter(group__in=group_ids)
+        return qs
+
+    def _get_group_ids(self, user, year: int, only_responsible: bool) -> list[int]:  # noqa: FBT001
+        """Return list of group IDs for which the user is responsible."""
+        if not only_responsible:
+            return []
+        return list(GroupResponsibility.objects.filter(year=year, responsible=user).values_list("group_id", flat=True))
+
+    # ---------- Generic data attachers --------------------------------------
+
+    @staticmethod
+    def _ensure_budget_defaults(accounts: list[Account]) -> None:
+        """Ensure every account has all budget attributes."""
+        for a in accounts:
+            if not hasattr(a, "budget_charges"):
+                a.budget_charges = Decimal("0.00")
+            if not hasattr(a, "budget_revenues"):
+                a.budget_revenues = Decimal("0.00")
+            if not hasattr(a, "budget_id"):
+                a.budget_id = None
+            if not hasattr(a, "budget_comment_count"):
+                a.budget_comment_count = 0
+
+    @staticmethod
+    def _calc_pct(current: Decimal, previous: Decimal) -> Decimal | None:
+        """Return percentage change, None if previous == 0."""
+        if previous == 0:
+            return None
+        return ((current - previous) / previous * 100).quantize(Decimal("0.1"))
+
+
+class AccountExplorerMixin(BaseExplorerLogicMixin):
     def get_accounts(self, user, year: int, *, only_responsible: bool) -> list[Account]:
         """
         Return queryset of accounts for a given year, filtered by responsibility if needed.
@@ -26,28 +77,6 @@ class AccountExplorerMixin:
         self._attach_budget_data(year, actual_accounts)
         self._ensure_budget_defaults(actual_accounts)
         return actual_accounts
-
-    # ---- Internal helpers ---------------------------------------------------
-
-    def _get_group_ids(self, user, year: int, only_responsible: bool) -> list[int]:  # noqa: FBT001
-        if not only_responsible:
-            return []
-        return list(GroupResponsibility.objects.filter(year=year, responsible=user).values_list("group_id", flat=True))
-
-    def _get_actual_accounts(self, year: int, group_ids: list[int]) -> list[Account]:
-        """Fetch actual (non-budget) accounts for the given year and optional group filter."""
-        qs = (
-            Account.objects.filter(
-                year=year,
-                is_budget=False,
-                group__isnull=False,
-            )
-            .select_related("group__supergroup__metagroup")
-            .annotate(comment_count=Count("comments"))
-        )
-        if group_ids:
-            qs = qs.filter(group__in=group_ids)
-        return list(qs)
 
     def _get_budget_fallback(self, year: int, group_ids: list[int]) -> list[Account]:
         """If no actual accounts exist, return budget accounts with zeroed actual values."""
@@ -111,44 +140,30 @@ class AccountExplorerMixin:
         """
         if not accounts:
             return OrderedDict()
-
         year = accounts[0].year
-
         responsibilities = {
             r.group_id: r.responsible
             for r in GroupResponsibility.objects.filter(year=year).select_related("responsible")
         }
-
         raw_structure: dict[int, dict] = {}
-
         for account in accounts:
             group = account.group
             supergroup = group.supergroup if group else None
             metagroup = supergroup.metagroup if supergroup else None
-
             if not (group and supergroup and metagroup):
                 continue
 
             mg_key = metagroup.code
             sg_key = supergroup.code
             ag_key = group.code
-
             mg = raw_structure.setdefault(
                 mg_key,
-                {
-                    "label": metagroup.label,
-                    "supergroups": {},
-                },
+                {"label": metagroup.label, "supergroups": {}},
             )
-
             sg = mg["supergroups"].setdefault(
                 sg_key,
-                {
-                    "label": supergroup.label,
-                    "groups": {},
-                },
+                {"label": supergroup.label, "groups": {}},
             )
-
             # ajout dans ag = sg["groups"].setdefault(...)
             ag = sg["groups"].setdefault(
                 ag_key,
@@ -168,7 +183,6 @@ class AccountExplorerMixin:
             ag["total_revenues"] += account.revenues
             ag["budget_total_charges"] += account.budget_charges
             ag["budget_total_revenues"] += account.budget_revenues
-
         return self.sort_grouped_structure(raw_structure)
 
     def sort_grouped_structure(self, raw_structure: dict) -> OrderedDict:
@@ -227,3 +241,64 @@ class AccountExplorerMixin:
             actual_lbl = _("actuals")
             parts.append(f"{actual_date} ({actual_lbl})")
         return _("Last import:") + " " + "  •  ".join(parts)
+
+    # ------------------------------------------------------------------
+    # legacy accessors used by get_accounts (for partial views)
+    # ------------------------------------------------------------------
+
+    def _get_actual_accounts(self, year: int, group_ids: list[int]):
+        """Return queryset for actual accounts of the given year."""
+        qs = (
+            Account.objects.filter(
+                year=year,
+                is_budget=False,
+                group__isnull=False,
+            )
+            .select_related("group__supergroup__metagroup")
+            .annotate(comment_count=Count("comments"))
+        )
+        # Only filter if the list of groups is non-empty
+        if group_ids:
+            qs = qs.filter(group_id__in=group_ids)
+        return qs
+
+    def _get_budget_accounts(self, year: int):
+        """Return queryset for budget accounts of the given year."""
+        return (
+            Account.objects.filter(
+                year=year,
+                is_budget=True,
+                group__isnull=False,
+            )
+            .select_related("group__supergroup__metagroup")
+            .annotate(comment_count=Count("comments"))
+        )
+
+
+class BudgetExplorerMixin(AccountExplorerMixin):
+    """Extend AccountExplorerMixin to handle year-1 and year-2 comparisons."""
+
+    def get_accounts(self, user, year: int, *, only_responsible: bool) -> list[Account]:
+        group_ids = self._get_group_ids(user, year, only_responsible)
+        current_budget = list(self._get_accounts_queryset(year=year, is_budget=True, group_ids=group_ids))
+        prev_budget = list(self._get_accounts_queryset(year=year - 1, is_budget=True))
+        actuals = list(self._get_accounts_queryset(year=year - 2, is_budget=False))
+
+        prev_map = {(a.function, a.nature, a.sub_account): a for a in prev_budget}
+        act_map = {(a.function, a.nature, a.sub_account): a for a in actuals}
+
+        for acc in current_budget:
+            key = (acc.function, acc.nature, acc.sub_account)
+            prev = prev_map.get(key)
+            act = act_map.get(key)
+            acc.prev_budget_charges = prev.charges if prev else Decimal("0.00")
+            acc.prev_budget_revenues = prev.revenues if prev else Decimal("0.00")
+            acc.actual_charges = act.charges if act else Decimal("0.00")
+            acc.actual_revenues = act.revenues if act else Decimal("0.00")
+            acc.charges_pct = self._calc_pct(acc.charges, acc.prev_budget_charges)
+            acc.revenues_pct = self._calc_pct(acc.revenues, acc.prev_budget_revenues)
+            acc.budget_charges = acc.charges
+            acc.budget_revenues = acc.revenues
+            acc.budget_id = acc.id
+            acc.budget_comment_count = acc.comment_count or 0
+        return current_budget

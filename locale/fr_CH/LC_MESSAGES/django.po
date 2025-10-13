@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-10 07:10+0200\n"
+"POT-Creation-Date: 2025-10-13 10:59+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -30,7 +30,7 @@ msgstr "Masquer les comptes dans le rapport"
 msgid "Display accounts in report"
 msgstr "Afficher les comptes dans le rapport"
 
-#: budgetis/accounting/apps.py:8 budgetis/templates/base.html:109
+#: budgetis/accounting/apps.py:8
 msgid "Accounting"
 msgstr "Comptabilité"
 
@@ -76,6 +76,7 @@ msgstr "Groupes de compte"
 
 #: budgetis/accounting/models.py:93
 #: budgetis/accounting/templates/accounting/partials/account_group_block.html:5
+#: budgetis/accounting/templates/accounting/partials/budget_group_block.html:5
 msgid "Responsible"
 msgstr "Responsable"
 
@@ -158,22 +159,37 @@ msgstr "Commentaires"
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
 #: budgetis/finance/models.py:7
 #: budgetis/finance/templates/finance/sankey.html:18
+#: budgetis/templates/base.html:116
 msgid "Budget"
 msgstr "Budget"
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:11
+#: budgetis/accounting/templates/accounting/account_explorer.html:4
+#: budgetis/templates/base.html:109
 msgid "Actuals"
 msgstr "Comptes"
 
-#: budgetis/accounting/views/mixins.py:224
+#: budgetis/accounting/templates/accounting/account_explorer.html:25
+msgid "Accounts explorer"
+msgstr "Explorateur de comptes"
+
+#: budgetis/accounting/templates/accounting/budget_explorer.html:3
+msgid "Budgets"
+msgstr "Budgets"
+
+#: budgetis/accounting/templates/accounting/budget_explorer.html:23
+msgid "Budget explorer"
+msgstr "Explorateur de budgets"
+
+#: budgetis/accounting/views/mixins.py:238
 msgid "budget"
 msgstr "budget"
 
-#: budgetis/accounting/views/mixins.py:227
+#: budgetis/accounting/views/mixins.py:241
 msgid "actuals"
 msgstr "comptes"
 
-#: budgetis/accounting/views/mixins.py:229
+#: budgetis/accounting/views/mixins.py:243
 msgid "Last import:"
 msgstr "Dernière Importation :"
 
@@ -571,23 +587,27 @@ msgid "Revenus → Budget"
 msgstr "Revenus → Allocations"
 
 #: budgetis/templates/allauth/layouts/entrance.html:13
-#: budgetis/templates/base.html:146
+#: budgetis/templates/base.html:163
 msgid "Sign In"
 msgstr "S'identifier"
 
-#: budgetis/templates/base.html:116
+#: budgetis/templates/base.html:124
+msgid "Reporting"
+msgstr "Rapports"
+
+#: budgetis/templates/base.html:133
 msgid "Import from BDI"
 msgstr "Importation de BDI"
 
-#: budgetis/templates/base.html:127
+#: budgetis/templates/base.html:144
 msgid "Admin"
 msgstr "Admin"
 
-#: budgetis/templates/base.html:134
+#: budgetis/templates/base.html:151
 msgid "My Profile"
 msgstr "Mon Profil"
 
-#: budgetis/templates/base.html:140
+#: budgetis/templates/base.html:157
 msgid "Sign Out"
 msgstr "Déconnexion"
 
