@@ -50,6 +50,8 @@ services:
       - "traefik.http.middlewares.login-ratelimit.ratelimit.period=1m"
     networks:
       - budgetis
+    volumes:
+      - ./budgetis/media:/app/budgetis/media
 
   celery:
     labels:

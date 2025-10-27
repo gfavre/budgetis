@@ -30,9 +30,12 @@ urlpatterns = [
     path("bdi/", include("budgetis.bdi_import.urls", namespace="bdi_import")),
     path("accounting/", include("budgetis.accounting.urls", namespace="accounting")),
     path("finance/", include("budgetis.finance.urls", namespace="finance")),
-    # Media files
-    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]
+
+# Serve media files even if DEBUG is False
+if settings.MEDIA_URL and settings.MEDIA_ROOT:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 if settings.DEBUG:
     # Static file serving when using Gunicorn + Uvicorn for local web socket development
     urlpatterns += staticfiles_urlpatterns()
