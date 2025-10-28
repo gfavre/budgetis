@@ -24,6 +24,7 @@ services:
     image: nginx:alpine
     volumes:
       - ./budgetis/media:/usr/share/nginx/html:ro
+      - ./nginx/media.conf:/etc/nginx/nginx.conf:ro
     expose:
       - "80"
     networks:
