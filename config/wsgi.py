@@ -20,6 +20,8 @@ from pathlib import Path
 
 from django.core.wsgi import get_wsgi_application
 
+from budgetis.core.wsgi_server_patch import StripServerHeaderMiddleware
+
 
 # This allows easy placement of apps within the interior
 # budgetis directory.
@@ -31,3 +33,4 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
 # file. This includes Django's development server, if the WSGI_APPLICATION
 # setting points here.
 application = get_wsgi_application()
+application = StripServerHeaderMiddleware(application)
