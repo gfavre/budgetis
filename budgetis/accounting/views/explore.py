@@ -46,10 +46,15 @@ class BaseAccountExplorerView(LoginRequiredMixin, TemplateView):
                     form.fields["year"].initial = year
 
         if year:
+            try:
+                previous_year = int(year) - 1
+            except ValueError:
+                previous_year = None
             accounts = self.get_accounts_for_year(year, self.request.user, only_responsible=bool(only))
             context.update(
                 {
                     "year": year,
+                    "previous_year": previous_year,
                     "grouped": self.build_grouped_structure(accounts),
                     "last_import_text": self.get_last_import_info(year),
                 }
