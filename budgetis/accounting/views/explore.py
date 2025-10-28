@@ -46,15 +46,10 @@ class BaseAccountExplorerView(LoginRequiredMixin, TemplateView):
                     form.fields["year"].initial = year
 
         if year:
-            try:
-                previous_year = int(year) - 1
-            except ValueError:
-                previous_year = None
             accounts = self.get_accounts_for_year(year, self.request.user, only_responsible=bool(only))
             context.update(
                 {
                     "year": year,
-                    "previous_year": previous_year,
                     "grouped": self.build_grouped_structure(accounts),
                     "last_import_text": self.get_last_import_info(year),
                 }
@@ -90,6 +85,12 @@ class BudgetExplorerView(BudgetExplorerMixin, BaseAccountExplorerView):
     template_name = "accounting/budget_explorer.html"
     title = "Budgets"
     is_budget_view = True
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["previous_year"] = context["year"] - 1
+        context["actuals_year"] = context["year"] - 2
+        return context
 
     def get_accounts_for_year(self, year: int, user, *, only_responsible: bool):
         return self.get_accounts(user, year, only_responsible=only_responsible)
