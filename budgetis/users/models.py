@@ -43,16 +43,15 @@ class User(AbstractUser):
         return reverse("users:detail", kwargs={"pk": self.id})
 
     def __str__(self) -> str:
-        output = ""
         if self.name:
-            output += self.name
+            base = self.name
         elif getattr(self, "first_name", None) or getattr(self, "last_name", None):
-            output += f"{self.first_name or ''} {self.last_name or ''}".strip()
-        if output and self.trigram:
-            return output + f" ({self.trigram})"
-        if self.trigram:
+            base = f"{self.first_name or ''} {self.last_name or ''}".strip()
+        elif self.trigram:
             return self.trigram
-        return self.email
+        else:
+            return self.email
+        return f"{base} ({self.trigram})" if self.trigram else base
 
 
 class AuthorizedEmail(models.Model):

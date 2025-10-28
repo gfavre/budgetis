@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-13 10:59+0200\n"
+"POT-Creation-Date: 2025-10-28 06:08+0100\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,6 +137,10 @@ msgstr ""
 msgid "Accounts"
 msgstr ""
 
+#: budgetis/accounting/models.py:204
+msgid "Content"
+msgstr ""
+
 #: budgetis/accounting/models.py:208
 msgid "Account Comment"
 msgstr ""
@@ -159,20 +163,20 @@ msgid "Budget"
 msgstr ""
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:11
-#: budgetis/accounting/templates/accounting/account_explorer.html:4
+#: budgetis/accounting/templates/accounting/account_explorer.html:6
 #: budgetis/templates/base.html:109
 msgid "Actuals"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/account_explorer.html:25
+#: budgetis/accounting/templates/accounting/account_explorer.html:27
 msgid "Accounts explorer"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/budget_explorer.html:3
+#: budgetis/accounting/templates/accounting/budget_explorer.html:6
 msgid "Budgets"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/budget_explorer.html:23
+#: budgetis/accounting/templates/accounting/budget_explorer.html:25
 msgid "Budget explorer"
 msgstr ""
 
@@ -574,27 +578,27 @@ msgid "Revenus → Budget"
 msgstr ""
 
 #: budgetis/templates/allauth/layouts/entrance.html:13
-#: budgetis/templates/base.html:163
+#: budgetis/templates/base.html:160
 msgid "Sign In"
 msgstr ""
 
-#: budgetis/templates/base.html:124
+#: budgetis/templates/base.html:123
 msgid "Reporting"
 msgstr ""
 
-#: budgetis/templates/base.html:133
+#: budgetis/templates/base.html:130
 msgid "Import from BDI"
 msgstr ""
 
-#: budgetis/templates/base.html:144
+#: budgetis/templates/base.html:141
 msgid "Admin"
 msgstr ""
 
-#: budgetis/templates/base.html:151
+#: budgetis/templates/base.html:148
 msgid "My Profile"
 msgstr ""
 
-#: budgetis/templates/base.html:157
+#: budgetis/templates/base.html:154
 msgid "Sign Out"
 msgstr ""
 

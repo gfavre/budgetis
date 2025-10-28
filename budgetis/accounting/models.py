@@ -201,7 +201,7 @@ class AccountComment(models.Model):
         blank=True,
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    content = models.TextField()
+    content = models.TextField(verbose_name=_("Content"))
 
     class Meta:
         ordering = ("account__year", "account__nature", "account__function", "created_at")

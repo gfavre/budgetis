@@ -24,7 +24,7 @@ class AccountCommentsView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         account_id = self.kwargs["account_id"]
         self.account = get_object_or_404(Account, pk=account_id)
-        return self.account.comments.all().order_by("-created_at")
+        return self.account.comments.all().order_by("created_at")
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

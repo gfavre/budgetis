@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-13 10:59+0200\n"
+"POT-Creation-Date: 2025-10-28 06:08+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.8\n"
 
 #: budgetis/accounting/admin.py:40
 msgid "Code"
@@ -142,6 +142,10 @@ msgstr "Compte"
 msgid "Accounts"
 msgstr "Comptes"
 
+#: budgetis/accounting/models.py:204
+msgid "Content"
+msgstr "Contenu"
+
 #: budgetis/accounting/models.py:208
 msgid "Account Comment"
 msgstr "Commentaire sur le compte"
@@ -164,20 +168,20 @@ msgid "Budget"
 msgstr "Budget"
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:11
-#: budgetis/accounting/templates/accounting/account_explorer.html:4
+#: budgetis/accounting/templates/accounting/account_explorer.html:6
 #: budgetis/templates/base.html:109
 msgid "Actuals"
 msgstr "Comptes"
 
-#: budgetis/accounting/templates/accounting/account_explorer.html:25
+#: budgetis/accounting/templates/accounting/account_explorer.html:27
 msgid "Accounts explorer"
 msgstr "Explorateur de comptes"
 
-#: budgetis/accounting/templates/accounting/budget_explorer.html:3
+#: budgetis/accounting/templates/accounting/budget_explorer.html:6
 msgid "Budgets"
 msgstr "Budgets"
 
-#: budgetis/accounting/templates/accounting/budget_explorer.html:23
+#: budgetis/accounting/templates/accounting/budget_explorer.html:25
 msgid "Budget explorer"
 msgstr "Explorateur de budgets"
 
@@ -587,27 +591,27 @@ msgid "Revenus → Budget"
 msgstr "Revenus → Allocations"
 
 #: budgetis/templates/allauth/layouts/entrance.html:13
-#: budgetis/templates/base.html:163
+#: budgetis/templates/base.html:160
 msgid "Sign In"
 msgstr "S'identifier"
 
-#: budgetis/templates/base.html:124
+#: budgetis/templates/base.html:123
 msgid "Reporting"
 msgstr "Rapports"
 
-#: budgetis/templates/base.html:133
+#: budgetis/templates/base.html:130
 msgid "Import from BDI"
 msgstr "Importation de BDI"
 
-#: budgetis/templates/base.html:144
+#: budgetis/templates/base.html:141
 msgid "Admin"
 msgstr "Admin"
 
-#: budgetis/templates/base.html:151
+#: budgetis/templates/base.html:148
 msgid "My Profile"
 msgstr "Mon Profil"
 
-#: budgetis/templates/base.html:157
+#: budgetis/templates/base.html:154
 msgid "Sign Out"
 msgstr "Déconnexion"
 
