@@ -24,6 +24,8 @@ services:
     image: nginx:alpine
     volumes:
       - ./budgetis/media:/usr/share/nginx/html:ro
+    expose:
+      - "80"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.media.rule=Host(`budgetis.genolier.ch`) && PathPrefix(`/media/`)"
