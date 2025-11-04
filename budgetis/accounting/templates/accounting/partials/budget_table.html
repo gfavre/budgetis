@@ -34,7 +34,6 @@
         </td>
         <!-- budget courant -->
         <td class="no-wrap text-end">
-          {{ account.charges|format_money }}
           {% with diff=account.charges|percent_diff:account.prev_budget_charges %}{{ diff|percent_diff_display }}{% endwith %}
           <button class="btn btn-sm btn-link"
                   title="Commentaires"
@@ -47,6 +46,7 @@
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
+          {{ account.charges|format_money }}
         </td>
         <td class="text-end">
           {% with diff=account.revenues|percent_diff:account.prev_budget_revenues %}

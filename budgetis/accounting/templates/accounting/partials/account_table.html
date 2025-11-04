@@ -52,7 +52,6 @@
           {{ account.revenues|format_money }}
         </td>
         <td class="text-end">
-          {{ account.budget_charges|format_money }}
           {% if account.budget_id %}
             <button class="btn btn-sm btn-link  no-print"
                     title="Commentaires"
@@ -66,6 +65,7 @@
               </span>
             </button>
           {% endif %}
+          {{ account.budget_charges|format_money }}
         </td>
         <td class="text-end">{{ account.budget_revenues|format_money }}</td>
       </tr>
