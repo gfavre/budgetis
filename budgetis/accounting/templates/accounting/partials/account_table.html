@@ -31,9 +31,8 @@
              data-bs-target="#accountHistoryModal">{{ account.label }}</a>
         </td>
         <td class="text-end">
-          {{ account.charges|format_money }}
           {% with diff=account.charges|percent_diff:account.budget_charges %}{{ diff|percent_diff_display }}{% endwith %}
-          <button class="btn btn-sm btn-link"
+          <button class="btn btn-sm btn-link  no-print"
                   title="Commentaires"
                   hx-get="{% url 'accounting:account-comments' account.id 'charges' %}"
                   hx-target="#accountCommentsModal .modal-content"
@@ -44,17 +43,18 @@
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
+          {{ account.charges|format_money }}
         </td>
         <td class="text-end">
-          {{ account.revenues|format_money }}
           {% with diff=account.revenues|percent_diff:account.budget_revenues %}
             {{ diff|percent_diff_display:True }}
           {% endwith %}
+          {{ account.revenues|format_money }}
         </td>
         <td class="text-end">
           {{ account.budget_charges|format_money }}
           {% if account.budget_id %}
-            <button class="btn btn-sm btn-link"
+            <button class="btn btn-sm btn-link  no-print"
                     title="Commentaires"
                     hx-get="{% url 'accounting:account-comments' account.budget_id 'budget_charges' %}"
                     hx-target="#accountCommentsModal .modal-content"
@@ -76,14 +76,14 @@
     <tr class="table-primary fw-bold">
       <td colspan="2">{{ code }} {{ label }}</td>
       <td class="text-end">
-        {{ data.total_charges|format_money }}
         {% with diff=data.total_charges|percent_diff:data.budget_total_charges %}{{ diff|percent_diff_display }}{% endwith %}
+        {{ data.total_charges|format_money }}
       </td>
       <td class="text-end">
-        {{ data.total_revenues|format_money }}
         {% with diff=data.total_revenues|percent_diff:data.budget_total_revenues %}
           {{ diff|percent_diff_display }}
         {% endwith %}
+        {{ data.total_revenues|format_money }}
       </td>
       <td class="text-end">{{ data.budget_total_charges|format_money }}</td>
       <td class="text-end">{{ data.budget_total_revenues|format_money }}</td>

@@ -19,18 +19,53 @@ h3 {
   margin: 1.5rem 0 1rem;
   color: var(--brand-color-alt);
 }
+@media print {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto; /* autorise largeur selon contenu */
+  }
+
+  /* Première colonne = largeur auto selon contenu */
+  table th:first-child,
+  table td:first-child {
+    white-space: nowrap;
+    width: 1%;
+  }
+
+  /* Deuxième colonne (désignation) prend le reste */
+  table th:nth-child(2),
+  table td:nth-child(2) {
+    width: auto;
+  }
+
+  /* Colonnes numériques compactes et alignées à droite */
+  table th:nth-child(n+3),
+  table td:nth-child(n+3) {
+    text-align: right;
+    width: 12%;
+  }
+
+  td small {
+  display: none
+}
+}
+
+
   </style>
 {% endblock extra_style %}
 {% block content %}
-  <h1>{% trans "Budget explorer" %}</h1>
-  <form method="post"
-        hx-post="{% url 'accounting:budget-partial' %}"
-        hx-target="#budget-list"
-        hx-swap="outerHTML"
-        hx-trigger="change delay:300ms from:input, change from:select">
-    {% crispy form %}
-  </form>
-  <hr />
+  <div class="no-print">
+    <h1>{% trans "Budget explorer" %}</h1>
+    <form method="post"
+          hx-post="{% url 'accounting:budget-partial' %}"
+          hx-target="#budget-list"
+          hx-swap="outerHTML"
+          hx-trigger="change delay:300ms from:input, change from:select">
+      {% crispy form %}
+    </form>
+    <hr />
+  </div>
   <div id="budget-list">
     {% include "accounting/partials/budget_list.html" with grouped=grouped year=year previous_year=previous_year actuals_year=actuals_year %}
   </div>

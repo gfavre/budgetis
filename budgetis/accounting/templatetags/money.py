@@ -76,5 +76,5 @@ def percent_diff_display(diff: float, is_revenue: bool = False) -> str:  # noqa:
         css_class = "text-muted"
         sign = ""
 
-    html = f'<small class="{css_class} text-nowrap">({sign}{diff_val:.1f}&nbsp;%)</small>'
+    html = f'<small class="{css_class} text-nowrap">({sign}{diff_val:.0f}%)</small>'
     return mark_safe(html)  # noqa: S308

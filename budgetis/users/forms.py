@@ -39,10 +39,11 @@ class UserAdminCreationForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         is_municipal = cleaned_data.get("is_municipal", False)
+        is_staff = cleaned_data.get("is_staff", False)
         password1 = cleaned_data.get("password1")
         password2 = cleaned_data.get("password2")
 
-        if not is_municipal:
+        if not is_municipal and is_staff:
             # Admin : mot de passe requis
             if not password1 or not password2:
                 raise forms.ValidationError(_("Password is required for admins."))
@@ -52,7 +53,7 @@ class UserAdminCreationForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        if self.cleaned_data.get("is_municipal"):
+        if not self.cleaned_data.get("is_staff") or not self.cleaned_data.get("is_superuser"):
             user.set_unusable_password()
         else:
             user.set_password(self.cleaned_data["password1"])

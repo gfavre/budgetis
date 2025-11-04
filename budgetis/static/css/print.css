@@ -1,0 +1,153 @@
+/* === Budgetis: print stylesheet (A4, B/W, dense) === */
+@page {
+  size: A4 portrait;
+  margin: 10mm 8mm;
+}
+
+@media print {
+  /* 1) Reset / typography */
+  html, body {
+    background: none !important;
+    color: #000 !important;
+    font-family: "Helvetica Neue", Arial, system-ui, sans-serif;
+    font-size: 9pt; /* petit mais lisible */
+    line-height: 1.25;
+  }
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-print-color-adjust: economy;
+    print-color-adjust: economy;
+  }
+
+  /* 2) Noir & blanc (neutralise les couleurs “succès/danger”, badges, liens) */
+  a, .link, .btn-link { color: #000 !important; text-decoration: none !important; }
+  .text-success, .text-danger, .text-warning, .text-muted,
+  .badge, [class*="badge-"], .label, [class*="label-"] {
+    color: #000 !important; background: transparent !important; border-color: #000 !important;
+  }
+  img { filter: grayscale(100%); }
+
+  /* 3) Mise en page (enlève le chrome de l’app) */
+  header, nav, footer, .navbar, .sidebar, .offcanvas,
+  .toast, .alert, .pagination, .btn, .btn-group,
+  form, .filters, .actions, .breadcrumbs, .tooltip,
+  .no-print { display: none !important; }
+
+  /* 4) Conteneurs pleine largeur */
+  .container, .container-fluid, .container-xl, .container-lg {
+    width: auto !important; max-width: none !important; padding: 0 !important;
+  }
+  .row, [class*="grid"], [class*="col-"] { gap: 0 !important; }
+
+  /* 5) Titres compacts */
+  h1, h2, h3 { margin: 4pt 0 2pt; font-weight: 600; color: #000 !important; }
+  h1 { font-size: 13pt; }
+  h2 { font-size: 11pt; }
+  h3 { font-size: 10pt; }
+
+  /* 6) Tableaux dense, nets, non zébrés */
+  table {
+    border-collapse: collapse !important;
+    width: 100%;
+    table-layout: fixed; /* largeur stable */
+  }
+
+  th, td {
+    border: 0.3pt solid #000 !important;
+    padding: 2pt 3pt !important;
+    vertical-align: top;
+    word-wrap: break-word;
+  }
+
+  th {
+    font-weight: 700;
+  }
+
+  /* === ALIGNEMENTS === */
+  .text-end,
+  .text-right,
+  [data-align="right"] {
+    text-align: right !important;
+  }
+
+  .text-center,
+  [data-align="center"] {
+    text-align: center !important;
+  }
+
+  /* === POURCENTAGE À GAUCHE, MONTANT À DROITE === */
+  td.text-end {
+    position: relative;
+    white-space: nowrap;
+  }
+
+  td.text-end small {
+    position: absolute;
+    left: 3pt;             /* léger décalage depuis le bord gauche */
+    top: 50%;                      /* position verticale centrée */
+    transform: translateY(-50%);   /* correction du centrage */
+    text-align: left;
+    font-size: 7pt;
+    color: #000;
+  }
+
+  /* Décale le texte principal pour ne pas chevaucher le pourcentage */
+  td.text-end {
+    padding-left: 22mm;    /* ajuste selon ta mise en page */
+  }
+
+  /* 7) Sauts de page soignés */
+  .page-break { break-before: page; }
+  h1 { break-after: avoid; }
+  table, figure, .card, .section, .group { break-inside: avoid; }
+  tr, th, td { page-break-inside: avoid; }
+
+  /* 8) Petits bonus utiles */
+  /* Afficher l’URL après les liens (en option : retirez si inutile) */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 8pt; font-weight: 400;
+  }
+
+  /* Réduit un peu l’interlignage dans les cellules “compactes” */
+  .compact, .table-compact td, .table-compact th { padding: 1.5pt 2pt !important; }
+
+  /* Classes utilitaires à poser dans vos templates */
+  .keep { break-inside: avoid; }        /* éviter de couper un bloc/table */
+  .nourl a::after { content: none !important; } /* pas d’URL imprimée */
+
+
+  h2 {
+    break-before: page;
+    page-break-before: always; /* compat older browsers */
+  }
+
+  /* Optionnel : pas de saut avant le tout premier H2 */
+  h2:first-of-type {
+    break-before: auto;
+    page-break-before: auto;
+  }
+   h2.no-break {
+    break-before: auto !important;
+    page-break-before: auto !important;
+  }
+
+  h3 {
+    break-after: avoid !important;
+    page-break-after: avoid !important; /* compat anciens navigateurs */
+  }
+  h3 + table,
+  h3 + .table,
+  h3 + .keep {
+    break-before: avoid !important;
+    page-break-before: avoid !important;
+  }
+
+  /* Si tu préfères encapsuler les deux dans un bloc : */
+  .section-title-with-table {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+}
