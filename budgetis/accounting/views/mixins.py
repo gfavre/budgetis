@@ -21,11 +21,7 @@ class BaseExplorerLogicMixin:
     def _get_accounts_queryset(self, *, year: int, is_budget: bool, group_ids: list[int] | None = None):
         """Return filtered queryset of Account, with proper selects and annotations."""
         qs = (
-            Account.objects.filter(
-                year=year,
-                is_budget=is_budget,
-                group__isnull=False,
-            )
+            Account.objects.filter(year=year, is_budget=is_budget, group__isnull=False, visible_in_report=True)
             .select_related("group__supergroup__metagroup")
             .annotate(comment_count=Count("comments"))
         )
@@ -249,11 +245,7 @@ class AccountExplorerMixin(BaseExplorerLogicMixin):
     def _get_actual_accounts(self, year: int, group_ids: list[int]):
         """Return queryset for actual accounts of the given year."""
         qs = (
-            Account.objects.filter(
-                year=year,
-                is_budget=False,
-                group__isnull=False,
-            )
+            Account.objects.filter(year=year, is_budget=False, group__isnull=False, visible_in_report=True)
             .select_related("group__supergroup__metagroup")
             .annotate(comment_count=Count("comments"))
         )
@@ -265,11 +257,7 @@ class AccountExplorerMixin(BaseExplorerLogicMixin):
     def _get_budget_accounts(self, year: int):
         """Return queryset for budget accounts of the given year."""
         return (
-            Account.objects.filter(
-                year=year,
-                is_budget=True,
-                group__isnull=False,
-            )
+            Account.objects.filter(year=year, is_budget=True, group__isnull=False, visible_in_report=True)
             .select_related("group__supergroup__metagroup")
             .annotate(comment_count=Count("comments"))
         )
@@ -302,3 +290,59 @@ class BudgetExplorerMixin(AccountExplorerMixin):
             acc.budget_id = acc.id
             acc.budget_comment_count = acc.comment_count or 0
         return current_budget
+
+    def build_grouped_structure(self, accounts: list[Account]) -> OrderedDict:
+        """
+        Build nested structure: MetaGroup > SuperGroup > AccountGroup > Accounts
+        with totals and labels.
+        """
+        if not accounts:
+            return OrderedDict()
+        year = accounts[0].year
+        responsibilities = {
+            r.group_id: r.responsible
+            for r in GroupResponsibility.objects.filter(year=year).select_related("responsible")
+        }
+        raw_structure: dict[int, dict] = {}
+        for account in accounts:
+            group = account.group
+            supergroup = group.supergroup if group else None
+            metagroup = supergroup.metagroup if supergroup else None
+            if not (group and supergroup and metagroup):
+                continue
+
+            mg_key = metagroup.code
+            sg_key = supergroup.code
+            ag_key = group.code
+            mg = raw_structure.setdefault(
+                mg_key,
+                {"label": metagroup.label, "supergroups": {}},
+            )
+            sg = mg["supergroups"].setdefault(
+                sg_key,
+                {"label": supergroup.label, "groups": {}},
+            )
+            # ajout dans ag = sg["groups"].setdefault(...)
+            ag = sg["groups"].setdefault(
+                ag_key,
+                {
+                    "label": group.label,
+                    "accounts": [],
+                    "budget_total_charges": Decimal(0),
+                    "budget_total_revenues": Decimal(0),
+                    "prev_budget_total_charges": Decimal(0),
+                    "prev_budget_total_revenues": Decimal(0),
+                    "actual_total_charges": Decimal(0),
+                    "actual_total_revenues": Decimal(0),
+                    "responsible": responsibilities.get(group.id),
+                },
+            )
+
+            ag["accounts"].append(account)
+            ag["budget_total_charges"] += account.budget_charges
+            ag["budget_total_revenues"] += account.budget_revenues
+            ag["prev_budget_total_charges"] += account.prev_budget_charges
+            ag["prev_budget_total_revenues"] += account.prev_budget_revenues
+            ag["actual_total_charges"] += account.actual_charges
+            ag["actual_total_revenues"] += account.actual_revenues
+        return self.sort_grouped_structure(raw_structure)

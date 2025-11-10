@@ -38,7 +38,7 @@ class BaseAccountExplorerView(LoginRequiredMixin, TemplateView):
             only = form.cleaned_data.get("only_responsible", False)
         else:
             year = self.get_default_year()
-            only = False
+            only = form.initial.get("only_responsible", True)
             if year:
                 # prefill form field
                 form.initial["year"] = year
