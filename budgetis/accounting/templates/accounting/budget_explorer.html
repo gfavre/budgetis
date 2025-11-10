@@ -22,10 +22,22 @@ h3 {
 @media print {
   table {
     width: 100%;
-    border-collapse: collapse;
-    table-layout: auto; /* autorise largeur selon contenu */
+    border-collapse: collapse;       /* <-- important : on sépare les cellules */
+    border-spacing: 0 0;             /* par défaut */
+    table-layout: auto;
   }
 
+  th, td {
+    padding: 2pt 3pt;
+    vertical-align: top;
+  }
+  th {
+    border: 0.2pt solid #000!important;
+
+  }
+  td {
+    border: 0;
+  }
   /* Première colonne = largeur auto selon contenu */
   table th:first-child,
   table td:first-child {
@@ -43,12 +55,36 @@ h3 {
   table th:nth-child(n+3),
   table td:nth-child(n+3) {
     text-align: right;
-    width: 12%;
+    width: 10.5%;
   }
 
   td small {
-  display: none
+    display: none
+  }
+
+  colgroup .col-charges{
+    border-left: 0.1pt solid #000;
+  }
+  colgroup .col-revenues{
+    border-right: 0.1pt solid #000;
+  }
+  colgroup .col-num {
+        border-left: 0.1pt solid #000;
+  }
+  tfoot .table-primary{
+    border-bottom: 0.1pt solid #000;
+  }
+/*
+ colgroup.budget-current {
+  border-left: 4px solid white;
 }
+ colgroup.budget-prev {
+  border-left: 4px solid white;
+}
+colgroup.accounts-prev {
+  border-left: 4px solid white;
+}*/
+
 }
 
 

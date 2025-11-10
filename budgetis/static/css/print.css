@@ -10,7 +10,7 @@
     background: none !important;
     color: #000 !important;
     font-family: "Helvetica Neue", Arial, system-ui, sans-serif;
-    font-size: 9pt; /* petit mais lisible */
+    font-size: 8pt; /* petit mais lisible */
     line-height: 1.25;
   }
   * {
@@ -48,13 +48,17 @@
 
   /* 6) Tableaux dense, nets, non zébrés */
   table {
-    border-collapse: collapse !important;
+    border-collapse: collapse;
     width: 100%;
-    table-layout: fixed; /* largeur stable */
+    table-layout: auto; /* largeur stable */
+    color: #000;
+  }
+  table.table {
+    color: #000;
   }
 
   th, td {
-    border: 0.3pt solid #000 !important;
+    border: 0.1pt solid #000;
     padding: 2pt 3pt !important;
     vertical-align: top;
     word-wrap: break-word;

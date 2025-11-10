@@ -1,13 +1,29 @@
 {% load money i18n %}
 
 <table class="table table-bordered align-middle mb-0">
+  <colgroup span="2" class="info">
+    <col span="1" class="col-num" />
+    <col span="1" class="col-label" />
+  </colgroup>          <!-- N°, Désignation -->
+  <colgroup span="2" class="budget-current">
+    <col span="1" class="col-charges" />
+    <col span="1" class="col-revenues" />
+  </colgroup> <!-- Budget courant -->
+  <colgroup span="2" class="budget-prev">
+    <col span="1" class="col-charges" />
+    <col span="1" class="col-revenues" />
+  </colgroup>    <!-- Budget -1 -->
+  <colgroup span="2" class="accounts-prev">
+    <col span="1" class="col-charges" />
+    <col span="1" class="col-revenues" />
+  </colgroup>  <!-- Comptes -2 -->
   <thead>
     <tr class="table-light text-center">
       <th rowspan="2" class="text-start">N°</th>
       <th rowspan="2" class="text-start">Désignation</th>
-      <th colspan="2">Budget {{ year }}</th>
-      <th colspan="2">Budget {{ previous_year }}</th>
-      <th colspan="2">Comptes {{ actuals_year }}</th>
+      <th colspan="2" class="text-center">Budget {{ year }}</th>
+      <th colspan="2" class="text-center">Budget {{ previous_year }}</th>
+      <th colspan="2" class="text-center">Comptes {{ actuals_year }}</th>
     </tr>
     <tr class="table-light text-center">
       <th>Charges</th>
@@ -46,7 +62,15 @@
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
-          {{ account.charges|format_money }}
+          {% if account.revenues %}
+            {% if account.charges %}{{ account.charges|format_money }}{% endif %}
+          {% else %}
+            {% if account.charges %}
+              {{ account.charges|format_money }}
+            {% else %}
+              -
+            {% endif %}
+          {% endif %}
         </td>
         <td class="text-end">
           {% with diff=account.revenues|percent_diff:account.prev_budget_revenues %}
@@ -63,15 +87,86 @@
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
-          {{ account.revenues|format_money }}
+          {% if account.charges %}
+            {% if account.revenues %}{{ account.revenues|format_money }}{% endif %}
+          {% else %}
+            {% if account.revenues %}
+              {{ account.revenues|format_money }}
+            {% else %}
+              -
+            {% endif %}
+          {% endif %}
         </td>
         <!-- budget -1 -->
-        <td class="text-end text-muted">{{ account.prev_budget_charges|format_money }}</td>
-        <td class="text-end text-muted">{{ account.prev_budget_revenues|format_money }}</td>
+        <td class="text-end">
+          {% if account.prev_budget_revenues %}
+            {% if account.prev_budget_charges %}{{ account.prev_budget_charges|format_money }}{% endif %}
+          {% else %}
+            {% if account.prev_budget_charges %}
+              {{ account.prev_budget_charges|format_money }}
+            {% else %}
+              -
+            {% endif %}
+          {% endif %}
+        </td>
+        <td class="text-end ">
+          {% if account.prev_budget_charges %}
+            {% if account.prev_budget_revenues %}{{ account.prev_budget_revenues|format_money }}{% endif %}
+          {% else %}
+            {% if account.prev_budget_revenues %}
+              {{ account.prev_budget_revenues|format_money }}
+            {% else %}
+              -
+            {% endif %}
+          {% endif %}
+        </td>
         <!-- comptes -2 -->
-        <td class="text-end text-muted small">{{ account.actual_charges|format_money }}</td>
-        <td class="text-end text-muted small">{{ account.actual_revenues|format_money }}</td>
+        <td class="text-end">
+          {% if account.actual_revenues %}
+            {% if account.actual_charges %}{{ account.actual_charges|format_money }}{% endif %}
+          {% else %}
+            {% if account.actual_charges %}
+              {{ account.actual_charges|format_money }}
+            {% else %}
+              -
+            {% endif %}
+          {% endif %}
+        </td>
+        <td class="text-end">
+          {% if account.actual_charges %}
+            {% if account.actual_revenues %}{{ account.actual_revenues|format_money }}{% endif %}
+          {% else %}
+            {% if account.actual_revenues %}
+              {{ account.actual_revenues|format_money }}
+            {% else %}
+              -
+            {% endif %}
+          {% endif %}
+        </td>
       </tr>
     {% endfor %}
   </tbody>
+  <tfoot>
+    <!-- Ligne d'en-tête style "190 Service informatique" avec totaux -->
+    <tr class="table-primary fw-bold">
+      <td>{{ code }}</td>
+      <td>{{ label }}</td>
+      <td class="text-end">
+        {% with diff=data.budget_total_charges|percent_diff:data.prev_budget_total_charges %}
+          {{ diff|percent_diff_display }}
+        {% endwith %}
+        {{ data.budget_total_charges|format_money }}
+      </td>
+      <td class="text-end">
+        {% with diff=data.budget_total_revenues|percent_diff:data.prev_budget_total_revenues %}
+          {{ diff|percent_diff_display }}
+        {% endwith %}
+        {{ data.budget_total_revenues|format_money }}
+      </td>
+      <td class="text-end">{{ data.prev_budget_total_charges|format_money }}</td>
+      <td class="text-end">{{ data.prev_budget_total_revenues|format_money }}</td>
+      <td class="text-end">{{ data.actual_total_charges|format_money }}</td>
+      <td class="text-end">{{ data.actual_total_revenues|format_money }}</td>
+    </tr>
+  </tfoot>
 </table>
