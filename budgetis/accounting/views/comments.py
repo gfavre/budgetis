@@ -30,6 +30,11 @@ class AccountCommentsView(LoginRequiredMixin, ListView):
         ctx = super().get_context_data(**kwargs)
         ctx["account"] = self.account
         ctx["kind"] = self.kwargs["kind"]
+        ctx["group_accounts"] = (
+            self.account.group.accounts.filter(year=self.account.year, is_budget=self.account.is_budget)
+            .prefetch_related("comments")
+            .all()
+        )
         return ctx
 
 

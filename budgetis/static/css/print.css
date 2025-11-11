@@ -155,3 +155,16 @@
   }
 
 }
+dl.comments {
+  grid-template-columns: 2.8rem auto;
+  gap: 0.5em;
+}
+
+dl.comments dt {
+  padding-left: .45rem;
+  font-weight: normal;
+}
+dl.comments dd {
+  grid-column: 2;
+  margin: 0;
+}

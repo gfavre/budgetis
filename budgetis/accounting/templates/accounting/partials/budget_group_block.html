@@ -1,6 +1,11 @@
 {% load i18n %}
 
 {% include "accounting/partials/budget_table.html" with accounts=data.accounts code=code label=label data=data %}
-<p class="text-end  mb-5 mt-2">
-  {% trans "Responsible" %} : <strong>{{ data.responsible.trigram|default:"N/A" }}</strong>
-</p>
+<div class="row mb-5 mt-2">
+  <div class="col-md-8" id="comments-group-{{ code }}">
+    {% include "accounting/partials/budget_comments.html" with accounts=data.accounts code=code label=label data=data %}
+  </div>
+  <div class="col-md-4 text-end">
+    {% trans "Responsible" %} : <strong>{{ data.responsible.trigram|default:"N/A" }}</strong>
+  </div>
+</div>

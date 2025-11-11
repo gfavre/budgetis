@@ -1,0 +1,16 @@
+{% load money i18n %}
+
+<dl class="comments">
+  {% for account in accounts %}
+    {% with comments=account.comments.all %}
+      {% if comments %}
+        <dt>{{ account.full_code }}</dt>
+        {% for comment in comments %}
+          <dd class="ms-4">
+            {{ comment.content }}
+          </dd>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  {% endfor %}
+</dl>

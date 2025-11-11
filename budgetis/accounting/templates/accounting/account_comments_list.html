@@ -1,57 +1,59 @@
 {% load i18n %}
 
-<div class="modal-header">
-  <h5 class="modal-title">
-    {% trans "Comments" %} –
-    {{ account.full_code }} {{ account.label }} |
-    <mark>
-      {% if account.is_budget %}
-        {% trans "Budget" %}
-      {% else %}
-        {% trans "Actuals" %}
-      {% endif %}
-    {{ account.year }}</mark>
-  </h5>
-  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-</div>
-<div class="modal-body">
-  {% if comments %}
-    <ul class="list-group mb-3">
-      {% for comment in comments %}
-        <li class="list-group-item d-flex justify-content-between align-items-start">
-          <div>
-            <strong>{{ comment.author|default_if_none:"?" }}</strong>
-            <br />
-            {{ comment.content|linebreaks }}
-            <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
-          </div>
-          <div class="btn-group btn-group-sm" role="group">
-            <button class="btn btn-outline-secondary"
-                    hx-get="{% url 'accounting:account-comment-edit' comment.id %}"
-                    hx-target="#accountCommentsModal .modal-content"
-                    title="Modifier">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn btn-outline-danger"
-                    hx-get="{% url 'accounting:account-comment-delete' comment.id %}"
-                    hx-target="#accountCommentsModal .modal-content"
-                    title="Supprimer">
-              <i class="bi bi-trash"></i>
-            </button>
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-muted">Aucun commentaire pour l’instant.</p>
-  {% endif %}
-</div>
-<div class="modal-footer">
-  <button class="btn btn-primary"
-          hx-get="{% url 'accounting:account-comment-create' account.id kind %}"
-          hx-target="#accountCommentsModal .modal-content">
-    <i class="bi bi-plus text-white me-1"></i> Ajouter un commentaire
-  </button>
+<div hx-target="#accountCommentsModal .modal-content" hx-swap="innerHTML">
+  <div class="modal-header">
+    <h5 class="modal-title">
+      {% trans "Comments" %} –
+      {{ account.full_code }} {{ account.label }} |
+      <mark>
+        {% if account.is_budget %}
+          {% trans "Budget" %}
+        {% else %}
+          {% trans "Actuals" %}
+        {% endif %}
+      {{ account.year }}</mark>
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+  </div>
+  <div class="modal-body">
+    {% if comments %}
+      <ul class="list-group mb-3">
+        {% for comment in comments %}
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div>
+              <strong>{{ comment.author|default_if_none:"?" }}</strong>
+              <br />
+              {{ comment.content|linebreaks }}
+              <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
+            </div>
+            <div class="btn-group btn-group-sm" role="group">
+              <button class="btn btn-outline-secondary"
+                      hx-get="{% url 'accounting:account-comment-edit' comment.id %}"
+                      hx-target="#accountCommentsModal .modal-content"
+                      title="Modifier">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-outline-danger"
+                      hx-get="{% url 'accounting:account-comment-delete' comment.id %}"
+                      hx-target="#accountCommentsModal .modal-content"
+                      title="Supprimer">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-muted">Aucun commentaire pour l’instant.</p>
+    {% endif %}
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary"
+            hx-get="{% url 'accounting:account-comment-create' account.id kind %}"
+            hx-target="#accountCommentsModal .modal-content">
+      <i class="bi bi-plus text-white me-1"></i> Ajouter un commentaire
+    </button>
+  </div>
 </div>
 {# 🔄 OOB update of the comment icon in the table #}
 <span id="comment-icon-{{ account.id }}"
@@ -59,3 +61,8 @@
       hx-swap-oob="true">
   <i class="bi bi-chat-left-text"></i>
 </span>
+<div class="col-md-8"
+     id="comments-group-{{ account.group.code }}"
+     hx-swap-oob="true">
+  {% include "accounting/partials/budget_comments.html" with accounts=group_accounts code=account.group.code label=account.group.label data=None %}
+</div>

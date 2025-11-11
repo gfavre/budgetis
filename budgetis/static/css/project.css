@@ -217,3 +217,17 @@ input[type="checkbox"] {
 .bg-secondary {
     background-color: var(--brand-color-alt) !important;
 }
+dl.comments {
+  display: grid;
+  grid-template-columns: 4.25rem auto;
+  gap: 0.5em;
+}
+
+dl.comments dt {
+  grid-column: 1;
+  padding-left: .75rem;
+}
+dl.comments dd {
+  grid-column: 2;
+  margin: 0;
+}

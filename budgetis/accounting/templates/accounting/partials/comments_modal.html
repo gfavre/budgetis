@@ -1,0 +1,30 @@
+{% load i18n %}
+
+<div class="modal fade"
+     id="accountCommentsModal"
+     tabindex="-1"
+     aria-hidden="true">
+  <div id="account-comments-summary-{{ account.id }}">
+    <dl class="d-print-block">
+      {% for comment in account.comments.all %}
+        <dt>{{ account.full_code }}</dt>
+        <dd class="ms-4">
+          {{ comment.content }}
+        </dd>
+      {% empty %}
+        <p class="text-muted fst-italic ms-4">Aucun commentaire.</p>
+      {% endfor %}
+    </dl>
+  </div>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <!-- htmx injects content here -->
+      <div class="modal-body text-center text-muted py-5">
+        <div class="spinner-border text-secondary" role="status">
+          <span class="visually-hidden">{% trans "Loading..." %}</span>
+        </div>
+        <p class="mt-3">{% trans "Loading comments..." %}</p>
+      </div>
+    </div>
+  </div>
+</div>
