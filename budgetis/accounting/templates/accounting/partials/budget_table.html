@@ -34,6 +34,29 @@
       <th>Produits</th>
     </tr>
   </thead>
+  <thead>
+    <!-- Ligne d'en-tête style "190 Service informatique" avec totaux -->
+    <tr class="table-primary fw-bold">
+      <td>{{ code }}</td>
+      <td>{{ label }}</td>
+      <td class="text-end">
+        {% with diff=data.budget_total_charges|percent_diff:data.prev_budget_total_charges %}
+          {{ diff|percent_diff_display }}
+        {% endwith %}
+        {{ data.budget_total_charges|format_money }}
+      </td>
+      <td class="text-end">
+        {% with diff=data.budget_total_revenues|percent_diff:data.prev_budget_total_revenues %}
+          {{ diff|percent_diff_display }}
+        {% endwith %}
+        {{ data.budget_total_revenues|format_money }}
+      </td>
+      <td class="text-end">{{ data.prev_budget_total_charges|format_money }}</td>
+      <td class="text-end">{{ data.prev_budget_total_revenues|format_money }}</td>
+      <td class="text-end">{{ data.actual_total_charges|format_money }}</td>
+      <td class="text-end">{{ data.actual_total_revenues|format_money }}</td>
+    </tr>
+  </thead>
   <tbody>
     {% for account in accounts %}
       <tr>
@@ -146,27 +169,4 @@
       </tr>
     {% endfor %}
   </tbody>
-  <tfoot>
-    <!-- Ligne d'en-tête style "190 Service informatique" avec totaux -->
-    <tr class="table-primary fw-bold">
-      <td>{{ code }}</td>
-      <td>{{ label }}</td>
-      <td class="text-end">
-        {% with diff=data.budget_total_charges|percent_diff:data.prev_budget_total_charges %}
-          {{ diff|percent_diff_display }}
-        {% endwith %}
-        {{ data.budget_total_charges|format_money }}
-      </td>
-      <td class="text-end">
-        {% with diff=data.budget_total_revenues|percent_diff:data.prev_budget_total_revenues %}
-          {{ diff|percent_diff_display }}
-        {% endwith %}
-        {{ data.budget_total_revenues|format_money }}
-      </td>
-      <td class="text-end">{{ data.prev_budget_total_charges|format_money }}</td>
-      <td class="text-end">{{ data.prev_budget_total_revenues|format_money }}</td>
-      <td class="text-end">{{ data.actual_total_charges|format_money }}</td>
-      <td class="text-end">{{ data.actual_total_revenues|format_money }}</td>
-    </tr>
-  </tfoot>
 </table>
