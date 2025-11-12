@@ -9,6 +9,68 @@
   {% endif %}
   {% for mg_code, mg in grouped.items %}
     <h2>{{ mg_code }} {{ mg.label }}</h2>
+    <!-- Tableau récapitulatif du supergroupe -->
+    <table class="table table-bordered align-middle mb-5 mt-5">
+      <colgroup span="2" class="info">
+        <col span="1" class="col-num" />
+        <col span="1" class="col-label" />
+      </colgroup>          <!-- N°, Désignation -->
+      <colgroup span="2" class="budget-current">
+        <col span="1" class="col-charges" />
+        <col span="1" class="col-revenues" />
+      </colgroup> <!-- Budget courant -->
+      <colgroup span="2" class="budget-prev">
+        <col span="1" class="col-charges" />
+        <col span="1" class="col-revenues" />
+      </colgroup>    <!-- Budget -1 -->
+      <colgroup span="2" class="accounts-prev">
+        <col span="1" class="col-charges" />
+        <col span="1" class="col-revenues" />
+      </colgroup>  <!-- Comptes -2 -->
+      <thead>
+        <tr class="table-light text-center">
+          <th rowspan="2" class="text-start">N°</th>
+          <th rowspan="2" class="text-start">Désignation</th>
+          <th colspan="2" class="text-center">Budget {{ year }}</th>
+          <th colspan="2" class="text-center">Budget {{ previous_year }}</th>
+          <th colspan="2" class="text-center">Comptes {{ actuals_year }}</th>
+        </tr>
+        <tr class="table-light text-center">
+          <th>Charges</th>
+          <th>Produits</th>
+          <th>Charges</th>
+          <th>Produits</th>
+          <th>Charges</th>
+          <th>Produits</th>
+        </tr>
+      </thead>
+      <thead class="table-primary fw-bold">
+        <tr>
+          <td>{{ mg_code }}</td>
+          <td>Total {{ mg.label }}</td>
+          <td class="text-end">{{ mg.budget_total_charges|format_money }}</td>
+          <td class="text-end">{{ mg.budget_total_revenues|format_money }}</td>
+          <td class="text-end">{{ mg.prev_budget_total_charges|format_money }}</td>
+          <td class="text-end">{{ mg.prev_budget_total_revenues|format_money }}</td>
+          <td class="text-end">{{ mg.actual_total_charges|format_money }}</td>
+          <td class="text-end">{{ mg.actual_total_revenues|format_money }}</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sg_code, sg in mg.supergroups.items %}
+          <tr>
+            <td class="text-nowrap">{{ sg_code }}</td>
+            <td>{{ sg.label }}</td>
+            <td class="text-end">{{ sg.budget_total_charges|format_money }}</td>
+            <td class="text-end">{{ sg.budget_total_revenues|format_money }}</td>
+            <td class="text-end">{{ sg.prev_budget_total_charges|format_money }}</td>
+            <td class="text-end">{{ sg.prev_budget_total_revenues|format_money }}</td>
+            <td class="text-end">{{ sg.actual_total_charges|format_money }}</td>
+            <td class="text-end">{{ sg.actual_total_revenues|format_money }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
     {% for sg_code, sg in mg.supergroups.items %}
       <h3>{{ sg_code }} {{ sg.label }}</h3>
       {% for ag_code, ag in sg.groups.items %}

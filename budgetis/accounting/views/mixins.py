@@ -158,7 +158,14 @@ class AccountExplorerMixin(BaseExplorerLogicMixin):
             )
             sg = mg["supergroups"].setdefault(
                 sg_key,
-                {"label": supergroup.label, "groups": {}},
+                {
+                    "label": supergroup.label,
+                    "groups": {},
+                    "total_charges": Decimal(0),
+                    "total_revenues": Decimal(0),
+                    "budget_total_charges": Decimal(0),
+                    "budget_total_revenues": Decimal(0),
+                },
             )
             # ajout dans ag = sg["groups"].setdefault(...)
             ag = sg["groups"].setdefault(
@@ -179,6 +186,13 @@ class AccountExplorerMixin(BaseExplorerLogicMixin):
             ag["total_revenues"] += account.revenues
             ag["budget_total_charges"] += account.budget_charges
             ag["budget_total_revenues"] += account.budget_revenues
+
+            # Totaux cumulés du supergroupe
+            sg["total_charges"] += account.charges
+            sg["total_revenues"] += account.revenues
+            sg["budget_total_charges"] += account.budget_charges
+            sg["budget_total_revenues"] += account.budget_revenues
+
         return self.sort_grouped_structure(raw_structure)
 
     def sort_grouped_structure(self, raw_structure: dict) -> OrderedDict:
@@ -316,11 +330,29 @@ class BudgetExplorerMixin(AccountExplorerMixin):
             ag_key = group.code
             mg = raw_structure.setdefault(
                 mg_key,
-                {"label": metagroup.label, "supergroups": {}},
+                {
+                    "label": metagroup.label,
+                    "supergroups": {},
+                    "budget_total_charges": Decimal(0),
+                    "budget_total_revenues": Decimal(0),
+                    "prev_budget_total_charges": Decimal(0),
+                    "prev_budget_total_revenues": Decimal(0),
+                    "actual_total_charges": Decimal(0),
+                    "actual_total_revenues": Decimal(0),
+                },
             )
             sg = mg["supergroups"].setdefault(
                 sg_key,
-                {"label": supergroup.label, "groups": {}},
+                {
+                    "label": supergroup.label,
+                    "groups": {},
+                    "budget_total_charges": Decimal(0),
+                    "budget_total_revenues": Decimal(0),
+                    "prev_budget_total_charges": Decimal(0),
+                    "prev_budget_total_revenues": Decimal(0),
+                    "actual_total_charges": Decimal(0),
+                    "actual_total_revenues": Decimal(0),
+                },
             )
             # ajout dans ag = sg["groups"].setdefault(...)
             ag = sg["groups"].setdefault(
@@ -345,4 +377,19 @@ class BudgetExplorerMixin(AccountExplorerMixin):
             ag["prev_budget_total_revenues"] += account.prev_budget_revenues
             ag["actual_total_charges"] += account.actual_charges
             ag["actual_total_revenues"] += account.actual_revenues
+
+            sg["budget_total_charges"] += account.budget_charges
+            sg["budget_total_revenues"] += account.budget_revenues
+            sg["prev_budget_total_charges"] += account.prev_budget_charges
+            sg["prev_budget_total_revenues"] += account.prev_budget_revenues
+            sg["actual_total_charges"] += account.actual_charges
+            sg["actual_total_revenues"] += account.actual_revenues
+
+            mg["budget_total_charges"] += account.budget_charges
+            mg["budget_total_revenues"] += account.budget_revenues
+            mg["prev_budget_total_charges"] += account.prev_budget_charges
+            mg["prev_budget_total_revenues"] += account.prev_budget_revenues
+            mg["actual_total_charges"] += account.actual_charges
+            mg["actual_total_revenues"] += account.actual_revenues
+
         return self.sort_grouped_structure(raw_structure)
