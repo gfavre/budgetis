@@ -393,3 +393,55 @@ class BudgetExplorerMixin(AccountExplorerMixin):
             mg["actual_total_revenues"] += account.actual_revenues
 
         return self.sort_grouped_structure(raw_structure)
+
+    def build_global_summary(self, grouped: OrderedDict) -> dict:
+        """
+        Build a list summarizing all MetaGroups (mg) totals.
+        Each entry contains label and totals for budget, prev_budget, and actuals.
+        """
+        summary = []
+        budget_total_charges = Decimal(0)
+        budget_total_revenues = Decimal(0)
+        prev_budget_total_charges = Decimal(0)
+        prev_budget_total_revenues = Decimal(0)
+        actual_total_charges = Decimal(0)
+        actual_total_revenues = Decimal(0)
+        for mg_code, mg in grouped.items():
+            summary.append(
+                {
+                    "code": mg_code,
+                    "label": mg["label"],
+                    "budget_total_charges": mg["budget_total_charges"],
+                    "budget_total_revenues": mg["budget_total_revenues"],
+                    "prev_budget_total_charges": mg["prev_budget_total_charges"],
+                    "prev_budget_total_revenues": mg["prev_budget_total_revenues"],
+                    "actual_total_charges": mg["actual_total_charges"],
+                    "actual_total_revenues": mg["actual_total_revenues"],
+                }
+            )
+            budget_total_charges += mg["budget_total_charges"]
+            budget_total_revenues += mg["budget_total_revenues"]
+            prev_budget_total_charges += mg["prev_budget_total_charges"]
+            prev_budget_total_revenues += mg["prev_budget_total_revenues"]
+            actual_total_charges += mg["actual_total_charges"]
+            actual_total_revenues += mg["actual_total_revenues"]
+
+        diff_budget = budget_total_revenues - budget_total_charges
+        diff_prev = prev_budget_total_revenues - prev_budget_total_charges
+        diff_actual = actual_total_revenues - actual_total_charges
+
+        totals = {
+            "budget_total_charges": budget_total_charges,
+            "budget_total_revenues": budget_total_revenues,
+            "prev_budget_total_charges": prev_budget_total_charges,
+            "prev_budget_total_revenues": prev_budget_total_revenues,
+            "actual_total_charges": actual_total_charges,
+            "actual_total_revenues": actual_total_revenues,
+            "budget_diff": diff_budget,
+            "budget_prev_diff": diff_prev,
+            "actual_diff": diff_actual,
+            "balanced_budget": max(budget_total_charges, budget_total_revenues),
+            "balanced_prev_budget": max(prev_budget_total_charges, prev_budget_total_revenues),
+            "balanced_actual": max(actual_total_charges, actual_total_revenues),
+        }
+        return {"rows": summary, "totals": totals}

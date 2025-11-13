@@ -38,6 +38,19 @@ def format_money(value: float | Decimal | None) -> str:
 
 
 @register.filter
+def format_money_abs(value: float | Decimal | None) -> str:
+    if value is None:
+        return ""
+
+    try:
+        value = Decimal(value).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    except (ValueError, TypeError, InvalidOperation):
+        return str(value)
+
+    return format_money(abs(value))
+
+
+@register.filter
 def percent_diff(actual, budget):
     try:
         if budget == 0:

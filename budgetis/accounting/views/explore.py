@@ -22,6 +22,9 @@ class BaseAccountExplorerView(LoginRequiredMixin, TemplateView):
     title = "Accounts"
     is_budget_view: bool = False  # surchargé dans la sous-classe
 
+    def build_global_summary(self, grouped: dict[str, list[str]]) -> dict[str, list[str]]:
+        return {}
+
     def get_default_year(self) -> int | None:
         """Return the most recent year available for this explorer."""
         qs = Account.objects.filter(is_budget=self.is_budget_view)
@@ -47,15 +50,19 @@ class BaseAccountExplorerView(LoginRequiredMixin, TemplateView):
 
         if year:
             accounts = self.get_accounts_for_year(year, self.request.user, only_responsible=bool(only))
+            grouped = self.build_grouped_structure(accounts)
             context.update(
                 {
                     "year": year,
-                    "grouped": self.build_grouped_structure(accounts),
+                    "grouped": grouped,
                     "last_import_text": self.get_last_import_info(year),
                 }
             )
+            context["global_summary"] = self.build_global_summary(grouped)
+
         else:
             context["grouped"] = OrderedDict()
+
         return context
 
     def get_accounts_for_year(self, year: int, user, *, only_responsible: bool):
@@ -139,4 +146,5 @@ class BudgetPartialView(BudgetExplorerMixin, FormView):
             actuals_year=year - 2,
             last_import_text=self.get_last_import_info(year),
         )
+        context["global_summary"] = self.build_global_summary(grouped)
         return self.render_to_response(context)

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-28 06:08+0100\n"
+"POT-Creation-Date: 2025-11-13 10:49+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -76,7 +76,7 @@ msgstr "Groupes de compte"
 
 #: budgetis/accounting/models.py:93
 #: budgetis/accounting/templates/accounting/partials/account_group_block.html:5
-#: budgetis/accounting/templates/accounting/partials/budget_group_block.html:5
+#: budgetis/accounting/templates/accounting/partials/budget_group_block.html:9
 msgid "Responsible"
 msgstr "Responsable"
 
@@ -154,26 +154,26 @@ msgstr "Commentaire sur le compte"
 msgid "Account Comments"
 msgstr "Commentaires sur le compte"
 
-#: budgetis/accounting/templates/accounting/account_comments_list.html:5
+#: budgetis/accounting/templates/accounting/account_comments_list.html:6
 msgid "Comments"
 msgstr "Commentaires"
 
-#: budgetis/accounting/templates/accounting/account_comments_list.html:9
+#: budgetis/accounting/templates/accounting/account_comments_list.html:10
 #: budgetis/bdi_import/models.py:55
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
 #: budgetis/finance/models.py:7
 #: budgetis/finance/templates/finance/sankey.html:18
-#: budgetis/templates/base.html:116
+#: budgetis/templates/base.html:117
 msgid "Budget"
 msgstr "Budget"
 
-#: budgetis/accounting/templates/accounting/account_comments_list.html:11
+#: budgetis/accounting/templates/accounting/account_comments_list.html:12
 #: budgetis/accounting/templates/accounting/account_explorer.html:6
-#: budgetis/templates/base.html:109
+#: budgetis/templates/base.html:110
 msgid "Actuals"
 msgstr "Comptes"
 
-#: budgetis/accounting/templates/accounting/account_explorer.html:27
+#: budgetis/accounting/templates/accounting/account_explorer.html:66
 msgid "Accounts explorer"
 msgstr "Explorateur de comptes"
 
@@ -181,19 +181,39 @@ msgstr "Explorateur de comptes"
 msgid "Budgets"
 msgstr "Budgets"
 
-#: budgetis/accounting/templates/accounting/budget_explorer.html:25
+#: budgetis/accounting/templates/accounting/budget_explorer.html:87
 msgid "Budget explorer"
 msgstr "Explorateur de budgets"
 
-#: budgetis/accounting/views/mixins.py:238
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:84
+msgid "Operating account"
+msgstr "Compte de fonctionnement"
+
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:157
+msgid "Revenue suprlus"
+msgstr "Excédent de recettes"
+
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:166
+msgid "Excess expense"
+msgstr "Excédent de charges"
+
+#: budgetis/accounting/templates/accounting/partials/comments_modal.html:24
+msgid "Loading..."
+msgstr "Chargement..."
+
+#: budgetis/accounting/templates/accounting/partials/comments_modal.html:26
+msgid "Loading comments..."
+msgstr "Chargement des commentaires..."
+
+#: budgetis/accounting/views/mixins.py:250
 msgid "budget"
 msgstr "budget"
 
-#: budgetis/accounting/views/mixins.py:241
+#: budgetis/accounting/views/mixins.py:253
 msgid "actuals"
 msgstr "comptes"
 
-#: budgetis/accounting/views/mixins.py:243
+#: budgetis/accounting/views/mixins.py:255
 msgid "Last import:"
 msgstr "Dernière Importation :"
 
@@ -591,27 +611,27 @@ msgid "Revenus → Budget"
 msgstr "Revenus → Allocations"
 
 #: budgetis/templates/allauth/layouts/entrance.html:13
-#: budgetis/templates/base.html:160
+#: budgetis/templates/base.html:161
 msgid "Sign In"
 msgstr "S'identifier"
 
-#: budgetis/templates/base.html:123
+#: budgetis/templates/base.html:124
 msgid "Reporting"
 msgstr "Rapports"
 
-#: budgetis/templates/base.html:130
+#: budgetis/templates/base.html:131
 msgid "Import from BDI"
 msgstr "Importation de BDI"
 
-#: budgetis/templates/base.html:141
+#: budgetis/templates/base.html:142
 msgid "Admin"
 msgstr "Admin"
 
-#: budgetis/templates/base.html:148
+#: budgetis/templates/base.html:149
 msgid "My Profile"
 msgstr "Mon Profil"
 
-#: budgetis/templates/base.html:154
+#: budgetis/templates/base.html:155
 msgid "Sign Out"
 msgstr "Déconnexion"
 
@@ -647,11 +667,11 @@ msgstr "Mot de passe"
 msgid "Password confirmation"
 msgstr "Confirmation du mot de passe"
 
-#: budgetis/users/forms.py:48
+#: budgetis/users/forms.py:49
 msgid "Password is required for admins."
 msgstr "Le mot de passe est requis pour les administrateurs."
 
-#: budgetis/users/forms.py:50
+#: budgetis/users/forms.py:51
 msgid "Passwords don't match."
 msgstr "Les mots de passe ne correspondent pas."
 
