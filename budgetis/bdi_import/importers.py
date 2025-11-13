@@ -86,7 +86,7 @@ def process_account_row(row, column_map, derived_from_total):
         revenues = -total if total < 0 else Decimal(0)
     else:
         charges = safe_decimal(row.get(column_map.get("charges", ""), 0))
-        revenues = safe_decimal(row.get(column_map.get("revenues", ""), 0))
+        revenues = -safe_decimal(row.get(column_map.get("revenues", ""), 0))
 
     expected_type = (
         Account.ExpectedType.BOTH
