@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 10:04+0100\n"
+"POT-Creation-Date: 2025-11-14 11:08+0100\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -149,67 +149,67 @@ msgstr ""
 msgid "Account Comments"
 msgstr ""
 
-#: budgetis/accounting/nature.py:6
+#: budgetis/accounting/nature.py:8
 msgid "Authorities and staff"
 msgstr ""
 
-#: budgetis/accounting/nature.py:7
+#: budgetis/accounting/nature.py:9
 msgid "Goods, services, merchandise"
 msgstr ""
 
-#: budgetis/accounting/nature.py:8
+#: budgetis/accounting/nature.py:10
 msgid "Interest expense"
 msgstr ""
 
-#: budgetis/accounting/nature.py:9
+#: budgetis/accounting/nature.py:11
 msgid "Depreciation"
 msgstr ""
 
-#: budgetis/accounting/nature.py:10
+#: budgetis/accounting/nature.py:12
 msgid "Reimbursements, contributions, and subsidies to public authorities"
 msgstr ""
 
-#: budgetis/accounting/nature.py:11
+#: budgetis/accounting/nature.py:13
 msgid "Aid and subsidies"
 msgstr ""
 
-#: budgetis/accounting/nature.py:12
+#: budgetis/accounting/nature.py:14
 msgid "Allocations to special funds and financing"
 msgstr ""
 
-#: budgetis/accounting/nature.py:13 budgetis/accounting/nature.py:22
+#: budgetis/accounting/nature.py:15 budgetis/accounting/nature.py:24
 msgid "Internal allocations"
 msgstr ""
 
-#: budgetis/accounting/nature.py:14
+#: budgetis/accounting/nature.py:16
 msgid "Taxes"
 msgstr ""
 
-#: budgetis/accounting/nature.py:15
+#: budgetis/accounting/nature.py:17
 msgid "Licenses, concessions"
 msgstr ""
 
-#: budgetis/accounting/nature.py:16
+#: budgetis/accounting/nature.py:18
 msgid "Income from assets"
 msgstr ""
 
-#: budgetis/accounting/nature.py:17
+#: budgetis/accounting/nature.py:19
 msgid "Taxes, fees, proceeds from sales"
 msgstr ""
 
-#: budgetis/accounting/nature.py:18
+#: budgetis/accounting/nature.py:20
 msgid "Shares in cantonal revenues"
 msgstr ""
 
-#: budgetis/accounting/nature.py:19
+#: budgetis/accounting/nature.py:21
 msgid "Contributions and reimbursements from public authorities"
 msgstr ""
 
-#: budgetis/accounting/nature.py:20
+#: budgetis/accounting/nature.py:22
 msgid "Other benefits and subsidies"
 msgstr ""
 
-#: budgetis/accounting/nature.py:21
+#: budgetis/accounting/nature.py:23
 msgid "Withdrawals from special funds and financing"
 msgstr ""
 
@@ -250,12 +250,12 @@ msgstr ""
 msgid "Accounts by nature"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:71
+#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:82
 #: budgetis/accounting/templates/accounting/partials/budget_list.html:143
 msgid "Revenue surplus"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:81
+#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:97
 #: budgetis/accounting/templates/accounting/partials/budget_list.html:158
 msgid "Excess expense"
 msgstr ""
@@ -272,19 +272,19 @@ msgstr ""
 msgid "Loading comments..."
 msgstr ""
 
-#: budgetis/accounting/views/explore.py:157
+#: budgetis/accounting/views/explore.py:159
 msgid "Budgets par nature"
 msgstr ""
 
-#: budgetis/accounting/views/mixins.py:248
+#: budgetis/accounting/views/mixins.py:249
 msgid "budget"
 msgstr ""
 
-#: budgetis/accounting/views/mixins.py:251
+#: budgetis/accounting/views/mixins.py:252
 msgid "actuals"
 msgstr ""
 
-#: budgetis/accounting/views/mixins.py:253
+#: budgetis/accounting/views/mixins.py:254
 msgid "Last import:"
 msgstr ""
 

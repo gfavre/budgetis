@@ -55,19 +55,19 @@ AISGE = [
 APEC = ("460.352", "460.352.1")
 TRANSPORTS_REGION = "180.351"
 ASSOCIATIONS = (
-    "160.352",
-    "310.351",
-    "320.352",
-    "320.352.1",
-    "440.352",
-    "540.352",
-    "580.352",
-    "650.352",
-    "660.352",
-    "710.352",
-    "720.352",
-    "810.352",
-    "810.352.1",
+    "160.352",  # Région Nyoin - taxes de séjour
+    # "310.351",  # Feu bactérien
+    "320.352",  # La Colline
+    "320.352.1",  # Fondation bois de chênes
+    "440.352",  # Centre funéraire de Nyon
+    "540.352",  # Orientation Professionneéée  => Evelyne
+    "580.352",  # Autres paroisses  => Evelyne
+    "650.352",  # SDIS Nyon-Dôle  => Pscal
+    "660.352",  # ORPC  => André
+    "710.352",  # CSR  => Evelyne
+    "720.352",  # ARAS  = Evelyne
+    "810.352",  # SAPAN
+    "810.352.1",  # Eaudici
 )
 
 
