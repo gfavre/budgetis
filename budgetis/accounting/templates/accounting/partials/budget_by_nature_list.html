@@ -1,0 +1,175 @@
+{% load money i18n %}
+
+<div id="account-list">
+  {% if last_import_text %}
+    <p class="text-muted small mb-3 no-print">
+      <i class="bi bi-clock-history"></i>
+      {{ last_import_text }}
+    </p>
+  {% endif %}
+  <h1 class="metagroup">{% trans "Accounts by nature" %}</h1>
+  <table class="table table-bordered recap global-summary">
+    <colgroup span="2" class="info">
+      <col span="1" class="col-num" />
+      <col span="1" class="col-label" />
+    </colgroup>          <!-- N°, Désignation -->
+    <colgroup span="2" class="budget-current">
+      <col span="1" class="col-charges" />
+      <col span="1" class="col-revenues" />
+    </colgroup> <!-- Budget courant -->
+    <colgroup span="2" class="budget-prev">
+      <col span="1" class="col-charges" />
+      <col span="1" class="col-revenues" />
+    </colgroup>    <!-- Budget -1 -->
+    <colgroup span="2" class="accounts-prev">
+      <col span="1" class="col-charges" />
+      <col span="1" class="col-revenues" />
+    </colgroup>  <!-- Comptes -2 -->
+    <thead>
+      <tr class="table-light text-center">
+        <th rowspan="2" class="text-start">N°</th>
+        <th rowspan="2" class="text-start">Désignation</th>
+        <th colspan="2" class="text-center">Budget {{ year }}</th>
+        <th colspan="2" class="text-center">Budget {{ previous_year }}</th>
+        <th colspan="2" class="text-center">Comptes {{ actuals_year }}</th>
+      </tr>
+      <tr class="table-light text-center">
+        <th>Charges</th>
+        <th>Produits</th>
+        <th>Charges</th>
+        <th>Produits</th>
+        <th>Charges</th>
+        <th>Produits</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for group_id, row in grouped.items %}
+        <tr>
+          <td>{{ row.code }}</td>
+          <td>{{ row.label }}</td>
+          <td class="text-end">
+            {% if row.budget_charges %}{{ row.budget_charges|format_money }}{% endif %}
+          </td>
+          <td class="text-end">
+            {% if row.budget_revenues %}{{ row.budget_revenues|format_money }}{% endif %}
+          </td>
+          <td class="text-end">
+            {% if row.prev_budget_charges %}{{ row.prev_budget_charges|format_money }}{% endif %}
+          </td>
+          <td class="text-end">
+            {% if row.prev_budget_revenues %}{{ row.prev_budget_revenues|format_money }}{% endif %}
+          </td>
+          <td class="text-end">
+            {% if row.actual_charges %}{{ row.actual_charges|format_money }}{% endif %}
+          </td>
+          <td class="text-end">
+            {% if row.actual_revenues %}{{ row.actual_revenues|format_money }}{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot class="table-primary fw-bold">
+      <tr>
+        <td colspan="2" class="text-end"></td>
+        <td class="text-end">{{ global_summary.totals.budget.0|format_money }}</td>
+        <td class="text-end">{{ global_summary.totals.budget.1|format_money }}</td>
+        <td class="text-end">{{ global_summary.totals.previous.0|format_money }}</td>
+        <td class="text-end">{{ global_summary.totals.previous.1|format_money }}</td>
+        <td class="text-end">{{ global_summary.totals.actual.0|format_money }}</td>
+        <td class="text-end">{{ global_summary.totals.actual.1|format_money }}</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="text-end">{% trans "Revenue surplus" %}</td>
+        <td class="text-end">
+          {% if global_summary.balance.budget > 0 %}{{ global_summary.balance.budget|format_money_abs }}{% endif %}
+        </td>
+        <td></td>
+        <td class="text-end">
+          {% if global_summary.balance.previous > 0 %}{{ global_summary.balance.previous|format_money_abs }}{% endif %}
+        </td>
+        <td></td>
+        <td class="text-end">
+          {% if global_summary.balance.actual > 0 %}{{ global_summary.balance.actual|format_money_abs }}{% endif %}
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td colspan="2" class="text-end">{% trans "Excess expense" %}</td>
+        <td></td>
+        <td class="text-end">
+          {% if global_summary.balance.budget < 0 %}{{ global_summary.balance.budget|format_money_abs }}{% endif %}
+        </td>
+        <td></td>
+        <td class="text-end">
+          {% if global_summary.balance.previous < 0 %}{{ global_summary.balance.previous|format_money_abs }}{% endif %}
+        </td>
+        <td></td>
+        <td class="text-end">
+          {% if global_summary.balance.actual < 0 %}{{ global_summary.balance.actual|format_money_abs }}{% endif %}
+        </td>
+      </tr>
+      <tr class="table-secondary">
+        <td colspan="2" class="text-end"></td>
+        {% with c=global_summary.totals.budget.0 r=global_summary.totals.budget.1 %}
+          <td class="text-end">
+            {% if c > r %}
+              {{ c|format_money_abs }}
+            {% else %}
+              {{ r|format_money_abs }}
+            {% endif %}
+          </td>
+          <td class="text-end">
+            {% if c > r %}
+              {{ c|format_money_abs }}
+            {% else %}
+              {{ r|format_money_abs }}
+            {% endif %}
+          </td>
+        {% endwith %}
+        {% with c=global_summary.totals.previous.0 r=global_summary.totals.previous.1 %}
+          <td class="text-end">
+            {% if c > r %}
+              {{ c|format_money_abs }}
+            {% else %}
+              {{ r|format_money_abs }}
+            {% endif %}
+          </td>
+          <td class="text-end">
+            {% if c > r %}
+              {{ c|format_money_abs }}
+            {% else %}
+              {{ r|format_money_abs }}
+            {% endif %}
+          </td>
+        {% endwith %}
+        {% with c=global_summary.totals.actual.0 r=global_summary.totals.actual.1 %}
+          <td class="text-end">
+            {% if c > r %}
+              {{ c|format_money_abs }}
+            {% else %}
+              {{ r|format_money_abs }}
+            {% endif %}
+          </td>
+          <td class="text-end">
+            {% if c > r %}
+              {{ c|format_money_abs }}
+            {% else %}
+              {{ r|format_money_abs }}
+            {% endif %}
+          </td>
+        {% endwith %}
+      </tr>
+    </tfoot>
+  </table>
+</div>
+<div class="modal fade"
+     id="accountHistoryModal"
+     tabindex="-1"
+     aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <!-- HTMX va remplacer ce contenu -->
+    </div>
+  </div>
+</div>
+{% include "accounting/partials/comments_modal.html" %}

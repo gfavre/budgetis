@@ -9,6 +9,7 @@ from budgetis.bdi_import.models import AccountImportLog
 
 from ..models import Account
 from ..models import GroupResponsibility
+from ..nature import NATURE_GROUPS
 
 
 class BaseExplorerLogicMixin:
@@ -445,3 +446,94 @@ class BudgetExplorerMixin(AccountExplorerMixin):
             "balanced_actual": max(actual_total_charges, actual_total_revenues),
         }
         return {"rows": summary, "totals": totals}
+
+
+class BudgetByNatureMixin(BudgetExplorerMixin):
+    """Simplified version of BudgetExplorerMixin grouped by nature instead of metagroup/supergroup."""
+
+    def _nature_group(self, nature: int) -> int | None:
+        """Return the first matching nature group key (tens digit)."""
+        try:
+            # extrait les deux premiers chiffres (ex: 380 -> 38)
+            n = int(str(nature)[:2])
+        except (TypeError, ValueError):
+            return None
+        return n if n in NATURE_GROUPS else None
+
+    def build_grouped_structure(self, accounts: list[Account]) -> OrderedDict:
+        """Aggregate all accounts by their nature group."""
+        grouped = OrderedDict(
+            (
+                gid,
+                {
+                    "code": gid,
+                    "label": label,
+                    "budget_charges": Decimal(0),
+                    "budget_revenues": Decimal(0),
+                    "prev_budget_charges": Decimal(0),
+                    "prev_budget_revenues": Decimal(0),
+                    "actual_charges": Decimal(0),
+                    "actual_revenues": Decimal(0),
+                },
+            )
+            for gid, label in NATURE_GROUPS.items()
+        )
+
+        for acc in accounts:
+            group_id = self._nature_group(int(acc.nature))
+            if group_id is None:
+                continue
+
+            entry = grouped[group_id]
+            if 30 <= group_id <= 39:  # noqa: PLR2004 - Charges
+                entry["budget_charges"] += acc.budget_charges
+                entry["prev_budget_charges"] += acc.prev_budget_charges
+                entry["actual_charges"] += acc.actual_charges
+            elif 40 <= group_id <= 49:  # noqa: PLR2004 - Revenues
+                entry["budget_revenues"] += acc.budget_revenues
+                entry["prev_budget_revenues"] += acc.prev_budget_revenues
+                entry["actual_revenues"] += acc.actual_revenues
+
+            # enfin on retire les lignes totalement vides
+        for gid in list(grouped.keys()):
+            v = grouped[gid]
+            if not any(
+                [
+                    v["budget_charges"],
+                    v["budget_revenues"],
+                    v["prev_budget_charges"],
+                    v["prev_budget_revenues"],
+                    v["actual_charges"],
+                    v["actual_revenues"],
+                ]
+            ):
+                grouped.pop(gid)
+
+        return grouped
+
+    def build_global_summary(self, grouped: OrderedDict) -> dict:
+        """Compute total charges, revenues and balances."""
+        total_budget_charges = total_budget_revenues = Decimal(0)
+        total_prev_charges = total_prev_revenues = Decimal(0)
+        total_actual_charges = total_actual_revenues = Decimal(0)
+
+        for data in grouped.values():
+            total_budget_charges += data["budget_charges"]
+            total_budget_revenues += data["budget_revenues"]
+            total_prev_charges += data["prev_budget_charges"]
+            total_prev_revenues += data["prev_budget_revenues"]
+            total_actual_charges += data["actual_charges"]
+            total_actual_revenues += data["actual_revenues"]
+
+        return {
+            "totals": {
+                "budget": (total_budget_charges, total_budget_revenues),
+                "previous": (total_prev_charges, total_prev_revenues),
+                "actual": (total_actual_charges, total_actual_revenues),
+            },
+            "balance": {
+                "budget": total_budget_revenues - total_budget_charges,
+                "previous": total_prev_revenues - total_prev_charges,
+                "actual": total_actual_revenues - total_actual_charges,
+            },
+        }

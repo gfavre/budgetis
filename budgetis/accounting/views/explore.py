@@ -3,12 +3,14 @@ from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Max
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.views.generic import TemplateView
 
 from ..forms import AccountFilterForm
 from ..models import Account
 from .mixins import AccountExplorerMixin
+from .mixins import BudgetByNatureMixin
 from .mixins import BudgetExplorerMixin
 
 
@@ -137,6 +139,45 @@ class BudgetPartialView(BudgetExplorerMixin, FormView):
         year = int(form.cleaned_data["year"])
         only = bool(form.cleaned_data.get("only_responsible"))
         accounts = self.get_accounts(self.request.user, year, only_responsible=only)
+        grouped = self.build_grouped_structure(accounts)
+        context = self.get_context_data(
+            form=form,
+            grouped=grouped,
+            year=year,
+            previous_year=year - 1,
+            actuals_year=year - 2,
+            last_import_text=self.get_last_import_info(year),
+        )
+        context["global_summary"] = self.build_global_summary(grouped)
+        return self.render_to_response(context)
+
+
+class BudgetByNatureView(BudgetByNatureMixin, BaseAccountExplorerView):
+    """Budget explorer grouped by nature."""
+
+    template_name = "accounting/budget_by_nature.html"
+    title = _("Budgets par nature")
+    is_budget_view = True
+
+    def get_accounts_for_year(self, year: int, user, *, only_responsible: bool):
+        return self.get_accounts(user, year, only_responsible=False)
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["previous_year"] = context["year"] - 1
+        context["actuals_year"] = context["year"] - 2
+        return context
+
+
+class BudgetByNaturePartialView(BudgetByNatureMixin, FormView):
+    """Partial HTMX/AJAX refresh for Budget by Nature table."""
+
+    form_class = AccountFilterForm
+    template_name = "accounting/partials/budget_by_nature_list.html"
+
+    def form_valid(self, form):
+        year = int(form.cleaned_data["year"])
+        accounts = self.get_accounts(self.request.user, year, only_responsible=False)
         grouped = self.build_grouped_structure(accounts)
         context = self.get_context_data(
             form=form,
