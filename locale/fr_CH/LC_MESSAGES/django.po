@@ -168,7 +168,7 @@ msgstr "Intérêts passifs"
 
 #: budgetis/accounting/nature.py:11
 msgid "Depreciation"
-msgstr "Amortissement1"
+msgstr "Amortissements"
 
 #: budgetis/accounting/nature.py:12
 msgid "Reimbursements, contributions, and subsidies to public authorities"
