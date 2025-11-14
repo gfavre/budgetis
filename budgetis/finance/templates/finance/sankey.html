@@ -14,7 +14,7 @@
              value="{{ default_year }}" />
     </label>
     <label>
-      <input id="is_budget" type="checkbox" />
+      <input id="is_budget" type="checkbox" name="budget" />
       {% trans "Budget" %}
     </label>
     <button id="reload">{% trans "Reload" %}</button>
@@ -27,6 +27,7 @@
   async function fetchBuckets() {
     const params = new URLSearchParams({
       year: $("#year").value,
+      budget: $("#is_budget").checked,
     });
     const resp = await fetch("{% url 'finance:data_buckets' %}?" + params.toString(), {
       headers: { "X-Requested-With": "fetch" },

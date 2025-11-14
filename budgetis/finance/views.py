@@ -28,9 +28,10 @@ class SankeyDataView(LoginRequiredMixin, View):
         year_str = request.GET.get("year", "")
         if not year_str.isdigit():
             return JsonResponse({"error": "Missing or invalid 'year'."}, status=400)
-
+        budget_str = request.GET.get("budget", "false").lower()
+        budget = budget_str in ("true", "1", "yes", "on")
         year = int(year_str)
-        qs = Account.objects.filter(year=year, is_budget=False)
+        qs = Account.objects.filter(year=year, is_budget=budget)
         data: dict[str, Any] = build_income_budget_canton_intercos_commune(qs)
         return JsonResponse(data, safe=False)
 
