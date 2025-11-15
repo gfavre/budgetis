@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 11:08+0100\n"
+"POT-Creation-Date: 2025-11-15 17:03+0100\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -242,8 +242,22 @@ msgid "Budgets"
 msgstr ""
 
 #: budgetis/accounting/templates/accounting/budget_by_nature.html:87
-#: budgetis/accounting/templates/accounting/budget_explorer.html:87
+#: budgetis/accounting/templates/accounting/budget_explorer.html:135
 msgid "Budget explorer"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/budget_explorer.html:149
+#, python-format
+msgid "Municipality of %(city)s"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/budget_explorer.html:151
+#, python-format
+msgid "Budget %(year)s"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/budget_explorer.html:152
+msgid "Accounts by administrative function"
 msgstr ""
 
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:10
@@ -669,7 +683,7 @@ msgstr ""
 msgid "Reload"
 msgstr ""
 
-#: budgetis/finance/templates/finance/sankey.html:70
+#: budgetis/finance/templates/finance/sankey.html:71
 msgid "Revenus → Budget"
 msgstr ""
 

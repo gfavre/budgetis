@@ -20,7 +20,11 @@ h3 {
   color: var(--brand-color-alt);
 }
 
-
+@media screen {
+  .print-cover-page {
+    display: none !important;
+  }
+}
 @media print {
   table {
     width: 100%;
@@ -77,6 +81,50 @@ h3 {
     border-bottom: 0.1pt solid #000;
   }
 
+   .print-cover-page {
+    page-break-after: always;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2cm;
+  }
+
+  .print-cover-page img.cover-logo {
+    max-width: 6cm;
+    height: auto;
+    margin-bottom: 1cm;
+    margin-top: 2em !important;
+  }
+
+  .print-cover-page .cover-commune {
+    font-size: 1.6rem; /* presque un h1 */
+    font-weight: 600;
+    margin: 0 0 0.5cm 0;
+  }
+
+  .print-cover-page .cover-title {
+    font-size: 2rem; /* indépendant de ton h1 global */
+    margin: 0 0 0.3cm 0;
+  }
+
+  .print-cover-page .cover-subtitle {
+    font-size: 1.3rem; /* un peu plus petit que le titre */
+    margin: 0;
+    font-weight: 600;
+    background: none;
+    border: none;
+    font-size: 12pt
+  }
+.print-cover-page h2 {
+  break-before: auto !important;
+  page-break-before: auto !important;
+  break-after: avoid !important;
+  page-break-after: avoid !important;
+}
+
 }
 
 
@@ -93,6 +141,16 @@ h3 {
       {% crispy form %}
     </form>
     <hr />
+  </div>
+  <div class="print-cover-page">
+    <img src="{{ config.logo.url }}"
+         alt="{{ config.commune_name }} logo"
+         class="cover-logo" />
+    <p class="cover-commune">
+      {% blocktrans with city=config.commune_name %}Municipality of {{ city }}{% endblocktrans %}
+    </p>
+    <h1 class="cover-title">{% blocktrans with year=year %}Budget {{ year }}{% endblocktrans %}</h1>
+    <h2 class="cover-subtitle">{% trans "Accounts by administrative function" %}</h2>
   </div>
   <div id="budget-list">
     {% include "accounting/partials/budget_list.html" with grouped=grouped year=year previous_year=previous_year actuals_year=actuals_year %}

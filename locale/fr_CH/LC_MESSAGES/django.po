@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 11:08+0100\n"
+"POT-Creation-Date: 2025-11-15 17:03+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.8\n"
 
 #: budgetis/accounting/admin.py:40
 msgid "Code"
@@ -189,7 +189,7 @@ msgstr "Imputations internes"
 
 #: budgetis/accounting/nature.py:16
 msgid "Taxes"
-msgstr "Taxes"
+msgstr "Impôts"
 
 #: budgetis/accounting/nature.py:17
 msgid "Licenses, concessions"
@@ -248,9 +248,23 @@ msgid "Budgets"
 msgstr "Budgets"
 
 #: budgetis/accounting/templates/accounting/budget_by_nature.html:87
-#: budgetis/accounting/templates/accounting/budget_explorer.html:87
+#: budgetis/accounting/templates/accounting/budget_explorer.html:135
 msgid "Budget explorer"
 msgstr "Explorateur de budgets"
+
+#: budgetis/accounting/templates/accounting/budget_explorer.html:149
+#, python-format
+msgid "Municipality of %(city)s"
+msgstr "Commune de %(city)s"
+
+#: budgetis/accounting/templates/accounting/budget_explorer.html:151
+#, python-format
+msgid "Budget %(year)s"
+msgstr "Budget %(year)s"
+
+#: budgetis/accounting/templates/accounting/budget_explorer.html:152
+msgid "Accounts by administrative function"
+msgstr "Comptes par fonction administrative"
 
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:10
 msgid "Accounts by nature"
@@ -683,7 +697,7 @@ msgstr "Années disponibles"
 msgid "Reload"
 msgstr "Rafraichir"
 
-#: budgetis/finance/templates/finance/sankey.html:70
+#: budgetis/finance/templates/finance/sankey.html:71
 msgid "Revenus → Budget"
 msgstr "Revenus → Allocations"
 

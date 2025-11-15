@@ -26,7 +26,6 @@
   .badge, [class*="badge-"], .label, [class*="label-"] {
     color: #000 !important; background: transparent !important; border-color: #000 !important;
   }
-  img { filter: grayscale(100%); }
 
   /* 3) Mise en page (enlève le chrome de l’app) */
   header, nav, footer, .navbar, .sidebar, .offcanvas,
@@ -55,6 +54,10 @@
   }
   table.table {
     color: #000;
+  }
+
+  table > tbody {
+    border-bottom: 0.1pt solid #000;
   }
 
   th, td {
