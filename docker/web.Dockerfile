@@ -10,6 +10,9 @@ RUN pip install --no-cache-dir uv
 
 WORKDIR /app
 
+# Ensure media folder exists
+RUN mkdir -p /app/media
+
 # Copier les fichiers de dépendances
 COPY pyproject.toml uv.lock ./
 RUN uv pip install --system --no-cache --group prod .
@@ -23,6 +26,9 @@ RUN chmod +x /app/docker/entrypoint.sh
 
 # Collect static and compress at build time
 ENV DJANGO_SETTINGS_MODULE=config.settings.production
+
+RUN mkdir -p /app/media
+
 RUN python manage.py collectstatic --noinput && \
     python manage.py compilemessages && \
     python manage.py compress --force

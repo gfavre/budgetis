@@ -25,6 +25,7 @@ services:
     volumes:
       - ./budgetis/media:/usr/share/nginx/html:ro
       - ./nginx/media.conf:/etc/nginx/nginx.conf:ro
+      - media_data:/usr/share/nginx/html/media
     expose:
       - "80"
     networks:
@@ -35,7 +36,6 @@ services:
       - "traefik.http.routers.media.entrypoints=websecure"
       - "traefik.http.routers.media.tls.certresolver=letsencrypt"
       - "traefik.http.services.media.loadbalancer.server.port=80"
-
 
   web:
     labels:
@@ -70,7 +70,8 @@ services:
     networks:
       - budgetis
     volumes:
-      - ./budgetis/media:/app/budgetis/media
+      - static_data:/app/static
+      - media_data:/app/media
 
   celery:
     labels:
@@ -86,6 +87,7 @@ services:
 
 volumes:
   letsencrypt:
+  media_data:
 
 networks:
   budgetis:

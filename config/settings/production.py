@@ -72,6 +72,8 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 
 # STATIC & MEDIA
 # ------------------------
+MEDIA_ROOT = str(BASE_DIR / "media")  # noqa: F405
+
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
