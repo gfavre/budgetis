@@ -82,12 +82,18 @@ services:
       - media_data:/app/media
 
   celery:
+    build:
+      context: .
+      dockerfile: docker/celery.Dockerfile
     labels:
       - "traefik.enable=false"
     networks:
       - budgetis
 
   celery-beat:
+    build:
+      context: .
+      dockerfile: docker/celery.Dockerfile
     labels:
       - "traefik.enable=false"
     networks:
