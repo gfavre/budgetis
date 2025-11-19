@@ -85,6 +85,8 @@ services:
     build:
       context: .
       dockerfile: docker/celery.Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.production
     labels:
       - "traefik.enable=false"
     networks:
@@ -94,6 +96,8 @@ services:
     build:
       context: .
       dockerfile: docker/celery.Dockerfile
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.production
     labels:
       - "traefik.enable=false"
     networks:
