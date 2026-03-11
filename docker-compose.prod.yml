@@ -48,7 +48,7 @@ services:
       - "traefik.http.middlewares.global-ratelimit.ratelimit.period=1m"
 
       - "traefik.http.services.budgetis.loadbalancer.server.port=8000"
-      -
+
       # Rate limiting for login
       - "traefik.http.routers.login.rule=Host(`budgetis.genolier.ch`) && Path(`/admin/login/`)"
       - "traefik.http.routers.login.entrypoints=websecure"
