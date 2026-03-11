@@ -122,7 +122,7 @@ def split_street_number(value: str) -> tuple[int, int, str]:
 
 
 def sort_by_street_and_number(
-    p_df: pd.DataFrame,
+    df: pd.DataFrame,
     street_col_index: int,
     number_col_index: int,
 ) -> pd.DataFrame:
@@ -130,7 +130,7 @@ def sort_by_street_and_number(
     Sort the DataFrame by street name and logical street number order.
 
     Args:
-        p_df (pd.DataFrame): Input DataFrame.
+        df (pd.DataFrame): Input DataFrame.
         street_col_index (int): Index of the street name column.
         number_col_index (int): Index of the street number column.
 
@@ -138,16 +138,16 @@ def sort_by_street_and_number(
         pd.DataFrame: Sorted DataFrame.
     """
     # Normalize street name IN PLACE
-    p_df.iloc[:, street_col_index] = p_df.iloc[:, street_col_index].astype(str).map(normalize_street_name)
+    df.iloc[:, street_col_index] = df.iloc[:, street_col_index].astype(str).map(normalize_street_name)
 
-    number_parts = p_df.iloc[:, number_col_index].map(split_street_number)
-    p_df["_base"] = number_parts.map(lambda x: x[0])
-    p_df["_kind"] = number_parts.map(lambda x: x[1])
-    p_df["_extra"] = number_parts.map(lambda x: x[2])
+    number_parts = df.iloc[:, number_col_index].map(split_street_number)
+    df["_base"] = number_parts.map(lambda x: x[0])
+    df["_kind"] = number_parts.map(lambda x: x[1])
+    df["_extra"] = number_parts.map(lambda x: x[2])
 
-    p_df = p_df.sort_values(
+    df = df.sort_values(
         by=[
-            p_df.columns[street_col_index],
+            df.columns[street_col_index],
             "_base",
             "_kind",
             "_extra",
@@ -156,7 +156,7 @@ def sort_by_street_and_number(
         kind="mergesort",
     )
 
-    return p_df.drop(columns=["_base", "_kind", "_extra"])
+    return df.drop(columns=["_base", "_kind", "_extra"])
 
 
 def parse_args() -> argparse.Namespace:

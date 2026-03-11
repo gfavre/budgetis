@@ -172,6 +172,7 @@ ignore = [
   "TID252", # import relative modules,
   "FBT002", # Boolean default positional argument in function definition
   "RUF002", # Docstring contains ambiguous `’` (RIGHT SINGLE QUOTATION MARK) => wtf!
+  "PD901", # df
 ]
 # The fixes in extend-unsafe-fixes will require
 # provide the `--unsafe-fixes` flag when fixing.

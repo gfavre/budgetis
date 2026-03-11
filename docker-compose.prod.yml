@@ -1,25 +1,4 @@
 services:
-  traefik:
-    image: traefik:v3.1
-    command:
-      - "--api.dashboard=true"
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.email=ton.email@genolier.ch"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "letsencrypt:/letsencrypt"
-      - ./budgetis/media:/media:ro
-
-    networks:
-      - budgetis
-
   media:
     image: nginx:alpine
     volumes:
@@ -29,6 +8,7 @@ services:
       - "80"
     networks:
       - budgetis
+      - web
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.media.rule=Host(`budgetis.genolier.ch`) && PathPrefix(`/media/`)"
@@ -68,7 +48,7 @@ services:
       - "traefik.http.middlewares.global-ratelimit.ratelimit.period=1m"
 
       # Rate limiting for login
-      - "traefik.http.routers.login.rule=Path(`/admin/login/`)"
+      - "traefik.http.routers.login.rule=Host(`budgetis.genolier.ch`) && Path(`/admin/login/`)"
       - "traefik.http.routers.login.entrypoints=websecure"
       - "traefik.http.routers.login.middlewares=login-ratelimit@docker"
       - "traefik.http.services.login.loadbalancer.server.port=8000"
@@ -77,6 +57,7 @@ services:
       - "traefik.http.middlewares.login-ratelimit.ratelimit.period=1m"
     networks:
       - budgetis
+      - web
     volumes:
       - static_data:/app/static
       - media_data:/app/media
@@ -111,3 +92,5 @@ volumes:
 networks:
   budgetis:
     external: false
+  web:
+    external: true
