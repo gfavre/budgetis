@@ -11,6 +11,7 @@ services:
       - web
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=web"
       - "traefik.http.routers.media.rule=Host(`budgetis.genolier.ch`) && PathPrefix(`/media/`)"
       - "traefik.http.routers.media.entrypoints=websecure"
       - "traefik.http.routers.media.tls.certresolver=letsencrypt"
@@ -28,7 +29,7 @@ services:
       - DJANGO_SETTINGS_MODULE=config.settings.production
     labels:
       - "traefik.enable=true"
-
+      - "traefik.docker.network=web"
       # Router HTTPS
       - "traefik.http.routers.budgetis.rule=Host(`budgetis.genolier.ch`)"
       - "traefik.http.routers.budgetis.entrypoints=websecure"
@@ -49,8 +50,6 @@ services:
       - "traefik.http.middlewares.global-ratelimit.ratelimit.average=60"
       - "traefik.http.middlewares.global-ratelimit.ratelimit.burst=200"
       - "traefik.http.middlewares.global-ratelimit.ratelimit.period=1m"
-
-      - "traefik.http.services.budgetis.loadbalancer.server.port=8000"
 
       # Rate limiting for login
       - "traefik.http.routers.login.rule=Host(`budgetis.genolier.ch`) && Path(`/admin/login/`)"
