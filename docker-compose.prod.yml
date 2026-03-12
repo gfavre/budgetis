@@ -33,6 +33,9 @@ services:
       - "traefik.http.routers.budgetis.rule=Host(`budgetis.genolier.ch`)"
       - "traefik.http.routers.budgetis.entrypoints=websecure"
       - "traefik.http.routers.budgetis.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.budgetis.service=budgetis"
+      - "traefik.http.services.budgetis.loadbalancer.server.port=8000"
+
 
       # Router HTTP -> HTTPS
       - "traefik.http.routers.budgetis_http.rule=Host(`budgetis.genolier.ch`)"
