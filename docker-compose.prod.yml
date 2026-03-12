@@ -30,13 +30,12 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=web"
+      -
       # Router HTTPS
       - "traefik.http.routers.budgetis.rule=Host(`budgetis.genolier.ch`)"
       - "traefik.http.routers.budgetis.entrypoints=websecure"
       - "traefik.http.routers.budgetis.tls.certresolver=letsencrypt"
       - "traefik.http.routers.budgetis.service=budgetis"
-      - "traefik.http.services.budgetis.loadbalancer.server.port=8000"
-
 
       # Router HTTP -> HTTPS
       - "traefik.http.routers.budgetis_http.rule=Host(`budgetis.genolier.ch`)"
@@ -51,11 +50,13 @@ services:
       - "traefik.http.middlewares.global-ratelimit.ratelimit.burst=200"
       - "traefik.http.middlewares.global-ratelimit.ratelimit.period=1m"
 
+      - "traefik.http.services.budgetis.loadbalancer.server.port=8000"
+
       # Rate limiting for login
       - "traefik.http.routers.login.rule=Host(`budgetis.genolier.ch`) && Path(`/admin/login/`)"
       - "traefik.http.routers.login.entrypoints=websecure"
       - "traefik.http.routers.login.middlewares=login-ratelimit@docker"
-      - "traefik.http.services.login.loadbalancer.server.port=8000"
+      - "traefik.http.routers.login.service=budgetis"
       - "traefik.http.middlewares.login-ratelimit.ratelimit.average=5"
       - "traefik.http.middlewares.login-ratelimit.ratelimit.burst=10"
       - "traefik.http.middlewares.login-ratelimit.ratelimit.period=1m"
