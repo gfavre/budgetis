@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-15 17:03+0100\n"
+"POT-Creation-Date: 2026-03-20 16:27+0100\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -246,17 +246,17 @@ msgstr ""
 msgid "Budget explorer"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/budget_explorer.html:149
+#: budgetis/accounting/templates/accounting/budget_explorer.html:150
 #, python-format
 msgid "Municipality of %(city)s"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/budget_explorer.html:151
+#: budgetis/accounting/templates/accounting/budget_explorer.html:152
 #, python-format
 msgid "Budget %(year)s"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/budget_explorer.html:152
+#: budgetis/accounting/templates/accounting/budget_explorer.html:153
 msgid "Accounts by administrative function"
 msgstr ""
 
@@ -300,6 +300,15 @@ msgstr ""
 
 #: budgetis/accounting/views/mixins.py:254
 msgid "Last import:"
+msgstr ""
+
+#: budgetis/bdi_import/admin.py:16
+msgid "Relaunch import"
+msgstr ""
+
+#: budgetis/bdi_import/admin.py:34
+#, python-format
+msgid "%(count)s import(s) relaunched successfully."
 msgstr ""
 
 #: budgetis/bdi_import/apps.py:8
