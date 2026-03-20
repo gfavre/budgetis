@@ -13,8 +13,8 @@ from .utils import load_account_dataframe
 logger = logging.getLogger(__name__)
 
 
-@shared_task
-def import_accounts_task(log_id: int):  # noqa: PLR0915
+@shared_task(bind=True)
+def import_accounts_task(self, log_id: int):  # noqa: PLR0915
     logger.info("[Import] Task received for log_id=%s", log_id)
     try:
         log = AccountImportLog.objects.get(pk=log_id)

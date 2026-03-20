@@ -71,12 +71,15 @@ services:
     build:
       context: .
       dockerfile: docker/celery.Dockerfile
+    command: celery -A config.celery_app worker -l DEBUG --pool=solo
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
     labels:
       - "traefik.enable=false"
     networks:
       - budgetis
+    volumes:
+      - media_data:/app/media
 
   celery-beat:
     build:
