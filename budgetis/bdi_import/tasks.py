@@ -38,7 +38,11 @@ def import_accounts_task(self, log_id: int):  # noqa: PLR0915
         account_rows = load_account_dataframe(log.file.path)
         logger.info("[Import] Dataframe loaded | rows=%s | log_id=%s", len(account_rows), log_id)
     except FileNotFoundError:
-        logger.info("[Import] Dataframe loaded | rows=%s | log_id=%s", len(account_rows), log_id)
+        logger.exception(
+            "[Import] File not found | path=%s | log_id=%s",
+            log.file.path,
+            log_id,
+        )
         log.status = AccountImportLog.Status.FAILED
         log.message = _("The import file could not be found.")
         log.save(update_fields=["status", "message"])
