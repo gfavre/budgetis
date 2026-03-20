@@ -55,7 +55,12 @@ def load_account_dataframe(path: str) -> pd.DataFrame:
         )
         raise ValueError(exception_message)
 
-    return dataframe.fillna("").applymap(lambda x: x.strip() if isinstance(x, str) else x)
+    dataframe = dataframe.fillna("")
+
+    for col in dataframe.select_dtypes(include="object"):
+        dataframe[col] = dataframe[col].str.strip()
+
+    return dataframe
 
 
 def load_dataframe_with_header(path: str) -> pd.DataFrame:
