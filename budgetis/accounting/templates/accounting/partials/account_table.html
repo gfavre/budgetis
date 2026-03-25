@@ -8,8 +8,11 @@
       <th rowspan="2" class="text-start">Désignation</th>
       <th colspan="2">Comptes {{ year }}</th>
       <th colspan="2">Budget {{ year }}</th>
+      <th colspan="2">Comptes {{ year|add:"-1" }}</th>
     </tr>
     <tr class="table-light text-center">
+      <th>Charges</th>
+      <th>Produits</th>
       <th>Charges</th>
       <th>Produits</th>
       <th>Charges</th>
@@ -68,6 +71,8 @@
           {{ account.budget_charges|format_money }}
         </td>
         <td class="text-end">{{ account.budget_revenues|format_money }}</td>
+        <td class="text-end">{{ account.prev_actual_charges|default:0|format_money }}</td>
+        <td class="text-end">{{ account.prev_actual_revenues|default:0|format_money }}</td>
       </tr>
     {% endfor %}
   </tbody>
@@ -87,6 +92,8 @@
       </td>
       <td class="text-end">{{ data.budget_total_charges|format_money }}</td>
       <td class="text-end">{{ data.budget_total_revenues|format_money }}</td>
+      <td class="text-end">{{ data.prev_total_charges|default:0|format_money }}</td>
+      <td class="text-end">{{ data.prev_total_revenues|default:0|format_money }}</td>
     </tr>
   </tfoot>
 </table>

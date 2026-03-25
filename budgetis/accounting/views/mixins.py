@@ -73,6 +73,7 @@ class AccountExplorerMixin(BaseExplorerLogicMixin):
 
         self._attach_budget_data(year, actual_accounts)
         self._ensure_budget_defaults(actual_accounts)
+        self._attach_previous_actuals(year, actual_accounts)
         return actual_accounts
 
     def _get_budget_fallback(self, year: int, group_ids: list[int]) -> list[Account]:
@@ -118,6 +119,27 @@ class AccountExplorerMixin(BaseExplorerLogicMixin):
                 actual.budget_id = b.id
                 actual.budget_comment_count = b.comment_count  # type: ignore[attr-defined]
 
+    def _attach_previous_actuals(self, year: int, accounts: list[Account]) -> None:
+        """
+        Attach previous year actual data (N-1) to current accounts.
+
+        Adds:
+            - prev_actual_charges
+            - prev_actual_revenues
+        """
+        prev_qs = Account.objects.filter(
+            year=year - 1,
+            is_budget=False,
+            function__in=[a.function for a in accounts],
+            nature__in=[a.nature for a in accounts],
+        )
+        prev_map = {(a.function, a.nature, a.sub_account): a for a in prev_qs}
+        for acc in accounts:
+            key = (acc.function, acc.nature, acc.sub_account)
+            prev = prev_map.get(key)
+            acc.prev_actual_charges = prev.charges if prev else Decimal("0.00")
+            acc.prev_actual_revenues = prev.revenues if prev else Decimal("0.00")
+
     def _ensure_budget_defaults(self, accounts: list[Account]) -> None:
         """Ensure each account has budget-related attributes even if unmatched."""
         for a in accounts:
@@ -155,7 +177,16 @@ class AccountExplorerMixin(BaseExplorerLogicMixin):
             ag_key = group.code
             mg = raw_structure.setdefault(
                 mg_key,
-                {"label": metagroup.label, "supergroups": {}},
+                {
+                    "label": metagroup.label,
+                    "supergroups": {},
+                    "total_charges": Decimal(0),
+                    "total_revenues": Decimal(0),
+                    "budget_total_charges": Decimal(0),
+                    "budget_total_revenues": Decimal(0),
+                    "prev_total_charges": Decimal(0),
+                    "prev_total_revenues": Decimal(0),
+                },
             )
             sg = mg["supergroups"].setdefault(
                 sg_key,
@@ -166,6 +197,8 @@ class AccountExplorerMixin(BaseExplorerLogicMixin):
                     "total_revenues": Decimal(0),
                     "budget_total_charges": Decimal(0),
                     "budget_total_revenues": Decimal(0),
+                    "prev_total_charges": Decimal(0),
+                    "prev_total_revenues": Decimal(0),
                 },
             )
             # ajout dans ag = sg["groups"].setdefault(...)
@@ -178,6 +211,8 @@ class AccountExplorerMixin(BaseExplorerLogicMixin):
                     "total_revenues": Decimal(0),
                     "budget_total_charges": Decimal(0),
                     "budget_total_revenues": Decimal(0),
+                    "prev_total_charges": Decimal(0),
+                    "prev_total_revenues": Decimal(0),
                     "responsible": responsibilities.get(group.id),
                 },
             )
@@ -187,12 +222,23 @@ class AccountExplorerMixin(BaseExplorerLogicMixin):
             ag["total_revenues"] += account.revenues
             ag["budget_total_charges"] += account.budget_charges
             ag["budget_total_revenues"] += account.budget_revenues
+            ag["prev_total_charges"] += account.prev_actual_charges
+            ag["prev_total_revenues"] += account.prev_actual_revenues
 
             # Totaux cumulés du supergroupe
             sg["total_charges"] += account.charges
             sg["total_revenues"] += account.revenues
             sg["budget_total_charges"] += account.budget_charges
             sg["budget_total_revenues"] += account.budget_revenues
+            sg["prev_total_charges"] += account.prev_actual_charges
+            sg["prev_total_revenues"] += account.prev_actual_revenues
+
+            mg["total_charges"] += account.charges
+            mg["total_revenues"] += account.revenues
+            mg["budget_total_charges"] += account.budget_charges
+            mg["budget_total_revenues"] += account.budget_revenues
+            mg["prev_total_charges"] += account.prev_actual_charges
+            mg["prev_total_revenues"] += account.prev_actual_revenues
 
         return self.sort_grouped_structure(raw_structure)
 

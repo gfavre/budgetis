@@ -10,6 +10,53 @@
   {% endif %}
   {% for mg_code, mg in grouped.items %}
     <h2>{{ mg_code }} {{ mg.label }}</h2>
+    <table class="table table-bordered align-middle mb-5 mt-3">
+      <thead class="table-light text-center">
+        <tr>
+          <th rowspan="2" class="text-start">N°</th>
+          <th rowspan="2" class="text-start">Désignation</th>
+          <th colspan="2">Comptes {{ year }}</th>
+          <th colspan="2">Budget {{ year }}</th>
+          <th colspan="2">Comptes {{ year|add:"-1" }}</th>
+        </tr>
+        <tr>
+          <th>Charges</th>
+          <th>Produits</th>
+          <th>Charges</th>
+          <th>Produits</th>
+          <th>Charges</th>
+          <th>Produits</th>
+        </tr>
+      </thead>
+      <!-- Total metagroup -->
+      <thead class="table-primary fw-bold">
+        <tr>
+          <td>{{ mg_code }}</td>
+          <td>Total {{ mg.label }}</td>
+          <td class="text-end">{{ mg.total_charges|format_money }}</td>
+          <td class="text-end">{{ mg.total_revenues|format_money }}</td>
+          <td class="text-end">{{ mg.budget_total_charges|format_money }}</td>
+          <td class="text-end">{{ mg.budget_total_revenues|format_money }}</td>
+          <td class="text-end">{{ mg.prev_total_charges|format_money }}</td>
+          <td class="text-end">{{ mg.prev_total_revenues|format_money }}</td>
+        </tr>
+      </thead>
+      <!-- Supergroups -->
+      <tbody>
+        {% for sg_code, sg in mg.supergroups.items %}
+          <tr>
+            <td>{{ sg_code }}</td>
+            <td>{{ sg.label }}</td>
+            <td class="text-end">{{ sg.total_charges|format_money }}</td>
+            <td class="text-end">{{ sg.total_revenues|format_money }}</td>
+            <td class="text-end">{{ sg.budget_total_charges|format_money }}</td>
+            <td class="text-end">{{ sg.budget_total_revenues|format_money }}</td>
+            <td class="text-end">{{ sg.prev_total_charges|format_money }}</td>
+            <td class="text-end">{{ sg.prev_total_revenues|format_money }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
     {% for sg_code, sg in mg.supergroups.items %}
       <h3>{{ sg_code }} {{ sg.label }}</h3>
       {% for ag_code, ag in sg.groups.items %}
