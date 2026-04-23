@@ -10,7 +10,6 @@ RUN pip install --no-cache-dir uv
 
 WORKDIR /app
 
-# Ensure media folder exists
 RUN mkdir -p /app/media
 
 # Copier les fichiers de dépendances
@@ -20,18 +19,18 @@ RUN uv pip install --system --no-cache --group prod .
 # Copier le code
 COPY . .
 
-# Copy entrypoint
-COPY docker/entrypoint.sh /app/docker/entrypoint.sh
 RUN chmod +x /app/docker/entrypoint.sh
 
 # Collect static and compress at build time
 ENV DJANGO_SETTINGS_MODULE=config.settings.production
 
-RUN mkdir -p /app/media
-
 RUN python manage.py collectstatic --noinput && \
     python manage.py compilemessages && \
     python manage.py compress --force
+
+RUN adduser --system --no-create-home appuser && chown -R appuser /app
+USER appuser
+
 ENTRYPOINT ["/app/docker/entrypoint.sh"]
 
 # Commande par défaut = Gunicorn

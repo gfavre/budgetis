@@ -54,8 +54,6 @@ services:
       - .env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
-      - POSTGRES_DB=budgetis
-      - POSTGRES_USER= budgetis
     depends_on:
       - db
       - redis

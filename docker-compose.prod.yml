@@ -71,7 +71,9 @@ services:
     build:
       context: .
       dockerfile: docker/celery.Dockerfile
-    command: celery -A config.celery_app worker -l DEBUG --pool=solo
+    command: celery -A config.celery_app worker -l info
+    env_file:
+      - .env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
     labels:
@@ -85,6 +87,9 @@ services:
     build:
       context: .
       dockerfile: docker/celery.Dockerfile
+    command: celery -A config.celery_app beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file:
+      - .env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
     labels:
