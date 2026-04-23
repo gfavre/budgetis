@@ -7,58 +7,128 @@
 {% endblock title %}
 {% block extra_style %}
   <style>
-h2 {
-    background: color-mix(in srgb, var(--brand-color-alt) 20%, white);
-  border-left: 5px solid var(--brand-color-alt);
-    padding: 0.6rem 0.6rem;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
+    h2 {
+      background: color-mix(in srgb, var(--brand-color-alt) 20%, white);
+      border-left: 5px solid var(--brand-color-alt);
+      padding: 0.6rem 0.6rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+    }
 
-}
-
-h3 {
+    h3 {
       margin: 1.5rem 0 1rem;
-  color: var(--brand-color-alt);
-}
-@media print {
+      color: var(--brand-color-alt);
+    }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: auto; /* autorise largeur selon contenu */
-  }
+    @media screen {
+      .print-cover-page {
+        display: none !important;
+      }
+    }
 
-  /* Colonnes numériques compactes et alignées à droite */
-  table th:nth-child(n+3),
-  table td:nth-child(n+3) {
-    text-align: right;
-    width: 12%;
-  }
+    @media print {
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0 0;
+        table-layout: auto;
+      }
 
-  /* Première colonne = largeur auto selon contenu */
-  table th:first-child,
-  table td:first-child {
-    white-space: nowrap;
-    width: 1%;
-  }
+      th,
+      td {
+        padding: 2pt 3pt;
+        vertical-align: top;
+      }
 
-  /* Deuxième colonne (désignation) prend le reste */
-  table th:nth-child(2),
-  table td:nth-child(2) {
-    width: auto;
-  }
+      th {
+        border: 0.2pt solid #000 !important;
+      }
 
-  /* Colonnes numériques compactes et alignées à droite */
-  table th:nth-child(n+3),
-  table td:nth-child(n+3) {
-    text-align: right;
-    width: 12%;
-  }
-  td small {
-  display: none
-}
-}
+      td {
+        border: 0;
+      }
 
+      table th:first-child,
+      table td:first-child {
+        white-space: nowrap;
+        width: 1%;
+      }
+
+      table th:nth-child(2),
+      table td:nth-child(2) {
+        width: auto;
+      }
+
+      table th:nth-child(n + 3),
+      table td:nth-child(n + 3) {
+        text-align: right;
+        width: 10.5%;
+      }
+
+      td small {
+        display: none;
+      }
+
+      colgroup .col-charges {
+        border-left: 0.1pt solid #000;
+      }
+
+      colgroup .col-revenues {
+        border-right: 0.1pt solid #000;
+      }
+
+      colgroup .col-num {
+        border-left: 0.1pt solid #000;
+      }
+
+      tfoot .table-primary {
+        border-bottom: 0.1pt solid #000;
+      }
+
+      .print-cover-page {
+        page-break-after: always;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 2cm;
+      }
+
+      .print-cover-page img.cover-logo {
+        max-width: 6cm;
+        height: auto;
+        margin-bottom: 1cm;
+        margin-top: 2em !important;
+      }
+
+      .print-cover-page .cover-commune {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin: 0 0 0.5cm 0;
+      }
+
+      .print-cover-page .cover-title {
+        font-size: 2rem;
+        margin: 0 0 0.3cm 0;
+      }
+
+      .print-cover-page .cover-subtitle {
+        font-size: 12pt;
+        margin: 0;
+        font-weight: 600;
+        background: none;
+        border: none;
+      }
+
+      .print-cover-page h2 {
+        break-before: auto !important;
+        page-break-before: auto !important;
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+      }
+    }
   </style>
 {% endblock extra_style %}
 {% block content %}
@@ -73,5 +143,17 @@ h3 {
     </form>
     <hr />
   </div>
-  <div id="account-list">{% include "accounting/partials/account_list.html" with grouped=grouped %}</div>
+  <div class="print-cover-page">
+    <img src="{{ config.logo.url }}"
+         alt="{{ config.commune_name }} logo"
+         class="cover-logo" />
+    <p class="cover-commune">
+      {% blocktrans with city=config.commune_name %}Municipality of {{ city }}{% endblocktrans %}
+    </p>
+    <h1 class="cover-title">{% blocktrans with year=year %}Actuals {{ year }}{% endblocktrans %}</h1>
+    <h2 class="cover-subtitle">{% trans "Accounts by administrative function" %}</h2>
+  </div>
+  <div id="account-list">
+    {% include "accounting/partials/account_list.html" with grouped=grouped year=year global_summary=global_summary %}
+  </div>
 {% endblock content %}

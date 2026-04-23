@@ -125,6 +125,7 @@ class AccountPartialView(AccountExplorerMixin, FormView):
             year=year,
             last_import_text=self.get_last_import_info(year),
         )
+        context["global_summary"] = self.build_global_summary(grouped)
         return self.render_to_response(context)
 
 

@@ -271,6 +271,57 @@ class AccountExplorerMixin(BaseExplorerLogicMixin):
 
         return sorted_structure
 
+    def build_global_summary(self, grouped: OrderedDict) -> dict:
+        """
+        Build a summary of all MetaGroups with totals for actuals N, budget N, and actuals N-1.
+        """
+        rows = []
+        total_charges = total_revenues = Decimal(0)
+        budget_total_charges = budget_total_revenues = Decimal(0)
+        prev_total_charges = prev_total_revenues = Decimal(0)
+
+        for mg_code, mg in grouped.items():
+            rows.append(
+                {
+                    "code": mg_code,
+                    "label": mg["label"],
+                    "total_charges": mg["total_charges"],
+                    "total_revenues": mg["total_revenues"],
+                    "budget_total_charges": mg["budget_total_charges"],
+                    "budget_total_revenues": mg["budget_total_revenues"],
+                    "prev_total_charges": mg["prev_total_charges"],
+                    "prev_total_revenues": mg["prev_total_revenues"],
+                }
+            )
+            total_charges += mg["total_charges"]
+            total_revenues += mg["total_revenues"]
+            budget_total_charges += mg["budget_total_charges"]
+            budget_total_revenues += mg["budget_total_revenues"]
+            prev_total_charges += mg["prev_total_charges"]
+            prev_total_revenues += mg["prev_total_revenues"]
+
+        actual_diff = total_revenues - total_charges
+        budget_diff = budget_total_revenues - budget_total_charges
+        prev_diff = prev_total_revenues - prev_total_charges
+
+        return {
+            "rows": rows,
+            "totals": {
+                "total_charges": total_charges,
+                "total_revenues": total_revenues,
+                "budget_total_charges": budget_total_charges,
+                "budget_total_revenues": budget_total_revenues,
+                "prev_total_charges": prev_total_charges,
+                "prev_total_revenues": prev_total_revenues,
+                "actual_diff": actual_diff,
+                "budget_diff": budget_diff,
+                "prev_diff": prev_diff,
+                "balanced_actual": max(total_charges, total_revenues),
+                "balanced_budget": max(budget_total_charges, budget_total_revenues),
+                "balanced_prev": max(prev_total_charges, prev_total_revenues),
+            },
+        }
+
     def get_last_import_info(self, year: int) -> str:
         """
         Return a human-readable string with the last import dates for budget and actual accounts.
