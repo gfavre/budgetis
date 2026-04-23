@@ -61,10 +61,35 @@ Active hooks:
 - `trailing-whitespace`, `end-of-file-fixer`, `check-json/toml/xml/yaml`
 - `debug-statements`, `check-builtin-literals`, `detect-private-key`
 - `django-upgrade` (target Django 5.0)
-- `ruff` (lint + autofix) then `ruff-format` (formatter)
+- `ruff` (lint + autofix, **`--exit-non-zero-on-fix`**) then `ruff-format` (formatter)
 - `djlint-reformat-django` + `djlint-django` (templates)
 
 Migrations and `staticfiles/` are excluded from all hooks.
+
+### Pass pre-commit first time
+
+Both `ruff` and `djlint-reformat` **auto-fix then exit non-zero** — even a successful fix forces a re-stage + re-commit. Write code that needs no fixing:
+
+**Python — ruff rules most commonly triggered:**
+
+| Rule | What it requires |
+|---|---|
+| `PLR0913` | ≤ 5 arguments per function; group extras into a dataclass or use `**kwargs` |
+| `FBT001/003` | No boolean positional args; use keyword-only: `def f(*, flag: bool = False)` |
+| `EM101/102` | No string literals directly in `raise`; assign `msg = "..."` first |
+| `T201` | No `print()`; use `logging.getLogger(__name__)` |
+| `TC001–TC003` | Type-annotation-only imports go inside `if TYPE_CHECKING:` |
+| `UP` | Use builtin generics: `list[str]`, `dict[str, int]`, `X \| Y` not `Optional[X]` |
+| `RUF001` | No en-dash (`–`) in string literals; use hyphen-minus (`-`) |
+| `I` (isort) | One import per line; exactly 2 blank lines after the last import |
+
+**Templates — djlint rules most commonly triggered:**
+
+| Rule | What it requires |
+|---|---|
+| `close_void_tags` | Self-close all void HTML tags: `<input />`, `<img />`, `<br />`, `<hr />`, `<meta />`, `<link />` |
+| `blank_line_after_tag` | Empty line after every `{% load %}` and `{% extends %}` block |
+| indentation | 2 spaces throughout; attributes on their own line when the tag exceeds 119 chars |
 
 ## Hard rules
 
@@ -107,7 +132,10 @@ Migrations and `staticfiles/` are excluded from all hooks.
 - `budgetis/core/templates/` for global templates only (base, login, admin overrides)
 - Move logic to views or template tags, not templates
 - CSRF protection on all forms
-- djLint enforces formatting (profile `django`, indent 2, max line 119); run `djlint --reformat` before committing
+- djLint enforces formatting (profile `django`, indent 2, max line 119)
+- Self-close all void HTML tags: `<input />`, `<img />`, `<br />`, `<hr />`
+- Leave a blank line after every `{% load %}` and `{% extends %}` tag
+- No standalone `<style>` blocks; use `{% block extra_style %}{% endblock %}` when per-page CSS is unavoidable
 
 ### Admin
 
@@ -168,9 +196,21 @@ Rules:
 
 ## i18n
 
-All user-facing strings (model verbose names, help text, choice labels) must use `gettext_lazy`.
+All user-facing strings (model verbose names, help text, choice labels, template text) must use `gettext_lazy` (`_()`) in Python and `{% trans %}` / `{% blocktrans %}` in templates.
 
-Language: `fr-ch` (French Switzerland). Time zone: `Europe/Zurich`.
+**Convention: msgids are English.** `fr_CH` carries the French translations; `en_US` has empty `msgstr ""` (Django falls back to the msgid). Never write French msgids in source code.
+
+```python
+# correct
+verbose_name = _("Account group")
+
+# wrong — French msgid
+verbose_name = _("Groupe de compte")
+```
+
+After adding new strings: `python manage.py makemessages -l fr_CH -l en_US`, then add translations to `locale/fr_CH/LC_MESSAGES/django.po` and compile with `python manage.py compilemessages`.
+
+Default locale: `fr-ch`. Time zone: `Europe/Zurich`.
 
 ## CSS & Frontend
 
