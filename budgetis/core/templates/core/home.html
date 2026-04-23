@@ -3,65 +3,209 @@
 {% load static i18n %}
 
 {% block title %}
-  Tableau de bord - Budgetis - {{ config.commune_name }}
+  {{ config.commune_name }} – Finances communales | Budgetis
 {% endblock title %}
 {% block extra_style %}
   <style>
-    .dashboard-grid {
+    .dashboard {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
       gap: 1.5rem;
-      max-width: 1000px;
+      max-width: 860px;
       margin: 0 auto;
     }
 
-    .card-tile {
-      text-decoration: none;
-      color: inherit;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .dashboard-panel {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
-    .card-tile:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-      text-decoration: none;
-      color: inherit;
+    .panel-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      color: white;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
     }
 
-    .card-icon {
-      font-size: 2.5rem;
-      color: var(--brand-color-alt);
-      margin-bottom: 0.5rem;
+    .panel-header.comptes,
+    .panel-header.budget {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)) fixed;
+    }
+
+    .panel-header .header-icon {
+      font-size: 1.75rem;
+      opacity: 0.9;
+    }
+
+    .panel-header .header-text .title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .panel-header .header-text .subtitle {
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .panel-links {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .panel-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1.25rem;
+      text-decoration: none;
+      color: #212529;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.15s ease;
+    }
+
+    .panel-link:last-child {
+      border-bottom: none;
+    }
+
+    .panel-link:hover {
+      background: color-mix(in srgb, var(--panel-accent) 8%, white);
+      color: var(--panel-accent);
+      text-decoration: none;
+    }
+
+    .panel-link .link-icon {
+      font-size: 1.4rem;
+      color: var(--panel-accent);
+      flex-shrink: 0;
+      width: 2rem;
+      text-align: center;
+    }
+
+    .panel-link .link-text .link-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      line-height: 1.3;
+    }
+
+    .panel-link .link-text .link-desc {
+      font-size: 0.78rem;
+      color: #6c757d;
+    }
+
+    .panel-comptes {
+      --panel-accent: var(--brand-color);
+    }
+
+    .panel-budget {
+      --panel-accent: var(--brand-color-alt);
+    }
+
+    .panel-analyses {
+      grid-column: 1 / -1;
+      --panel-accent: #6c757d;
+    }
+
+    .panel-analyses .panel-header {
+      background: #495057;
+    }
+
+    @media (max-width: 600px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-analyses {
+        grid-column: 1;
+      }
     }
   </style>
 {% endblock extra_style %}
 {% block content %}
-  <h1>Bienvenue – {{ config.commune_name }}</h1>
-  <div class="dashboard-grid">
-    <a class="card card-body text-center card-tile shadow-sm"
-       href="{% url 'accounting:account-explorer' %}">
-      <i class="bi bi-diagram-3 card-icon"></i>
-      <h2>Comptes par fonction</h2>
-    </a>
-    <a class="card card-body text-center card-tile shadow-sm"
-       href="{% url 'accounting:budget-explorer' %}">
-      <i class="bi bi-graph-up-arrow card-icon"></i>
-      <h2>Budgets par fonction</h2>
-    </a>
-    <a class="card card-body text-center card-tile shadow-sm"
-       href="{% url 'accounting:budget-nature-explorer' %}">
-      <i class="bi bi-puzzle-fill card-icon"></i>
-      <h2>Budgets par nature</h2>
-    </a>
-    <a class="card card-body text-center card-tile shadow-sm"
-       href="{% url 'accounting:natures' %}">
-      <i class="bi bi-collection card-icon"></i>
-      <h2>Comptes par nature</h2>
-    </a>
-    <a class="card card-body text-center card-tile shadow-sm"
-       href="{% url 'finance:index' %}">
-      <i class="bi bi-bar-chart-line card-icon"></i>
-      <h2>Analyses & rapports</h2>
-    </a>
+  <h1 class="mb-4">
+    {{ config.commune_name }}
+    <span class="fw-light text-muted fs-4">— Finances communales</span>
+  </h1>
+  <div class="dashboard">
+    <!-- Comptes -->
+    <div class="dashboard-panel panel-comptes">
+      <div class="panel-header comptes">
+        <i class="bi bi-receipt header-icon"></i>
+        <div class="header-text">
+          <div class="title">Comptes</div>
+          <div class="subtitle">Réalisations</div>
+        </div>
+      </div>
+      <div class="panel-links">
+        <a href="{% url 'accounting:account-explorer' %}" class="panel-link">
+          <i class="bi bi-diagram-3 link-icon"></i>
+          <div class="link-text">
+            <div class="link-title">Par fonction</div>
+            <div class="link-desc">Comptes N · Budget N · Comptes N-1</div>
+          </div>
+        </a>
+        <a href="{% url 'accounting:natures' %}" class="panel-link">
+          <i class="bi bi-tags link-icon"></i>
+          <div class="link-text">
+            <div class="link-title">Par nature</div>
+            <div class="link-desc">Charges & produits agrégés</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <!-- Budget -->
+    <div class="dashboard-panel panel-budget">
+      <div class="panel-header budget">
+        <i class="bi bi-calculator header-icon"></i>
+        <div class="header-text">
+          <div class="title">Budget</div>
+          <div class="subtitle">Prévisions</div>
+        </div>
+      </div>
+      <div class="panel-links">
+        <a href="{% url 'accounting:budget-explorer' %}" class="panel-link">
+          <i class="bi bi-diagram-3 link-icon"></i>
+          <div class="link-text">
+            <div class="link-title">Par fonction</div>
+            <div class="link-desc">Budget N · Budget N-1 · Comptes N-2</div>
+          </div>
+        </a>
+        <a href="{% url 'accounting:budget-nature-explorer' %}"
+           class="panel-link">
+          <i class="bi bi-tags link-icon"></i>
+          <div class="link-text">
+            <div class="link-title">Par nature</div>
+            <div class="link-desc">Charges & produits agrégés</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <!-- Analyses — transversal -->
+    <div class="dashboard-panel panel-analyses">
+      <div class="panel-header">
+        <i class="bi bi-pie-chart header-icon"></i>
+        <div class="header-text">
+          <div class="title">Analyses & rapports</div>
+          <div class="subtitle">Vues transversales</div>
+        </div>
+      </div>
+      <div class="panel-links">
+        <a href="{% url 'finance:index' %}" class="panel-link">
+          <i class="bi bi-bar-chart-line link-icon"></i>
+          <div class="link-text">
+            <div class="link-title">Reporting</div>
+            <div class="link-desc">Sankey du ménage communal · exports</div>
+          </div>
+        </a>
+      </div>
+    </div>
   </div>
 {% endblock content %}
