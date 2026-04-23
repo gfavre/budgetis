@@ -140,12 +140,14 @@ class ActualsLoader(BaseLoader):
             is_budget=False,
             function__in=[a.function for a in accounts],
             nature__in=[a.nature for a in accounts],
-        )
+        ).annotate(comment_count=Count("comments"))
         prev_map = {(a.function, a.nature, a.sub_account): a for a in prev_qs}
         for acc in accounts:
             prev = prev_map.get((acc.function, acc.nature, acc.sub_account))
             acc.prev_actual_charges = prev.charges if prev else Decimal("0.00")
             acc.prev_actual_revenues = prev.revenues if prev else Decimal("0.00")
+            acc.prev_actual_id = prev.id if prev else None
+            acc.prev_actual_comment_count = prev.comment_count if prev else 0
 
 
 class BudgetLoader(BaseLoader):
@@ -171,6 +173,8 @@ class BudgetLoader(BaseLoader):
             a = act_map.get(key)
             acc.budget_id = acc.id
             acc.budget_comment_count = acc.comment_count or 0  # type: ignore[attr-defined]
+            acc.actuals_id = a.id if a else None
+            acc.actuals_comment_count = a.comment_count if a else 0
             rows.append(
                 AccountRow(
                     account=acc,

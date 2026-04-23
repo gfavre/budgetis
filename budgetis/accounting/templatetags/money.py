@@ -51,6 +51,22 @@ def format_money_abs(value: float | Decimal | None) -> str:
 
 
 @register.filter
+def money_cell(value: Decimal | None, other: Decimal | None) -> str:
+    """
+    Format a value for a charges/revenues cell in a double-entry table.
+
+    - Non-zero value → formatted amount
+    - Zero value, non-zero other → blank (account belongs to the other side)
+    - Both zero → "-" (account exists but has no activity)
+    """
+    if value:
+        return format_money(value)
+    if other:
+        return ""
+    return "-"
+
+
+@register.filter
 def percent_diff(actual, budget):
     try:
         if budget == 0:

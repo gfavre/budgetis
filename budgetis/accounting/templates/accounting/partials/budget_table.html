@@ -79,82 +79,56 @@
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
-          {% if row.col1_revenues %}
-            {% if row.col1_charges %}{{ row.col1_charges|format_money }}{% endif %}
-          {% else %}
-            {% if row.col1_charges %}
-              {{ row.col1_charges|format_money }}
-            {% else %}
-              -
-            {% endif %}
-          {% endif %}
+          {{ row.col1_charges|money_cell:row.col1_revenues }}
         </td>
         <td class="text-end">
           {% with diff=row.col1_revenues|percent_diff:row.col2_revenues %}{{ diff|percent_diff_display:True }}{% endwith %}
           <button class="btn btn-sm btn-link no-print"
                   title="{% trans 'Comments' %}"
-                  hx-get="{% url 'accounting:account-comments' row.account.id 'charges' %}"
+                  hx-get="{% url 'accounting:account-comments' row.account.id 'revenues' %}"
                   hx-target="#accountCommentsModal .modal-content"
                   data-bs-toggle="modal"
                   data-bs-target="#accountCommentsModal">
-            <span id="comment-icon-{{ row.account.id }}"
+            <span id="comment-icon-revenues-{{ row.account.id }}"
                   class="{% if not row.account.comment_count %}text-muted{% endif %}">
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
-          {% if row.col1_charges %}
-            {% if row.col1_revenues %}{{ row.col1_revenues|format_money }}{% endif %}
-          {% else %}
-            {% if row.col1_revenues %}
-              {{ row.col1_revenues|format_money }}
-            {% else %}
-              -
-            {% endif %}
+          {{ row.col1_revenues|money_cell:row.col1_charges }}
+        </td>
+        <td class="text-end">{{ row.col2_charges|money_cell:row.col2_revenues }}</td>
+        <td class="text-end">{{ row.col2_revenues|money_cell:row.col2_charges }}</td>
+        <td class="text-end">
+          {% if row.account.actuals_id %}
+            <button class="btn btn-sm btn-link no-print"
+                    title="{% trans 'Comments' %}"
+                    hx-get="{% url 'accounting:account-comments' row.account.actuals_id 'charges' %}"
+                    hx-target="#accountCommentsModal .modal-content"
+                    data-bs-toggle="modal"
+                    data-bs-target="#accountCommentsModal">
+              <span id="comment-icon-actuals-{{ row.account.actuals_id }}"
+                    class="{% if not row.account.actuals_comment_count %}text-muted{% endif %}">
+                <i class="bi bi-chat-left-text"></i>
+              </span>
+            </button>
           {% endif %}
+          {{ row.col3_charges|money_cell:row.col3_revenues }}
         </td>
         <td class="text-end">
-          {% if row.col2_revenues %}
-            {% if row.col2_charges %}{{ row.col2_charges|format_money }}{% endif %}
-          {% else %}
-            {% if row.col2_charges %}
-              {{ row.col2_charges|format_money }}
-            {% else %}
-              -
-            {% endif %}
+          {% if row.account.actuals_id %}
+            <button class="btn btn-sm btn-link no-print"
+                    title="{% trans 'Comments' %}"
+                    hx-get="{% url 'accounting:account-comments' row.account.actuals_id 'revenues' %}"
+                    hx-target="#accountCommentsModal .modal-content"
+                    data-bs-toggle="modal"
+                    data-bs-target="#accountCommentsModal">
+              <span id="comment-icon-actuals-revenues-{{ row.account.actuals_id }}"
+                    class="{% if not row.account.actuals_comment_count %}text-muted{% endif %}">
+                <i class="bi bi-chat-left-text"></i>
+              </span>
+            </button>
           {% endif %}
-        </td>
-        <td class="text-end">
-          {% if row.col2_charges %}
-            {% if row.col2_revenues %}{{ row.col2_revenues|format_money }}{% endif %}
-          {% else %}
-            {% if row.col2_revenues %}
-              {{ row.col2_revenues|format_money }}
-            {% else %}
-              -
-            {% endif %}
-          {% endif %}
-        </td>
-        <td class="text-end">
-          {% if row.col3_revenues %}
-            {% if row.col3_charges %}{{ row.col3_charges|format_money }}{% endif %}
-          {% else %}
-            {% if row.col3_charges %}
-              {{ row.col3_charges|format_money }}
-            {% else %}
-              -
-            {% endif %}
-          {% endif %}
-        </td>
-        <td class="text-end">
-          {% if row.col3_charges %}
-            {% if row.col3_revenues %}{{ row.col3_revenues|format_money }}{% endif %}
-          {% else %}
-            {% if row.col3_revenues %}
-              {{ row.col3_revenues|format_money }}
-            {% else %}
-              -
-            {% endif %}
-          {% endif %}
+          {{ row.col3_revenues|money_cell:row.col3_charges }}
         </td>
       </tr>
     {% endfor %}
