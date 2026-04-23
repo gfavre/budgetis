@@ -7,31 +7,43 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.views.generic import TemplateView
 
+from budgetis.accounting.groupers import build_grouped
+from budgetis.accounting.groupers import build_nature_grouped
+from budgetis.accounting.groupers import build_summary
+from budgetis.accounting.loaders import ActualsLoader
+from budgetis.accounting.loaders import BudgetLoader
+from budgetis.accounting.loaders import get_last_import_info
+from budgetis.accounting.models import Account
+
 from ..forms import AccountFilterForm
-from ..models import Account
-from .mixins import AccountByNatureMixin
-from .mixins import AccountExplorerMixin
-from .mixins import BudgetByNatureMixin
-from .mixins import BudgetExplorerMixin
 
 
-class BaseAccountExplorerView(LoginRequiredMixin, TemplateView):
+class BaseExplorerView(LoginRequiredMixin, TemplateView):
     """
-    Abstract view providing shared logic for account and budget explorers.
-    Child classes must implement get_accounts_for_year(year: int, user) -> list[Account].
+    Base view for all account/budget explorers.
+    Subclasses set loader_class and implement _extra_context().
     """
 
-    template_name = ""  # defined by subclasses
-    title = "Accounts"
-    is_budget_view: bool = False  # surchargé dans la sous-classe
+    template_name = ""
+    title = ""
+    is_budget_view: bool = False
+    loader_class: type[ActualsLoader | BudgetLoader] = ActualsLoader
 
-    def build_global_summary(self, grouped: dict[str, list[str]]) -> dict[str, list[str]]:
+    def _get_default_year(self) -> int | None:
+        return Account.objects.filter(is_budget=self.is_budget_view).aggregate(Max("year")).get("year__max")
+
+    def _extra_context(self, year: int) -> dict[str, Any]:
         return {}
 
-    def get_default_year(self) -> int | None:
-        """Return the most recent year available for this explorer."""
-        qs = Account.objects.filter(is_budget=self.is_budget_view)
-        return qs.aggregate(Max("year")).get("year__max")
+    def _build(self, year: int, user, *, only_responsible: bool) -> dict[str, Any]:
+        loader = self.loader_class()
+        rows = loader.load(year, user, only_responsible=only_responsible)
+        grouped = build_grouped(rows, year)
+        return {
+            "grouped": grouped,
+            "global_summary": build_summary(grouped),
+            "last_import_text": get_last_import_info(year),
+        }
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -43,189 +55,156 @@ class BaseAccountExplorerView(LoginRequiredMixin, TemplateView):
             year = int(form.cleaned_data["year"])
             only = form.cleaned_data.get("only_responsible", False)
         else:
-            year = self.get_default_year()
+            year = self._get_default_year()
             only = form.initial.get("only_responsible", True)
             if year:
-                # prefill form field
                 form.initial["year"] = year
                 if "year" in form.fields:
                     form.fields["year"].initial = year
 
         if year:
-            accounts = self.get_accounts_for_year(year, self.request.user, only_responsible=bool(only))
-            grouped = self.build_grouped_structure(accounts)
-            context.update(
-                {
-                    "year": year,
-                    "grouped": grouped,
-                    "last_import_text": self.get_last_import_info(year),
-                }
-            )
-            context["global_summary"] = self.build_global_summary(grouped)
-
+            context.update(self._build(year, self.request.user, only_responsible=bool(only)))
+            context["year"] = year
+            context.update(self._extra_context(year))
         else:
             context["grouped"] = OrderedDict()
 
         return context
 
-    def get_accounts_for_year(self, year: int, user, *, only_responsible: bool):
-        """Return list of accounts for the selected year (to be implemented)."""
-        raise NotImplementedError("Subclasses must implement get_accounts_for_year()")  # noqa: EM101
 
-
-class AccountExplorerView(AccountExplorerMixin, BaseAccountExplorerView):
-    """
-    Explorer view for actual accounts + budget.
-    """
-
+class AccountExplorerView(BaseExplorerView):
     template_name = "accounting/account_explorer.html"
+    title = _("Actuals")
     is_budget_view = False
-
-    def get_accounts_for_year(self, year: int, user, *, only_responsible: bool):
-        return self.get_accounts(user, year, only_responsible=only_responsible)
+    loader_class = ActualsLoader
 
 
-class BudgetExplorerView(BudgetExplorerMixin, BaseAccountExplorerView):
-    """
-    Identique à AccountExplorerView mais pour les budgets :
-    - affiche le budget courant, le budget de l’année -1, et les comptes de l’année -2
-    - conserve le même form, la même structure, les mêmes modales et les mêmes interactions HTMX
-    """
-
+class BudgetExplorerView(BaseExplorerView):
     template_name = "accounting/budget_explorer.html"
-    title = "Budgets"
+    title = _("Budgets")
     is_budget_view = True
+    loader_class = BudgetLoader
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["previous_year"] = context["year"] - 1
-        context["actuals_year"] = context["year"] - 2
-        return context
-
-    def get_accounts_for_year(self, year: int, user, *, only_responsible: bool):
-        return self.get_accounts(user, year, only_responsible=only_responsible)
+    def _extra_context(self, year: int) -> dict[str, Any]:
+        return {"previous_year": year - 1, "actuals_year": year - 2}
 
 
-class AccountPartialView(AccountExplorerMixin, FormView):
-    """
-    Partial HTMX/AJAX refresh for the accounts explorer table.
-    """
-
+class AccountPartialView(LoginRequiredMixin, FormView):
     form_class = AccountFilterForm
     template_name = "accounting/partials/account_list.html"
 
     def form_valid(self, form):
         year = int(form.cleaned_data["year"])
         only = bool(form.cleaned_data.get("only_responsible"))
-        accounts = self.get_accounts(self.request.user, year, only_responsible=only)
-        grouped = self.build_grouped_structure(accounts)
-        context = self.get_context_data(
-            form=form,
-            grouped=grouped,
-            year=year,
-            last_import_text=self.get_last_import_info(year),
+        rows = ActualsLoader().load(year, self.request.user, only_responsible=only)
+        grouped = build_grouped(rows, year)
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                grouped=grouped,
+                global_summary=build_summary(grouped),
+                year=year,
+                last_import_text=get_last_import_info(year),
+            )
         )
-        context["global_summary"] = self.build_global_summary(grouped)
-        return self.render_to_response(context)
 
 
-class BudgetPartialView(BudgetExplorerMixin, FormView):
-    """
-    Partial HTMX/AJAX refresh for the budget explorer table.
-    """
-
+class BudgetPartialView(LoginRequiredMixin, FormView):
     form_class = AccountFilterForm
     template_name = "accounting/partials/budget_list.html"
 
     def form_valid(self, form):
         year = int(form.cleaned_data["year"])
         only = bool(form.cleaned_data.get("only_responsible"))
-        accounts = self.get_accounts(self.request.user, year, only_responsible=only)
-        grouped = self.build_grouped_structure(accounts)
-        context = self.get_context_data(
-            form=form,
-            grouped=grouped,
-            year=year,
-            previous_year=year - 1,
-            actuals_year=year - 2,
-            last_import_text=self.get_last_import_info(year),
+        rows = BudgetLoader().load(year, self.request.user, only_responsible=only)
+        grouped = build_grouped(rows, year)
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                grouped=grouped,
+                global_summary=build_summary(grouped),
+                year=year,
+                previous_year=year - 1,
+                actuals_year=year - 2,
+                last_import_text=get_last_import_info(year),
+            )
         )
-        context["global_summary"] = self.build_global_summary(grouped)
-        return self.render_to_response(context)
 
 
-class BudgetByNatureView(BudgetByNatureMixin, BaseAccountExplorerView):
-    """Budget explorer grouped by nature."""
-
+class BudgetByNatureView(BaseExplorerView):
     template_name = "accounting/budget_by_nature.html"
     title = _("Budget by nature")
     is_budget_view = True
+    loader_class = BudgetLoader
 
-    def get_accounts_for_year(self, year: int, user, *, only_responsible: bool):
-        return self.get_accounts(user, year, only_responsible=False)
+    def _extra_context(self, year: int) -> dict[str, Any]:
+        return {"previous_year": year - 1, "actuals_year": year - 2}
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["previous_year"] = context["year"] - 1
-        context["actuals_year"] = context["year"] - 2
-        return context
+    def _build(self, year: int, user, *, only_responsible: bool) -> dict[str, Any]:
+        rows = self.loader_class().load(year, user, only_responsible=False)
+        grouped = build_nature_grouped(rows)
+        return {
+            "grouped": grouped,
+            "global_summary": build_summary(grouped),
+            "last_import_text": get_last_import_info(year),
+        }
 
 
-class BudgetByNaturePartialView(BudgetByNatureMixin, FormView):
-    """Partial HTMX/AJAX refresh for Budget by Nature table."""
-
+class BudgetByNaturePartialView(LoginRequiredMixin, FormView):
     form_class = AccountFilterForm
     template_name = "accounting/partials/budget_by_nature_list.html"
 
     def form_valid(self, form):
         year = int(form.cleaned_data["year"])
-        accounts = self.get_accounts(self.request.user, year, only_responsible=False)
-        grouped = self.build_grouped_structure(accounts)
-        context = self.get_context_data(
-            form=form,
-            grouped=grouped,
-            year=year,
-            previous_year=year - 1,
-            actuals_year=year - 2,
-            last_import_text=self.get_last_import_info(year),
+        rows = BudgetLoader().load(year, self.request.user, only_responsible=False)
+        grouped = build_nature_grouped(rows)
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                grouped=grouped,
+                global_summary=build_summary(grouped),
+                year=year,
+                previous_year=year - 1,
+                actuals_year=year - 2,
+                last_import_text=get_last_import_info(year),
+            )
         )
-        context["global_summary"] = self.build_global_summary(grouped)
-        return self.render_to_response(context)
 
 
-class AccountByNatureView(AccountByNatureMixin, BaseAccountExplorerView):
-    """Actuals explorer grouped by nature (actuals N / budget N / actuals N-1)."""
-
+class AccountByNatureView(BaseExplorerView):
     template_name = "accounting/account_by_nature.html"
     title = _("Actuals by nature")
     is_budget_view = False
+    loader_class = ActualsLoader
 
-    def get_accounts_for_year(self, year: int, user, *, only_responsible: bool):
-        return self.get_accounts(user, year, only_responsible=False)
+    def _extra_context(self, year: int) -> dict[str, Any]:
+        return {"prev_year": year - 1}
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        if "year" in context:
-            context["prev_year"] = context["year"] - 1
-        return context
+    def _build(self, year: int, user, *, only_responsible: bool) -> dict[str, Any]:
+        rows = self.loader_class().load(year, user, only_responsible=False)
+        grouped = build_nature_grouped(rows)
+        return {
+            "grouped": grouped,
+            "global_summary": build_summary(grouped),
+            "last_import_text": get_last_import_info(year),
+        }
 
 
-class AccountByNaturePartialView(AccountByNatureMixin, FormView):
-    """Partial HTMX/AJAX refresh for the Actuals by Nature table."""
-
+class AccountByNaturePartialView(LoginRequiredMixin, FormView):
     form_class = AccountFilterForm
     template_name = "accounting/partials/account_by_nature_list.html"
 
     def form_valid(self, form):
         year = int(form.cleaned_data["year"])
-        accounts = self.get_accounts(self.request.user, year, only_responsible=False)
-        grouped = self.build_grouped_structure(accounts)
-        context = self.get_context_data(
-            form=form,
-            grouped=grouped,
-            year=year,
-            prev_year=year - 1,
-            last_import_text=self.get_last_import_info(year),
+        rows = ActualsLoader().load(year, self.request.user, only_responsible=False)
+        grouped = build_nature_grouped(rows)
+        return self.render_to_response(
+            self.get_context_data(
+                form=form,
+                grouped=grouped,
+                global_summary=build_summary(grouped),
+                year=year,
+                prev_year=year - 1,
+                last_import_text=get_last_import_info(year),
+            )
         )
-        context["global_summary"] = self.build_global_summary(grouped)
-        return self.render_to_response(context)
