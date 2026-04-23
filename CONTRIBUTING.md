@@ -74,13 +74,14 @@ Both `ruff` and `djlint-reformat` **auto-fix then exit non-zero** — even a suc
 
 | Rule | What it requires |
 |---|---|
-| `PLR0913` | ≤ 5 arguments per function; group extras into a dataclass or use `**kwargs` |
+| `PLR0913` | ≤ 5 arguments per function; group extras into a dataclass or use `**kwargs`. Use `# noqa: PLR0913` only for private helpers where refactoring would hurt readability. |
 | `FBT001/003` | No boolean positional args; use keyword-only: `def f(*, flag: bool = False)` |
 | `EM101/102` | No string literals directly in `raise`; assign `msg = "..."` first |
 | `T201` | No `print()`; use `logging.getLogger(__name__)` |
 | `TC001–TC003` | Type-annotation-only imports go inside `if TYPE_CHECKING:` |
 | `UP` | Use builtin generics: `list[str]`, `dict[str, int]`, `X \| Y` not `Optional[X]` |
-| `RUF001` | No en-dash (`–`) in string literals; use hyphen-minus (`-`) |
+| `RUF001` | No ambiguous Unicode in **string literals**; use hyphen-minus (`-`) not en-dash (`–`) |
+| `RUF003` | No ambiguous Unicode in **comments**; same rule — use `-` not `–` |
 | `I` (isort) | One import per line; exactly 2 blank lines after the last import |
 
 **Templates — djlint rules most commonly triggered:**

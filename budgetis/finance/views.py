@@ -10,6 +10,7 @@ from django.views.generic import TemplateView
 from budgetis.accounting.models import Account
 
 from .builders import build_income_budget_canton_intercos_commune
+from .models import AvailableYear
 
 
 class SankeyDataView(LoginRequiredMixin, View):
@@ -36,14 +37,20 @@ class SankeyDataView(LoginRequiredMixin, View):
         return JsonResponse(data, safe=False)
 
 
-class SankeyView(TemplateView):
+class SankeyView(LoginRequiredMixin, TemplateView):
     template_name = "finance/sankey.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        from django.utils.timezone import now
-
-        context["default_year"] = now().year
+        available = list(AvailableYear.objects.order_by("-year").values_list("year", flat=True).distinct())
+        actual_years = list(
+            AvailableYear.objects.filter(type=AvailableYear.YearType.ACTUAL)
+            .order_by("-year")
+            .values_list("year", flat=True)
+        )
+        default_year = actual_years[0] if actual_years else (available[0] if available else None)
+        context["available_years"] = available
+        context["default_year"] = default_year
         return context
 
 

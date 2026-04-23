@@ -1,26 +1,24 @@
-<!-- ruff: noqa: H021 -->
 {% extends "base.html" %}
 
 {% load static i18n %}
 
 {% block content %}
-  <div style="display:flex;gap:12px;align-items:center;margin:10px 0">
-    <label>
-      {% trans "Year" %}:
-      <input id="year"
-             type="number"
-             min="2000"
-             max="2100"
-             value="{{ default_year }}" />
-    </label>
-    <label>
-      <input id="is_budget" type="checkbox" name="budget" />
-      {% trans "Budget" %}
-    </label>
-    <button id="reload">{% trans "Reload" %}</button>
+  <div class="d-flex gap-3 align-items-center mb-3">
+    <div class="d-flex align-items-center gap-2">
+      <label class="form-label mb-0" for="year">{% trans "Year" %}</label>
+      <select id="year" class="form-select form-select-sm w-auto">
+        {% for y in available_years %}
+          <option value="{{ y }}"{% if y == default_year %} selected{% endif %}>{{ y }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-check mb-0">
+      <input id="is_budget" class="form-check-input" type="checkbox" />
+      <label class="form-check-label" for="is_budget">{% trans "Budget" %}</label>
+    </div>
   </div>
-  <div id="chart" style="width:100%;height:70vh"></div>
-  <!-- noqa: H021 -->
+  <div id="chart" class="d-none" style="width:100%;height:75vh"></div>
+  <div id="no-data" class="text-center text-muted py-5">{% trans "Données non disponibles." %}</div>
   <script type="module">
   const $ = (q) => document.querySelector(q);
 
@@ -38,7 +36,11 @@
 
   async function drawBuckets() {
     const data = await fetchBuckets();
-    if (!data) return;
+    const hasData = data && data.links && data.links.length > 0;
+    Plotly.purge("chart");
+    $("#chart").classList.toggle("d-none", !hasData);
+    $("#no-data").classList.toggle("d-none", hasData);
+    if (!hasData) return;
 
     const trace = {
       type: "sankey",
@@ -49,35 +51,28 @@
         pad: 14,
         thickness: 22,
         line: { width: 0.5, color: "rgba(0,0,0,0.25)" },
-        labelfont: { size: 18, color: "#111" },   // texte plus grand
-          hoverinfo: "none",   // <- empêche l’affichage du hover des nœuds
-
-
+        labelfont: { size: 18, color: "#111" },
+        hoverinfo: "none",
       },
       link: {
         source: data.links.map(l => l.source),
         target: data.links.map(l => l.target),
         value: data.links.map(l => l.value),
         color: data.link_colors,
-          hovertemplate: "%{value:' .0f} CHF<extra></extra>",  // <- seulement le montant formaté
-
+        hovertemplate: "%{value:' .0f} CHF<extra></extra>",
       },
     };
 
     Plotly.newPlot(
       "chart",
       [trace],
-      {
-        title: "{{ _('Revenus → Budget') }}",
-        font: { size: 16, family: "var(--bs-body-font-family)" },
-      },
+      { font: { size: 16, family: "var(--bs-body-font-family)" } },
       { responsive: true }
     );
-
   }
 
-  // Hook to your existing UI if needed:
-  document.getElementById("reload").addEventListener("click", drawBuckets);
+  $("#year").addEventListener("change", drawBuckets);
+  $("#is_budget").addEventListener("change", drawBuckets);
   window.addEventListener("load", drawBuckets);
   </script>
 {% endblock content %}

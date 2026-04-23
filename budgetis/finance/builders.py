@@ -26,6 +26,7 @@ IMPOTS_NATURE_EXCLUDE = (402, 404, 405)
 TAXES_NATURE_RANGE = (430, 439)
 INTERESTS_NATURE = (422, 424)
 RENTALS_NATURE = (423, 425, 427)
+FUNDS_WITHDRAWAL_NATURE_RANGE = (480, 489)
 
 
 WAGES_NATURE_RANGE = (301, 309)
@@ -76,6 +77,7 @@ COLOR_RANDOM = "#5B8DEF"
 COLOR_TAXES = "#F59E0B"
 COLOR_RENTALS = "#2BB673"
 COLOR_OTHERS = "#6B7280"
+COLOR_FUNDS_WITHDRAWAL = "#6366F1"
 
 # --- Budget (hub central) ---
 COLOR_BUDGET = "#111827"  # gris foncé
@@ -106,6 +108,7 @@ COLOR_COMMUNE_WAGES = "#FDE68A"
 COLOR_COMMUNE_GOODS = "#FCD34D"
 COLOR_COMMUNE_INTERESTS = "#FBBF24"
 COLOR_COMMUNE_AIDS = "#F59E0B"
+COLOR_COMMUNE_DOTATIONS = "#B45309"
 
 # --- Résultat ---
 COLOR_RESULT = "#374151"
@@ -129,12 +132,14 @@ LABEL_WAGES = _("Wages")
 LABEL_GOODS = _("Goods and services")
 LABEL_INTERESTS = _("Interests")
 LABEL_AIDS = _("Aids and subsidies")
+LABEL_DOTATIONS = _("Depreciation & allocations")
 
 LABEL_TAXES_GENERAL = _("Taxes (general)")
 LABEL_TAXES_RANDOM = _("Random taxes")
 LABEL_TAXES_USAGE = _("Levies (usage-based)")
 LABEL_RENTALS = _("Rentals")
 LABEL_REVENUES_OTHER = _("Other revenues")
+LABEL_FUNDS_WITHDRAWAL = _("Fund withdrawals")
 
 LABEL_RESULT = _("Cash result")
 LABEL_RESULT_HUB = _("Result")
@@ -159,6 +164,7 @@ KEY_WAGES = "wages"
 KEY_GOODS = "goods_services"
 KEY_INTERESTS = "interests"
 KEY_AIDS = "aids"
+KEY_DOTATIONS = "dotations"
 
 # Revenue bucket keys (from nature ranges)
 KEY_IMPOTS = "taxes_general"
@@ -167,6 +173,7 @@ KEY_LEVIES = "levies_usage"
 KEY_RENTALS = "rentals"
 KEY_INTERESTS_REV = "interests_revenues"
 KEY_OTHERS_REV = "other_revenues"
+KEY_FUNDS_WITHDRAWAL = "funds_withdrawal"
 KEY_RESULT = "result"
 
 KEY_AMORT = "amortizations"
@@ -291,15 +298,19 @@ def _compute_bucket_sums(qs: QuerySet[Account]) -> dict[str, Decimal]:
     levies = base.filter(nature__range=TAXES_NATURE_RANGE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
     rentals = base.filter(nature__in=RENTALS_NATURE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
     interests = base.filter(nature__in=INTERESTS_NATURE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
+    funds_withdrawal = base.filter(nature__range=FUNDS_WITHDRAWAL_NATURE_RANGE).aggregate(v=Sum("revenues"))[
+        "v"
+    ] or Decimal("0")
     others = base.exclude(nature__range=IMPOTS_NATURE_RANGE).exclude(nature__range=TAXES_NATURE_RANGE).exclude(
         nature__in=RENTALS_NATURE + INTERESTS_NATURE
-    ).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
+    ).exclude(nature__range=FUNDS_WITHDRAWAL_NATURE_RANGE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
     return {
         KEY_IMPOTS: impots,
         KEY_RANDOMS: randoms,
         KEY_LEVIES: levies,
         KEY_RENTALS: rentals,
         KEY_INTERESTS_REV: interests,
+        KEY_FUNDS_WITHDRAWAL: funds_withdrawal,
         KEY_OTHERS_REV: others,
     }
 
@@ -383,13 +394,20 @@ def compute_commune_breakdown(qs: QuerySet[Account]) -> dict:
     aisge_366_codes = codes_with_nature(AISGE, 366)
     q_excl_aisge_366 = q_from_codes(qs, aisge_366_codes) if aisge_366_codes else Q()
     aids = sum_field(qs, q_aides_base & ~q_excl_aisge_366, "charges")
-    total = wages + goods + interests + aids
+
+    # Amortissements (330-349) + attributions aux fonds/charges extraordinaires (370-399)
+    dotations = (qs.filter(nature__range=(330, 349)).aggregate(v=Sum("charges"))["v"] or Decimal("0")) + (
+        qs.filter(nature__range=(370, 399)).aggregate(v=Sum("charges"))["v"] or Decimal("0")
+    )
+
+    total = wages + goods + interests + aids + dotations
 
     return {
         KEY_WAGES: max(Decimal("0"), wages),
         KEY_GOODS: max(Decimal("0"), goods),
         KEY_INTERESTS: max(Decimal("0"), interests),
         KEY_AIDS: max(Decimal("0"), aids),
+        KEY_DOTATIONS: max(Decimal("0"), dotations),
         KEY_TOTAL: max(Decimal("0"), total),
     }
 
@@ -398,7 +416,7 @@ def _node_label(label: str, val: Decimal) -> str:
     return f"<sub>{label}</sub><br>{_fmt_chf_short(val)}" if val > 0 else label
 
 
-def _push_node(
+def _push_node(  # noqa: PLR0913
     idx: dict[str, int],
     labels: list[str],
     nodes: list[dict[str, str]],
@@ -419,7 +437,7 @@ def _push_node(
     node_colors.append(color)
 
 
-def _add_link(
+def _add_link(  # noqa: PLR0913
     idx: dict[str, int],
     links: list[dict[str, float]],
     link_colors: list[str],
@@ -456,6 +474,7 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
         (KEY_LEVIES, LABEL_TAXES_USAGE, COLOR_TAXES),
         (KEY_RENTALS, LABEL_RENTALS, COLOR_RENTALS),
         (KEY_INTERESTS_REV, LABEL_INTERESTS, COLOR_OTHERS),
+        (KEY_FUNDS_WITHDRAWAL, LABEL_FUNDS_WITHDRAWAL, COLOR_FUNDS_WITHDRAWAL),
         (KEY_OTHERS_REV, LABEL_REVENUES_OTHER, COLOR_OTHERS),
     ]
     left_vals = [max(Decimal("0"), rev[k]) for k, _lbl, _c in left]
@@ -534,6 +553,16 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
         COLOR_COMMUNE_INTERESTS,
     )
     _push_node(idx, labels, nodes, node_colors, KEY_AIDS, LABEL_AIDS, commune[KEY_AIDS], COLOR_COMMUNE_AIDS)
+    _push_node(
+        idx,
+        labels,
+        nodes,
+        node_colors,
+        KEY_DOTATIONS,
+        LABEL_DOTATIONS,
+        commune[KEY_DOTATIONS],
+        COLOR_COMMUNE_DOTATIONS,
+    )
 
     for i, (k, _lbl, col) in enumerate(left):
         _add_link(idx, links, link_colors, k, NODE_HOUSEHOLD, left_vals[i], col)
@@ -557,28 +586,16 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
     _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_GOODS, commune[KEY_GOODS], COLOR_COMMUNE_LINKS)
     _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_INTERESTS, commune[KEY_INTERESTS], COLOR_COMMUNE_LINKS)
     _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_AIDS, commune[KEY_AIDS], COLOR_COMMUNE_LINKS)
+    _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_DOTATIONS, commune[KEY_DOTATIONS], COLOR_COMMUNE_LINKS)
 
-    # --- result
+    # --- result (cash surplus after all classified charges)
     total_out = total_canton + total_inter + total_commune
     remainder = total_left - total_out
     if abs(remainder) > MIN_VAL:
-        amort_val = Decimal(0)  # TODO: calcul réel
-        funds_val = Decimal(0)  # TODO: calcul réel
-        profit_val = remainder - amort_val - funds_val
-
-        # Hub résultat
         _push_node(idx, labels, nodes, node_colors, NODE_RESULT, LABEL_RESULT_HUB, remainder, COLOR_RESULT)
-
-        # Leaves
-        _push_node(idx, labels, nodes, node_colors, KEY_AMORT, LABEL_AMORT, amort_val, COLOR_RESULT)
-        _push_node(idx, labels, nodes, node_colors, KEY_FUNDS, LABEL_FUNDS, funds_val, COLOR_RESULT)
-        _push_node(idx, labels, nodes, node_colors, KEY_PROFIT, LABEL_PROFIT, profit_val, COLOR_RESULT)
-
-        # Liens
+        _push_node(idx, labels, nodes, node_colors, KEY_PROFIT, LABEL_PROFIT, remainder, COLOR_RESULT)
         _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_RESULT, remainder, COLOR_BUDGET_LINKS)
-        _add_link(idx, links, link_colors, NODE_RESULT, KEY_AMORT, amort_val, COLOR_RESULT)
-        _add_link(idx, links, link_colors, NODE_RESULT, KEY_FUNDS, funds_val, COLOR_RESULT)
-        _add_link(idx, links, link_colors, NODE_RESULT, KEY_PROFIT, profit_val, COLOR_RESULT)
+        _add_link(idx, links, link_colors, NODE_RESULT, KEY_PROFIT, remainder, COLOR_RESULT)
 
     return {
         "nodes": nodes,  # [{"name": "Label<br>CHF…"}, ...]
