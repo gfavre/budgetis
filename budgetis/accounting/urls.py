@@ -5,6 +5,8 @@ from .views.comments import AccountCommentCreateView
 from .views.comments import AccountCommentDeleteView
 from .views.comments import AccountCommentEditView
 from .views.comments import AccountCommentsView
+from .views.explore import AccountByNaturePartialView
+from .views.explore import AccountByNatureView
 from .views.explore import AccountExplorerView
 from .views.explore import AccountPartialView
 from .views.explore import BudgetByNaturePartialView
@@ -24,6 +26,9 @@ urlpatterns = [
     path("budgets/partial/", BudgetPartialView.as_view(), name="budget-partial"),
     path("budgets-nature/", BudgetByNatureView.as_view(), name="budget-nature-explorer"),
     path("budgets-nature/partial/", BudgetByNaturePartialView.as_view(), name="budget-nature-partial"),
+    # Actuals by nature
+    path("accounts-nature/", AccountByNatureView.as_view(), name="natures"),
+    path("accounts-nature/partial/", AccountByNaturePartialView.as_view(), name="accounts-nature-partial"),
     path("history/<int:account_id>/", account_history_modal, name="account-history"),
     path(
         "comments/<int:pk>/edit/",

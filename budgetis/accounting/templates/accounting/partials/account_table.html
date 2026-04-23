@@ -5,18 +5,18 @@
     <!-- Ligne d'en-tête colonnes -->
     <tr class="table-light text-center">
       <th rowspan="2" class="text-start">N°</th>
-      <th rowspan="2" class="text-start">Désignation</th>
-      <th colspan="2">Comptes {{ year }}</th>
-      <th colspan="2">Budget {{ year }}</th>
-      <th colspan="2">Comptes {{ year|add:"-1" }}</th>
+      <th rowspan="2" class="text-start">{% trans "Designation" %}</th>
+      <th colspan="2">{% blocktrans %}Actuals {{ year }}{% endblocktrans %}</th>
+      <th colspan="2">{% blocktrans %}Budget {{ year }}{% endblocktrans %}</th>
+      <th colspan="2">{% blocktrans with prev_y=year|add:"-1" %}Actuals {{ prev_y }}{% endblocktrans %}</th>
     </tr>
     <tr class="table-light text-center">
-      <th>Charges</th>
-      <th>Produits</th>
-      <th>Charges</th>
-      <th>Produits</th>
-      <th>Charges</th>
-      <th>Produits</th>
+      <th>{% trans "Charges" %}</th>
+      <th>{% trans "Revenues" %}</th>
+      <th>{% trans "Charges" %}</th>
+      <th>{% trans "Revenues" %}</th>
+      <th>{% trans "Charges" %}</th>
+      <th>{% trans "Revenues" %}</th>
     </tr>
   </thead>
   <tbody>

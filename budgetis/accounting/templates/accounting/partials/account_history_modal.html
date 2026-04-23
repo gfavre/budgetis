@@ -1,9 +1,13 @@
+{% load i18n %}
+
 <div class="modal-header">
-  <h5 class="modal-title">Historique {{ account.full_code }} – {{ account.label }}</h5>
+  <h5 class="modal-title">
+    {% blocktrans with code=account.full_code lbl=account.label %}History {{ code }} – {{ lbl }}{% endblocktrans %}
+  </h5>
   <button type="button"
           class="btn-close"
           data-bs-dismiss="modal"
-          aria-label="Fermer"></button>
+          aria-label="{% trans 'Close' %}"></button>
 </div>
 <div class="modal-body">
   <canvas id="accountHistoryChart" class="chart-canvas w-100"></canvas>
@@ -19,7 +23,8 @@
         labels: {{ years|safe }},
         datasets: [
           {
-            label: "Comptes",
+            label: "{% trans 'Actuals' %}",
+            budgetKey: "comptes",
             data: {{ comptes|safe }},
             borderColor: "#0d6efd",
             backgroundColor: "rgba(13,110,253,0.15)",
@@ -30,7 +35,8 @@
             pointHoverRadius: 5,
           },
           {
-            label: "Budget",
+            label: "{% trans 'Budget' %}",
+            budgetKey: "budget",
             data: {{ budgets|safe }},
             borderColor: "#6c757d",
             backgroundColor: "rgba(108,117,125,0.1)",
@@ -50,15 +56,14 @@
             callbacks: {
               label: function(context) {
                 let year = context.label;
-                let datasetLabel = context.dataset.label.toLowerCase(); // "comptes" ou "budget"
                 let lines = [
                   `${context.dataset.label}: ${context.parsed.y.toLocaleString()} CHF`
                 ];
 
                 // Ajouter les commentaires
-                if (commentsByYear[year] && commentsByYear[year][datasetLabel]) {
-                  lines.push("Commentaires:");   // titre
-                  commentsByYear[year][datasetLabel].forEach(c => {
+                if (commentsByYear[year] && commentsByYear[year][context.dataset.budgetKey]) {
+                  lines.push("{% trans 'Comments:' %}");   // titre
+                  commentsByYear[year][context.dataset.budgetKey].forEach(c => {
                     lines.push(`- ${c}`);       // chaque commentaire sur sa ligne
                   });
                 }
