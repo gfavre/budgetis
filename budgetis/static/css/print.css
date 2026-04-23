@@ -159,6 +159,7 @@
 
 }
 dl.comments {
+  display: grid;
   grid-template-columns: 2.8rem auto;
   gap: 0.5em;
 }

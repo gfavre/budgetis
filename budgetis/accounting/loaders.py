@@ -46,6 +46,7 @@ class BaseLoader:
         qs = (
             Account.objects.filter(year=year, is_budget=is_budget, group__isnull=False, visible_in_report=True)
             .select_related("group__supergroup__metagroup")
+            .prefetch_related("comments")
             .annotate(comment_count=Count("comments"))
         )
         if group_ids:

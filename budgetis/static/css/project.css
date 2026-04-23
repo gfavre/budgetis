@@ -218,7 +218,7 @@ input[type="checkbox"] {
     background-color: var(--brand-color-alt) !important;
 }
 dl.comments {
-  display: grid;
+  display: none;
   grid-template-columns: 4.25rem auto;
   gap: 0.5em;
 }
