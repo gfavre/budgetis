@@ -9,6 +9,7 @@ from django.views.generic import TemplateView
 
 from ..forms import AccountFilterForm
 from ..models import Account
+from .mixins import AccountByNatureMixin
 from .mixins import AccountExplorerMixin
 from .mixins import BudgetByNatureMixin
 from .mixins import BudgetExplorerMixin
@@ -185,6 +186,44 @@ class BudgetByNaturePartialView(BudgetByNatureMixin, FormView):
             year=year,
             previous_year=year - 1,
             actuals_year=year - 2,
+            last_import_text=self.get_last_import_info(year),
+        )
+        context["global_summary"] = self.build_global_summary(grouped)
+        return self.render_to_response(context)
+
+
+class AccountByNatureView(AccountByNatureMixin, BaseAccountExplorerView):
+    """Actuals explorer grouped by nature (actuals N / budget N / actuals N-1)."""
+
+    template_name = "accounting/account_by_nature.html"
+    title = _("Actuals by nature")
+    is_budget_view = False
+
+    def get_accounts_for_year(self, year: int, user, *, only_responsible: bool):
+        return self.get_accounts(user, year, only_responsible=False)
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        if "year" in context:
+            context["prev_year"] = context["year"] - 1
+        return context
+
+
+class AccountByNaturePartialView(AccountByNatureMixin, FormView):
+    """Partial HTMX/AJAX refresh for the Actuals by Nature table."""
+
+    form_class = AccountFilterForm
+    template_name = "accounting/partials/account_by_nature_list.html"
+
+    def form_valid(self, form):
+        year = int(form.cleaned_data["year"])
+        accounts = self.get_accounts(self.request.user, year, only_responsible=False)
+        grouped = self.build_grouped_structure(accounts)
+        context = self.get_context_data(
+            form=form,
+            grouped=grouped,
+            year=year,
+            prev_year=year - 1,
             last_import_text=self.get_last_import_info(year),
         )
         context["global_summary"] = self.build_global_summary(grouped)

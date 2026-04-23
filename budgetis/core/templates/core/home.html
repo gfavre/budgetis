@@ -53,16 +53,11 @@
       <i class="bi bi-puzzle-fill card-icon"></i>
       <h2>Budgets par nature</h2>
     </a>
-    {% comment %}
-        <a class="card card-body text-center card-tile shadow-sm" href="{% url 'accounting:natures' %}">
+    <a class="card card-body text-center card-tile shadow-sm"
+       href="{% url 'accounting:natures' %}">
       <i class="bi bi-collection card-icon"></i>
-            <h2>Comptes par nature</h2>
-        </a>
-        <a class="card card-body text-center card-tile shadow-sm" href="{% url 'budget:overview' %}">
-      <i class="bi bi-cash-stack card-icon"></i>
-            <h2>Budget</h2>
-        </a>
-    {% endcomment %}
+      <h2>Comptes par nature</h2>
+    </a>
     <a class="card card-body text-center card-tile shadow-sm"
        href="{% url 'finance:index' %}">
       <i class="bi bi-bar-chart-line card-icon"></i>

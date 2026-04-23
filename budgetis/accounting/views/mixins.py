@@ -583,3 +583,89 @@ class BudgetByNatureMixin(BudgetExplorerMixin):
                 "actual": total_actual_revenues - total_actual_charges,
             },
         }
+
+
+class AccountByNatureMixin(AccountExplorerMixin):
+    """AccountExplorerMixin variant grouped by nature (actuals N / budget N / actuals N-1)."""
+
+    def _nature_group(self, nature: int) -> int | None:
+        try:
+            n = int(str(nature)[:2])
+        except (TypeError, ValueError):
+            return None
+        return n if n in NATURE_GROUPS else None
+
+    def build_grouped_structure(self, accounts: list[Account]) -> OrderedDict:
+        grouped = OrderedDict(
+            (
+                gid,
+                {
+                    "code": gid,
+                    "label": label,
+                    "actual_charges": Decimal(0),
+                    "actual_revenues": Decimal(0),
+                    "budget_charges": Decimal(0),
+                    "budget_revenues": Decimal(0),
+                    "prev_actual_charges": Decimal(0),
+                    "prev_actual_revenues": Decimal(0),
+                },
+            )
+            for gid, label in NATURE_GROUPS.items()
+        )
+
+        for acc in accounts:
+            group_id = self._nature_group(int(acc.nature))
+            if group_id is None:
+                continue
+
+            entry = grouped[group_id]
+            if 30 <= group_id <= 39:  # noqa: PLR2004
+                entry["actual_charges"] += acc.charges
+                entry["budget_charges"] += acc.budget_charges
+                entry["prev_actual_charges"] += acc.prev_actual_charges
+            elif 40 <= group_id <= 49:  # noqa: PLR2004
+                entry["actual_revenues"] += acc.revenues
+                entry["budget_revenues"] += acc.budget_revenues
+                entry["prev_actual_revenues"] += acc.prev_actual_revenues
+
+        for gid in list(grouped.keys()):
+            v = grouped[gid]
+            if not any(
+                [
+                    v["actual_charges"],
+                    v["actual_revenues"],
+                    v["budget_charges"],
+                    v["budget_revenues"],
+                    v["prev_actual_charges"],
+                    v["prev_actual_revenues"],
+                ]
+            ):
+                grouped.pop(gid)
+
+        return grouped
+
+    def build_global_summary(self, grouped: OrderedDict) -> dict:
+        total_actual_charges = total_actual_revenues = Decimal(0)
+        total_budget_charges = total_budget_revenues = Decimal(0)
+        total_prev_charges = total_prev_revenues = Decimal(0)
+
+        for data in grouped.values():
+            total_actual_charges += data["actual_charges"]
+            total_actual_revenues += data["actual_revenues"]
+            total_budget_charges += data["budget_charges"]
+            total_budget_revenues += data["budget_revenues"]
+            total_prev_charges += data["prev_actual_charges"]
+            total_prev_revenues += data["prev_actual_revenues"]
+
+        return {
+            "totals": {
+                "actual": (total_actual_charges, total_actual_revenues),
+                "budget": (total_budget_charges, total_budget_revenues),
+                "previous": (total_prev_charges, total_prev_revenues),
+            },
+            "balance": {
+                "actual": total_actual_revenues - total_actual_charges,
+                "budget": total_budget_revenues - total_budget_charges,
+                "previous": total_prev_revenues - total_prev_charges,
+            },
+        }
