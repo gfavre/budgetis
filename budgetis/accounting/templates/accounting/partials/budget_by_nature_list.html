@@ -12,19 +12,19 @@
     <colgroup span="2" class="info">
       <col span="1" class="col-num" />
       <col span="1" class="col-label" />
-    </colgroup>          <!-- N°, Désignation -->
+    </colgroup>
     <colgroup span="2" class="budget-current">
       <col span="1" class="col-charges" />
       <col span="1" class="col-revenues" />
-    </colgroup> <!-- Budget courant -->
+    </colgroup>
     <colgroup span="2" class="budget-prev">
       <col span="1" class="col-charges" />
       <col span="1" class="col-revenues" />
-    </colgroup>    <!-- Budget -1 -->
+    </colgroup>
     <colgroup span="2" class="accounts-prev">
       <col span="1" class="col-charges" />
       <col span="1" class="col-revenues" />
-    </colgroup>  <!-- Comptes -2 -->
+    </colgroup>
     <thead>
       <tr class="table-light text-center">
         <th rowspan="2" class="text-start">N°</th>
@@ -48,22 +48,22 @@
           <td>{{ row.code }}</td>
           <td>{{ row.label }}</td>
           <td class="text-end">
-            {% if row.budget_charges %}{{ row.budget_charges|format_money }}{% endif %}
+            {% if row.col1_charges %}{{ row.col1_charges|format_money }}{% endif %}
           </td>
           <td class="text-end">
-            {% if row.budget_revenues %}{{ row.budget_revenues|format_money }}{% endif %}
+            {% if row.col1_revenues %}{{ row.col1_revenues|format_money }}{% endif %}
           </td>
           <td class="text-end">
-            {% if row.prev_budget_charges %}{{ row.prev_budget_charges|format_money }}{% endif %}
+            {% if row.col2_charges %}{{ row.col2_charges|format_money }}{% endif %}
           </td>
           <td class="text-end">
-            {% if row.prev_budget_revenues %}{{ row.prev_budget_revenues|format_money }}{% endif %}
+            {% if row.col2_revenues %}{{ row.col2_revenues|format_money }}{% endif %}
           </td>
           <td class="text-end">
-            {% if row.actual_charges %}{{ row.actual_charges|format_money }}{% endif %}
+            {% if row.col3_charges %}{{ row.col3_charges|format_money }}{% endif %}
           </td>
           <td class="text-end">
-            {% if row.actual_revenues %}{{ row.actual_revenues|format_money }}{% endif %}
+            {% if row.col3_revenues %}{{ row.col3_revenues|format_money }}{% endif %}
           </td>
         </tr>
       {% endfor %}
@@ -71,25 +71,25 @@
     <tfoot class="table-primary fw-bold">
       <tr>
         <td colspan="2" class="text-end"></td>
-        <td class="text-end">{{ global_summary.totals.budget.0|format_money }}</td>
-        <td class="text-end">{{ global_summary.totals.budget.1|format_money }}</td>
-        <td class="text-end">{{ global_summary.totals.previous.0|format_money }}</td>
-        <td class="text-end">{{ global_summary.totals.previous.1|format_money }}</td>
-        <td class="text-end">{{ global_summary.totals.actual.0|format_money }}</td>
-        <td class="text-end">{{ global_summary.totals.actual.1|format_money }}</td>
+        <td class="text-end">{{ global_summary.totals.col1_charges|format_money }}</td>
+        <td class="text-end">{{ global_summary.totals.col1_revenues|format_money }}</td>
+        <td class="text-end">{{ global_summary.totals.col2_charges|format_money }}</td>
+        <td class="text-end">{{ global_summary.totals.col2_revenues|format_money }}</td>
+        <td class="text-end">{{ global_summary.totals.col3_charges|format_money }}</td>
+        <td class="text-end">{{ global_summary.totals.col3_revenues|format_money }}</td>
       </tr>
       <tr>
         <td colspan="2" class="text-end">{% trans "Revenue surplus" %}</td>
         <td class="text-end">
-          {% if global_summary.balance.budget > 0 %}{{ global_summary.balance.budget|format_money_abs }}{% endif %}
+          {% if global_summary.totals.col1_diff > 0 %}{{ global_summary.totals.col1_diff|format_money_abs }}{% endif %}
         </td>
         <td></td>
         <td class="text-end">
-          {% if global_summary.balance.previous > 0 %}{{ global_summary.balance.previous|format_money_abs }}{% endif %}
+          {% if global_summary.totals.col2_diff > 0 %}{{ global_summary.totals.col2_diff|format_money_abs }}{% endif %}
         </td>
         <td></td>
         <td class="text-end">
-          {% if global_summary.balance.actual > 0 %}{{ global_summary.balance.actual|format_money_abs }}{% endif %}
+          {% if global_summary.totals.col3_diff > 0 %}{{ global_summary.totals.col3_diff|format_money_abs }}{% endif %}
         </td>
         <td></td>
       </tr>
@@ -97,67 +97,25 @@
         <td colspan="2" class="text-end">{% trans "Excess expense" %}</td>
         <td></td>
         <td class="text-end">
-          {% if global_summary.balance.budget < 0 %}{{ global_summary.balance.budget|format_money_abs }}{% endif %}
+          {% if global_summary.totals.col1_diff < 0 %}{{ global_summary.totals.col1_diff|format_money_abs }}{% endif %}
         </td>
         <td></td>
         <td class="text-end">
-          {% if global_summary.balance.previous < 0 %}{{ global_summary.balance.previous|format_money_abs }}{% endif %}
+          {% if global_summary.totals.col2_diff < 0 %}{{ global_summary.totals.col2_diff|format_money_abs }}{% endif %}
         </td>
         <td></td>
         <td class="text-end">
-          {% if global_summary.balance.actual < 0 %}{{ global_summary.balance.actual|format_money_abs }}{% endif %}
+          {% if global_summary.totals.col3_diff < 0 %}{{ global_summary.totals.col3_diff|format_money_abs }}{% endif %}
         </td>
       </tr>
       <tr class="table-secondary">
         <td colspan="2" class="text-end"></td>
-        {% with c=global_summary.totals.budget.0 r=global_summary.totals.budget.1 %}
-          <td class="text-end">
-            {% if c > r %}
-              {{ c|format_money_abs }}
-            {% else %}
-              {{ r|format_money_abs }}
-            {% endif %}
-          </td>
-          <td class="text-end">
-            {% if c > r %}
-              {{ c|format_money_abs }}
-            {% else %}
-              {{ r|format_money_abs }}
-            {% endif %}
-          </td>
-        {% endwith %}
-        {% with c=global_summary.totals.previous.0 r=global_summary.totals.previous.1 %}
-          <td class="text-end">
-            {% if c > r %}
-              {{ c|format_money_abs }}
-            {% else %}
-              {{ r|format_money_abs }}
-            {% endif %}
-          </td>
-          <td class="text-end">
-            {% if c > r %}
-              {{ c|format_money_abs }}
-            {% else %}
-              {{ r|format_money_abs }}
-            {% endif %}
-          </td>
-        {% endwith %}
-        {% with c=global_summary.totals.actual.0 r=global_summary.totals.actual.1 %}
-          <td class="text-end">
-            {% if c > r %}
-              {{ c|format_money_abs }}
-            {% else %}
-              {{ r|format_money_abs }}
-            {% endif %}
-          </td>
-          <td class="text-end">
-            {% if c > r %}
-              {{ c|format_money_abs }}
-            {% else %}
-              {{ r|format_money_abs }}
-            {% endif %}
-          </td>
-        {% endwith %}
+        <td class="text-end">{{ global_summary.totals.balanced_col1|format_money_abs }}</td>
+        <td class="text-end">{{ global_summary.totals.balanced_col1|format_money_abs }}</td>
+        <td class="text-end">{{ global_summary.totals.balanced_col2|format_money_abs }}</td>
+        <td class="text-end">{{ global_summary.totals.balanced_col2|format_money_abs }}</td>
+        <td class="text-end">{{ global_summary.totals.balanced_col3|format_money_abs }}</td>
+        <td class="text-end">{{ global_summary.totals.balanced_col3|format_money_abs }}</td>
       </tr>
     </tfoot>
   </table>
@@ -167,9 +125,7 @@
      tabindex="-1"
      aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <!-- HTMX va remplacer ce contenu -->
-    </div>
+    <div class="modal-content"></div>
   </div>
 </div>
 {% include "accounting/partials/comments_modal.html" %}

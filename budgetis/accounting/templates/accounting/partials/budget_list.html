@@ -9,24 +9,23 @@
   {% endif %}
   {% for mg_code, mg in grouped.items %}
     <h2>{{ mg_code }} {{ mg.label }}</h2>
-    <!-- Tableau récapitulatif du supergroupe -->
     <table class="table table-bordered align-middle mb-5 mt-5">
       <colgroup span="2" class="info">
         <col span="1" class="col-num" />
         <col span="1" class="col-label" />
-      </colgroup>          <!-- N°, Désignation -->
+      </colgroup>
       <colgroup span="2" class="budget-current">
         <col span="1" class="col-charges" />
         <col span="1" class="col-revenues" />
-      </colgroup> <!-- Budget courant -->
+      </colgroup>
       <colgroup span="2" class="budget-prev">
         <col span="1" class="col-charges" />
         <col span="1" class="col-revenues" />
-      </colgroup>    <!-- Budget -1 -->
+      </colgroup>
       <colgroup span="2" class="accounts-prev">
         <col span="1" class="col-charges" />
         <col span="1" class="col-revenues" />
-      </colgroup>  <!-- Comptes -2 -->
+      </colgroup>
       <thead>
         <tr class="table-light text-center">
           <th rowspan="2" class="text-start">N°</th>
@@ -48,12 +47,12 @@
         <tr>
           <td>{{ mg_code }}</td>
           <td>{% blocktrans with lbl=mg.label %}Total {{ lbl }}{% endblocktrans %}</td>
-          <td class="text-end">{{ mg.budget_total_charges|format_money }}</td>
-          <td class="text-end">{{ mg.budget_total_revenues|format_money }}</td>
-          <td class="text-end">{{ mg.prev_budget_total_charges|format_money }}</td>
-          <td class="text-end">{{ mg.prev_budget_total_revenues|format_money }}</td>
-          <td class="text-end">{{ mg.actual_total_charges|format_money }}</td>
-          <td class="text-end">{{ mg.actual_total_revenues|format_money }}</td>
+          <td class="text-end">{{ mg.col1_charges|format_money }}</td>
+          <td class="text-end">{{ mg.col1_revenues|format_money }}</td>
+          <td class="text-end">{{ mg.col2_charges|format_money }}</td>
+          <td class="text-end">{{ mg.col2_revenues|format_money }}</td>
+          <td class="text-end">{{ mg.col3_charges|format_money }}</td>
+          <td class="text-end">{{ mg.col3_revenues|format_money }}</td>
         </tr>
       </thead>
       <tbody>
@@ -61,12 +60,12 @@
           <tr>
             <td class="text-nowrap">{{ sg_code }}</td>
             <td>{{ sg.label }}</td>
-            <td class="text-end">{{ sg.budget_total_charges|format_money }}</td>
-            <td class="text-end">{{ sg.budget_total_revenues|format_money }}</td>
-            <td class="text-end">{{ sg.prev_budget_total_charges|format_money }}</td>
-            <td class="text-end">{{ sg.prev_budget_total_revenues|format_money }}</td>
-            <td class="text-end">{{ sg.actual_total_charges|format_money }}</td>
-            <td class="text-end">{{ sg.actual_total_revenues|format_money }}</td>
+            <td class="text-end">{{ sg.col1_charges|format_money }}</td>
+            <td class="text-end">{{ sg.col1_revenues|format_money }}</td>
+            <td class="text-end">{{ sg.col2_charges|format_money }}</td>
+            <td class="text-end">{{ sg.col2_revenues|format_money }}</td>
+            <td class="text-end">{{ sg.col3_charges|format_money }}</td>
+            <td class="text-end">{{ sg.col3_revenues|format_money }}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -85,19 +84,19 @@
   <colgroup span="2" class="info">
     <col span="1" class="col-num" />
     <col span="1" class="col-label" />
-  </colgroup>          <!-- N°, Désignation -->
+  </colgroup>
   <colgroup span="2" class="budget-current">
     <col span="1" class="col-charges" />
     <col span="1" class="col-revenues" />
-  </colgroup> <!-- Budget courant -->
+  </colgroup>
   <colgroup span="2" class="budget-prev">
     <col span="1" class="col-charges" />
     <col span="1" class="col-revenues" />
-  </colgroup>    <!-- Budget -1 -->
+  </colgroup>
   <colgroup span="2" class="accounts-prev">
     <col span="1" class="col-charges" />
     <col span="1" class="col-revenues" />
-  </colgroup>  <!-- Comptes -2 -->
+  </colgroup>
   <thead>
     <tr class="table-light text-center">
       <th rowspan="2" class="text-start">N°</th>
@@ -120,37 +119,37 @@
       <tr>
         <td>{{ row.code }}</td>
         <td>{{ row.label }}</td>
-        <td class="text-end">{{ row.budget_total_charges|format_money }}</td>
-        <td class="text-end">{{ row.budget_total_revenues|format_money }}</td>
-        <td class="text-end">{{ row.prev_budget_total_charges|format_money }}</td>
-        <td class="text-end">{{ row.prev_budget_total_revenues|format_money }}</td>
-        <td class="text-end">{{ row.actual_total_charges|format_money }}</td>
-        <td class="text-end">{{ row.actual_total_revenues|format_money }}</td>
+        <td class="text-end">{{ row.col1_charges|format_money }}</td>
+        <td class="text-end">{{ row.col1_revenues|format_money }}</td>
+        <td class="text-end">{{ row.col2_charges|format_money }}</td>
+        <td class="text-end">{{ row.col2_revenues|format_money }}</td>
+        <td class="text-end">{{ row.col3_charges|format_money }}</td>
+        <td class="text-end">{{ row.col3_revenues|format_money }}</td>
       </tr>
     {% endfor %}
   </tbody>
   <tfoot class="table-primary fw-bold">
     <tr>
       <td colspan="2"></td>
-      <td class="text-end">{{ global_summary.totals.budget_total_charges|format_money }}</td>
-      <td class="text-end">{{ global_summary.totals.budget_total_revenues|format_money }}</td>
-      <td class="text-end">{{ global_summary.totals.prev_budget_total_charges|format_money }}</td>
-      <td class="text-end">{{ global_summary.totals.prev_budget_total_revenues|format_money }}</td>
-      <td class="text-end">{{ global_summary.totals.actual_total_charges|format_money }}</td>
-      <td class="text-end">{{ global_summary.totals.actual_total_revenues|format_money }}</td>
+      <td class="text-end">{{ global_summary.totals.col1_charges|format_money }}</td>
+      <td class="text-end">{{ global_summary.totals.col1_revenues|format_money }}</td>
+      <td class="text-end">{{ global_summary.totals.col2_charges|format_money }}</td>
+      <td class="text-end">{{ global_summary.totals.col2_revenues|format_money }}</td>
+      <td class="text-end">{{ global_summary.totals.col3_charges|format_money }}</td>
+      <td class="text-end">{{ global_summary.totals.col3_revenues|format_money }}</td>
     </tr>
     <tr>
       <td colspan="2" class="text-right">{% trans "Revenue surplus" %}</td>
       <td>
-        {% if global_summary.totals.budget_diff > 0 %}{{ global_summary.totals.budget_diff|format_money_abs }}{% endif %}
+        {% if global_summary.totals.col1_diff > 0 %}{{ global_summary.totals.col1_diff|format_money_abs }}{% endif %}
       </td>
       <td></td>
       <td>
-        {% if global_summary.totals.budget_prev_diff > 0 %}{{ totals.budget_prev_diff|format_money_abs }}{% endif %}
+        {% if global_summary.totals.col2_diff > 0 %}{{ global_summary.totals.col2_diff|format_money_abs }}{% endif %}
       </td>
       <td></td>
       <td>
-        {% if global_summary.totals.actual_diff > 0 %}{{ global_summary.totals.actual_diff|format_money_abs }}{% endif %}
+        {% if global_summary.totals.col3_diff > 0 %}{{ global_summary.totals.col3_diff|format_money_abs }}{% endif %}
       </td>
       <td></td>
     </tr>
@@ -158,27 +157,25 @@
       <td colspan="2" class="text-right">{% trans "Excess expense" %}</td>
       <td></td>
       <td>
-        {% if global_summary.totals.budget_diff < 0 %}{{ global_summary.totals.budget_diff|format_money_abs }}{% endif %}
+        {% if global_summary.totals.col1_diff < 0 %}{{ global_summary.totals.col1_diff|format_money_abs }}{% endif %}
       </td>
       <td></td>
       <td>
-        {% if global_summary.totals.budget_prev_diff < 0 %}
-          {{ global_summary.totals.budget_prev_diff|format_money_abs }}
-        {% endif %}
+        {% if global_summary.totals.col2_diff < 0 %}{{ global_summary.totals.col2_diff|format_money_abs }}{% endif %}
       </td>
       <td></td>
       <td>
-        {% if global_summary.totals.actual_diff < 0 %}{{ global_summary.totals.actual_diff|format_money_abs }}{% endif %}
+        {% if global_summary.totals.col3_diff < 0 %}{{ global_summary.totals.col3_diff|format_money_abs }}{% endif %}
       </td>
     </tr>
     <tr>
       <th colspan="2"></th>
-      <th>{{ global_summary.totals.balanced_budget|format_money_abs }}</th>
-      <th>{{ global_summary.totals.balanced_budget|format_money_abs }}</th>
-      <th>{{ global_summary.totals.balanced_prev_budget|format_money_abs }}</th>
-      <th>{{ global_summary.totals.balanced_prev_budget|format_money_abs }}</th>
-      <th>{{ global_summary.totals.balanced_actual|format_money_abs }}</th>
-      <th>{{ global_summary.totals.balanced_actual|format_money_abs }}</th>
+      <th>{{ global_summary.totals.balanced_col1|format_money_abs }}</th>
+      <th>{{ global_summary.totals.balanced_col1|format_money_abs }}</th>
+      <th>{{ global_summary.totals.balanced_col2|format_money_abs }}</th>
+      <th>{{ global_summary.totals.balanced_col2|format_money_abs }}</th>
+      <th>{{ global_summary.totals.balanced_col3|format_money_abs }}</th>
+      <th>{{ global_summary.totals.balanced_col3|format_money_abs }}</th>
     </tr>
   </tfoot>
 </table>
@@ -187,9 +184,7 @@
      tabindex="-1"
      aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <!-- HTMX va remplacer ce contenu -->
-    </div>
+    <div class="modal-content"></div>
   </div>
 </div>
 {% include "accounting/partials/comments_modal.html" %}

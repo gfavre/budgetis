@@ -4,19 +4,19 @@
   <colgroup span="2" class="info">
     <col span="1" class="col-num" />
     <col span="1" class="col-label" />
-  </colgroup>          <!-- N°, Désignation -->
+  </colgroup>
   <colgroup span="2" class="budget-current">
     <col span="1" class="col-charges" />
     <col span="1" class="col-revenues" />
-  </colgroup> <!-- Budget courant -->
+  </colgroup>
   <colgroup span="2" class="budget-prev">
     <col span="1" class="col-charges" />
     <col span="1" class="col-revenues" />
-  </colgroup>    <!-- Budget -1 -->
+  </colgroup>
   <colgroup span="2" class="accounts-prev">
     <col span="1" class="col-charges" />
     <col span="1" class="col-revenues" />
-  </colgroup>  <!-- Comptes -2 -->
+  </colgroup>
   <thead>
     <tr class="table-light text-center">
       <th rowspan="2" class="text-start">N°</th>
@@ -35,136 +35,100 @@
     </tr>
   </thead>
   <thead>
-    <!-- Ligne d'en-tête style "190 Service informatique" avec totaux -->
     <tr class="table-primary fw-bold">
       <td>{{ code }}</td>
       <td>{{ label }}</td>
       <td class="text-end">
-        {% with diff=data.budget_total_charges|percent_diff:data.prev_budget_total_charges %}
-          {{ diff|percent_diff_display }}
-        {% endwith %}
-        {{ data.budget_total_charges|format_money }}
+        {% with diff=data.col1_charges|percent_diff:data.col2_charges %}{{ diff|percent_diff_display }}{% endwith %}
+        {{ data.col1_charges|format_money }}
       </td>
       <td class="text-end">
-        {% with diff=data.budget_total_revenues|percent_diff:data.prev_budget_total_revenues %}
-          {{ diff|percent_diff_display }}
-        {% endwith %}
-        {{ data.budget_total_revenues|format_money }}
+        {% with diff=data.col1_revenues|percent_diff:data.col2_revenues %}{{ diff|percent_diff_display }}{% endwith %}
+        {{ data.col1_revenues|format_money }}
       </td>
-      <td class="text-end">{{ data.prev_budget_total_charges|format_money }}</td>
-      <td class="text-end">{{ data.prev_budget_total_revenues|format_money }}</td>
-      <td class="text-end">{{ data.actual_total_charges|format_money }}</td>
-      <td class="text-end">{{ data.actual_total_revenues|format_money }}</td>
+      <td class="text-end">{{ data.col2_charges|format_money }}</td>
+      <td class="text-end">{{ data.col2_revenues|format_money }}</td>
+      <td class="text-end">{{ data.col3_charges|format_money }}</td>
+      <td class="text-end">{{ data.col3_revenues|format_money }}</td>
     </tr>
   </thead>
   <tbody>
-    {% for account in accounts %}
+    {% for row in accounts %}
       <tr>
-        <td class="text-nowrap">{{ account.full_code }}</td>
+        <td class="text-nowrap">{{ row.account.full_code }}</td>
         <td>
-          <a href="{% url 'accounting:account-history' account.id %}"
+          <a href="{% url 'accounting:account-history' row.account.id %}"
              class="account-history-link"
-             hx-get="{% url 'accounting:account-history' account.id %}"
+             hx-get="{% url 'accounting:account-history' row.account.id %}"
              hx-target="#accountHistoryModal .modal-content"
              hx-trigger="click"
              hx-swap="innerHTML"
              data-bs-toggle="modal"
-             data-bs-target="#accountHistoryModal">{{ account.label }}</a>
+             data-bs-target="#accountHistoryModal">{{ row.account.label }}</a>
         </td>
-        <!-- budget courant -->
         <td class="no-wrap text-end">
-          {% with diff=account.charges|percent_diff:account.prev_budget_charges %}{{ diff|percent_diff_display }}{% endwith %}
+          {% with diff=row.col1_charges|percent_diff:row.col2_charges %}{{ diff|percent_diff_display }}{% endwith %}
           <button class="btn btn-sm btn-link"
-                  title="Commentaires"
-                  hx-get="{% url 'accounting:account-comments' account.id 'charges' %}"
+                  title="{% trans 'Comments' %}"
+                  hx-get="{% url 'accounting:account-comments' row.account.id 'charges' %}"
                   hx-target="#accountCommentsModal .modal-content"
                   data-bs-toggle="modal"
                   data-bs-target="#accountCommentsModal">
-            <span id="comment-icon-{{ account.id }}"
-                  class="{% if not account.comment_count %}text-muted{% endif %}">
+            <span id="comment-icon-{{ row.account.id }}"
+                  class="{% if not row.account.comment_count %}text-muted{% endif %}">
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
-          {% if account.revenues %}
-            {% if account.charges %}{{ account.charges|format_money }}{% endif %}
-          {% else %}
-            {% if account.charges %}
-              {{ account.charges|format_money }}
-            {% else %}
-              -
-            {% endif %}
-          {% endif %}
+          {{ row.col1_charges|money_cell:row.col1_revenues }}
         </td>
         <td class="text-end">
-          {% with diff=account.revenues|percent_diff:account.prev_budget_revenues %}
-            {{ diff|percent_diff_display:True }}
-          {% endwith %}
+          {% with diff=row.col1_revenues|percent_diff:row.col2_revenues %}{{ diff|percent_diff_display:True }}{% endwith %}
           <button class="btn btn-sm btn-link no-print"
-                  title="Commentaires"
-                  hx-get="{% url 'accounting:account-comments' account.id 'charges' %}"
+                  title="{% trans 'Comments' %}"
+                  hx-get="{% url 'accounting:account-comments' row.account.id 'revenues' %}"
                   hx-target="#accountCommentsModal .modal-content"
                   data-bs-toggle="modal"
                   data-bs-target="#accountCommentsModal">
-            <span id="comment-icon-{{ account.id }}"
-                  class="{% if not account.comment_count %}text-muted{% endif %}">
+            <span id="comment-icon-revenues-{{ row.account.id }}"
+                  class="{% if not row.account.comment_count %}text-muted{% endif %}">
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
-          {% if account.charges %}
-            {% if account.revenues %}{{ account.revenues|format_money }}{% endif %}
-          {% else %}
-            {% if account.revenues %}
-              {{ account.revenues|format_money }}
-            {% else %}
-              -
-            {% endif %}
-          {% endif %}
+          {{ row.col1_revenues|money_cell:row.col1_charges }}
         </td>
-        <!-- budget -1 -->
+        <td class="text-end">{{ row.col2_charges|money_cell:row.col2_revenues }}</td>
+        <td class="text-end">{{ row.col2_revenues|money_cell:row.col2_charges }}</td>
         <td class="text-end">
-          {% if account.prev_budget_revenues %}
-            {% if account.prev_budget_charges %}{{ account.prev_budget_charges|format_money }}{% endif %}
-          {% else %}
-            {% if account.prev_budget_charges %}
-              {{ account.prev_budget_charges|format_money }}
-            {% else %}
-              -
-            {% endif %}
+          {% if row.account.actuals_id %}
+            <button class="btn btn-sm btn-link no-print"
+                    title="{% trans 'Comments' %}"
+                    hx-get="{% url 'accounting:account-comments' row.account.actuals_id 'charges' %}"
+                    hx-target="#accountCommentsModal .modal-content"
+                    data-bs-toggle="modal"
+                    data-bs-target="#accountCommentsModal">
+              <span id="comment-icon-{{ row.account.actuals_id }}"
+                    class="{% if not row.account.actuals_comment_count %}text-muted{% endif %}">
+                <i class="bi bi-chat-left-text"></i>
+              </span>
+            </button>
           {% endif %}
-        </td>
-        <td class="text-end ">
-          {% if account.prev_budget_charges %}
-            {% if account.prev_budget_revenues %}{{ account.prev_budget_revenues|format_money }}{% endif %}
-          {% else %}
-            {% if account.prev_budget_revenues %}
-              {{ account.prev_budget_revenues|format_money }}
-            {% else %}
-              -
-            {% endif %}
-          {% endif %}
-        </td>
-        <!-- comptes -2 -->
-        <td class="text-end">
-          {% if account.actual_revenues %}
-            {% if account.actual_charges %}{{ account.actual_charges|format_money }}{% endif %}
-          {% else %}
-            {% if account.actual_charges %}
-              {{ account.actual_charges|format_money }}
-            {% else %}
-              -
-            {% endif %}
-          {% endif %}
+          {{ row.col3_charges|money_cell:row.col3_revenues }}
         </td>
         <td class="text-end">
-          {% if account.actual_charges %}
-            {% if account.actual_revenues %}{{ account.actual_revenues|format_money }}{% endif %}
-          {% else %}
-            {% if account.actual_revenues %}
-              {{ account.actual_revenues|format_money }}
-            {% else %}
-              -
-            {% endif %}
+          {% if row.account.actuals_id %}
+            <button class="btn btn-sm btn-link no-print"
+                    title="{% trans 'Comments' %}"
+                    hx-get="{% url 'accounting:account-comments' row.account.actuals_id 'revenues' %}"
+                    hx-target="#accountCommentsModal .modal-content"
+                    data-bs-toggle="modal"
+                    data-bs-target="#accountCommentsModal">
+              <span id="comment-icon-revenues-{{ row.account.actuals_id }}"
+                    class="{% if not row.account.actuals_comment_count %}text-muted{% endif %}">
+                <i class="bi bi-chat-left-text"></i>
+              </span>
+            </button>
           {% endif %}
+          {{ row.col3_revenues|money_cell:row.col3_charges }}
         </td>
       </tr>
     {% endfor %}

@@ -27,31 +27,29 @@
           <th>{% trans "Revenues" %}</th>
         </tr>
       </thead>
-      <!-- Total metagroup -->
       <thead class="table-primary fw-bold">
         <tr>
           <td>{{ mg_code }}</td>
           <td>{% blocktrans with lbl=mg.label %}Total {{ lbl }}{% endblocktrans %}</td>
-          <td class="text-end">{{ mg.total_charges|format_money }}</td>
-          <td class="text-end">{{ mg.total_revenues|format_money }}</td>
-          <td class="text-end">{{ mg.budget_total_charges|format_money }}</td>
-          <td class="text-end">{{ mg.budget_total_revenues|format_money }}</td>
-          <td class="text-end">{{ mg.prev_total_charges|format_money }}</td>
-          <td class="text-end">{{ mg.prev_total_revenues|format_money }}</td>
+          <td class="text-end">{{ mg.col1_charges|format_money }}</td>
+          <td class="text-end">{{ mg.col1_revenues|format_money }}</td>
+          <td class="text-end">{{ mg.col2_charges|format_money }}</td>
+          <td class="text-end">{{ mg.col2_revenues|format_money }}</td>
+          <td class="text-end">{{ mg.col3_charges|format_money }}</td>
+          <td class="text-end">{{ mg.col3_revenues|format_money }}</td>
         </tr>
       </thead>
-      <!-- Supergroups -->
       <tbody>
         {% for sg_code, sg in mg.supergroups.items %}
           <tr>
             <td>{{ sg_code }}</td>
             <td>{{ sg.label }}</td>
-            <td class="text-end">{{ sg.total_charges|format_money }}</td>
-            <td class="text-end">{{ sg.total_revenues|format_money }}</td>
-            <td class="text-end">{{ sg.budget_total_charges|format_money }}</td>
-            <td class="text-end">{{ sg.budget_total_revenues|format_money }}</td>
-            <td class="text-end">{{ sg.prev_total_charges|format_money }}</td>
-            <td class="text-end">{{ sg.prev_total_revenues|format_money }}</td>
+            <td class="text-end">{{ sg.col1_charges|format_money }}</td>
+            <td class="text-end">{{ sg.col1_revenues|format_money }}</td>
+            <td class="text-end">{{ sg.col2_charges|format_money }}</td>
+            <td class="text-end">{{ sg.col2_revenues|format_money }}</td>
+            <td class="text-end">{{ sg.col3_charges|format_money }}</td>
+            <td class="text-end">{{ sg.col3_revenues|format_money }}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -64,14 +62,115 @@
     {% endfor %}
   {% endfor %}
 </div>
+<hr class="section-sep page-break-before" />
+<h1 class="metagroup">{% trans "Operating account" %}</h1>
+<table class="table table-bordered recap global-summary">
+  <colgroup span="2" class="info">
+    <col span="1" class="col-num" />
+    <col span="1" class="col-label" />
+  </colgroup>
+  <colgroup span="2" class="actuals-current">
+    <col span="1" class="col-charges" />
+    <col span="1" class="col-revenues" />
+  </colgroup>
+  <colgroup span="2" class="budget-current">
+    <col span="1" class="col-charges" />
+    <col span="1" class="col-revenues" />
+  </colgroup>
+  <colgroup span="2" class="accounts-prev">
+    <col span="1" class="col-charges" />
+    <col span="1" class="col-revenues" />
+  </colgroup>
+  <thead>
+    <tr class="table-light text-center">
+      <th rowspan="2" class="text-start">N°</th>
+      <th rowspan="2" class="text-start">{% trans "Designation" %}</th>
+      <th colspan="2" class="text-center">{% blocktrans %}Actuals {{ year }}{% endblocktrans %}</th>
+      <th colspan="2" class="text-center">{% blocktrans %}Budget {{ year }}{% endblocktrans %}</th>
+      <th colspan="2" class="text-center">
+        {% blocktrans with prev_y=year|add:"-1" %}Actuals {{ prev_y }}{% endblocktrans %}
+      </th>
+    </tr>
+    <tr class="table-light text-center">
+      <th>{% trans "Charges" %}</th>
+      <th>{% trans "Revenues" %}</th>
+      <th>{% trans "Charges" %}</th>
+      <th>{% trans "Revenues" %}</th>
+      <th>{% trans "Charges" %}</th>
+      <th>{% trans "Revenues" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in global_summary.rows %}
+      <tr>
+        <td>{{ row.code }}</td>
+        <td>{{ row.label }}</td>
+        <td class="text-end">{{ row.col1_charges|format_money }}</td>
+        <td class="text-end">{{ row.col1_revenues|format_money }}</td>
+        <td class="text-end">{{ row.col2_charges|format_money }}</td>
+        <td class="text-end">{{ row.col2_revenues|format_money }}</td>
+        <td class="text-end">{{ row.col3_charges|format_money }}</td>
+        <td class="text-end">{{ row.col3_revenues|format_money }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot class="table-primary fw-bold">
+    <tr>
+      <td colspan="2"></td>
+      <td class="text-end">{{ global_summary.totals.col1_charges|format_money }}</td>
+      <td class="text-end">{{ global_summary.totals.col1_revenues|format_money }}</td>
+      <td class="text-end">{{ global_summary.totals.col2_charges|format_money }}</td>
+      <td class="text-end">{{ global_summary.totals.col2_revenues|format_money }}</td>
+      <td class="text-end">{{ global_summary.totals.col3_charges|format_money }}</td>
+      <td class="text-end">{{ global_summary.totals.col3_revenues|format_money }}</td>
+    </tr>
+    <tr>
+      <td colspan="2" class="text-end">{% trans "Revenue surplus" %}</td>
+      <td>
+        {% if global_summary.totals.col1_diff > 0 %}{{ global_summary.totals.col1_diff|format_money_abs }}{% endif %}
+      </td>
+      <td></td>
+      <td>
+        {% if global_summary.totals.col2_diff > 0 %}{{ global_summary.totals.col2_diff|format_money_abs }}{% endif %}
+      </td>
+      <td></td>
+      <td>
+        {% if global_summary.totals.col3_diff > 0 %}{{ global_summary.totals.col3_diff|format_money_abs }}{% endif %}
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="2" class="text-end">{% trans "Excess expense" %}</td>
+      <td></td>
+      <td>
+        {% if global_summary.totals.col1_diff < 0 %}{{ global_summary.totals.col1_diff|format_money_abs }}{% endif %}
+      </td>
+      <td></td>
+      <td>
+        {% if global_summary.totals.col2_diff < 0 %}{{ global_summary.totals.col2_diff|format_money_abs }}{% endif %}
+      </td>
+      <td></td>
+      <td>
+        {% if global_summary.totals.col3_diff < 0 %}{{ global_summary.totals.col3_diff|format_money_abs }}{% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th colspan="2"></th>
+      <th>{{ global_summary.totals.balanced_col1|format_money_abs }}</th>
+      <th>{{ global_summary.totals.balanced_col1|format_money_abs }}</th>
+      <th>{{ global_summary.totals.balanced_col2|format_money_abs }}</th>
+      <th>{{ global_summary.totals.balanced_col2|format_money_abs }}</th>
+      <th>{{ global_summary.totals.balanced_col3|format_money_abs }}</th>
+      <th>{{ global_summary.totals.balanced_col3|format_money_abs }}</th>
+    </tr>
+  </tfoot>
+</table>
 <div class="modal fade"
      id="accountHistoryModal"
      tabindex="-1"
      aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <!-- HTMX va remplacer ce contenu -->
-    </div>
+    <div class="modal-content"></div>
   </div>
 </div>
 <div class="modal fade"
@@ -80,10 +179,9 @@
      aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
-      <!-- htmx injects content here -->
       <div class="modal-body text-center text-muted py-5">
         <div class="spinner-border text-secondary" role="status">
-          <span class="visually-hidden">Chargement...</span>
+          <span class="visually-hidden">{% trans "Loading..." %}</span>
         </div>
         <p class="mt-3">{% trans "Loading comments..." %}</p>
       </div>

@@ -55,9 +55,13 @@
     </button>
   </div>
 </div>
-{# 🔄 OOB update of the comment icon in the table #}
 <span id="comment-icon-{{ account.id }}"
-      class="{% if comments|length %}text-primary{% else %}text-muted{% endif %}"
+      class="{% if not comments|length %}text-muted{% endif %}"
+      hx-swap-oob="true">
+  <i class="bi bi-chat-left-text"></i>
+</span>
+<span id="comment-icon-revenues-{{ account.id }}"
+      class="{% if not comments|length %}text-muted{% endif %}"
       hx-swap-oob="true">
   <i class="bi bi-chat-left-text"></i>
 </span>

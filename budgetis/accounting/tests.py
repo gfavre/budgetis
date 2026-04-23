@@ -1,1 +1,1 @@
-# Create your tests here.
+# Tests live in budgetis/accounting/tests/ package.
