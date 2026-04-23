@@ -55,6 +55,7 @@ AISGE = [
 ]
 APEC = ("460.352", "460.352.1")
 TRANSPORTS_REGION = "180.351"
+RAT = ("710.365.1",)
 ASSOCIATIONS = (
     "160.352",  # Région Nyoin - taxes de séjour
     # "310.351",  # Feu bactérien
@@ -75,8 +76,9 @@ ASSOCIATIONS = (
 COLOR_IMPOTS = "#2066CF"
 COLOR_RANDOM = "#5B8DEF"
 COLOR_TAXES = "#F59E0B"
-COLOR_RENTALS = "#2BB673"
-COLOR_OTHERS = "#6B7280"
+COLOR_RENTALS = "#0891B2"  # cyan/sky — distinct du vert Canton
+COLOR_INTERESTS_REV = "#94A3B8"  # slate clair — distinct du gris Autres recettes
+COLOR_OTHERS = "#6B7280"  # gris foncé
 COLOR_FUNDS_WITHDRAWAL = "#6366F1"
 
 # --- Budget (hub central) ---
@@ -98,17 +100,18 @@ COLOR_INTERCOS_LINKS = "#C4B5FD"
 COLOR_INTERCOS_AISGE = "#A78BFA"
 COLOR_INTERCOS_APEC = "#C4B5FD"
 COLOR_INTERCOS_TRANSPORTS = "#DDD6FE"
+COLOR_INTERCOS_RAT = "#D8B4FE"
 COLOR_INTERCOS_OTHER = "#EDE9FE"
 
-# --- Commune ---
-COLOR_COMMUNE = "#D97706"
-COLOR_COMMUNE_LINKS = "#FCD34D"
+# --- Commune --- (palette jaune-doré, progression amber-200 → yellow-700)
+COLOR_COMMUNE = "#CA8A04"  # yellow-600, doré — moins orange que D97706
+COLOR_COMMUNE_LINKS = "#FCD34D"  # amber-300
 
-COLOR_COMMUNE_WAGES = "#FDE68A"
-COLOR_COMMUNE_GOODS = "#FCD34D"
-COLOR_COMMUNE_INTERESTS = "#FBBF24"
-COLOR_COMMUNE_AIDS = "#F59E0B"
-COLOR_COMMUNE_DOTATIONS = "#B45309"
+COLOR_COMMUNE_WAGES = "#FDE68A"  # amber-200
+COLOR_COMMUNE_GOODS = "#FCD34D"  # amber-300
+COLOR_COMMUNE_INTERESTS = "#FBBF24"  # amber-400
+COLOR_COMMUNE_AIDS = "#EAB308"  # yellow-500 — plus doré, moins orange que F59E0B
+COLOR_COMMUNE_DOTATIONS = "#A16207"  # yellow-700
 
 # --- Résultat ---
 COLOR_RESULT = "#374151"
@@ -125,6 +128,7 @@ LABEL_POLICE = _("Police")
 LABEL_AISGE = "AISGE"  # acronym stays the same
 LABEL_APEC = "APEC"
 LABEL_TRANSPORTS = _("Regional transports")
+LABEL_RAT = "RAT"
 LABEL_ASSOCIATIONS = _("Associations")
 LABEL_INTERCOS_OTHER = _("Other intercommunalities")
 
@@ -157,6 +161,7 @@ KEY_TOTAL = "total"
 KEY_AISGE = "aisge"
 KEY_APEC = "apec"
 KEY_TRANSPORTS = "transports_region"
+KEY_RAT = "rat"
 KEY_INTERCOS_OTHER = "other_intercommunalities"
 
 # Commune keys
@@ -345,6 +350,7 @@ def compute_intercos(qs: QuerySet[Account]) -> dict:
     q_aisge = q_from_codes(qs, AISGE)
     q_apec = q_from_codes(qs, APEC)
     q_trans = q_from_codes(qs, [TRANSPORTS_REGION])
+    q_rat = q_from_codes(qs, RAT)
 
     # Les 3 'Canton' sont aussi en nature 351/352 -> à exclure d'intercos.autres
     q_canton = q_from_codes(qs, [SOCIAL_SECURITY, PEREQUATION, POLICE])
@@ -352,8 +358,8 @@ def compute_intercos(qs: QuerySet[Account]) -> dict:
     # Base "intercos" = toutes natures 350-359
     q_intercos_base = Q(nature__range=(350, 359))
 
-    # Exclusions déjà traitées
-    q_exclude = q_aisge | q_apec | q_trans | q_canton
+    # Exclusions déjà traitées (RAT est en nature 365, hors base, mais exclu par cohérence)
+    q_exclude = q_aisge | q_apec | q_trans | q_rat | q_canton
 
     # "autres intercos" = base - exclusions
     q_intercos_autres = q_intercos_base & ~q_exclude
@@ -361,14 +367,16 @@ def compute_intercos(qs: QuerySet[Account]) -> dict:
     aisge = sum_field(qs, q_aisge, "charges")
     apec = sum_field(qs, q_apec, "charges")
     trans = sum_field(qs, q_trans, "charges")
+    rat = sum_field(qs, q_rat, "charges")
     autres = sum_field(qs, q_intercos_autres, "charges")
 
-    total = aisge + apec + trans + autres
+    total = aisge + apec + trans + rat + autres
 
     return {
         KEY_AISGE: max(Decimal("0"), aisge),
         KEY_APEC: max(Decimal("0"), apec),
         KEY_TRANSPORTS: max(Decimal("0"), trans),
+        KEY_RAT: max(Decimal("0"), rat),
         KEY_INTERCOS_OTHER: max(Decimal("0"), autres),
         KEY_TOTAL: max(Decimal("0"), total),
     }
@@ -380,7 +388,7 @@ def compute_commune_breakdown(qs: QuerySet[Account]) -> dict:
       - 301–309  -> salaires
       - 310–319  -> biens
       - 320–329  -> interets
-      - 360–369  -> aides  (en excluant les codes AISGE *.366)
+      - 360–369  -> aides  (en excluant les codes AISGE *.366 et RAT 710.365.1)
     """
 
     def rng(a: int, b: int) -> Decimal:
@@ -393,7 +401,8 @@ def compute_commune_breakdown(qs: QuerySet[Account]) -> dict:
     q_aides_base = Q(nature__range=AIDS_NATURE_RANGE)
     aisge_366_codes = codes_with_nature(AISGE, 366)
     q_excl_aisge_366 = q_from_codes(qs, aisge_366_codes) if aisge_366_codes else Q()
-    aids = sum_field(qs, q_aides_base & ~q_excl_aisge_366, "charges")
+    q_excl_rat = q_from_codes(qs, RAT)
+    aids = sum_field(qs, q_aides_base & ~q_excl_aisge_366 & ~q_excl_rat, "charges")
 
     # Amortissements (330-349) + attributions aux fonds/charges extraordinaires (370-399)
     dotations = (qs.filter(nature__range=(330, 349)).aggregate(v=Sum("charges"))["v"] or Decimal("0")) + (
@@ -473,7 +482,7 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
         (KEY_RANDOMS, LABEL_TAXES_RANDOM, COLOR_RANDOM),
         (KEY_LEVIES, LABEL_TAXES_USAGE, COLOR_TAXES),
         (KEY_RENTALS, LABEL_RENTALS, COLOR_RENTALS),
-        (KEY_INTERESTS_REV, LABEL_INTERESTS, COLOR_OTHERS),
+        (KEY_INTERESTS_REV, LABEL_INTERESTS, COLOR_INTERESTS_REV),
         (KEY_FUNDS_WITHDRAWAL, LABEL_FUNDS_WITHDRAWAL, COLOR_FUNDS_WITHDRAWAL),
         (KEY_OTHERS_REV, LABEL_REVENUES_OTHER, COLOR_OTHERS),
     ]
@@ -528,6 +537,7 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
         inter[KEY_TRANSPORTS],
         COLOR_INTERCOS_TRANSPORTS,
     )
+    _push_node(idx, labels, nodes, node_colors, KEY_RAT, LABEL_RAT, inter[KEY_RAT], COLOR_INTERCOS_RAT)
     _push_node(
         idx,
         labels,
@@ -578,6 +588,7 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
     _add_link(idx, links, link_colors, NODE_INTERCOS, KEY_AISGE, inter[KEY_AISGE], COLOR_INTERCOS_LINKS)
     _add_link(idx, links, link_colors, NODE_INTERCOS, KEY_APEC, inter[KEY_APEC], COLOR_INTERCOS_LINKS)
     _add_link(idx, links, link_colors, NODE_INTERCOS, KEY_TRANSPORTS, inter[KEY_TRANSPORTS], COLOR_INTERCOS_LINKS)
+    _add_link(idx, links, link_colors, NODE_INTERCOS, KEY_RAT, inter[KEY_RAT], COLOR_INTERCOS_LINKS)
     _add_link(
         idx, links, link_colors, NODE_INTERCOS, KEY_INTERCOS_OTHER, inter[KEY_INTERCOS_OTHER], COLOR_INTERCOS_LINKS
     )
