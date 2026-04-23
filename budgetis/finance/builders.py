@@ -73,48 +73,49 @@ ASSOCIATIONS = (
 )
 
 
-COLOR_IMPOTS = "#2066CF"
-COLOR_RANDOM = "#5B8DEF"
-COLOR_TAXES = "#F59E0B"
-COLOR_RENTALS = "#0891B2"  # cyan/sky — distinct du vert Canton
-COLOR_INTERESTS_REV = "#94A3B8"  # slate clair — distinct du gris Autres recettes
-COLOR_OTHERS = "#6B7280"  # gris foncé
-COLOR_FUNDS_WITHDRAWAL = "#6366F1"
+COLOR_IMPOTS = "#246BCE"
+COLOR_RANDOM = "#5B9BD6"  # bleu clair, dérivé de COLOR_IMPOTS
+COLOR_TAXES = "#F57C00"
+COLOR_RENTALS = "#6D4C41"
+COLOR_INTERESTS_REV = "#9E9E9E"  # absent de l'export manuel
+COLOR_OTHERS = "#AAAAAA"
+COLOR_FUNDS_WITHDRAWAL = "#6366F1"  # absent de l'export manuel
 
 # --- Budget (hub central) ---
-COLOR_BUDGET = "#111827"  # gris foncé
-COLOR_BUDGET_LINKS = "#9CA3AF"  # gris neutre
+COLOR_BUDGET = "#555555"
+COLOR_BUDGET_LINKS = "#888888"
 
 # --- Canton ---
-COLOR_CANTON = "#15803D"
-COLOR_CANTON_LINKS = "#4ADE80"
+COLOR_CANTON = "#447B30"
+COLOR_CANTON_LINKS = "#6DA44D"
 
-COLOR_CANTON_SOCIAL = "#86EFAC"
-COLOR_CANTON_EQUALIZATION = "#4ADE80"
-COLOR_CANTON_POLICE = "#22C55E"
+COLOR_CANTON_SOCIAL = "#6DA44D"
+COLOR_CANTON_EQUALIZATION = "#2E5A20"
+COLOR_CANTON_POLICE = "#8BC06C"
 
 # --- Intercommunalités ---
-COLOR_INTERCOS = "#6D28D9"
-COLOR_INTERCOS_LINKS = "#C4B5FD"
+COLOR_INTERCOS = "#B55239"
+COLOR_INTERCOS_LINKS = "#CD6E4D"
 
-COLOR_INTERCOS_AISGE = "#A78BFA"
-COLOR_INTERCOS_APEC = "#C4B5FD"
-COLOR_INTERCOS_TRANSPORTS = "#DDD6FE"
-COLOR_INTERCOS_RAT = "#D8B4FE"
-COLOR_INTERCOS_OTHER = "#EDE9FE"
+COLOR_INTERCOS_AISGE = "#94402D"
+COLOR_INTERCOS_APEC = "#B55239"
+COLOR_INTERCOS_TRANSPORTS = "#CD6E4D"
+COLOR_INTERCOS_RAT = "#B97258"
+COLOR_INTERCOS_OTHER = "#E7A38C"
 
-# --- Commune --- (palette jaune-doré, progression amber-200 → yellow-700)
-COLOR_COMMUNE = "#CA8A04"  # yellow-600, doré — moins orange que D97706
-COLOR_COMMUNE_LINKS = "#FCD34D"  # amber-300
+# --- Commune ---
+COLOR_COMMUNE = "#D4AF37"
+COLOR_COMMUNE_LINKS = "#E7C970"
 
-COLOR_COMMUNE_WAGES = "#FDE68A"  # amber-200
-COLOR_COMMUNE_GOODS = "#FCD34D"  # amber-300
-COLOR_COMMUNE_INTERESTS = "#FBBF24"  # amber-400
-COLOR_COMMUNE_AIDS = "#EAB308"  # yellow-500 — plus doré, moins orange que F59E0B
-COLOR_COMMUNE_DOTATIONS = "#A16207"  # yellow-700
+COLOR_COMMUNE_WAGES = "#D4AF37"
+COLOR_COMMUNE_GOODS = "#E7C970"
+COLOR_COMMUNE_INTERESTS = "#D4C07E"
+COLOR_COMMUNE_AIDS = "#D4A337"
+COLOR_COMMUNE_DOTATIONS = "#D49C37"
 
 # --- Résultat ---
-COLOR_RESULT = "#374151"
+COLOR_RESULT = "#000000"
+COLOR_PROFIT = "#447B30"  # vert canton pour un résultat positif
 
 LABEL_HOUSEHOLD = _("Municipal household")
 LABEL_CANTON = _("Canton")
@@ -191,6 +192,123 @@ NODE_CANTON = "canton"
 NODE_INTERCOS = "intercommunities"
 NODE_COMMUNE = "commune"
 NODE_RESULT = "result"
+
+KEY_LOSS = "loss"
+
+# ----- SankeyMATIC labels and colors -----------------------------------------
+
+SM_LABELS: dict[str, str] = {
+    NODE_HOUSEHOLD: "Budget",
+    KEY_IMPOTS: "Impôts",
+    KEY_RANDOMS: "Impôts aléatoires",
+    KEY_LEVIES: "Taxes",
+    KEY_RENTALS: "Locations",
+    KEY_INTERESTS_REV: "Intérêts revenus",
+    KEY_FUNDS_WITHDRAWAL: "Prélèvements sur fonds",
+    KEY_OTHERS_REV: "Autres recettes",
+    NODE_CANTON: "Canton",
+    NODE_INTERCOS: "Intercommunalités",
+    NODE_COMMUNE: "Commune",
+    KEY_EQUALIZATION: "Péréquation",
+    KEY_SOCIAL: "Facture sociale",
+    KEY_POLICE: "Police cantonale",
+    KEY_AISGE: "AISGE",
+    KEY_APEC: "APEC",
+    KEY_RAT: "RAT",
+    KEY_TRANSPORTS: "Transports région",
+    KEY_INTERCOS_OTHER: "Diverses associations",
+    KEY_WAGES: "Salaires",
+    KEY_GOODS: "Biens / services",
+    KEY_AIDS: "Aides et subventions",
+    KEY_DOTATIONS: "Amortissements & attribution aux fonds",
+    KEY_INTERESTS: "Intérêts bancaires",
+    KEY_PROFIT: "Bénéfice",
+    KEY_LOSS: "Perte",
+}
+
+SM_COLORS: dict[str, str] = {
+    NODE_HOUSEHOLD: COLOR_BUDGET,
+    KEY_IMPOTS: COLOR_IMPOTS,
+    KEY_RANDOMS: COLOR_RANDOM,
+    KEY_LEVIES: COLOR_TAXES,
+    KEY_RENTALS: COLOR_RENTALS,
+    KEY_INTERESTS_REV: COLOR_INTERESTS_REV,
+    KEY_FUNDS_WITHDRAWAL: COLOR_FUNDS_WITHDRAWAL,
+    KEY_OTHERS_REV: COLOR_OTHERS,
+    NODE_CANTON: COLOR_CANTON,
+    NODE_INTERCOS: COLOR_INTERCOS,
+    NODE_COMMUNE: COLOR_COMMUNE,
+    KEY_EQUALIZATION: COLOR_CANTON_EQUALIZATION,
+    KEY_SOCIAL: COLOR_CANTON_SOCIAL,
+    KEY_POLICE: COLOR_CANTON_POLICE,
+    KEY_AISGE: COLOR_INTERCOS_AISGE,
+    KEY_APEC: COLOR_INTERCOS_APEC,
+    KEY_RAT: COLOR_INTERCOS_RAT,
+    KEY_TRANSPORTS: COLOR_INTERCOS_TRANSPORTS,
+    KEY_INTERCOS_OTHER: COLOR_INTERCOS_OTHER,
+    KEY_WAGES: COLOR_COMMUNE_WAGES,
+    KEY_GOODS: COLOR_COMMUNE_GOODS,
+    KEY_AIDS: COLOR_COMMUNE_AIDS,
+    KEY_DOTATIONS: COLOR_COMMUNE_DOTATIONS,
+    KEY_INTERESTS: COLOR_COMMUNE_INTERESTS,
+    KEY_PROFIT: COLOR_PROFIT,
+    KEY_LOSS: COLOR_RESULT,
+}
+
+SM_SETTINGS = """\
+// === Settings ===
+
+// ✓ size w 1200
+// ✓   h 928
+// ✓ margin l 12
+// ✓   r 12
+// ✓   t 19
+// ✓   b 20
+// ✓ bg color #ffffff
+// ✓   transparent N
+// ✓ node w 20
+// ✓   h 55.5
+// ✓   spacing 56.5
+// ✓   border 2
+// ✓   theme a
+// ✓   color #888888
+// ✓   opacity 1
+// ✓ flow curvature 0.5
+// ✓   inheritfrom source
+// ✓   color #999999
+// ✓   opacity 0.45
+// ✓ layout order automatic
+// ✓   justifyorigins N
+// ✓   justifyends N
+// ✓   reversegraph N
+// ✓   attachincompletesto nearest
+// ✓ labels color #000000
+// ✓   hide N
+// ✓   highlight 0.85
+// ✓   fontface sans-serif
+// ✓   linespacing 0.2
+// ✓   relativesize 109
+// ✓   magnify 119
+// ✓ labelname appears Y
+// ✓   size 18
+// ✓   weight 400
+// ✓ labelvalue appears Y
+// ✓   fullprecision Y
+// ✓   position below
+// ✓   weight 400
+// ✓ labelposition autoalign 0
+// ✓   scheme auto
+// ✓   first before
+// ✓   breakpoint 5
+// ✓ value format ' .'
+// ✓   prefix 'CHF'
+// ✓   suffix 'K'
+// ✓ themeoffset a 3
+// ✓   b 2
+// ✓   c 0
+// ✓   d 0
+// ✓ meta mentionsankeymatic N
+// ✓   listimbalances Y"""
 
 
 def to_rounded_float(val, q: str = "0.01") -> float:
@@ -463,6 +581,101 @@ def _add_link(  # noqa: PLR0913
         link_colors.append(color)
 
 
+def build_sankeymatic_export(qs: QuerySet, year: int, *, is_budget: bool = False) -> str:  # noqa: C901, PLR0915
+    """Generate a SankeyMATIC-compatible text file for the given year/type."""
+    from datetime import UTC
+    from datetime import datetime
+
+    rev = _compute_bucket_sums(qs)
+    canton = compute_canton_breakdown(qs)
+    inter = compute_intercos(qs)
+    commune = compute_commune_breakdown(qs)
+
+    total_canton = canton[KEY_TOTAL]
+    total_inter = inter[KEY_TOTAL]
+    total_commune = commune[KEY_TOTAL]
+    total_out = total_canton + total_inter + total_commune
+    total_left = sum(rev.values())
+    remainder = total_left - total_out
+
+    def k(val: Decimal) -> int:
+        return round(float(val) / 1000)
+
+    def flow(src: str, dst: str, val: Decimal) -> str | None:
+        n = k(val)
+        return f"{SM_LABELS[src]} [{n}] {SM_LABELS[dst]}" if n > 0 else None
+
+    hub = NODE_HOUSEHOLD
+    type_label = "Budget" if is_budget else "Comptes"
+    now = datetime.now(tz=UTC).strftime("%d/%m/%Y %H:%M:%S")
+    lines = [
+        f"// SankeyMATIC diagram inputs - Saved: {now}",
+        f"// {type_label} {year}",
+        "// https://sankeymatic.com/build/",
+        "",
+        "// === Nodes and Flows ===",
+        "",
+    ]
+
+    revenue_keys = [
+        KEY_IMPOTS,
+        KEY_RANDOMS,
+        KEY_LEVIES,
+        KEY_RENTALS,
+        KEY_INTERESTS_REV,
+        KEY_FUNDS_WITHDRAWAL,
+        KEY_OTHERS_REV,
+    ]
+    lines.extend(filter(None, (flow(key, hub, rev[key]) for key in revenue_keys)))
+    if remainder < -MIN_VAL:
+        lines.append(f"{SM_LABELS[KEY_LOSS]} [{k(abs(remainder))}] {SM_LABELS[hub]}")
+    lines.append("")
+
+    major_outputs = [(NODE_CANTON, total_canton), (NODE_INTERCOS, total_inter), (NODE_COMMUNE, total_commune)]
+    lines.extend(filter(None, (flow(hub, key, val) for key, val in major_outputs)))
+    if remainder > MIN_VAL:
+        lines.append(f"{SM_LABELS[hub]} [{k(remainder)}] {SM_LABELS[KEY_PROFIT]}")
+    lines.append("")
+
+    canton_keys = [KEY_EQUALIZATION, KEY_SOCIAL, KEY_POLICE]
+    lines.extend(filter(None, (flow(NODE_CANTON, key, canton[key]) for key in canton_keys)))
+    lines.append("")
+
+    intercos_keys = [KEY_AISGE, KEY_APEC, KEY_RAT, KEY_TRANSPORTS, KEY_INTERCOS_OTHER]
+    lines.extend(filter(None, (flow(NODE_INTERCOS, key, inter[key]) for key in intercos_keys)))
+    lines.append("")
+
+    commune_keys = [KEY_WAGES, KEY_GOODS, KEY_AIDS, KEY_DOTATIONS, KEY_INTERESTS]
+    lines.extend(filter(None, (flow(NODE_COMMUNE, key, commune[key]) for key in commune_keys)))
+    lines.append("")
+
+    used: set[str] = set()
+    for key in revenue_keys:
+        if k(rev[key]) > 0:
+            used.add(key)
+    if remainder < -MIN_VAL:
+        used.add(KEY_LOSS)
+    elif remainder > MIN_VAL:
+        used.add(KEY_PROFIT)
+    for group, keys in [
+        ([NODE_HOUSEHOLD, NODE_CANTON, NODE_INTERCOS, NODE_COMMUNE], None),
+        ([KEY_EQUALIZATION, KEY_SOCIAL, KEY_POLICE], canton),
+        ([KEY_AISGE, KEY_APEC, KEY_RAT, KEY_TRANSPORTS, KEY_INTERCOS_OTHER], inter),
+        ([KEY_WAGES, KEY_GOODS, KEY_AIDS, KEY_DOTATIONS, KEY_INTERESTS], commune),
+    ]:
+        for key in group:
+            if keys is None or k(keys.get(key, Decimal(0))) > 0:
+                used.add(key)
+
+    lines.append("// === Colors ===")
+    lines.append("")
+    lines.extend(f":{label} {SM_COLORS[key]}" for key, label in SM_LABELS.items() if key in used)
+    lines.append("")
+    lines.append(SM_SETTINGS)
+
+    return "\n".join(lines)
+
+
 def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict:  # noqa: PLR0915
     """
     Sankey auto-layout with index mapping (no magic numbers).
@@ -603,10 +816,10 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
     total_out = total_canton + total_inter + total_commune
     remainder = total_left - total_out
     if abs(remainder) > MIN_VAL:
-        _push_node(idx, labels, nodes, node_colors, NODE_RESULT, LABEL_RESULT_HUB, remainder, COLOR_RESULT)
-        _push_node(idx, labels, nodes, node_colors, KEY_PROFIT, LABEL_PROFIT, remainder, COLOR_RESULT)
+        _push_node(idx, labels, nodes, node_colors, NODE_RESULT, LABEL_RESULT_HUB, remainder, COLOR_PROFIT)
+        _push_node(idx, labels, nodes, node_colors, KEY_PROFIT, LABEL_PROFIT, remainder, COLOR_PROFIT)
         _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_RESULT, remainder, COLOR_BUDGET_LINKS)
-        _add_link(idx, links, link_colors, NODE_RESULT, KEY_PROFIT, remainder, COLOR_RESULT)
+        _add_link(idx, links, link_colors, NODE_RESULT, KEY_PROFIT, remainder, COLOR_PROFIT)
 
     return {
         "nodes": nodes,  # [{"name": "Label<br>CHF…"}, ...]

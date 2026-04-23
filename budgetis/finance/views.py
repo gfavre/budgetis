@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import TemplateView
@@ -10,6 +11,7 @@ from django.views.generic import TemplateView
 from budgetis.accounting.models import Account
 
 from .builders import build_income_budget_canton_intercos_commune
+from .builders import build_sankeymatic_export
 from .models import AvailableYear
 
 
@@ -52,6 +54,25 @@ class SankeyView(LoginRequiredMixin, TemplateView):
         context["available_years"] = available
         context["default_year"] = default_year
         return context
+
+
+class SankeyMaticExportView(LoginRequiredMixin, View):
+    """Return a SankeyMATIC-compatible text file for the requested year/type."""
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        year_str = request.GET.get("year", "")
+        if not year_str.isdigit():
+            return HttpResponse("Missing or invalid 'year'.", status=400, content_type="text/plain")
+        year = int(year_str)
+        budget_str = request.GET.get("budget", "false").lower()
+        is_budget = budget_str in ("true", "1", "yes", "on")
+        qs = Account.objects.filter(year=year, is_budget=is_budget)
+        content = build_sankeymatic_export(qs, year, is_budget=is_budget)
+        type_label = "budget" if is_budget else "comptes"
+        filename = f"sankeymatic_{type_label}_{year}.txt"
+        response = HttpResponse(content, content_type="text/plain; charset=utf-8")
+        response["Content-Disposition"] = f'attachment; filename="{filename}"'
+        return response
 
 
 class SankeySimpleValuesView(LoginRequiredMixin, View):
