@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.views.generic import DeleteView
@@ -59,7 +60,15 @@ class AccountCommentCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.account = get_object_or_404(Account, pk=self.kwargs["account_id"])
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        form.save()
+        response = render(
+            self.request,
+            "accounting/partials/comment_saved_oob.html",
+            {"account_id": form.instance.account.id},
+        )
+        response["HX-Reswap"] = "none"
+        response["HX-Trigger"] = "closeAccountCommentsModal"
+        return response
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

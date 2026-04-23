@@ -106,7 +106,7 @@
                     hx-target="#accountCommentsModal .modal-content"
                     data-bs-toggle="modal"
                     data-bs-target="#accountCommentsModal">
-              <span id="comment-icon-actuals-{{ row.account.actuals_id }}"
+              <span id="comment-icon-{{ row.account.actuals_id }}"
                     class="{% if not row.account.actuals_comment_count %}text-muted{% endif %}">
                 <i class="bi bi-chat-left-text"></i>
               </span>
@@ -122,7 +122,7 @@
                     hx-target="#accountCommentsModal .modal-content"
                     data-bs-toggle="modal"
                     data-bs-target="#accountCommentsModal">
-              <span id="comment-icon-actuals-revenues-{{ row.account.actuals_id }}"
+              <span id="comment-icon-revenues-{{ row.account.actuals_id }}"
                     class="{% if not row.account.actuals_comment_count %}text-muted{% endif %}">
                 <i class="bi bi-chat-left-text"></i>
               </span>
