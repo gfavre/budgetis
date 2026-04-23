@@ -134,6 +134,29 @@
                 {% endif %}
               </ul>
               <ul class="navbar-nav ms-auto">
+                {% get_current_language as current_lang %}
+                <li class="nav-item d-flex align-items-center px-2"
+                    style="font-size: 0.75rem">
+                  <form action="{% url 'set_language' %}" method="post" class="d-inline m-0">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+                    {% if current_lang == "fr-ch" %}
+                      <span class="text-muted fw-semibold">FR</span>
+                      <span class="text-muted mx-1">|</span>
+                      <input type="hidden" name="language" value="en" />
+                      <button type="submit"
+                              class="btn btn-link p-0 text-muted"
+                              style="font-size: 0.75rem">EN</button>
+                    {% else %}
+                      <input type="hidden" name="language" value="fr-ch" />
+                      <button type="submit"
+                              class="btn btn-link p-0 text-muted"
+                              style="font-size: 0.75rem">FR</button>
+                      <span class="text-muted mx-1">|</span>
+                      <span class="text-muted fw-semibold">EN</span>
+                    {% endif %}
+                  </form>
+                </li>
                 {% if request.user.is_authenticated %}
                   {% if user.is_staff %}
                     <li class="nav-item">

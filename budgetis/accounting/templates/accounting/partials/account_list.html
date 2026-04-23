@@ -1,6 +1,5 @@
-{% load money %}
+{% load money i18n %}
 
-<!-- DEBUG: loaded partial -->
 <div id="account-list">
   {% if last_import_text %}
     <p class="text-muted small mb-3 no-print">
@@ -14,25 +13,25 @@
       <thead class="table-light text-center">
         <tr>
           <th rowspan="2" class="text-start">N°</th>
-          <th rowspan="2" class="text-start">Désignation</th>
-          <th colspan="2">Comptes {{ year }}</th>
-          <th colspan="2">Budget {{ year }}</th>
-          <th colspan="2">Comptes {{ year|add:"-1" }}</th>
+          <th rowspan="2" class="text-start">{% trans "Designation" %}</th>
+          <th colspan="2">{% blocktrans %}Actuals {{ year }}{% endblocktrans %}</th>
+          <th colspan="2">{% blocktrans %}Budget {{ year }}{% endblocktrans %}</th>
+          <th colspan="2">{% blocktrans with prev_y=year|add:"-1" %}Actuals {{ prev_y }}{% endblocktrans %}</th>
         </tr>
         <tr>
-          <th>Charges</th>
-          <th>Produits</th>
-          <th>Charges</th>
-          <th>Produits</th>
-          <th>Charges</th>
-          <th>Produits</th>
+          <th>{% trans "Charges" %}</th>
+          <th>{% trans "Revenues" %}</th>
+          <th>{% trans "Charges" %}</th>
+          <th>{% trans "Revenues" %}</th>
+          <th>{% trans "Charges" %}</th>
+          <th>{% trans "Revenues" %}</th>
         </tr>
       </thead>
       <!-- Total metagroup -->
       <thead class="table-primary fw-bold">
         <tr>
           <td>{{ mg_code }}</td>
-          <td>Total {{ mg.label }}</td>
+          <td>{% blocktrans with lbl=mg.label %}Total {{ lbl }}{% endblocktrans %}</td>
           <td class="text-end">{{ mg.total_charges|format_money }}</td>
           <td class="text-end">{{ mg.total_revenues|format_money }}</td>
           <td class="text-end">{{ mg.budget_total_charges|format_money }}</td>
@@ -86,7 +85,7 @@
         <div class="spinner-border text-secondary" role="status">
           <span class="visually-hidden">Chargement...</span>
         </div>
-        <p class="mt-3">Chargement des commentaires…</p>
+        <p class="mt-3">{% trans "Loading comments..." %}</p>
       </div>
     </div>
   </div>

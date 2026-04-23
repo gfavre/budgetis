@@ -61,13 +61,13 @@
            class="logo" />
     {% endif %}
     <h1>{{ config.commune_name }}</h1>
-    <p>Bienvenue sur la plateforme d’exploration des comptes et budgets de la commune.</p>
-    <a href="{% provider_login_url 'microsoft' %}?process=login"
+    <p>{% trans "Welcome to the financial management platform of the commune." %}</p>
+    <a href="{% provider_login_url ‘microsoft’ %}?process=login"
        class="btn btn-primary"
        style="display: inline-block;
               padding: 10px 20px;
               border-radius: 5px;
               text-decoration: none;
-              margin-top: 20px">Connexion</a>
+              margin-top: 20px">{% trans "Sign In" %}</a>
   </div>
 {% endblock body %}

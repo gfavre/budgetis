@@ -1,9 +1,11 @@
+{% load i18n %}
+
 <div class="modal-header">
-  <h5 class="modal-title">Supprimer le commentaire</h5>
+  <h5 class="modal-title">{% trans "Delete comment" %}</h5>
   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 <div class="modal-body">
-  <p>Voulez-vous vraiment supprimer ce commentaire&nbsp;?</p>
+  <p>{% trans "Are you sure you want to delete this comment?" %}</p>
   <blockquote class="blockquote">
     {{ object.content }}
   </blockquote>
@@ -14,7 +16,7 @@
         hx-target="#accountCommentsModal .modal-content"
         hx-swap="innerHTML">
     {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Supprimer</button>
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+    <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
   </form>
 </div>

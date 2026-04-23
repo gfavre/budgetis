@@ -157,7 +157,7 @@ class BudgetByNatureView(BudgetByNatureMixin, BaseAccountExplorerView):
     """Budget explorer grouped by nature."""
 
     template_name = "accounting/budget_by_nature.html"
-    title = _("Budgets par nature")
+    title = _("Budget by nature")
     is_budget_view = True
 
     def get_accounts_for_year(self, year: int, user, *, only_responsible: bool):

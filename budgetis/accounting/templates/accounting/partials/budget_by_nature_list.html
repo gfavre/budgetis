@@ -28,18 +28,18 @@
     <thead>
       <tr class="table-light text-center">
         <th rowspan="2" class="text-start">N°</th>
-        <th rowspan="2" class="text-start">Désignation</th>
-        <th colspan="2" class="text-center">Budget {{ year }}</th>
-        <th colspan="2" class="text-center">Budget {{ previous_year }}</th>
-        <th colspan="2" class="text-center">Comptes {{ actuals_year }}</th>
+        <th rowspan="2" class="text-start">{% trans "Designation" %}</th>
+        <th colspan="2" class="text-center">{% blocktrans %}Budget {{ year }}{% endblocktrans %}</th>
+        <th colspan="2" class="text-center">{% blocktrans %}Budget {{ previous_year }}{% endblocktrans %}</th>
+        <th colspan="2" class="text-center">{% blocktrans %}Actuals {{ actuals_year }}{% endblocktrans %}</th>
       </tr>
       <tr class="table-light text-center">
-        <th>Charges</th>
-        <th>Produits</th>
-        <th>Charges</th>
-        <th>Produits</th>
-        <th>Charges</th>
-        <th>Produits</th>
+        <th>{% trans "Charges" %}</th>
+        <th>{% trans "Revenues" %}</th>
+        <th>{% trans "Charges" %}</th>
+        <th>{% trans "Revenues" %}</th>
+        <th>{% trans "Charges" %}</th>
+        <th>{% trans "Revenues" %}</th>
       </tr>
     </thead>
     <tbody>

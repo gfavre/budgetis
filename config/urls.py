@@ -15,6 +15,7 @@ def direct_ms_login(request):
 
 
 urlpatterns = [
+    path("i18n/", include("django.conf.urls.i18n")),
     path("", include("budgetis.core.urls")),
     path(
         "about/",

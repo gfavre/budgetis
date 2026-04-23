@@ -132,7 +132,7 @@
 {% block content %}
   <h1 class="mb-4">
     {{ config.commune_name }}
-    <span class="fw-light text-muted fs-4">— Finances communales</span>
+    <span class="fw-light text-muted fs-4">— {% trans "Municipal finances" %}</span>
   </h1>
   <div class="dashboard">
     <!-- Comptes -->
@@ -140,23 +140,23 @@
       <div class="panel-header comptes">
         <i class="bi bi-receipt header-icon"></i>
         <div class="header-text">
-          <div class="title">Comptes</div>
-          <div class="subtitle">Réalisations</div>
+          <div class="title">{% trans "Actuals" %}</div>
+          <div class="subtitle">{% trans "Realized accounts" %}</div>
         </div>
       </div>
       <div class="panel-links">
         <a href="{% url 'accounting:account-explorer' %}" class="panel-link">
           <i class="bi bi-diagram-3 link-icon"></i>
           <div class="link-text">
-            <div class="link-title">Par fonction</div>
-            <div class="link-desc">Comptes N · Budget N · Comptes N-1</div>
+            <div class="link-title">{% trans "By function" %}</div>
+            <div class="link-desc">{% trans "Actuals N · Budget N · Actuals N-1" %}</div>
           </div>
         </a>
         <a href="{% url 'accounting:natures' %}" class="panel-link">
           <i class="bi bi-tags link-icon"></i>
           <div class="link-text">
-            <div class="link-title">Par nature</div>
-            <div class="link-desc">Charges & produits agrégés</div>
+            <div class="link-title">{% trans "By nature" %}</div>
+            <div class="link-desc">{% trans "Aggregated charges & revenues" %}</div>
           </div>
         </a>
       </div>
@@ -166,24 +166,24 @@
       <div class="panel-header budget">
         <i class="bi bi-calculator header-icon"></i>
         <div class="header-text">
-          <div class="title">Budget</div>
-          <div class="subtitle">Prévisions</div>
+          <div class="title">{% trans "Budget" %}</div>
+          <div class="subtitle">{% trans "Forecasts" %}</div>
         </div>
       </div>
       <div class="panel-links">
         <a href="{% url 'accounting:budget-explorer' %}" class="panel-link">
           <i class="bi bi-diagram-3 link-icon"></i>
           <div class="link-text">
-            <div class="link-title">Par fonction</div>
-            <div class="link-desc">Budget N · Budget N-1 · Comptes N-2</div>
+            <div class="link-title">{% trans "By function" %}</div>
+            <div class="link-desc">{% trans "Budget N · Budget N-1 · Actuals N-2" %}</div>
           </div>
         </a>
         <a href="{% url 'accounting:budget-nature-explorer' %}"
            class="panel-link">
           <i class="bi bi-tags link-icon"></i>
           <div class="link-text">
-            <div class="link-title">Par nature</div>
-            <div class="link-desc">Charges & produits agrégés</div>
+            <div class="link-title">{% trans "By nature" %}</div>
+            <div class="link-desc">{% trans "Aggregated charges & revenues" %}</div>
           </div>
         </a>
       </div>
@@ -193,16 +193,16 @@
       <div class="panel-header">
         <i class="bi bi-pie-chart header-icon"></i>
         <div class="header-text">
-          <div class="title">Analyses & rapports</div>
-          <div class="subtitle">Vues transversales</div>
+          <div class="title">{% trans "Analyses & reports" %}</div>
+          <div class="subtitle">{% trans "Cross-cutting views" %}</div>
         </div>
       </div>
       <div class="panel-links">
         <a href="{% url 'finance:index' %}" class="panel-link">
           <i class="bi bi-bar-chart-line link-icon"></i>
           <div class="link-text">
-            <div class="link-title">Reporting</div>
-            <div class="link-desc">Sankey du ménage communal · exports</div>
+            <div class="link-title">{% trans "Reporting" %}</div>
+            <div class="link-desc">{% trans "Communal household Sankey · exports" %}</div>
           </div>
         </a>
       </div>

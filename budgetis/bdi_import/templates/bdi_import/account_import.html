@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
+{% load i18n %}
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <h1>Importer des comptes</h1>
+  <h1>{% trans "Import accounts" %}</h1>
   <form method="post" enctype="multipart/form-data">
     {% crispy form %}
   </form>
