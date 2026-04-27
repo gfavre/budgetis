@@ -7,7 +7,7 @@ services:
     build:
       context: .
       dockerfile: docker/web.Dockerfile
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000 --worker-tmp-dir /dev/shm
     entrypoint: [ "/app/docker/entrypoint.sh" ]
     volumes:
       - ./budgetis:/app/budgetis
