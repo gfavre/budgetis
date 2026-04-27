@@ -18,6 +18,7 @@ services:
       - .env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
+      - HOME=/tmp
     depends_on:
       - db
       - redis
