@@ -1,8 +1,6 @@
 networks:
   budgetis:
     external: false
-  web:
-    external: true
 
 services:
   web:
@@ -21,18 +19,11 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
       - HOME=/tmp
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.budgetis.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.budgetis.entrypoints=websecure"
-      - "traefik.http.routers.budgetis.tls.certresolver=letsencrypt"
-      - "traefik.http.services.budgetis.loadbalancer.server.port=8000"
     depends_on:
       - db
       - redis
     networks:
       - budgetis
-      - web
 
   celery:
     build:
