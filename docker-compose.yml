@@ -62,6 +62,7 @@ services:
 
   db:
     image: postgres:15
+    command: postgres -c log_min_messages=WARNING -c log_min_duration_statement=-1
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USER}
