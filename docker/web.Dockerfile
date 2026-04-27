@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir uv
 
 WORKDIR /app
 
-RUN mkdir -p /app/media
+RUN mkdir -p /app/media/imports/accounts
 
 # Copier les fichiers de dépendances
 COPY pyproject.toml uv.lock ./

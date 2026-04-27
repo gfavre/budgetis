@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+# Ensure media subdirectories exist (volume mount can reset them)
+mkdir -p /app/media/imports/accounts
+
 # Wait for database to be ready
 echo "⏳ Waiting for database..."
 until nc -z db 5432; do
