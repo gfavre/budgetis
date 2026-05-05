@@ -256,59 +256,58 @@ SM_COLORS: dict[str, str] = {
 }
 
 SM_SETTINGS = """\
-// === Settings ===
-
-// ✓ size w 1200
-// ✓   h 928
-// ✓ margin l 12
-// ✓   r 12
-// ✓   t 19
-// ✓   b 20
-// ✓ bg color #ffffff
-// ✓   transparent N
-// ✓ node w 20
-// ✓   h 55.5
-// ✓   spacing 56.5
-// ✓   border 2
-// ✓   theme a
-// ✓   color #888888
-// ✓   opacity 1
-// ✓ flow curvature 0.5
-// ✓   inheritfrom source
-// ✓   color #999999
-// ✓   opacity 0.45
-// ✓ layout order automatic
-// ✓   justifyorigins N
-// ✓   justifyends N
-// ✓   reversegraph N
-// ✓   attachincompletesto nearest
-// ✓ labels color #000000
-// ✓   hide N
-// ✓   highlight 0.85
-// ✓   fontface sans-serif
-// ✓   linespacing 0.2
-// ✓   relativesize 109
-// ✓   magnify 119
-// ✓ labelname appears Y
-// ✓   size 18
-// ✓   weight 400
-// ✓ labelvalue appears Y
-// ✓   fullprecision Y
-// ✓   position below
-// ✓   weight 400
-// ✓ labelposition autoalign 0
-// ✓   scheme auto
-// ✓   first before
-// ✓   breakpoint 5
-// ✓ value format ' .'
-// ✓   prefix 'CHF'
-// ✓   suffix 'K'
-// ✓ themeoffset a 3
-// ✓   b 2
-// ✓   c 0
-// ✓   d 0
-// ✓ meta mentionsankeymatic N
-// ✓   listimbalances Y"""
+=== Settings ===
+size w 1200
+ h 928
+margin l 12
+ r 12
+ t 19
+ b 20
+bg color #ffffff
+ transparent Y
+node w 20
+ h 55.5
+ spacing 56.5
+ border 2
+ theme a
+ color #888888
+ opacity 1
+flow curvature 0.5
+ inheritfrom source
+ color #999999
+ opacity 0.45
+layout order automatic
+ justifyorigins N
+ justifyends N
+ reversegraph N
+ attachincompletesto nearest
+labels color #000000
+ hide N
+ highlight 0.85
+ fontface sans-serif
+ linespacing 0.2
+ relativesize 109
+ magnify 119
+labelname appears Y
+ size 18
+ weight 400
+labelvalue appears Y
+ fullprecision Y
+ position below
+ weight 400
+labelposition autoalign 0
+ scheme auto
+ first before
+ breakpoint 5
+value format ' .'
+ prefix 'CHF'
+ suffix 'K'
+themeoffset a 3
+ b 2
+ c 0
+ d 0
+meta mentionsankeymatic N
+ listimbalances Y"""
 
 
 def to_rounded_float(val, q: str = "0.01") -> float:
