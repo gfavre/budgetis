@@ -198,7 +198,7 @@ KEY_LOSS = "loss"
 # ----- SankeyMATIC labels and colors -----------------------------------------
 
 SM_LABELS: dict[str, str] = {
-    NODE_HOUSEHOLD: "Budget",
+    NODE_HOUSEHOLD: "Ménage communal",
     KEY_IMPOTS: "Impôts",
     KEY_RANDOMS: "Impôts aléatoires",
     KEY_LEVIES: "Taxes",
@@ -249,7 +249,7 @@ SM_COLORS: dict[str, str] = {
     KEY_WAGES: COLOR_COMMUNE_WAGES,
     KEY_GOODS: COLOR_COMMUNE_GOODS,
     KEY_AIDS: COLOR_COMMUNE_AIDS,
-    KEY_DOTATIONS: COLOR_COMMUNE_DOTATIONS,
+    KEY_DOTATIONS: COLOR_FUNDS_WITHDRAWAL,
     KEY_INTERESTS: COLOR_COMMUNE_INTERESTS,
     KEY_PROFIT: COLOR_PROFIT,
     KEY_LOSS: COLOR_RESULT,
@@ -593,8 +593,9 @@ def build_sankeymatic_export(qs: QuerySet, year: int, *, is_budget: bool = False
 
     total_canton = canton[KEY_TOTAL]
     total_inter = inter[KEY_TOTAL]
-    total_commune = commune[KEY_TOTAL]
-    total_out = total_canton + total_inter + total_commune
+    dotations = commune[KEY_DOTATIONS]
+    total_commune = commune[KEY_TOTAL] - dotations
+    total_out = total_canton + total_inter + commune[KEY_TOTAL]
     total_left = sum(rev.values())
     remainder = total_left - total_out
 
@@ -623,8 +624,8 @@ def build_sankeymatic_export(qs: QuerySet, year: int, *, is_budget: bool = False
         KEY_LEVIES,
         KEY_RENTALS,
         KEY_INTERESTS_REV,
-        KEY_FUNDS_WITHDRAWAL,
         KEY_OTHERS_REV,
+        KEY_FUNDS_WITHDRAWAL,
     ]
     lines.extend(filter(None, (flow(key, hub, rev[key]) for key in revenue_keys)))
     if remainder < -MIN_VAL:
@@ -645,9 +646,15 @@ def build_sankeymatic_export(qs: QuerySet, year: int, *, is_budget: bool = False
     lines.extend(filter(None, (flow(NODE_INTERCOS, key, inter[key]) for key in intercos_keys)))
     lines.append("")
 
-    commune_keys = [KEY_WAGES, KEY_GOODS, KEY_AIDS, KEY_DOTATIONS, KEY_INTERESTS]
+    commune_keys = [KEY_WAGES, KEY_GOODS, KEY_AIDS, KEY_INTERESTS]
     lines.extend(filter(None, (flow(NODE_COMMUNE, key, commune[key]) for key in commune_keys)))
     lines.append("")
+
+    # Dotations come directly from Ménage communal (not a third-party payment)
+    dotations_line = flow(hub, KEY_DOTATIONS, dotations)
+    if dotations_line:
+        lines.append(dotations_line)
+        lines.append("")
 
     used: set[str] = set()
     for key in revenue_keys:
@@ -657,11 +664,13 @@ def build_sankeymatic_export(qs: QuerySet, year: int, *, is_budget: bool = False
         used.add(KEY_LOSS)
     elif remainder > MIN_VAL:
         used.add(KEY_PROFIT)
+    if k(dotations) > 0:
+        used.add(KEY_DOTATIONS)
     for group, keys in [
         ([NODE_HOUSEHOLD, NODE_CANTON, NODE_INTERCOS, NODE_COMMUNE], None),
         ([KEY_EQUALIZATION, KEY_SOCIAL, KEY_POLICE], canton),
         ([KEY_AISGE, KEY_APEC, KEY_RAT, KEY_TRANSPORTS, KEY_INTERCOS_OTHER], inter),
-        ([KEY_WAGES, KEY_GOODS, KEY_AIDS, KEY_DOTATIONS, KEY_INTERESTS], commune),
+        ([KEY_WAGES, KEY_GOODS, KEY_AIDS, KEY_INTERESTS], commune),
     ]:
         for key in group:
             if keys is None or k(keys.get(key, Decimal(0))) > 0:
@@ -696,14 +705,15 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
         (KEY_LEVIES, LABEL_TAXES_USAGE, COLOR_TAXES),
         (KEY_RENTALS, LABEL_RENTALS, COLOR_RENTALS),
         (KEY_INTERESTS_REV, LABEL_INTERESTS, COLOR_INTERESTS_REV),
-        (KEY_FUNDS_WITHDRAWAL, LABEL_FUNDS_WITHDRAWAL, COLOR_FUNDS_WITHDRAWAL),
         (KEY_OTHERS_REV, LABEL_REVENUES_OTHER, COLOR_OTHERS),
+        (KEY_FUNDS_WITHDRAWAL, LABEL_FUNDS_WITHDRAWAL, COLOR_FUNDS_WITHDRAWAL),
     ]
     left_vals = [max(Decimal("0"), rev[k]) for k, _lbl, _c in left]
     total_left = sum(left_vals)
     total_canton = max(Decimal("0"), canton[KEY_TOTAL])
     total_inter = max(Decimal("0"), inter[KEY_TOTAL])
-    total_commune = max(Decimal("0"), commune[KEY_TOTAL])
+    dotations = max(Decimal("0"), commune[KEY_DOTATIONS])
+    total_commune = max(Decimal("0"), commune[KEY_TOTAL] - dotations)
 
     # --- build nodes (use stable keys, render labels with values)
     idx: dict[str, int] = {}
@@ -762,7 +772,7 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
         COLOR_INTERCOS_OTHER,
     )
 
-    # Commune leaves
+    # Commune leaves (without dotations — see below)
     _push_node(idx, labels, nodes, node_colors, KEY_WAGES, LABEL_WAGES, commune[KEY_WAGES], COLOR_COMMUNE_WAGES)
     _push_node(idx, labels, nodes, node_colors, KEY_GOODS, LABEL_GOODS, commune[KEY_GOODS], COLOR_COMMUNE_GOODS)
     _push_node(
@@ -776,16 +786,6 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
         COLOR_COMMUNE_INTERESTS,
     )
     _push_node(idx, labels, nodes, node_colors, KEY_AIDS, LABEL_AIDS, commune[KEY_AIDS], COLOR_COMMUNE_AIDS)
-    _push_node(
-        idx,
-        labels,
-        nodes,
-        node_colors,
-        KEY_DOTATIONS,
-        LABEL_DOTATIONS,
-        commune[KEY_DOTATIONS],
-        COLOR_COMMUNE_DOTATIONS,
-    )
 
     for i, (k, _lbl, col) in enumerate(left):
         _add_link(idx, links, link_colors, k, NODE_HOUSEHOLD, left_vals[i], col)
@@ -810,16 +810,28 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict: 
     _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_GOODS, commune[KEY_GOODS], COLOR_COMMUNE_LINKS)
     _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_INTERESTS, commune[KEY_INTERESTS], COLOR_COMMUNE_LINKS)
     _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_AIDS, commune[KEY_AIDS], COLOR_COMMUNE_LINKS)
-    _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_DOTATIONS, commune[KEY_DOTATIONS], COLOR_COMMUNE_LINKS)
 
-    # --- result (cash surplus after all classified charges)
-    total_out = total_canton + total_inter + total_commune
+    # --- result (cash surplus after all classified charges, before dotations)
+    total_out = total_canton + total_inter + commune[KEY_TOTAL]
     remainder = total_left - total_out
     if abs(remainder) > MIN_VAL:
         _push_node(idx, labels, nodes, node_colors, NODE_RESULT, LABEL_RESULT_HUB, remainder, COLOR_PROFIT)
         _push_node(idx, labels, nodes, node_colors, KEY_PROFIT, LABEL_PROFIT, remainder, COLOR_PROFIT)
         _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_RESULT, remainder, COLOR_BUDGET_LINKS)
         _add_link(idx, links, link_colors, NODE_RESULT, KEY_PROFIT, remainder, COLOR_PROFIT)
+
+    # Dotations go directly from Ménage communal, below the result (not a third-party payment)
+    _push_node(
+        idx,
+        labels,
+        nodes,
+        node_colors,
+        KEY_DOTATIONS,
+        LABEL_DOTATIONS,
+        dotations,
+        COLOR_COMMUNE_DOTATIONS,
+    )
+    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, KEY_DOTATIONS, dotations, COLOR_BUDGET_LINKS)
 
     return {
         "nodes": nodes,  # [{"name": "Label<br>CHF…"}, ...]
