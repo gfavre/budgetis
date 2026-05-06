@@ -258,7 +258,7 @@ SM_COLORS: dict[str, str] = {
 SM_SETTINGS = """\
 === Settings ===
 size w 1200
- h 928
+ h 1020
 margin l 12
  r 12
  t 19
@@ -266,8 +266,8 @@ margin l 12
 bg color #ffffff
  transparent Y
 node w 20
- h 55.5
- spacing 56.5
+ h 40.5
+ spacing 61.5
  border 2
  theme a
  color #888888
@@ -283,7 +283,7 @@ layout order automatic
  attachincompletesto nearest
 labels color #000000
  hide N
- highlight 0.85
+ highlight 0.65
  fontface sans-serif
  linespacing 0.2
  relativesize 109
@@ -296,9 +296,9 @@ labelvalue appears Y
  position below
  weight 400
 labelposition autoalign 0
- scheme auto
+ scheme per_stage
  first before
- breakpoint 5
+ breakpoint 4
 value format ' .'
  prefix 'CHF'
  suffix 'K'
