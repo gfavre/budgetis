@@ -1,6 +1,7 @@
 services:
   media:
     image: nginx:alpine
+    restart: unless-stopped
     volumes:
       - ./nginx/media.conf:/etc/nginx/nginx.conf:ro
       - media_data:/usr/share/nginx/html/media
@@ -27,6 +28,7 @@ services:
       - .env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=web"
@@ -60,6 +62,7 @@ services:
       - "traefik.http.middlewares.login-ratelimit.ratelimit.average=5"
       - "traefik.http.middlewares.login-ratelimit.ratelimit.burst=10"
       - "traefik.http.middlewares.login-ratelimit.ratelimit.period=1m"
+
     networks:
       - budgetis
       - web
@@ -76,6 +79,7 @@ services:
       - .env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
+    restart: unless-stopped
     labels:
       - "traefik.enable=false"
     networks:
@@ -92,6 +96,7 @@ services:
       - .env
     environment:
       - DJANGO_SETTINGS_MODULE=config.settings.production
+    restart: unless-stopped
     labels:
       - "traefik.enable=false"
     networks:
