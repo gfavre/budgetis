@@ -6,6 +6,7 @@ from factory.django import DjangoModelFactory
 from budgetis.accounting.models import Account
 from budgetis.accounting.models import AccountComment
 from budgetis.accounting.models import AccountGroup
+from budgetis.accounting.models import GroupResponsibility
 from budgetis.accounting.models import MetaGroup
 from budgetis.accounting.models import SuperGroup
 from budgetis.users.tests.factories import UserFactory
@@ -52,6 +53,15 @@ class AccountFactory(DjangoModelFactory):
 
     class Meta:
         model = Account
+
+
+class GroupResponsibilityFactory(DjangoModelFactory):
+    group = factory.SubFactory(AccountGroupFactory)
+    year = 2024
+    responsible = factory.SubFactory(UserFactory)
+
+    class Meta:
+        model = GroupResponsibility
 
 
 class AccountCommentFactory(DjangoModelFactory):
