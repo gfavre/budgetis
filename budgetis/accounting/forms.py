@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.admin import widgets as admin_widgets
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 from budgetis.finance.models import AvailableYear
@@ -73,6 +74,33 @@ class AccountFilterForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["year"].choices = [("", _("- Select year -"))] + [
+            (str(y), str(y)) for y in AvailableYear.objects.values_list("year", flat=True).distinct().order_by("-year")
+        ]
+
+
+class ReassignResponsibleFormBase(forms.Form):
+    responsible = forms.ModelChoiceField(
+        label=_("Responsible"),
+        queryset=get_user_model().objects.order_by("name"),
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["responsible"].label_from_instance = str
+
+
+class ReassignAccountResponsibleForm(ReassignResponsibleFormBase):
+    """Reassigns the AccountGroup responsible for the year of each selected account."""
+
+
+class ReassignGroupResponsibleForm(ReassignResponsibleFormBase):
+    """Reassigns the AccountGroup responsible for an explicitly chosen year."""
+
+    year = forms.ChoiceField(label=_("Year"))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["year"].choices = [
             (str(y), str(y)) for y in AvailableYear.objects.values_list("year", flat=True).distinct().order_by("-year")
         ]
 

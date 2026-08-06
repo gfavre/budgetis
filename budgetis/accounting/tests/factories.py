@@ -9,6 +9,7 @@ from budgetis.accounting.models import AccountGroup
 from budgetis.accounting.models import GroupResponsibility
 from budgetis.accounting.models import MetaGroup
 from budgetis.accounting.models import SuperGroup
+from budgetis.finance.models import AvailableYear
 from budgetis.users.tests.factories import UserFactory
 
 
@@ -62,6 +63,14 @@ class GroupResponsibilityFactory(DjangoModelFactory):
 
     class Meta:
         model = GroupResponsibility
+
+
+class AvailableYearFactory(DjangoModelFactory):
+    year = 2024
+    type = AvailableYear.YearType.BUDGET
+
+    class Meta:
+        model = AvailableYear
 
 
 class AccountCommentFactory(DjangoModelFactory):

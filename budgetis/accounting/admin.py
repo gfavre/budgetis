@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin import helpers
 from django.db.models import CharField
 from django.db.models import F
 from django.db.models import Q
@@ -6,12 +7,15 @@ from django.db.models import Value
 from django.db.models.functions import Cast
 from django.db.models.functions import Coalesce
 from django.db.models.functions import Concat
+from django.template.response import TemplateResponse
 from django.utils.html import format_html
 from django.utils.html import format_html_join
 from django.utils.translation import gettext_lazy as _
 
 from .forms import AccountGroupForm
 from .forms import MetaGroupForm
+from .forms import ReassignAccountResponsibleForm
+from .forms import ReassignGroupResponsibleForm
 from .forms import SuperGroupForm
 from .models import Account
 from .models import AccountComment
@@ -19,6 +23,21 @@ from .models import AccountGroup
 from .models import GroupResponsibility
 from .models import MetaGroup
 from .models import SuperGroup
+
+
+REASSIGN_RESPONSIBLE_TEMPLATE = "accounting/admin/reassign_responsible.html"
+
+
+def _reassign_responsible_response(model_admin, request, queryset, form, title):
+    context = {
+        **model_admin.admin_site.each_context(request),
+        "title": title,
+        "queryset": queryset,
+        "form": form,
+        "opts": model_admin.opts,
+        "action_checkbox_name": helpers.ACTION_CHECKBOX_NAME,
+    }
+    return TemplateResponse(request, REASSIGN_RESPONSIBLE_TEMPLATE, context)
 
 
 @admin.register(Account)
@@ -34,7 +53,7 @@ class AccountAdmin(admin.ModelAdmin):
     list_filter = ("year", "is_budget", "visible_in_report", "updated_at")
     search_fields = ("label",)
     date_hierarchy = "updated_at"
-    actions = ["hide_from_report", "show_in_report"]
+    actions = ["hide_from_report", "show_in_report", "reassign_responsible"]
     ordering = ()  # Important: prevent default ordering
 
     @admin.display(ordering="full_code_sort", description=_("Code"))
@@ -48,6 +67,24 @@ class AccountAdmin(admin.ModelAdmin):
     @admin.action(description=_("Display accounts in report"))
     def show_in_report(self, request, queryset):
         queryset.update(visible_in_report=True)
+
+    @admin.action(description=_("Reassign responsible"))
+    def reassign_responsible(self, request, queryset):
+        if "apply" in request.POST:
+            form = ReassignAccountResponsibleForm(request.POST)
+            if form.is_valid():
+                responsible = form.cleaned_data["responsible"]
+                pairs = {(a.group_id, a.year) for a in queryset if a.group_id}
+                for group_id, year in pairs:
+                    GroupResponsibility.objects.update_or_create(
+                        group_id=group_id, year=year, defaults={"responsible": responsible}
+                    )
+                self.message_user(request, _("Updated %(count)d group(s).") % {"count": len(pairs)})
+                return None
+        else:
+            form = ReassignAccountResponsibleForm()
+
+        return _reassign_responsible_response(self, request, queryset, form, _("Reassign responsible"))
 
     @admin.display(description="Rapport")
     def report_status(self, obj):
@@ -157,6 +194,7 @@ class AccountGroupAdmin(admin.ModelAdmin):
     list_filter = ("supergroup", "updated_at")
     date_hierarchy = "updated_at"
     search_fields = ("label", "code")
+    actions = ["reassign_responsible"]
 
     form = AccountGroupForm
 
@@ -176,6 +214,24 @@ class AccountGroupAdmin(admin.ModelAdmin):
             if account.group_id != obj.id:
                 account.group = obj
                 account.save()
+
+    @admin.action(description=_("Reassign responsible"))
+    def reassign_responsible(self, request, queryset):
+        if "apply" in request.POST:
+            form = ReassignGroupResponsibleForm(request.POST)
+            if form.is_valid():
+                responsible = form.cleaned_data["responsible"]
+                year = int(form.cleaned_data["year"])
+                for group in queryset:
+                    GroupResponsibility.objects.update_or_create(
+                        group=group, year=year, defaults={"responsible": responsible}
+                    )
+                self.message_user(request, _("Updated %(count)d group(s).") % {"count": queryset.count()})
+                return None
+        else:
+            form = ReassignGroupResponsibleForm()
+
+        return _reassign_responsible_response(self, request, queryset, form, _("Reassign responsible"))
 
 
 @admin.register(GroupResponsibility)

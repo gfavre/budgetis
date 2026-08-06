@@ -1,0 +1,27 @@
+{% extends "admin/base_site.html" %}
+
+{% load i18n %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      {% blocktrans count counter=queryset|length %}
+        Reassign the responsible for the following {{ counter }} item?
+      {% plural %}
+        Reassign the responsible for the following {{ counter }} items?
+      {% endblocktrans %}
+    </p>
+    <ul>
+      {% for obj in queryset %}<li>{{ obj }}</li>{% endfor %}
+    </ul>
+    {{ form.as_p }}
+    {% for obj in queryset %}<input type="hidden" name="{{ action_checkbox_name }}" value="{{ obj.pk }}" />{% endfor %}
+    <input type="hidden" name="action" value="reassign_responsible" />
+    <input type="submit"
+           name="apply"
+           value="{% trans 'Confirm' %}"
+           class="default" />
+    <a href="#" onclick="window.history.back(); return false;">{% trans "Cancel" %}</a>
+  </form>
+{% endblock content %}
