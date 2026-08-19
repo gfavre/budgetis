@@ -2,6 +2,7 @@ from collections import OrderedDict
 from decimal import Decimal
 
 import pytest
+from django.template.loader import render_to_string
 
 from budgetis.accounting.groupers import _nature_group
 from budgetis.accounting.groupers import build_grouped
@@ -9,9 +10,16 @@ from budgetis.accounting.groupers import build_nature_grouped
 from budgetis.accounting.groupers import build_summary
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
-from budgetis.accounting.tests.factories import MetaGroupFactory
-from budgetis.accounting.tests.factories import SuperGroupFactory
 from budgetis.accounting.views.data import AccountRow
+from budgetis.common.models import ChartScheme
+
+
+def _mch1_tree():
+    """Build a 3-level MCH1 tree: level1 -> level2 -> level3 (leaf)."""
+    level1 = AccountGroupFactory(level=1, parent=None)
+    level2 = AccountGroupFactory(level=2, parent=level1)
+    leaf = AccountGroupFactory(level=3, parent=level2)
+    return level1, level2, leaf
 
 
 pytestmark = pytest.mark.django_db
@@ -31,35 +39,31 @@ class TestBuildGrouped:
         assert build_grouped([], 2024) == OrderedDict()
 
     def test_accumulates_totals_at_all_hierarchy_levels(self):
-        mg = MetaGroupFactory()
-        sg = SuperGroupFactory(metagroup=mg)
-        ag = AccountGroupFactory(supergroup=sg)
-        acc = AccountFactory(group=ag)
+        level1, level2, leaf = _mch1_tree()
+        acc = AccountFactory(group=leaf)
         row = _row(acc, col1_charges=Decimal("500"), col1_revenues=Decimal("200"))
 
         result = build_grouped([row], 2024)
 
-        mg_data = result[mg.code]
-        sg_data = mg_data["supergroups"][sg.code]
-        ag_data = sg_data["groups"][ag.code]
-        assert mg_data["col1_charges"] == Decimal("500")
-        assert sg_data["col1_charges"] == Decimal("500")
-        assert ag_data["col1_charges"] == Decimal("500")
-        assert ag_data["col1_revenues"] == Decimal("200")
+        level1_data = result[level1.code]
+        level2_data = level1_data["children"][level2.code]
+        leaf_data = level2_data["children"][leaf.code]
+        assert level1_data["col1_charges"] == Decimal("500")
+        assert level2_data["col1_charges"] == Decimal("500")
+        assert leaf_data["col1_charges"] == Decimal("500")
+        assert leaf_data["col1_revenues"] == Decimal("200")
 
     def test_two_rows_in_same_group_accumulate(self):
-        mg = MetaGroupFactory()
-        sg = SuperGroupFactory(metagroup=mg)
-        ag = AccountGroupFactory(supergroup=sg)
-        acc1 = AccountFactory(group=ag)
-        acc2 = AccountFactory(group=ag)
+        level1, level2, leaf = _mch1_tree()
+        acc1 = AccountFactory(group=leaf)
+        acc2 = AccountFactory(group=leaf)
         row1 = _row(acc1, col1_charges=Decimal("300"))
         row2 = _row(acc2, col1_charges=Decimal("700"))
 
         result = build_grouped([row1, row2], 2024)
-        ag_data = result[mg.code]["supergroups"][sg.code]["groups"][ag.code]
-        assert ag_data["col1_charges"] == Decimal("1000")
-        assert len(ag_data["accounts"]) == TWO_ACCOUNTS
+        leaf_data = result[level1.code]["children"][level2.code]["children"][leaf.code]
+        assert leaf_data["col1_charges"] == Decimal("1000")
+        assert len(leaf_data["accounts"]) == TWO_ACCOUNTS
 
     def test_row_without_group_is_skipped(self):
         acc = AccountFactory(group=None)
@@ -67,18 +71,69 @@ class TestBuildGrouped:
         assert build_grouped([row], 2024) == OrderedDict()
 
     def test_accounts_sorted_by_function_within_group(self):
-        mg = MetaGroupFactory()
-        sg = SuperGroupFactory(metagroup=mg)
-        ag = AccountGroupFactory(supergroup=sg)
-        acc_b = AccountFactory(group=ag, function="720", nature="351")
-        acc_a = AccountFactory(group=ag, function="460", nature="351")
+        level1, level2, leaf = _mch1_tree()
+        acc_b = AccountFactory(group=leaf, function="720", nature="351")
+        acc_a = AccountFactory(group=leaf, function="460", nature="351")
         row_b = _row(acc_b, col1_charges=Decimal("100"))
         row_a = _row(acc_a, col1_charges=Decimal("200"))
 
         result = build_grouped([row_b, row_a], 2024)
-        accounts = result[mg.code]["supergroups"][sg.code]["groups"][ag.code]["accounts"]
+        accounts = result[level1.code]["children"][level2.code]["children"][leaf.code]["accounts"]
         functions = [r.account.function for r in accounts]
         assert functions == sorted(functions)
+
+    def test_four_level_mch2_tree_builds_through_same_path(self):
+        level1 = AccountGroupFactory(scheme=ChartScheme.MCH2, level=1, parent=None, code="0")
+        level2 = AccountGroupFactory(scheme=ChartScheme.MCH2, level=2, parent=level1, code="01")
+        level3 = AccountGroupFactory(scheme=ChartScheme.MCH2, level=3, parent=level2, code="011")
+        leaf = AccountGroupFactory(scheme=ChartScheme.MCH2, level=4, parent=level3, code="0110")
+        acc = AccountFactory(scheme=ChartScheme.MCH2, group=leaf, function="01100")
+        row = _row(acc, col1_charges=Decimal("500"))
+
+        result = build_grouped([row], 2024)
+
+        leaf_data = result[level1.code]["children"][level2.code]["children"][level3.code]["children"][leaf.code]
+        assert leaf_data["col1_charges"] == Decimal("500")
+        assert leaf_data["accounts"][0].account == acc
+
+
+class TestGroupNodeTemplateRendersBothDepths:
+    """
+    Proves account_list.html renders a 3-level MCH1 tree and a 4-level MCH2 tree
+    through the exact same recursive group_node.html partial, with no
+    scheme-specific branching in the view/template layer.
+    """
+
+    def _render(self, grouped: OrderedDict) -> str:
+        return render_to_string(
+            "accounting/partials/account_list.html",
+            {"grouped": grouped, "global_summary": {"rows": [], "totals": {}}, "year": 2024},
+        )
+
+    def test_three_level_mch1_tree(self):
+        level1, level2, leaf = _mch1_tree()
+        acc = AccountFactory(group=leaf)
+        row = _row(acc, col1_charges=Decimal("500"))
+        html = self._render(build_grouped([row], 2024))
+
+        assert html.count("<h2>") == 1
+        assert html.count("<h3>") == 1
+        assert html.count("<h4>") == 0
+        assert leaf.label in html
+
+    def test_four_level_mch2_tree(self):
+        level1 = AccountGroupFactory(scheme=ChartScheme.MCH2, level=1, parent=None, code="0")
+        level2 = AccountGroupFactory(scheme=ChartScheme.MCH2, level=2, parent=level1, code="01")
+        level3 = AccountGroupFactory(scheme=ChartScheme.MCH2, level=3, parent=level2, code="011")
+        leaf = AccountGroupFactory(scheme=ChartScheme.MCH2, level=4, parent=level3, code="0110")
+        acc = AccountFactory(scheme=ChartScheme.MCH2, group=leaf, function="01100")
+        row = _row(acc, col1_charges=Decimal("500"))
+        html = self._render(build_grouped([row], 2024))
+
+        assert html.count("<h2>") == 1
+        assert html.count("<h3>") == 1
+        assert html.count("<h4>") == 1
+        assert leaf.label in html
 
 
 class TestBuildSummary:

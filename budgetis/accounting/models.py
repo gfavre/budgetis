@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from budgetis.common.models import ChartScheme
 from budgetis.common.models import TimeStampedModel
 
 
@@ -11,57 +12,39 @@ FUNDING_REQUEST_GTE = 500
 DEPRECIATION_GTE = 600
 DEPRECIATION_LT = 700
 
-
-class MetaGroup(TimeStampedModel):
-    """
-    Represents a meta group of accounts (e.g. 1, 2, 3).
-    """
-
-    id = models.BigAutoField(primary_key=True)
-    code = models.SmallIntegerField(db_index=True, unique=True)
-    label = models.CharField(max_length=100)
-
-    class Meta:
-        ordering = ("code",)
-        verbose_name = _("Meta Group")
-        verbose_name_plural = _("Meta Groups")
-
-    def __str__(self) -> str:
-        return f"{self.code} - {self.label}"
-
-
-class SuperGroup(TimeStampedModel):
-    """
-    Represents a super group of accounts (e.g. 41, 42, 43).
-    """
-
-    id = models.BigAutoField(primary_key=True)
-    code = models.SmallIntegerField(db_index=True, unique=True)
-    label = models.CharField(max_length=100)
-    metagroup = models.ForeignKey(MetaGroup, on_delete=models.SET_NULL, null=True, related_name="supergroups")
-
-    class Meta:
-        ordering = ("code",)
-        verbose_name = _("Super Group")
-        verbose_name_plural = _("Super Groups")
-
-    def __str__(self) -> str:
-        return f"{self.code} - {self.label}"
+# MCH2 function codes are the 4-digit canonical group code (N4) plus one
+# commune-specific digit; the group a MCH2 account belongs to is looked up by
+# that 4-digit prefix rather than by an exact code match (see Account.save()).
+MCH2_GROUP_CODE_LENGTH = 4
 
 
 class AccountGroup(TimeStampedModel):
     """
-    Represents a group of accounts (e.g., PCO, ADA).
-    Each group is typically under the responsibility of a specific municipal member.
+    Represents one node of the functional classification hierarchy (e.g. MetaGroup
+    1/2/3, SuperGroup 41/42/43, AccountGroup 720/460 in MCH1; N1-N4 in MCH2), all
+    unified into a single self-referential tree so both schemes render through the
+    same recursive grouping/template code regardless of how many levels deep they
+    go (3 for MCH1, 4 for MCH2). The deepest level of a given scheme is the one a
+    municipal officer is responsible for (see GroupResponsibility) and the one
+    Account.group points to.
     """
 
     id = models.BigAutoField(primary_key=True)
-    code = models.CharField(max_length=5, db_index=True, unique=True)
+    code = models.CharField(max_length=5, db_index=True)
     label = models.CharField(max_length=100)
-    supergroup = models.ForeignKey(SuperGroup, on_delete=models.SET_NULL, null=True, related_name="groups")
+    scheme = models.CharField(max_length=10, choices=ChartScheme.choices, default=ChartScheme.MCH1)
+    level = models.PositiveSmallIntegerField()
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="children",
+    )
 
     class Meta:
-        ordering = ("code",)
+        unique_together = ("scheme", "level", "code")
+        ordering = ("scheme", "level", "code")
         verbose_name = _("Account Group")
         verbose_name_plural = _("Account Groups")
 
@@ -117,6 +100,9 @@ class Account(TimeStampedModel):
     label = models.CharField(verbose_name=_("Label"), max_length=255)
     group = models.ForeignKey(
         AccountGroup, on_delete=models.SET_NULL, verbose_name=_("Group"), null=True, related_name="accounts"
+    )
+    scheme = models.CharField(
+        verbose_name=_("Scheme"), max_length=10, choices=ChartScheme.choices, default=ChartScheme.MCH1
     )
     is_budget = models.BooleanField(
         default=False,
@@ -175,7 +161,13 @@ class Account(TimeStampedModel):
     def save(self, *args, **kwargs):
         if self.group is None:
             with suppress(AccountGroup.DoesNotExist):
-                self.group = AccountGroup.objects.get(code=self.function)
+                if self.scheme == ChartScheme.MCH2:
+                    # MCH2 function = 4-digit group code (N4) + 1 commune digit.
+                    group_code = self.function[:MCH2_GROUP_CODE_LENGTH]
+                else:
+                    # MCH1 function code matches its group code exactly.
+                    group_code = self.function
+                self.group = AccountGroup.objects.get(code=group_code, scheme=self.scheme)
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:

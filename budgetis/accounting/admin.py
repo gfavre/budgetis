@@ -9,20 +9,15 @@ from django.db.models.functions import Coalesce
 from django.db.models.functions import Concat
 from django.template.response import TemplateResponse
 from django.utils.html import format_html
-from django.utils.html import format_html_join
 from django.utils.translation import gettext_lazy as _
 
 from .forms import AccountGroupForm
-from .forms import MetaGroupForm
 from .forms import ReassignAccountResponsibleForm
 from .forms import ReassignGroupResponsibleForm
-from .forms import SuperGroupForm
 from .models import Account
 from .models import AccountComment
 from .models import AccountGroup
 from .models import GroupResponsibility
-from .models import MetaGroup
-from .models import SuperGroup
 
 
 REASSIGN_RESPONSIBLE_TEMPLATE = "accounting/admin/reassign_responsible.html"
@@ -190,11 +185,13 @@ class AccountCommentAdmin(admin.ModelAdmin):
 
 @admin.register(AccountGroup)
 class AccountGroupAdmin(admin.ModelAdmin):
-    list_display = ("code", "label", "updated_at")
-    list_filter = ("supergroup", "updated_at")
+    list_display = ("code", "label", "scheme", "level", "parent", "updated_at")
+    list_filter = ("scheme", "level", "updated_at")
     date_hierarchy = "updated_at"
     search_fields = ("label", "code")
     actions = ["reassign_responsible"]
+    autocomplete_fields = ("parent",)
+    search_help_text = _("Code or label")
 
     form = AccountGroupForm
 
@@ -237,7 +234,7 @@ class AccountGroupAdmin(admin.ModelAdmin):
 @admin.register(GroupResponsibility)
 class GroupResponsibilityAdmin(admin.ModelAdmin):
     list_display = ("group", "year", "responsible")
-    list_filter = ("year", "group__supergroup", "responsible")
+    list_filter = ("year", "group__scheme", "responsible")
     search_fields = ("group__label", "responsible__name", "responsible__email", "responsible__trigram")
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -249,73 +246,3 @@ class GroupResponsibilityAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         # Override to prefetch related groups for performance
         return super().get_queryset(request).select_related("group", "responsible")
-
-
-@admin.register(SuperGroup, site=admin.site)
-class SuperGroupAdmin(admin.ModelAdmin):
-    list_display = ("code", "label", "get_groups")
-    list_filter = ("updated_at",)
-    date_hierarchy = "updated_at"
-    search_fields = ("label", "code")
-
-    form = SuperGroupForm
-
-    def get_queryset(self, request):
-        # Override to prefetch related groups for performance
-        return super().get_queryset(request).prefetch_related("groups")
-
-    @admin.display(description="Groupes")
-    def get_groups(self, obj):
-        return format_html("<ul>{}</ul>", format_html_join("", "<li>{}</li>", ((str(e),) for e in obj.groups.all())))
-
-    def save_model(self, request, obj, form, change):
-        # Save the group first
-        super().save_model(request, obj, form, change)
-
-        selected_groups = form.cleaned_data.get("groups", [])
-        selected_ids = {a.id for a in selected_groups}
-
-        # Remove accounts no longer in the selection
-        AccountGroup.objects.filter(supergroup=obj).exclude(id__in=selected_ids).update(supergroup=None)
-
-        # Assign the selected accounts to this group
-        for group in selected_groups:
-            if group.supergroup_id != obj.id:
-                group.supergroup = obj
-                group.save()
-
-
-@admin.register(MetaGroup, site=admin.site)
-class MetaGroupAdmin(admin.ModelAdmin):
-    list_display = ("code", "label", "get_supergroups")
-    list_filter = ("updated_at",)
-    date_hierarchy = "updated_at"
-    search_fields = ("label", "code")
-
-    form = MetaGroupForm
-
-    def get_queryset(self, request):
-        # Override to prefetch related supergroups for performance
-        return super().get_queryset(request).prefetch_related("supergroups")
-
-    @admin.display(description="Supergroupes")
-    def get_supergroups(self, obj):
-        return format_html(
-            "<ul>{}</ul>", format_html_join("", "<li>{}</li>", ((str(e),) for e in obj.supergroups.all()))
-        )
-
-    def save_model(self, request, obj, form, change):
-        # Save the group first
-        super().save_model(request, obj, form, change)
-
-        selected_groups = form.cleaned_data.get("supergroups", [])
-        selected_ids = {a.id for a in selected_groups}
-
-        # Remove accounts no longer in the selection
-        SuperGroup.objects.filter(metagroup=obj).exclude(id__in=selected_ids).update(metagroup=None)
-
-        # Assign the selected accounts to this group
-        for supergroup in selected_groups:
-            if supergroup.metagroup_id != obj.id:
-                supergroup.metagroup = obj
-                supergroup.save()

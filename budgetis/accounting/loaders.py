@@ -45,7 +45,7 @@ class BaseLoader:
     def _get_accounts_queryset(self, year: int, *, is_budget: bool, group_ids: list[int] | None = None):
         qs = (
             Account.objects.filter(year=year, is_budget=is_budget, group__isnull=False, visible_in_report=True)
-            .select_related("group__supergroup__metagroup")
+            .select_related("group__parent__parent__parent")
             .prefetch_related("comments")
             .annotate(comment_count=Count("comments"))
         )
@@ -88,7 +88,7 @@ class ActualsLoader(BaseLoader):
     def _budget_fallback(self, year: int, group_ids: list[int]) -> list[AccountRow]:
         qs = (
             Account.objects.filter(year=year, is_budget=True, group__isnull=False)
-            .select_related("group__supergroup__metagroup")
+            .select_related("group__parent__parent__parent")
             .annotate(comment_count=Count("comments"))
         )
         if group_ids:

@@ -1,13 +1,18 @@
 from decimal import Decimal
 
 import pytest
+from django.db.models import ProtectedError
 
+from budgetis.accounting.models import AccountGroup
 from budgetis.accounting.tests.factories import AccountCommentFactory
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
+from budgetis.common.models import ChartScheme
 
 
 pytestmark = pytest.mark.django_db
+
+TWO_GROUPS = 2
 
 
 class TestAccountFullCode:
@@ -73,6 +78,27 @@ class TestAccountSave:
         group = AccountGroupFactory()
         acc = AccountFactory(group=group)
         assert acc.group == group
+
+    def test_auto_assigns_mch2_group_from_four_digit_prefix(self):
+        group = AccountGroupFactory(scheme=ChartScheme.MCH2, level=4, code="0110")
+        acc = AccountFactory.build(scheme=ChartScheme.MCH2, function="01100", group=None)
+        acc.save()
+        acc.refresh_from_db()
+        assert acc.group == group
+
+
+class TestAccountGroupHierarchy:
+    def test_same_code_coexists_across_schemes_and_levels(self):
+        mch1_root = AccountGroupFactory(scheme=ChartScheme.MCH1, level=1, code="1", parent=None)
+        mch2_root = AccountGroupFactory(scheme=ChartScheme.MCH2, level=1, code="1", parent=None)
+        assert mch1_root.id != mch2_root.id
+        assert AccountGroup.objects.filter(code="1").count() == TWO_GROUPS
+
+    def test_deleting_a_parent_with_children_is_protected(self):
+        parent = AccountGroupFactory(level=1, parent=None)
+        AccountGroupFactory(level=2, parent=parent)
+        with pytest.raises(ProtectedError):
+            parent.delete()
 
 
 class TestAccountComment:
