@@ -10,8 +10,10 @@ from budgetis.accounting.groupers import build_nature_grouped
 from budgetis.accounting.groupers import build_summary
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
+from budgetis.accounting.tests.factories import GroupResponsibilityFactory
 from budgetis.accounting.views.data import AccountRow
 from budgetis.common.models import ChartScheme
+from budgetis.users.tests.factories import UserFactory
 
 
 def _mch1_tree():
@@ -95,6 +97,72 @@ class TestBuildGrouped:
         leaf_data = result[level1.code]["children"][level2.code]["children"][level3.code]["children"][leaf.code]
         assert leaf_data["col1_charges"] == Decimal("500")
         assert leaf_data["accounts"][0].account == acc
+
+
+class TestDisplayResponsibleAggregation:
+    """
+    SuperGroup/MetaGroup nodes never have their own GroupResponsibility — they're
+    purely a graphical grouping for the report. Their displayed `responsible` is
+    derived bottom-up from the leaf (function) nodes underneath them.
+    """
+
+    def _two_leaves_under_shared_ancestors(self):
+        level1 = AccountGroupFactory(level=1, parent=None)
+        level2 = AccountGroupFactory(level=2, parent=level1)
+        leaf_a = AccountGroupFactory(level=3, parent=level2)
+        leaf_b = AccountGroupFactory(level=3, parent=level2)
+        return level1, level2, leaf_a, leaf_b
+
+    def test_ancestor_shows_shared_responsible_when_all_leaves_agree(self):
+        level1, level2, leaf_a, leaf_b = self._two_leaves_under_shared_ancestors()
+        user = UserFactory()
+        GroupResponsibilityFactory(group=leaf_a, year=2024, responsible=user)
+        GroupResponsibilityFactory(group=leaf_b, year=2024, responsible=user)
+        acc_a = AccountFactory(group=leaf_a)
+        acc_b = AccountFactory(group=leaf_b)
+        rows = [_row(acc_a, col1_charges=Decimal("100")), _row(acc_b, col1_charges=Decimal("200"))]
+
+        result = build_grouped(rows, 2024)
+
+        level2_data = result[level1.code]["children"][level2.code]
+        assert level2_data["responsible"] == user
+        assert result[level1.code]["responsible"] == user
+
+    def test_ancestor_shows_no_responsible_when_leaves_disagree(self):
+        level1, level2, leaf_a, leaf_b = self._two_leaves_under_shared_ancestors()
+        GroupResponsibilityFactory(group=leaf_a, year=2024, responsible=UserFactory())
+        GroupResponsibilityFactory(group=leaf_b, year=2024, responsible=UserFactory())
+        acc_a = AccountFactory(group=leaf_a)
+        acc_b = AccountFactory(group=leaf_b)
+        rows = [_row(acc_a, col1_charges=Decimal("100")), _row(acc_b, col1_charges=Decimal("200"))]
+
+        result = build_grouped(rows, 2024)
+
+        level2_data = result[level1.code]["children"][level2.code]
+        assert level2_data["responsible"] is None
+        assert result[level1.code]["responsible"] is None
+
+    def test_ancestor_shows_none_when_no_leaf_has_a_responsible(self):
+        level1, level2, leaf = _mch1_tree()
+        acc = AccountFactory(group=leaf)
+        row = _row(acc, col1_charges=Decimal("100"))
+
+        result = build_grouped([row], 2024)
+
+        assert result[level1.code]["children"][level2.code]["responsible"] is None
+        assert result[level1.code]["responsible"] is None
+
+    def test_leaf_keeps_its_own_responsible(self):
+        level1, level2, leaf = _mch1_tree()
+        user = UserFactory()
+        GroupResponsibilityFactory(group=leaf, year=2024, responsible=user)
+        acc = AccountFactory(group=leaf)
+        row = _row(acc, col1_charges=Decimal("100"))
+
+        result = build_grouped([row], 2024)
+
+        leaf_data = result[level1.code]["children"][level2.code]["children"][leaf.code]
+        assert leaf_data["responsible"] == user
 
 
 class TestGroupNodeTemplateRendersBothDepths:

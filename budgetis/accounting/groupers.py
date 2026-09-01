@@ -73,6 +73,20 @@ def _accumulate(row: AccountRow, group: AccountGroup, *, nodes: dict, groups_by_
         current = groups_by_id[current.parent_id]
 
 
+def _resolve_display_responsible(node: dict):
+    """
+    Leaves keep their own GroupResponsibility (set in _node_for). An ancestor
+    (SuperGroup/MetaGroup) never has one of its own — it's purely a graphical
+    grouping for the report — so it shows the single responsible shared by
+    every descendant leaf function, or None when they disagree.
+    """
+    if not node["children"]:
+        return node["responsible"]
+    values = {_resolve_display_responsible(child) for child in node["children"].values()}
+    node["responsible"] = values.pop() if len(values) == 1 else None
+    return node["responsible"]
+
+
 def build_grouped(rows: list[AccountRow], year: int) -> OrderedDict:
     """
     Build a tree of AccountGroup nodes (root -> ... -> leaf -> AccountRows),
@@ -105,6 +119,9 @@ def build_grouped(rows: list[AccountRow], year: int) -> OrderedDict:
         )
         leaf_node["accounts"].append(row)
         _accumulate(row, group, nodes=nodes, groups_by_id=groups_by_id)
+
+    for root in roots.values():
+        _resolve_display_responsible(root)
 
     return _sort_tree(roots)
 
