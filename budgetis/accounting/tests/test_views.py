@@ -87,6 +87,44 @@ class TestAccountByNatureView:
         assert LOGIN_URL in response.url
 
 
+# ── HTMX partial views ──────────────────────────────────────────────────────
+# Each partial's root element id must match its explorer page's hx-target, or
+# an htmx outerHTML swap replaces it with a mismatched id - breaking every
+# swap after the first, since the original hx-target no longer exists in the
+# DOM (regression: budget/budget-by-nature partials used to render
+# id="account-list" instead of id="budget-list").
+
+
+class TestBudgetPartialView:
+    def test_login_required(self, client):
+        response = client.post(reverse("accounting:budget-partial"), {"year": 2024})
+        assert response.status_code == HTTPStatus.FOUND
+        assert LOGIN_URL in response.url
+
+    def test_root_element_id_matches_explorer_hx_target(self, client):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH1)
+
+        response = client.post(reverse("accounting:budget-partial"), {"year": 2024})
+
+        assert response.content.decode().strip().startswith('<div id="budget-list">')
+
+
+class TestBudgetByNaturePartialView:
+    def test_login_required(self, client):
+        response = client.post(reverse("accounting:budget-nature-partial"), {"year": 2024})
+        assert response.status_code == HTTPStatus.FOUND
+        assert LOGIN_URL in response.url
+
+    def test_root_element_id_matches_explorer_hx_target(self, client):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH1)
+
+        response = client.post(reverse("accounting:budget-nature-partial"), {"year": 2024})
+
+        assert response.content.decode().strip().startswith('<div id="budget-list">')
+
+
 # ── Comment views ────────────────────────────────────────────────────────────
 
 
