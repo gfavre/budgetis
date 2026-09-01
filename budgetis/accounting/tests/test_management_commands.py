@@ -6,6 +6,7 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 
 from budgetis.accounting.management.commands.import_mch2_functional_classification import DEFAULT_EXCEL_PATH
+from budgetis.accounting.models import AccountCodeMapping
 from budgetis.accounting.models import AccountGroup
 from budgetis.accounting.models import GroupResponsibility
 from budgetis.accounting.tests.factories import AccountGroupFactory
@@ -258,3 +259,100 @@ class TestImportMch2FunctionalClassification:
             level: AccountGroup.objects.filter(scheme=ChartScheme.MCH2, level=level).count() for level in (1, 2, 3, 4)
         }
         assert counts == {1: 10, 2: 69, 3: 159, 4: 180}
+
+
+def _write_mapping_excel(tmp_path, rows):
+    """`rows` are (mch1_function, mch1_nature, mch1_sub_account, mch2_function, mch2_nature, mch2_sub_account)."""
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = "Fonctionnement"
+    sheet.append(["ADMIN1", "F", "NAT2", "ADMIN1_N", "NAT1_N", "NAT2_N"])
+    for row in rows:
+        sheet.append(row)
+    path = tmp_path / "conversion.xlsx"
+    workbook.save(path)
+    return path
+
+
+def _run_mapping(excel_path, *, dry_run=False):
+    out, err = StringIO(), StringIO()
+    call_command("import_account_code_mapping", str(excel_path), dry_run=dry_run, stdout=out, stderr=err)
+    return out.getvalue(), err.getvalue()
+
+
+class TestImportAccountCodeMapping:
+    def test_raises_when_file_missing(self, tmp_path):
+        with pytest.raises(CommandError):
+            call_command("import_account_code_mapping", str(tmp_path / "missing.xlsx"))
+
+    def test_creates_mapping_from_both_sides_filled(self, tmp_path):
+        excel_path = _write_mapping_excel(tmp_path, [(100, 301, 0, 1100, 3010, 0)])
+
+        out, _ = _run_mapping(excel_path)
+
+        assert "1 created, 0 unchanged" in out
+        mapping = AccountCodeMapping.objects.get()
+        assert (mapping.mch1_function, mapping.mch1_nature, mapping.mch1_sub_account) == ("100", "301", "")
+        assert (mapping.mch2_function, mapping.mch2_nature, mapping.mch2_sub_account) == ("01100", "3010", "")
+
+    def test_zero_pads_mch2_codes_dropped_by_pandas_int_coercion(self, tmp_path):
+        # Pandas reads a numeric-looking column as int, silently dropping the
+        # leading zero that makes up the commune-specific digit (e.g. "01100").
+        excel_path = _write_mapping_excel(tmp_path, [(100, 301, 0, 1100, 3010, 1)])
+
+        _run_mapping(excel_path)
+
+        mapping = AccountCodeMapping.objects.get()
+        assert mapping.mch2_function == "01100"
+        assert mapping.mch2_sub_account == "01"
+
+    def test_preserves_a_real_mch1_sub_account(self, tmp_path):
+        excel_path = _write_mapping_excel(tmp_path, [(110, 365, 1, 59200, 3632, 0)])
+
+        _run_mapping(excel_path)
+
+        mapping = AccountCodeMapping.objects.get()
+        assert mapping.mch1_sub_account == "1"
+
+    def test_skips_row_missing_mch1_side(self, tmp_path):
+        excel_path = _write_mapping_excel(tmp_path, [(None, None, None, 1100, 3052, 0)])
+
+        _run_mapping(excel_path)
+
+        assert not AccountCodeMapping.objects.exists()
+
+    def test_skips_fully_blank_row(self, tmp_path):
+        excel_path = _write_mapping_excel(tmp_path, [(None, None, None, None, None, None)])
+
+        out, _ = _run_mapping(excel_path)
+
+        assert "0 created, 0 unchanged" in out
+
+    def test_dry_run_does_not_persist(self, tmp_path):
+        excel_path = _write_mapping_excel(tmp_path, [(100, 301, 0, 1100, 3010, 0)])
+
+        _run_mapping(excel_path, dry_run=True)
+
+        assert not AccountCodeMapping.objects.exists()
+
+    def test_rerun_is_idempotent(self, tmp_path):
+        excel_path = _write_mapping_excel(tmp_path, [(100, 301, 0, 1100, 3010, 0)])
+        _run_mapping(excel_path)
+
+        out, _ = _run_mapping(excel_path)
+
+        assert "0 created, 1 unchanged" in out
+
+    def test_split_source_produces_two_mapping_rows(self, tmp_path):
+        excel_path = _write_mapping_excel(
+            tmp_path,
+            [
+                (100, 306, 0, 1100, 3049, 0),
+                (100, 306, 0, 1100, 3099, 0),
+            ],
+        )
+
+        out, _ = _run_mapping(excel_path)
+
+        assert "2 created, 0 unchanged" in out
+        assert AccountCodeMapping.objects.filter(mch1_function="100", mch1_nature="306").count() == 2  # noqa: PLR2004

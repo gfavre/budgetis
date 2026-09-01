@@ -80,6 +80,52 @@ class GroupResponsibility(models.Model):
         return f"{self.year} - {self.group.code} - {self.responsible.trigram if self.responsible else 'Unknown'}"
 
 
+class AccountCodeMapping(TimeStampedModel):
+    """
+    Crosswalk between one historical MCH1 account code and its MCH2 equivalent,
+    sourced from the commune's own conversion table. Not 1:1: several MCH1 rows
+    can converge on the same MCH2 target (merge), and a single MCH1 row can also
+    appear under several different MCH2 targets (split) — see
+    budgetis.accounting.scheme_transition for how this is resolved into a
+    continuous history per account.
+    """
+
+    mch1_function = models.CharField(verbose_name=_("MCH1 function"))
+    mch1_nature = models.CharField(verbose_name=_("MCH1 nature"))
+    mch1_sub_account = models.CharField(verbose_name=_("MCH1 subaccount"), blank=True)
+    mch2_function = models.CharField(verbose_name=_("MCH2 function"))
+    mch2_nature = models.CharField(verbose_name=_("MCH2 nature"))
+    mch2_sub_account = models.CharField(verbose_name=_("MCH2 subaccount"), blank=True)
+
+    class Meta:
+        unique_together = (
+            "mch1_function",
+            "mch1_nature",
+            "mch1_sub_account",
+            "mch2_function",
+            "mch2_nature",
+            "mch2_sub_account",
+        )
+        ordering = ("mch2_function", "mch2_nature", "mch2_sub_account")
+        verbose_name = _("Account code mapping")
+        verbose_name_plural = _("Account code mappings")
+
+    @staticmethod
+    def _code(function: str, nature: str, sub_account: str) -> str:
+        return f"{function}.{nature}" + (f".{sub_account}" if sub_account else "")
+
+    @property
+    def mch1_code(self) -> str:
+        return self._code(self.mch1_function, self.mch1_nature, self.mch1_sub_account)
+
+    @property
+    def mch2_code(self) -> str:
+        return self._code(self.mch2_function, self.mch2_nature, self.mch2_sub_account)
+
+    def __str__(self) -> str:
+        return f"{self.mch1_code} -> {self.mch2_code}"
+
+
 class Account(TimeStampedModel):
     """
     Represents a specific account based on its full code structure.

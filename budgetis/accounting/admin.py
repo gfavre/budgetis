@@ -15,6 +15,7 @@ from .forms import AccountGroupForm
 from .forms import ReassignAccountResponsibleForm
 from .forms import ReassignGroupResponsibleForm
 from .models import Account
+from .models import AccountCodeMapping
 from .models import AccountComment
 from .models import AccountGroup
 from .models import GroupResponsibility
@@ -246,3 +247,16 @@ class GroupResponsibilityAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         # Override to prefetch related groups for performance
         return super().get_queryset(request).select_related("group", "responsible")
+
+
+@admin.register(AccountCodeMapping)
+class AccountCodeMappingAdmin(admin.ModelAdmin):
+    list_display = ("mch1_code", "mch2_code")
+    search_fields = (
+        "mch1_function",
+        "mch1_nature",
+        "mch1_sub_account",
+        "mch2_function",
+        "mch2_nature",
+        "mch2_sub_account",
+    )

@@ -4,6 +4,7 @@ import pytest
 from django.db.models import ProtectedError
 
 from budgetis.accounting.models import AccountGroup
+from budgetis.accounting.tests.factories import AccountCodeMappingFactory
 from budgetis.accounting.tests.factories import AccountCommentFactory
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
@@ -106,3 +107,28 @@ class TestAccountComment:
         comment = AccountCommentFactory()
         assert str(comment.author) in str(comment)
         assert str(comment.account) in str(comment)
+
+
+class TestAccountCodeMapping:
+    def test_mch1_code_without_sub_account(self):
+        mapping = AccountCodeMappingFactory(mch1_function="100", mch1_nature="301", mch1_sub_account="")
+        assert mapping.mch1_code == "100.301"
+
+    def test_mch1_code_with_sub_account(self):
+        mapping = AccountCodeMappingFactory(mch1_function="110", mch1_nature="365", mch1_sub_account="1")
+        assert mapping.mch1_code == "110.365.1"
+
+    def test_mch2_code(self):
+        mapping = AccountCodeMappingFactory(mch2_function="01100", mch2_nature="3010", mch2_sub_account="")
+        assert mapping.mch2_code == "01100.3010"
+
+    def test_str_shows_both_codes(self):
+        mapping = AccountCodeMappingFactory(
+            mch1_function="100",
+            mch1_nature="301",
+            mch1_sub_account="",
+            mch2_function="01100",
+            mch2_nature="3010",
+            mch2_sub_account="",
+        )
+        assert str(mapping) == "100.301 -> 01100.3010"

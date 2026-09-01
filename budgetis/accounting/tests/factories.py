@@ -4,6 +4,7 @@ import factory
 from factory.django import DjangoModelFactory
 
 from budgetis.accounting.models import Account
+from budgetis.accounting.models import AccountCodeMapping
 from budgetis.accounting.models import AccountComment
 from budgetis.accounting.models import AccountGroup
 from budgetis.accounting.models import GroupResponsibility
@@ -64,6 +65,18 @@ class AvailableYearFactory(DjangoModelFactory):
 
     class Meta:
         model = AvailableYear
+
+
+class AccountCodeMappingFactory(DjangoModelFactory):
+    mch1_function = factory.Sequence(lambda n: str(500 + n))
+    mch1_nature = "301"
+    mch1_sub_account = ""
+    mch2_function = factory.Sequence(lambda n: str(10000 + n))
+    mch2_nature = "3010"
+    mch2_sub_account = ""
+
+    class Meta:
+        model = AccountCodeMapping
 
 
 class AccountCommentFactory(DjangoModelFactory):

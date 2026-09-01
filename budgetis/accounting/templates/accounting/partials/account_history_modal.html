@@ -10,17 +10,54 @@
           aria-label="{% trans 'Close' %}"></button>
 </div>
 <div class="modal-body">
-  <canvas id="accountHistoryChart" class="chart-canvas w-100"></canvas>
+  {% if origin_labels %}
+    <div class="row">
+      <div class="col-md-3 border-end small text-muted">
+        <p class="fw-bold">{% trans "Before the switch, this account came from:" %}</p>
+        <ul class="ps-3">
+          {% for label in origin_labels %}<li>{{ label }}</li>{% endfor %}
+        </ul>
+      </div>
+      <div class="col-md-9">
+        <canvas id="accountHistoryChart" class="chart-canvas w-100"></canvas>
+      </div>
+    </div>
+  {% else %}
+    <canvas id="accountHistoryChart" class="chart-canvas w-100"></canvas>
+  {% endif %}
 </div>
 <script>
   (() => {
     const ctx = document.getElementById("accountHistoryChart");
     const commentsByYear = {{ comments_by_year|safe }};
+    const years = {{ years|safe }};
+    const transitionYear = {{ transition_year|default:"null" }};
+    const transitionIndex = transitionYear === null ? -1 : years.indexOf(transitionYear);
 
-    new Chart(ctx, {
+    const transitionMarker = {
+      id: "transitionMarker",
+      afterDraw(chartInstance) {
+        if (transitionIndex === -1) {
+          return;
+        }
+        const { ctx: canvasCtx, chartArea, scales } = chartInstance;
+        const x = scales.x.getPixelForValue(transitionIndex);
+        canvasCtx.save();
+        canvasCtx.strokeStyle = "#dc3545";
+        canvasCtx.setLineDash([6, 4]);
+        canvasCtx.beginPath();
+        canvasCtx.moveTo(x, chartArea.top);
+        canvasCtx.lineTo(x, chartArea.bottom);
+        canvasCtx.stroke();
+        canvasCtx.restore();
+      },
+    };
+
+    const chart = new Chart(ctx, {
       type: "line",
+      plugins: [transitionMarker],
       data: {
-        labels: {{ years|safe }},
+        labels: years,
         datasets: [
           {
             label: "{% trans 'Actuals' %}",

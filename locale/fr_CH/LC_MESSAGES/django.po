@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-23 11:50+0200\n"
+"POT-Creation-Date: 2026-09-01 10:39+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,181 +18,242 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.9\n"
 
-#: budgetis/accounting/admin.py:40
+#: budgetis/accounting/admin.py:55
 msgid "Code"
 msgstr "Code"
 
-#: budgetis/accounting/admin.py:44
+#: budgetis/accounting/admin.py:59
 msgid "Hide accounts in report"
 msgstr "Masquer les comptes dans le rapport"
 
-#: budgetis/accounting/admin.py:48
+#: budgetis/accounting/admin.py:63
 msgid "Display accounts in report"
 msgstr "Afficher les comptes dans le rapport"
+
+#: budgetis/accounting/admin.py:67 budgetis/accounting/admin.py:83
+#: budgetis/accounting/admin.py:216 budgetis/accounting/admin.py:232
+#, fuzzy
+#| msgid "Responsible"
+msgid "Reassign responsible"
+msgstr "Responsable"
+
+#: budgetis/accounting/admin.py:78 budgetis/accounting/admin.py:227
+#, python-format
+msgid "Updated %(count)d group(s)."
+msgstr ""
+
+#: budgetis/accounting/admin.py:195
+#, fuzzy
+#| msgid "Copy labels"
+msgid "Code or label"
+msgstr "Copier les libellés"
 
 #: budgetis/accounting/apps.py:8
 msgid "Accounting"
 msgstr "Comptabilité"
 
-#: budgetis/accounting/forms.py:66 budgetis/accounting/models.py:112
-#: budgetis/bdi_import/forms.py:15 budgetis/bdi_import/models.py:15
+#: budgetis/accounting/forms.py:34 budgetis/accounting/forms.py:66
+#: budgetis/accounting/models.py:141 budgetis/bdi_import/forms.py:15
+#: budgetis/bdi_import/models.py:15
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:21
-#: budgetis/finance/models.py:10
-#: budgetis/finance/templates/finance/sankey.html:9
+#: budgetis/finance/models.py:12
+#: budgetis/finance/templates/finance/sankey.html:12
 msgid "Year"
 msgstr "Année"
 
-#: budgetis/accounting/forms.py:68
+#: budgetis/accounting/forms.py:36
 msgid "Show only my accounts"
 msgstr "Afficher uniquement mes comptes"
 
-#: budgetis/accounting/forms.py:75
+#: budgetis/accounting/forms.py:43
 msgid "- Select year -"
 msgstr "- Sélectionnez l'année -"
 
-#: budgetis/accounting/models.py:26
-msgid "Meta Group"
-msgstr "Groupe de premier niveau"
-
-#: budgetis/accounting/models.py:27
-msgid "Meta Groups"
-msgstr "Groupes de premier niveau"
-
-#: budgetis/accounting/models.py:45
-msgid "Super Group"
-msgstr "Groupe de second niveau"
-
-#: budgetis/accounting/models.py:46
-msgid "Super Groups"
-msgstr "Groupes de second niveau"
-
-#: budgetis/accounting/models.py:65
-msgid "Account Group"
-msgstr "Groupe de compte"
-
-#: budgetis/accounting/models.py:66
-msgid "Account Groups"
-msgstr "Groupes de compte"
-
-#: budgetis/accounting/models.py:93
-#: budgetis/accounting/templates/accounting/partials/account_group_block.html:5
+#: budgetis/accounting/forms.py:50 budgetis/accounting/models.py:76
+#: budgetis/accounting/templates/accounting/partials/account_group_block.html:9
 #: budgetis/accounting/templates/accounting/partials/budget_group_block.html:9
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:7
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:80
+#: budgetis/accounting/templates/accounting/partials/group_node.html:7
+#: budgetis/accounting/templates/accounting/partials/group_node.html:64
 msgid "Responsible"
 msgstr "Responsable"
 
-#: budgetis/accounting/models.py:94
+#: budgetis/accounting/loaders.py:31
+msgid "budget"
+msgstr "budget"
+
+#: budgetis/accounting/loaders.py:33
+msgid "actuals"
+msgstr "comptes"
+
+#: budgetis/accounting/loaders.py:34
+msgid "Last import:"
+msgstr "Dernière Importation :"
+
+#: budgetis/accounting/models.py:48
+msgid "Account Group"
+msgstr "Groupe de compte"
+
+#: budgetis/accounting/models.py:49
+msgid "Account Groups"
+msgstr "Groupes de compte"
+
+#: budgetis/accounting/models.py:77
 msgid "Responsibles"
 msgstr "Responsables"
 
-#: budgetis/accounting/models.py:106
+#: budgetis/accounting/models.py:93
+msgid "MCH1 function"
+msgstr "Fonction MCH1"
+
+#: budgetis/accounting/models.py:94
+msgid "MCH1 nature"
+msgstr "Nature MCH1"
+
+#: budgetis/accounting/models.py:95
+msgid "MCH1 subaccount"
+msgstr "Sous-compte MCH1"
+
+#: budgetis/accounting/models.py:96
+msgid "MCH2 function"
+msgstr "Fonction MCH2"
+
+#: budgetis/accounting/models.py:97
+msgid "MCH2 nature"
+msgstr "Nature MCH2"
+
+#: budgetis/accounting/models.py:98
+msgid "MCH2 subaccount"
+msgstr "Sous-compte MCH2"
+
+#: budgetis/accounting/models.py:110
+msgid "Account code mapping"
+msgstr "Correspondance de compte"
+
+#: budgetis/accounting/models.py:111
+msgid "Account code mappings"
+msgstr "Correspondances de compte"
+
+#: budgetis/accounting/models.py:135
 msgid "Charges only"
 msgstr "Seulement les charges"
 
-#: budgetis/accounting/models.py:107
+#: budgetis/accounting/models.py:136
 msgid "Revenues only"
 msgstr "Seulement les produits"
 
-#: budgetis/accounting/models.py:108
+#: budgetis/accounting/models.py:137
 msgid "Both charges and revenues"
 msgstr "Charges et produits"
 
-#: budgetis/accounting/models.py:113
+#: budgetis/accounting/models.py:142
 msgid "Function"
 msgstr "Fonction"
 
-#: budgetis/accounting/models.py:114 budgetis/bdi_import/forms.py:17
+#: budgetis/accounting/models.py:143 budgetis/bdi_import/forms.py:17
 msgid "Nature"
 msgstr "Nature"
 
-#: budgetis/accounting/models.py:115
+#: budgetis/accounting/models.py:144
 msgid "Subaccount"
 msgstr "Sous-compte"
 
-#: budgetis/accounting/models.py:117
+#: budgetis/accounting/models.py:146
 msgid "Label"
 msgstr "Désignation"
 
-#: budgetis/accounting/models.py:119
+#: budgetis/accounting/models.py:148
 msgid "Group"
 msgstr "Groupe"
 
-#: budgetis/accounting/models.py:125
+#: budgetis/accounting/models.py:151 budgetis/finance/models.py:15
+msgid "Scheme"
+msgstr ""
+
+#: budgetis/accounting/models.py:157
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:37
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:39
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:41
-#: budgetis/accounting/templates/accounting/partials/account_list.html:22
-#: budgetis/accounting/templates/accounting/partials/account_list.html:24
-#: budgetis/accounting/templates/accounting/partials/account_list.html:26
-#: budgetis/accounting/templates/accounting/partials/account_table.html:14
-#: budgetis/accounting/templates/accounting/partials/account_table.html:16
-#: budgetis/accounting/templates/accounting/partials/account_table.html:18
+#: budgetis/accounting/templates/accounting/partials/account_list.html:44
+#: budgetis/accounting/templates/accounting/partials/account_list.html:46
+#: budgetis/accounting/templates/accounting/partials/account_list.html:48
+#: budgetis/accounting/templates/accounting/partials/account_table.html:13
+#: budgetis/accounting/templates/accounting/partials/account_table.html:15
+#: budgetis/accounting/templates/accounting/partials/account_table.html:17
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:37
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:39
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:41
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:39
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:41
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:43
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:110
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:112
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:114
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:35
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:37
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:39
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:42
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:44
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:46
 #: budgetis/accounting/templates/accounting/partials/budget_table.html:29
 #: budgetis/accounting/templates/accounting/partials/budget_table.html:31
 #: budgetis/accounting/templates/accounting/partials/budget_table.html:33
+#: budgetis/accounting/templates/accounting/partials/group_node.html:19
+#: budgetis/accounting/templates/accounting/partials/group_node.html:21
+#: budgetis/accounting/templates/accounting/partials/group_node.html:23
 #: budgetis/bdi_import/models.py:63 budgetis/finance/utils.py:117
 msgid "Charges"
 msgstr "Charges"
 
-#: budgetis/accounting/models.py:126
+#: budgetis/accounting/models.py:158
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:38
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:40
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:42
-#: budgetis/accounting/templates/accounting/partials/account_list.html:23
-#: budgetis/accounting/templates/accounting/partials/account_list.html:25
-#: budgetis/accounting/templates/accounting/partials/account_list.html:27
-#: budgetis/accounting/templates/accounting/partials/account_table.html:15
-#: budgetis/accounting/templates/accounting/partials/account_table.html:17
-#: budgetis/accounting/templates/accounting/partials/account_table.html:19
+#: budgetis/accounting/templates/accounting/partials/account_list.html:45
+#: budgetis/accounting/templates/accounting/partials/account_list.html:47
+#: budgetis/accounting/templates/accounting/partials/account_list.html:49
+#: budgetis/accounting/templates/accounting/partials/account_table.html:14
+#: budgetis/accounting/templates/accounting/partials/account_table.html:16
+#: budgetis/accounting/templates/accounting/partials/account_table.html:18
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:38
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:40
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:42
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:40
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:42
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:44
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:111
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:113
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:115
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:36
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:38
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:40
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:43
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:45
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:47
 #: budgetis/accounting/templates/accounting/partials/budget_table.html:30
 #: budgetis/accounting/templates/accounting/partials/budget_table.html:32
 #: budgetis/accounting/templates/accounting/partials/budget_table.html:34
+#: budgetis/accounting/templates/accounting/partials/group_node.html:20
+#: budgetis/accounting/templates/accounting/partials/group_node.html:22
+#: budgetis/accounting/templates/accounting/partials/group_node.html:24
 #: budgetis/bdi_import/models.py:64 budgetis/finance/utils.py:116
 msgid "Revenues"
 msgstr "Produits"
 
-#: budgetis/accounting/models.py:128
+#: budgetis/accounting/models.py:160
 msgid "Expected type"
 msgstr "Type attendu"
 
-#: budgetis/accounting/models.py:133
+#: budgetis/accounting/models.py:165
 msgid "Visible in report"
 msgstr "Visible dans le rapport"
 
-#: budgetis/accounting/models.py:143
+#: budgetis/accounting/models.py:175
 msgid "Account"
 msgstr "Compte"
 
-#: budgetis/accounting/models.py:144
+#: budgetis/accounting/models.py:176
 msgid "Accounts"
 msgstr "Comptes"
 
-#: budgetis/accounting/models.py:204
+#: budgetis/accounting/models.py:242
 msgid "Content"
 msgstr "Contenu"
 
-#: budgetis/accounting/models.py:208
+#: budgetis/accounting/models.py:246
 msgid "Account Comment"
 msgstr "Commentaire sur le compte"
 
-#: budgetis/accounting/models.py:209
+#: budgetis/accounting/models.py:247
 msgid "Account Comments"
 msgstr "Commentaires sur le compte"
 
@@ -261,13 +322,31 @@ msgstr "Autres prestations et subventions"
 msgid "Withdrawals from special funds and financing"
 msgstr "Prélèvements sur les fonds et financements spéciaux"
 
+#: budgetis/accounting/scheme_transition.py:15
+msgid "One to one"
+msgstr "Un à un"
+
+#: budgetis/accounting/scheme_transition.py:16
+msgid "Merge"
+msgstr "Fusion"
+
+#: budgetis/accounting/scheme_transition.py:17
+msgid "Split"
+msgstr "Éclatement"
+
+#: budgetis/accounting/scheme_transition.py:18
+#: budgetis/accounting/templates/accounting/partials/account_comment_form.html:8
+msgid "New"
+msgstr "Nouveau"
+
 #: budgetis/accounting/templates/accounting/account_by_nature.html:6
 #: budgetis/accounting/templates/accounting/account_comments_list.html:12
 #: budgetis/accounting/templates/accounting/account_explorer.html:6
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:32
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:34
-#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:23
-#: budgetis/core/templates/core/home.html:143 budgetis/templates/base.html:110
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:63
+#: budgetis/accounting/views/explore.py:77
+#: budgetis/core/templates/core/home.html:143 budgetis/templates/base.html:109
 msgid "Actuals"
 msgstr "Comptes"
 
@@ -276,26 +355,75 @@ msgid "Actuals explorer"
 msgstr "Explorateur de comptes"
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:6
+#: budgetis/accounting/templates/accounting/partials/account_table.html:38
+#: budgetis/accounting/templates/accounting/partials/account_table.html:57
+#: budgetis/accounting/templates/accounting/partials/account_table.html:74
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:72
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:87
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:104
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:120
 msgid "Comments"
 msgstr "Commentaires"
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:10
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:33
-#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:35
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:75
 #: budgetis/bdi_import/models.py:55
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
-#: budgetis/core/templates/core/home.html:169 budgetis/finance/models.py:7
-#: budgetis/finance/templates/finance/sankey.html:18
-#: budgetis/templates/base.html:117
+#: budgetis/core/templates/core/home.html:169 budgetis/finance/models.py:9
+#: budgetis/finance/templates/finance/sankey.html:21
+#: budgetis/templates/base.html:116
 msgid "Budget"
 msgstr "Budget"
 
-#: budgetis/accounting/templates/accounting/account_explorer.html:66
+#: budgetis/accounting/templates/accounting/account_explorer.html:136
 msgid "Accounts explorer"
 msgstr "Explorateur de comptes"
 
+#: budgetis/accounting/templates/accounting/account_explorer.html:151
+#: budgetis/accounting/templates/accounting/budget_explorer.html:150
+#, python-format
+msgid "Municipality of %(city)s"
+msgstr "Commune de %(city)s"
+
+#: budgetis/accounting/templates/accounting/account_explorer.html:153
+#: budgetis/accounting/templates/accounting/partials/account_list.html:37
+#: budgetis/accounting/templates/accounting/partials/account_table.html:8
+#: budgetis/accounting/templates/accounting/partials/group_node.html:14
+#, python-format
+msgid "Actuals %(year)s"
+msgstr "Comptes %(year)s"
+
+#: budgetis/accounting/templates/accounting/account_explorer.html:154
+#: budgetis/accounting/templates/accounting/budget_explorer.html:153
+msgid "Accounts by administrative function"
+msgstr "Comptes par fonction administrative"
+
+#: budgetis/accounting/templates/accounting/admin/reassign_responsible.html:9
+#, python-format
+msgid ""
+"\n"
+"        Reassign the responsible for the following %(counter)s item?\n"
+"      "
+msgid_plural ""
+"\n"
+"        Reassign the responsible for the following %(counter)s items?\n"
+"      "
+msgstr[0] ""
+msgstr[1] ""
+
+#: budgetis/accounting/templates/accounting/admin/reassign_responsible.html:23
+msgid "Confirm"
+msgstr "Confirm"
+
+#: budgetis/accounting/templates/accounting/admin/reassign_responsible.html:25
+#: budgetis/accounting/templates/accounting/partials/account_comment_confirm_delete.html:20
+msgid "Cancel"
+msgstr "Annuler"
+
 #: budgetis/accounting/templates/accounting/budget_by_nature.html:6
 #: budgetis/accounting/templates/accounting/budget_explorer.html:6
+#: budgetis/accounting/views/explore.py:84
 msgid "Budgets"
 msgstr "Budgets"
 
@@ -304,25 +432,17 @@ msgstr "Budgets"
 msgid "Budget explorer"
 msgstr "Explorateur de budgets"
 
-#: budgetis/accounting/templates/accounting/budget_explorer.html:150
-#, python-format
-msgid "Municipality of %(city)s"
-msgstr "Commune de %(city)s"
-
 #: budgetis/accounting/templates/accounting/budget_explorer.html:152
-#: budgetis/accounting/templates/accounting/partials/account_list.html:18
-#: budgetis/accounting/templates/accounting/partials/account_table.html:10
+#: budgetis/accounting/templates/accounting/partials/account_list.html:38
+#: budgetis/accounting/templates/accounting/partials/account_table.html:9
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:32
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:34
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:105
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:30
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:37
 #: budgetis/accounting/templates/accounting/partials/budget_table.html:24
+#: budgetis/accounting/templates/accounting/partials/group_node.html:15
 #, python-format
 msgid "Budget %(year)s"
 msgstr "Budget %(year)s"
-
-#: budgetis/accounting/templates/accounting/budget_explorer.html:153
-msgid "Accounts by administrative function"
-msgstr "Comptes par fonction administrative"
 
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:10
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:10
@@ -330,142 +450,126 @@ msgid "Accounts by nature"
 msgstr "Comptes par nature"
 
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:31
-#: budgetis/accounting/templates/accounting/partials/account_list.html:16
-#: budgetis/accounting/templates/accounting/partials/account_table.html:8
+#: budgetis/accounting/templates/accounting/partials/account_list.html:36
+#: budgetis/accounting/templates/accounting/partials/account_table.html:7
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:31
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:33
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:104
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:29
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:36
 #: budgetis/accounting/templates/accounting/partials/budget_table.html:23
+#: budgetis/accounting/templates/accounting/partials/group_node.html:13
 msgid "Designation"
 msgstr "Désignation"
 
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:82
+#: budgetis/accounting/templates/accounting/partials/account_list.html:77
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:82
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:143
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:75
 msgid "Revenue surplus"
 msgstr "Excédent de recettes"
 
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:97
+#: budgetis/accounting/templates/accounting/partials/account_list.html:92
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:97
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:158
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:90
 msgid "Excess expense"
 msgstr "Excédent de charges"
 
-#: budgetis/accounting/templates/accounting/partials/account_comment_confirm_delete.html:3
+#: budgetis/accounting/templates/accounting/partials/account_comment_confirm_delete.html:4
 msgid "Delete comment"
 msgstr "Supprimer le commentaire"
 
-#: budgetis/accounting/templates/accounting/partials/account_comment_confirm_delete.html:7
+#: budgetis/accounting/templates/accounting/partials/account_comment_confirm_delete.html:8
 msgid "Are you sure you want to delete this comment?"
 msgstr "Voulez-vous vraiment supprimer ce commentaire ?"
 
-#: budgetis/accounting/templates/accounting/partials/account_comment_confirm_delete.html:18
+#: budgetis/accounting/templates/accounting/partials/account_comment_confirm_delete.html:19
 msgid "Delete"
 msgstr "Supprimer"
 
-#: budgetis/accounting/templates/accounting/partials/account_comment_confirm_delete.html:19
-msgid "Cancel"
-msgstr "Annuler"
-
-#: budgetis/accounting/templates/accounting/partials/account_comment_form.html:5
+#: budgetis/accounting/templates/accounting/partials/account_comment_form.html:6
 msgid "Edit"
 msgstr "Modifier"
 
-#: budgetis/accounting/templates/accounting/partials/account_comment_form.html:7
-msgid "New"
-msgstr "Nouveau"
-
-#: budgetis/accounting/templates/accounting/partials/account_comment_form.html:9
+#: budgetis/accounting/templates/accounting/partials/account_comment_form.html:10
 msgid "comment"
 msgstr "commentaire"
 
-#: budgetis/accounting/templates/accounting/partials/account_comment_form.html:21
+#: budgetis/accounting/templates/accounting/partials/account_comment_form.html:22
 msgid "Save"
 msgstr "Enregistrer"
 
-#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:3
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:5
 #, python-format
 msgid "History %(code)s – %(lbl)s"
 msgstr "Historique %(code)s – %(lbl)s"
 
-#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:7
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:10
 msgid "Close"
 msgstr "Fermer"
 
-#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:62
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:16
+msgid "Before the switch, this account came from:"
+msgstr "Avant la bascule, ce compte provenait de :"
+
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:102
 msgid "Comments:"
 msgstr "Commentaires :"
 
-#: budgetis/accounting/templates/accounting/partials/account_list.html:17
-#: budgetis/accounting/templates/accounting/partials/account_table.html:9
-#, python-format
-msgid "Actuals %(year)s"
-msgstr "Comptes %(year)s"
+#: budgetis/accounting/templates/accounting/partials/account_list.html:15
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:15
+msgid "Operating account"
+msgstr "Compte de fonctionnement"
 
-#: budgetis/accounting/templates/accounting/partials/account_list.html:19
-#: budgetis/accounting/templates/accounting/partials/account_table.html:11
+#: budgetis/accounting/templates/accounting/partials/account_list.html:40
+#: budgetis/accounting/templates/accounting/partials/account_table.html:10
+#: budgetis/accounting/templates/accounting/partials/group_node.html:16
 #, python-format
 msgid "Actuals %(prev_y)s"
 msgstr "Comptes %(prev_y)s"
 
-#: budgetis/accounting/templates/accounting/partials/account_list.html:34
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:50
-#, python-format
-msgid "Total %(lbl)s"
-msgstr "Total %(lbl)s"
+#: budgetis/accounting/templates/accounting/partials/account_list.html:133
+#: budgetis/accounting/templates/accounting/partials/comments_modal.html:24
+msgid "Loading..."
+msgstr "Chargement..."
 
-#: budgetis/accounting/templates/accounting/partials/account_list.html:88
+#: budgetis/accounting/templates/accounting/partials/account_list.html:135
 #: budgetis/accounting/templates/accounting/partials/comments_modal.html:26
 msgid "Loading comments..."
 msgstr "Chargement des commentaires..."
 
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:33
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:35
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:106
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:31
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:38
 #: budgetis/accounting/templates/accounting/partials/budget_table.html:25
 #, python-format
 msgid "Budget %(previous_year)s"
 msgstr "Budget %(previous_year)s"
 
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:34
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:36
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:107
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:32
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:39
 #: budgetis/accounting/templates/accounting/partials/budget_table.html:26
 #, python-format
 msgid "Actuals %(actuals_year)s"
 msgstr "Comptes %(actuals_year)s"
 
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:83
-msgid "Operating account"
-msgstr "Compte de fonctionnement"
+#: budgetis/accounting/templates/accounting/partials/budget_group_node.html:46
+#: budgetis/accounting/templates/accounting/partials/group_node.html:30
+#, python-format
+msgid "Total %(lbl)s"
+msgstr "Total %(lbl)s"
 
 #: budgetis/accounting/templates/accounting/partials/comments_modal.html:15
 msgid "No comments."
 msgstr "Aucun commentaire."
 
-#: budgetis/accounting/templates/accounting/partials/comments_modal.html:24
-msgid "Loading..."
-msgstr "Chargement..."
-
-#: budgetis/accounting/views/explore.py:160
+#: budgetis/accounting/views/explore.py:136
 msgid "Budget by nature"
 msgstr "Budgets par nature"
 
-#: budgetis/accounting/views/explore.py:199
+#: budgetis/accounting/views/explore.py:176
 msgid "Actuals by nature"
 msgstr "Comptes par nature"
-
-#: budgetis/accounting/views/mixins.py:295
-msgid "budget"
-msgstr "budget"
-
-#: budgetis/accounting/views/mixins.py:298
-msgid "actuals"
-msgstr "comptes"
-
-#: budgetis/accounting/views/mixins.py:300
-msgid "Last import:"
-msgstr "Dernière Importation :"
 
 #: budgetis/bdi_import/admin.py:17
 msgid "Relaunch import"
@@ -677,7 +781,7 @@ msgid "Import Settings"
 msgstr "Paramètres d'importation"
 
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:25
-#: budgetis/finance/models.py:11
+#: budgetis/finance/models.py:13
 msgid "Type"
 msgstr "Type"
 
@@ -720,6 +824,14 @@ msgid "Column mapping saved. Import will now be launched."
 msgstr ""
 "Le mappage des colonnes est sauvegardé. L'importation va maintenant être "
 "lancée."
+
+#: budgetis/common/models.py:20
+msgid "MCH1"
+msgstr ""
+
+#: budgetis/common/models.py:21
+msgid "MCH2"
+msgstr ""
 
 #: budgetis/core/apps.py:8
 msgid "Core"
@@ -796,7 +908,7 @@ msgstr "Analyses & rapports"
 msgid "Cross-cutting views"
 msgstr "Vues transversales"
 
-#: budgetis/core/templates/core/home.html:204 budgetis/templates/base.html:124
+#: budgetis/core/templates/core/home.html:204 budgetis/templates/base.html:123
 msgid "Reporting"
 msgstr "Rapports"
 
@@ -806,147 +918,155 @@ msgstr "Sankey du ménage communal · exports"
 
 #: budgetis/core/templates/core/home_public.html:64
 msgid "Welcome to the financial management platform of the commune."
-msgstr "Bienvenue sur la plateforme d'exploration des comptes et budgets de la commune."
+msgstr ""
+"Bienvenue sur la plateforme d'exploration des comptes et budgets de la "
+"commune."
 
 #: budgetis/core/templates/core/home_public.html:71
 #: budgetis/templates/allauth/layouts/entrance.html:13
-#: budgetis/templates/base.html:161
+#: budgetis/templates/base.html:183
 msgid "Sign In"
 msgstr "S'identifier"
 
-#: budgetis/finance/builders.py:113
+#: budgetis/finance/builders.py:120
 msgid "Municipal household"
 msgstr "Ménage communal"
 
-#: budgetis/finance/builders.py:114
+#: budgetis/finance/builders.py:121
 msgid "Canton"
 msgstr "Canton"
 
-#: budgetis/finance/builders.py:115
+#: budgetis/finance/builders.py:122
 msgid "Intercommunalities"
 msgstr "Intercommunalités"
 
-#: budgetis/finance/builders.py:116
+#: budgetis/finance/builders.py:123
 msgid "Commune"
 msgstr "Commune"
 
-#: budgetis/finance/builders.py:118
+#: budgetis/finance/builders.py:125
 msgid "Social security"
 msgstr "Sécurité sociale"
 
-#: budgetis/finance/builders.py:119
+#: budgetis/finance/builders.py:126
 msgid "Equalization"
 msgstr "Péréquation"
 
-#: budgetis/finance/builders.py:120
+#: budgetis/finance/builders.py:127
 msgid "Police"
 msgstr "Police"
 
-#: budgetis/finance/builders.py:124
+#: budgetis/finance/builders.py:131
 msgid "Regional transports"
 msgstr "Transports régionaux"
 
-#: budgetis/finance/builders.py:125
+#: budgetis/finance/builders.py:133
 msgid "Associations"
 msgstr "Associations"
 
-#: budgetis/finance/builders.py:126
+#: budgetis/finance/builders.py:134
 msgid "Other intercommunalities"
 msgstr "Autres intercommunalités"
 
-#: budgetis/finance/builders.py:128
+#: budgetis/finance/builders.py:136
 msgid "Wages"
 msgstr "Salaires"
 
-#: budgetis/finance/builders.py:129
+#: budgetis/finance/builders.py:137
 msgid "Goods and services"
 msgstr "Biens et services"
 
-#: budgetis/finance/builders.py:130
+#: budgetis/finance/builders.py:138
 msgid "Interests"
 msgstr "Intérêts"
 
-#: budgetis/finance/builders.py:131
+#: budgetis/finance/builders.py:139
 msgid "Aids and subsidies"
 msgstr "Aides et subventions"
 
-#: budgetis/finance/builders.py:133
+#: budgetis/finance/builders.py:140
+#, fuzzy
+#| msgid "Internal allocations"
+msgid "Depreciation & allocations"
+msgstr "Imputations internes"
+
+#: budgetis/finance/builders.py:142
 msgid "Taxes (general)"
 msgstr "Impôts"
 
-#: budgetis/finance/builders.py:134
+#: budgetis/finance/builders.py:143
 msgid "Random taxes"
 msgstr "Impôts aléatoires"
 
-#: budgetis/finance/builders.py:135
+#: budgetis/finance/builders.py:144
 msgid "Levies (usage-based)"
 msgstr "Taxes"
 
-#: budgetis/finance/builders.py:136
+#: budgetis/finance/builders.py:145
 msgid "Rentals"
 msgstr "Locations"
 
-#: budgetis/finance/builders.py:137
+#: budgetis/finance/builders.py:146
 msgid "Other revenues"
 msgstr "Autres recettes"
 
-#: budgetis/finance/builders.py:139
+#: budgetis/finance/builders.py:147
+msgid "Fund withdrawals"
+msgstr ""
+
+#: budgetis/finance/builders.py:149
 msgid "Cash result"
 msgstr "Résultat de trésorerie"
 
-#: budgetis/finance/builders.py:140
+#: budgetis/finance/builders.py:150
 msgid "Result"
 msgstr "Résultat"
 
-#: budgetis/finance/builders.py:141
+#: budgetis/finance/builders.py:151
 msgid "Amortizations"
 msgstr "Amortissements"
 
-#: budgetis/finance/builders.py:142
+#: budgetis/finance/builders.py:152
 msgid "Fund allocations"
 msgstr "Affectation des fonds"
 
-#: budgetis/finance/builders.py:143
+#: budgetis/finance/builders.py:153
 msgid "Profit"
 msgstr "Bénéfice"
 
-#: budgetis/finance/models.py:8
+#: budgetis/finance/models.py:10
 msgid "Comptes"
 msgstr "Comptes"
 
-#: budgetis/finance/models.py:12
+#: budgetis/finance/models.py:17
 msgid "Created at"
 msgstr "Créé à"
 
-#: budgetis/finance/models.py:15
+#: budgetis/finance/models.py:20
 msgid "Available year"
 msgstr "Année disponible"
 
-#: budgetis/finance/models.py:16
+#: budgetis/finance/models.py:21
 msgid "Available years"
 msgstr "Années disponibles"
 
-#: budgetis/finance/templates/finance/sankey.html:20
-msgid "Reload"
-msgstr "Rafraichir"
+#: budgetis/finance/templates/finance/sankey.html:28
+msgid "Données non disponibles."
+msgstr ""
 
-#: budgetis/finance/templates/finance/sankey.html:71
-msgid "Revenus → Budget"
-msgstr "Revenus → Allocations"
-
-#: budgetis/templates/base.html:131
+#: budgetis/templates/base.html:130
 msgid "Import from BDI"
 msgstr "Importation de BDI"
 
-#: budgetis/templates/base.html:142
+#: budgetis/templates/base.html:164
 msgid "Admin"
 msgstr "Admin"
 
-#: budgetis/templates/base.html:149
+#: budgetis/templates/base.html:171
 msgid "My Profile"
 msgstr "Mon Profil"
 
-#: budgetis/templates/base.html:155
+#: budgetis/templates/base.html:177
 msgid "Sign Out"
 msgstr "Déconnexion"
 
@@ -1005,6 +1125,24 @@ msgstr "Cette adresse e-mail est déjà utilisée."
 #: budgetis/users/tests/test_views.py:73 budgetis/users/views.py:25
 msgid "Information successfully updated"
 msgstr "Informations mises à jour avec succès"
+
+#~ msgid "Meta Group"
+#~ msgstr "Groupe de premier niveau"
+
+#~ msgid "Meta Groups"
+#~ msgstr "Groupes de premier niveau"
+
+#~ msgid "Super Group"
+#~ msgstr "Groupe de second niveau"
+
+#~ msgid "Super Groups"
+#~ msgstr "Groupes de second niveau"
+
+#~ msgid "Reload"
+#~ msgstr "Rafraichir"
+
+#~ msgid "Revenus → Budget"
+#~ msgstr "Revenus → Allocations"
 
 #~ msgid "Impôts"
 #~ msgstr "Impôts"
@@ -1103,9 +1241,6 @@ msgstr "Informations mises à jour avec succès"
 #~ msgstr ""
 #~ "Veuillez confirmer que <a href=\"mailto:%(email)s\">%(email)s</a> est un "
 #~ "e-mail adresse de l'utilisateur %(user_display)s."
-
-#~ msgid "Confirm"
-#~ msgstr "Confirm"
 
 #, python-format
 #~ msgid ""
