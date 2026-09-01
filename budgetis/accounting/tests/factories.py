@@ -4,36 +4,30 @@ import factory
 from factory.django import DjangoModelFactory
 
 from budgetis.accounting.models import Account
+from budgetis.accounting.models import AccountCodeMapping
 from budgetis.accounting.models import AccountComment
 from budgetis.accounting.models import AccountGroup
 from budgetis.accounting.models import GroupResponsibility
-from budgetis.accounting.models import MetaGroup
-from budgetis.accounting.models import SuperGroup
+from budgetis.common.models import ChartScheme
 from budgetis.finance.models import AvailableYear
 from budgetis.users.tests.factories import UserFactory
 
 
-class MetaGroupFactory(DjangoModelFactory):
-    code = factory.Sequence(lambda n: n + 1)
-    label = factory.Faker("word")
-
-    class Meta:
-        model = MetaGroup
-
-
-class SuperGroupFactory(DjangoModelFactory):
-    code = factory.Sequence(lambda n: n + 10)
-    label = factory.Faker("word")
-    metagroup = factory.SubFactory(MetaGroupFactory)
-
-    class Meta:
-        model = SuperGroup
-
-
 class AccountGroupFactory(DjangoModelFactory):
+    """
+    Defaults to a standalone MCH1 leaf group (level 3, no parent) — the shape
+    most tests need. Build a full tree explicitly when a test cares about the
+    hierarchy, e.g.:
+        root = AccountGroupFactory(level=1, parent=None)
+        mid = AccountGroupFactory(level=2, parent=root)
+        leaf = AccountGroupFactory(level=3, parent=mid)
+    """
+
     code = factory.Sequence(lambda n: str(500 + n))
     label = factory.Faker("word")
-    supergroup = factory.SubFactory(SuperGroupFactory)
+    scheme = ChartScheme.MCH1
+    level = 3
+    parent = None
 
     class Meta:
         model = AccountGroup
@@ -71,6 +65,18 @@ class AvailableYearFactory(DjangoModelFactory):
 
     class Meta:
         model = AvailableYear
+
+
+class AccountCodeMappingFactory(DjangoModelFactory):
+    mch1_function = factory.Sequence(lambda n: str(500 + n))
+    mch1_nature = "301"
+    mch1_sub_account = ""
+    mch2_function = factory.Sequence(lambda n: str(10000 + n))
+    mch2_nature = "3010"
+    mch2_sub_account = ""
+
+    class Meta:
+        model = AccountCodeMapping
 
 
 class AccountCommentFactory(DjangoModelFactory):

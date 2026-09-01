@@ -8,8 +8,6 @@ from budgetis.finance.models import AvailableYear
 from .models import Account
 from .models import AccountComment
 from .models import AccountGroup
-from .models import MetaGroup
-from .models import SuperGroup
 
 
 class AccountGroupForm(forms.ModelForm):
@@ -21,46 +19,15 @@ class AccountGroupForm(forms.ModelForm):
 
     class Meta:
         model = AccountGroup
-        fields = ("id", "code", "label", "accounts")
+        fields = ("id", "code", "label", "scheme", "level", "parent", "accounts")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
             self.fields["accounts"].initial = self.instance.accounts.all()
-
-
-class SuperGroupForm(forms.ModelForm):
-    groups = forms.ModelMultipleChoiceField(
-        queryset=AccountGroup.objects.order_by("code"),
-        required=False,
-        widget=admin_widgets.FilteredSelectMultiple("AccountGroup", is_stacked=False),
-    )
-
-    class Meta:
-        model = SuperGroup
-        fields = ("id", "code", "label", "groups")
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.fields["groups"].initial = self.instance.groups.all()
-
-
-class MetaGroupForm(forms.ModelForm):
-    supergroups = forms.ModelMultipleChoiceField(
-        queryset=SuperGroup.objects.order_by("code"),
-        required=False,
-        widget=admin_widgets.FilteredSelectMultiple("SuperGroup", is_stacked=False),
-    )
-
-    class Meta:
-        model = MetaGroup
-        fields = ("id", "code", "label", "supergroups")
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.fields["supergroups"].initial = self.instance.supergroups.all()
+            self.fields["parent"].queryset = AccountGroup.objects.exclude(pk=self.instance.pk).order_by(
+                "scheme", "level", "code"
+            )
 
 
 class AccountFilterForm(forms.Form):

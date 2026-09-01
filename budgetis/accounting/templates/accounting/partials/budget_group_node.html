@@ -1,0 +1,102 @@
+{% load money i18n %}
+
+{% if node.children %}
+  {% if node.level == 1 %}
+    <h2>{{ node.code }} {{ node.label }}</h2>
+    <table class="table table-bordered align-middle mb-5 mt-5">
+      <colgroup span="2" class="info">
+        <col span="1" class="col-num" />
+        <col span="1" class="col-label" />
+      </colgroup>
+      <colgroup span="2" class="budget-current">
+        <col span="1" class="col-charges" />
+        <col span="1" class="col-revenues" />
+      </colgroup>
+      {% if show_col2 %}
+        <colgroup span="2" class="budget-prev">
+          <col span="1" class="col-charges" />
+          <col span="1" class="col-revenues" />
+        </colgroup>
+      {% endif %}
+      {% if show_col3 %}
+        <colgroup span="2" class="accounts-prev">
+          <col span="1" class="col-charges" />
+          <col span="1" class="col-revenues" />
+        </colgroup>
+      {% endif %}
+      <thead>
+        <tr class="table-light text-center">
+          <th rowspan="2" class="text-start">N°</th>
+          <th rowspan="2" class="text-start">{% trans "Designation" %}</th>
+          <th colspan="2" class="text-center">{% blocktrans %}Budget {{ year }}{% endblocktrans %}</th>
+          {% if show_col2 %}
+            <th colspan="2" class="text-center">{% blocktrans %}Budget {{ previous_year }}{% endblocktrans %}</th>
+          {% endif %}
+          {% if show_col3 %}
+            <th colspan="2" class="text-center">{% blocktrans %}Actuals {{ actuals_year }}{% endblocktrans %}</th>
+          {% endif %}
+        </tr>
+        <tr class="table-light text-center">
+          <th>{% trans "Charges" %}</th>
+          <th>{% trans "Revenues" %}</th>
+          {% if show_col2 %}
+            <th>{% trans "Charges" %}</th>
+            <th>{% trans "Revenues" %}</th>
+          {% endif %}
+          {% if show_col3 %}
+            <th>{% trans "Charges" %}</th>
+            <th>{% trans "Revenues" %}</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <thead class="table-primary fw-bold">
+        <tr>
+          <td>{{ node.code }}</td>
+          <td>{% blocktrans with lbl=node.label %}Total {{ lbl }}{% endblocktrans %}</td>
+          <td class="text-end">{{ node.col1_charges|format_money }}</td>
+          <td class="text-end">{{ node.col1_revenues|format_money }}</td>
+          {% if show_col2 %}
+            <td class="text-end">{{ node.col2_charges|format_money }}</td>
+            <td class="text-end">{{ node.col2_revenues|format_money }}</td>
+          {% endif %}
+          {% if show_col3 %}
+            <td class="text-end">{{ node.col3_charges|format_money }}</td>
+            <td class="text-end">{{ node.col3_revenues|format_money }}</td>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for child_code, child in node.children.items %}
+          <tr>
+            <td class="text-nowrap">{{ child_code }}</td>
+            <td>{{ child.label }}</td>
+            <td class="text-end">{{ child.col1_charges|format_money }}</td>
+            <td class="text-end">{{ child.col1_revenues|format_money }}</td>
+            {% if show_col2 %}
+              <td class="text-end">{{ child.col2_charges|format_money }}</td>
+              <td class="text-end">{{ child.col2_revenues|format_money }}</td>
+            {% endif %}
+            {% if show_col3 %}
+              <td class="text-end">{{ child.col3_charges|format_money }}</td>
+              <td class="text-end">{{ child.col3_revenues|format_money }}</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% for child_code, child in node.children.items %}
+      {% include "accounting/partials/budget_group_node.html" with node=child %}
+    {% endfor %}
+  {% else %}
+    {% if node.level == 2 %}
+      <h3>{{ node.code }} {{ node.label }}</h3>
+    {% else %}
+      <h4>{{ node.code }} {{ node.label }}</h4>
+    {% endif %}
+    {% for child_code, child in node.children.items %}
+      {% include "accounting/partials/budget_group_node.html" with node=child %}
+    {% endfor %}
+  {% endif %}
+{% else %}
+  {% include "accounting/partials/budget_group_block.html" with code=node.code label=node.label data=node %}
+{% endif %}

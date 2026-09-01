@@ -8,6 +8,7 @@ from django.db import transaction
 
 from budgetis.accounting.models import AccountGroup
 from budgetis.accounting.models import GroupResponsibility
+from budgetis.common.models import ChartScheme
 
 
 COLUMN_CODE = "No"
@@ -65,7 +66,10 @@ class Command(BaseCommand):
         return function_trigrams
 
     def _apply(self, function_trigrams: dict[str, str], year: int, *, dry_run: bool) -> None:
-        groups = {g.code: g for g in AccountGroup.objects.filter(code__in=function_trigrams)}
+        # This command reads MCH1-style codes (a single dot-segment matching the
+        # group code exactly) — restrict to MCH1 so it can't collide with MCH2
+        # groups sharing the same short code (e.g. a 1-digit N1 code).
+        groups = {g.code: g for g in AccountGroup.objects.filter(code__in=function_trigrams, scheme=ChartScheme.MCH1)}
         users = {u.trigram: u for u in get_user_model().objects.filter(trigram__in=set(function_trigrams.values()))}
         existing = {
             r.group_id: r for r in GroupResponsibility.objects.filter(year=year, group__code__in=function_trigrams)

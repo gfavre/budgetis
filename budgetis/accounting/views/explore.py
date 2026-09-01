@@ -14,6 +14,7 @@ from budgetis.accounting.loaders import ActualsLoader
 from budgetis.accounting.loaders import BudgetLoader
 from budgetis.accounting.loaders import get_last_import_info
 from budgetis.accounting.models import Account
+from budgetis.accounting.scheme_transition import comparison_flags
 
 from ..forms import AccountFilterForm
 
@@ -65,6 +66,7 @@ class BaseExplorerView(LoginRequiredMixin, TemplateView):
         if year:
             context.update(self._build(year, self.request.user, only_responsible=bool(only)))
             context["year"] = year
+            context.update(comparison_flags(year, is_budget=self.is_budget_view))
             context.update(self._extra_context(year))
         else:
             context["grouped"] = OrderedDict()
@@ -105,6 +107,7 @@ class AccountPartialView(LoginRequiredMixin, FormView):
                 global_summary=build_summary(grouped),
                 year=year,
                 last_import_text=get_last_import_info(year),
+                **comparison_flags(year, is_budget=False),
             )
         )
 
@@ -127,6 +130,7 @@ class BudgetPartialView(LoginRequiredMixin, FormView):
                 previous_year=year - 1,
                 actuals_year=year - 2,
                 last_import_text=get_last_import_info(year),
+                **comparison_flags(year, is_budget=True),
             )
         )
 
@@ -167,6 +171,7 @@ class BudgetByNaturePartialView(LoginRequiredMixin, FormView):
                 previous_year=year - 1,
                 actuals_year=year - 2,
                 last_import_text=get_last_import_info(year),
+                **comparison_flags(year, is_budget=True),
             )
         )
 
@@ -206,5 +211,6 @@ class AccountByNaturePartialView(LoginRequiredMixin, FormView):
                 year=year,
                 prev_year=year - 1,
                 last_import_text=get_last_import_info(year),
+                **comparison_flags(year, is_budget=False),
             )
         )
