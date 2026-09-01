@@ -3,9 +3,6 @@
 {% if node.children %}
   {% if node.level == 1 %}
     <h2>{{ node.code }} {{ node.label }}</h2>
-    {% if node.responsible %}
-      <p class="text-muted small mb-2">{% trans "Responsible" %}: {{ node.responsible.trigram }}</p>
-    {% endif %}
     <table class="table table-bordered align-middle mb-5 mt-3">
       <thead class="table-light text-center">
         <tr>
@@ -59,9 +56,6 @@
       <h3>{{ node.code }} {{ node.label }}</h3>
     {% else %}
       <h4>{{ node.code }} {{ node.label }}</h4>
-    {% endif %}
-    {% if node.responsible %}
-      <p class="text-muted small mb-2">{% trans "Responsible" %}: {{ node.responsible.trigram }}</p>
     {% endif %}
     {% for child_code, child in node.children.items %}
       {% include "accounting/partials/group_node.html" with node=child %}
