@@ -42,15 +42,19 @@ class BaseLoader:
             return []
         return list(GroupResponsibility.objects.filter(year=year, responsible=user).values_list("group_id", flat=True))
 
-    def _get_accounts_queryset(self, year: int, *, is_budget: bool, group_ids: list[int] | None = None):
+    def _get_accounts_queryset(
+        self, year: int, *, is_budget: bool, only_responsible: bool = False, group_ids: list[int] | None = None
+    ):
         qs = (
             Account.objects.filter(year=year, is_budget=is_budget, group__isnull=False, visible_in_report=True)
             .select_related("group__parent__parent__parent")
             .prefetch_related("comments")
             .annotate(comment_count=Count("comments"))
         )
-        if group_ids:
-            qs = qs.filter(group__in=group_ids)
+        if only_responsible:
+            # An empty group_ids here means "responsible for nothing this year" and
+            # must yield zero accounts - not silently fall through to "no filter".
+            qs = qs.filter(group__in=group_ids or [])
         return qs
 
 
@@ -63,10 +67,12 @@ class ActualsLoader(BaseLoader):
 
     def load(self, year: int, user, *, only_responsible: bool) -> list[AccountRow]:
         group_ids = self._get_group_ids(user, year, only_responsible=only_responsible)
-        accounts = list(self._get_accounts_queryset(year, is_budget=False, group_ids=group_ids or None))
+        accounts = list(
+            self._get_accounts_queryset(year, is_budget=False, only_responsible=only_responsible, group_ids=group_ids)
+        )
 
         if not accounts:
-            return self._budget_fallback(year, group_ids)
+            return self._budget_fallback(year, only_responsible=only_responsible, group_ids=group_ids)
 
         self._attach_budget(year, accounts)
         self._ensure_budget_defaults(accounts)
@@ -85,13 +91,14 @@ class ActualsLoader(BaseLoader):
             for acc in accounts
         ]
 
-    def _budget_fallback(self, year: int, group_ids: list[int]) -> list[AccountRow]:
+    def _budget_fallback(self, year: int, *, only_responsible: bool, group_ids: list[int]) -> list[AccountRow]:
         qs = (
             Account.objects.filter(year=year, is_budget=True, group__isnull=False)
             .select_related("group__parent__parent__parent")
+            .prefetch_related("comments")
             .annotate(comment_count=Count("comments"))
         )
-        if group_ids:
+        if only_responsible:
             qs = qs.filter(group__in=group_ids)
 
         rows = []
@@ -160,7 +167,9 @@ class BudgetLoader(BaseLoader):
 
     def load(self, year: int, user, *, only_responsible: bool) -> list[AccountRow]:
         group_ids = self._get_group_ids(user, year, only_responsible=only_responsible)
-        current = list(self._get_accounts_queryset(year, is_budget=True, group_ids=group_ids or None))
+        current = list(
+            self._get_accounts_queryset(year, is_budget=True, only_responsible=only_responsible, group_ids=group_ids)
+        )
         prev = list(self._get_accounts_queryset(year - 1, is_budget=True))
         actuals = list(self._get_accounts_queryset(year - 2, is_budget=False))
 
