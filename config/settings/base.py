@@ -213,6 +213,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "budgetis.users.context_processors.allauth_settings",
                 "budgetis.core.context_processors.site_config",
+                "budgetis.core.context_processors.app_version",
             ],
         },
     },

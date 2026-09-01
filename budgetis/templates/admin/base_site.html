@@ -1,6 +1,6 @@
 {% extends "admin/base.html" %}
 
-{% load static %}
+{% load static i18n %}
 
 {% block extrastyle %}
   {{ block.super }}
@@ -13,5 +13,15 @@
     textarea {
       font-family: 'Roboto', sans-serif;
     }
+
+    #budgetis-version {
+      padding: 8px 20px;
+      color: var(--body-quiet-color);
+      font-size: 0.75rem;
+    }
   </style>
 {% endblock extrastyle %}
+{% block footer %}
+  {{ block.super }}
+  <div id="budgetis-version">{% blocktrans with version=app_version %}Budgetis v{{ version }}{% endblocktrans %}</div>
+{% endblock footer %}
