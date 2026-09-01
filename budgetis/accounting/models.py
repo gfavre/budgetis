@@ -213,7 +213,14 @@ class Account(TimeStampedModel):
                 else:
                     # MCH1 function code matches its group code exactly.
                     group_code = self.function
-                self.group = AccountGroup.objects.get(code=group_code, scheme=self.scheme)
+                # A group's code is only unique within its own level (see
+                # AccountGroup.Meta.unique_together) - without pinning the
+                # deepest level, a code that happens to collide with one at
+                # another level would raise MultipleObjectsReturned instead.
+                deepest_level = AccountGroup.objects.filter(scheme=self.scheme).aggregate(models.Max("level"))[
+                    "level__max"
+                ]
+                self.group = AccountGroup.objects.get(code=group_code, scheme=self.scheme, level=deepest_level)
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:

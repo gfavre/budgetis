@@ -226,6 +226,7 @@ class TestAccountHistoryModal:
             function="100",
             nature="301",
             sub_account="",
+            label="Salaire des autorités et commissions - scrt.",
             is_budget=False,
             charges=Decimal("500"),
         )
@@ -243,7 +244,54 @@ class TestAccountHistoryModal:
 
         assert response.context["comptes"] == "[500.0, 700.0]"
         assert response.context["transition_year"] == TRANSITION_YEAR
-        assert response.context["origin_labels"] == []
+        assert response.context["split_origins"] == []
+        assert response.context["pre_mch2_origins"] == [
+            {
+                "function": "100",
+                "nature": "301",
+                "sub_account": "",
+                "code": "100.301",
+                "label": "Salaire des autorités et commissions - scrt.",
+            }
+        ]
+
+    def test_actuals_gap_when_not_yet_recorded_while_budget_continues(self, client):
+        # Actuals lag behind budget: a year with a budget row but no actuals
+        # row yet must show a gap on the "comptes" line, not a false zero,
+        # while the budget line keeps going.
+        client.force_login(UserFactory())
+        _set_up_transition_years()
+        AccountCodeMappingFactory(
+            mch1_function="100",
+            mch1_nature="301",
+            mch1_sub_account="",
+            mch2_function="01100",
+            mch2_nature="3010",
+            mch2_sub_account="",
+        )
+        AccountFactory(
+            scheme=ChartScheme.MCH1,
+            year=PRE_TRANSITION_YEAR,
+            function="100",
+            nature="301",
+            sub_account="",
+            is_budget=False,
+            charges=Decimal("500"),
+        )
+        account = AccountFactory(
+            scheme=ChartScheme.MCH2,
+            year=TRANSITION_YEAR,
+            function="01100",
+            nature="3010",
+            sub_account="",
+            is_budget=True,
+            charges=Decimal("700"),
+        )
+
+        response = client.get(_history_url(account))
+
+        assert response.context["comptes"] == "[500.0, null]"
+        assert response.context["budgets"] == "[0.0, 700.0]"
 
     def test_merge_sums_origins_before_the_transition(self, client):
         client.force_login(UserFactory())
@@ -295,6 +343,9 @@ class TestAccountHistoryModal:
         response = client.get(_history_url(account))
 
         assert response.context["comptes"] == "[700.0, 900.0]"
+        assert response.context["split_origins"] == []
+        codes = sorted(entry["code"] for entry in response.context["pre_mch2_origins"])
+        assert codes == ["110.318", "220.318"]
 
     def test_split_has_no_pre_transition_data_and_lists_origins(self, client):
         client.force_login(UserFactory())
@@ -334,11 +385,26 @@ class TestAccountHistoryModal:
             is_budget=False,
             charges=Decimal("120"),
         )
+        AccountFactory(
+            scheme=ChartScheme.MCH2,
+            year=TRANSITION_YEAR,
+            function="01100",
+            nature="3099",
+            sub_account="",
+            label="Autres charges du personnel",
+            is_budget=False,
+            charges=Decimal("0"),
+        )
 
         response = client.get(_history_url(account))
 
         assert response.context["comptes"] == "[null, 120.0]"
-        assert response.context["origin_labels"] == ["100.306 - Conseil Communal - Frais"]
+        assert response.context["pre_mch2_origins"] == []
+        split_origins = response.context["split_origins"]
+        assert len(split_origins) == 1
+        assert split_origins[0]["code"] == "100.306"
+        assert split_origins[0]["label"] == "Conseil Communal - Frais"
+        assert split_origins[0]["other_targets"] == [{"code": "01100.3099", "label": "Autres charges du personnel"}]
 
     def test_new_account_has_no_origins_and_no_pre_transition_data(self, client):
         client.force_login(UserFactory())
@@ -356,4 +422,5 @@ class TestAccountHistoryModal:
         response = client.get(_history_url(account))
 
         assert response.context["comptes"] == "[0.0, 50.0]"
-        assert response.context["origin_labels"] == []
+        assert response.context["pre_mch2_origins"] == []
+        assert response.context["split_origins"] == []

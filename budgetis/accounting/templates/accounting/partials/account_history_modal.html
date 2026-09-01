@@ -10,20 +10,51 @@
           aria-label="{% trans 'Close' %}"></button>
 </div>
 <div class="modal-body">
-  {% if origin_labels %}
+  {% if pre_mch2_origins %}
+    <p class="text-muted small mb-2">
+      {% blocktrans with year=transition_year %}Before {{ year }}:{% endblocktrans %}
+      {% for entry in pre_mch2_origins %}
+        {{ entry.code }}
+        {% if entry.label %}- {{ entry.label }}{% endif %}
+        {% if not forloop.last %},{% endif %}
+      {% endfor %}
+    </p>
+  {% endif %}
+  {% if split_origins %}
     <div class="row">
-      <div class="col-md-3 border-end small text-muted">
-        <p class="fw-bold">{% trans "Before the switch, this account came from:" %}</p>
-        <ul class="ps-3">
-          {% for label in origin_labels %}<li>{{ label }}</li>{% endfor %}
-        </ul>
+      <div class="col-md-4 border-end small">
+        <p class="fw-bold text-danger mb-1">{% trans "History unavailable before the switch" %}</p>
+        <p class="text-muted">
+          {% trans "This account's MCH1 predecessor was also split across other MCH2 accounts, so its historical amount can't be divided automatically between them." %}
+        </p>
+        {% for entry in split_origins %}
+          <p class="mb-2">
+            <strong>{{ entry.code }}</strong>
+            {% if entry.label %}- {{ entry.label }}{% endif %}
+            {% if entry.other_targets %}
+              <br />
+              <span class="text-muted">
+                {% trans "also went to:" %}
+                {% for target in entry.other_targets %}
+                  {{ target.code }}
+                  {% if target.label %}- {{ target.label }}{% endif %}
+                  {% if not forloop.last %},{% endif %}
+                {% endfor %}
+              </span>
+            {% endif %}
+          </p>
+        {% endfor %}
       </div>
-      <div class="col-md-9">
-        <canvas id="accountHistoryChart" class="chart-canvas w-100"></canvas>
+      <div class="col-md-8">
+        <div class="chart-canvas-wrapper">
+          <canvas id="accountHistoryChart" class="chart-canvas w-100"></canvas>
+        </div>
       </div>
     </div>
   {% else %}
-    <canvas id="accountHistoryChart" class="chart-canvas w-100"></canvas>
+    <div class="chart-canvas-wrapper">
+      <canvas id="accountHistoryChart" class="chart-canvas w-100"></canvas>
+    </div>
   {% endif %}
 </div>
 <script>
@@ -41,7 +72,12 @@
           return;
         }
         const { ctx: canvasCtx, chartArea, scales } = chartInstance;
-        const x = scales.x.getPixelForValue(transitionIndex);
+        // Sit between the last MCH1 point and the first MCH2 point - the switch
+        // happened between them, not on either one.
+        const x =
+          transitionIndex > 0
+            ? (scales.x.getPixelForValue(transitionIndex - 1) + scales.x.getPixelForValue(transitionIndex)) / 2
+            : scales.x.getPixelForValue(transitionIndex);
         canvasCtx.save();
         canvasCtx.strokeStyle = "#dc3545";
         canvasCtx.setLineDash([6, 4]);
@@ -49,13 +85,62 @@
         canvasCtx.moveTo(x, chartArea.top);
         canvasCtx.lineTo(x, chartArea.bottom);
         canvasCtx.stroke();
+
+        const label = "MCH2";
+        const fontSize = 11;
+        const labelY = chartArea.bottom - 4;
+        canvasCtx.font = `${fontSize}px sans-serif`;
+        canvasCtx.textAlign = "center";
+        canvasCtx.textBaseline = "bottom";
+        const textWidth = canvasCtx.measureText(label).width;
+        canvasCtx.fillStyle = "#fff";
+        canvasCtx.fillRect(x - textWidth / 2 - 3, labelY - fontSize - 1, textWidth + 6, fontSize + 3);
+        canvasCtx.fillStyle = "#dc3545";
+        canvasCtx.fillText(label, x, labelY);
+        canvasCtx.restore();
+      },
+    };
+
+    const endOfLineLabels = {
+      id: "endOfLineLabels",
+      afterDatasetsDraw(chartInstance) {
+        const { ctx: canvasCtx } = chartInstance;
+        const minGap = 14;
+
+        const labels = chartInstance.data.datasets
+          .map((dataset, datasetIndex) => {
+            const points = chartInstance.getDatasetMeta(datasetIndex).data;
+            for (let i = dataset.data.length - 1; i >= 0; i--) {
+              if (dataset.data[i] !== null && dataset.data[i] !== undefined) {
+                return { text: dataset.label, color: dataset.borderColor, x: points[i].x, y: points[i].y };
+              }
+            }
+            return null;
+          })
+          .filter((label) => label !== null)
+          .sort((a, b) => a.y - b.y);
+
+        for (let i = 1; i < labels.length; i++) {
+          if (labels[i].y - labels[i - 1].y < minGap) {
+            labels[i].y = labels[i - 1].y + minGap;
+          }
+        }
+
+        canvasCtx.save();
+        canvasCtx.font = "11px sans-serif";
+        canvasCtx.textAlign = "left";
+        canvasCtx.textBaseline = "middle";
+        labels.forEach((label) => {
+          canvasCtx.fillStyle = label.color;
+          canvasCtx.fillText(label.text, label.x + 8, label.y);
+        });
         canvasCtx.restore();
       },
     };
 
     const chart = new Chart(ctx, {
       type: "line",
-      plugins: [transitionMarker],
+      plugins: [transitionMarker, endOfLineLabels],
       data: {
         labels: years,
         datasets: [
@@ -88,6 +173,9 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,  // <-- souvent nécessaire dans un modal
+        layout: {
+          padding: { right: 56 }  // room for the end-of-line labels
+        },
         plugins: {
           tooltip: {
             callbacks: {
@@ -109,11 +197,7 @@
             }
           },
           legend: {
-            position: "bottom",
-            labels: {
-              usePointStyle: true,
-              padding: 20
-            }
+            display: false
           },
           title: {
             display: false

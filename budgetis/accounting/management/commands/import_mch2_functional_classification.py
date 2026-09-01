@@ -9,6 +9,8 @@ from django.db import transaction
 from budgetis.accounting.models import AccountGroup
 from budgetis.common.models import ChartScheme
 
+from ._excel import read_excel_sheet
+
 
 SHEET_NAME = "Classification fonctionnelle"
 HEADER_ROWS = 3
@@ -56,7 +58,7 @@ class Command(BaseCommand):
         Returns one (level, code, label, parent_code) tuple per N1-N4 node, in the
         sheet's own depth-first order (a node's parent always appears earlier).
         """
-        df = pd.read_excel(excel_path, sheet_name=SHEET_NAME, header=None, skiprows=HEADER_ROWS)
+        df = read_excel_sheet(excel_path, SHEET_NAME, header=None, skiprows=HEADER_ROWS)
 
         rows: list[ClassificationRow] = []
         last_code_by_level: dict[int, str] = {}

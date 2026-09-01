@@ -8,6 +8,8 @@ from django.db import transaction
 
 from budgetis.accounting.models import AccountCodeMapping
 
+from ._excel import read_excel_sheet
+
 
 SHEET_NAME = "Fonctionnement"
 COL_MCH1_FUNCTION, COL_MCH1_NATURE, COL_MCH1_SUB_ACCOUNT = "ADMIN1", "F", "NAT2"
@@ -57,7 +59,7 @@ class Command(BaseCommand):
         accounts with no MCH1 history (nothing to map); fully blank rows are
         sheet padding. Neither needs a row here.
         """
-        df = pd.read_excel(excel_path, sheet_name=SHEET_NAME, header=0)
+        df = read_excel_sheet(excel_path, SHEET_NAME, header=0)
 
         rows: list[MappingRow] = []
         for _, row in df.iterrows():

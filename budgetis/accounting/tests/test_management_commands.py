@@ -1,3 +1,4 @@
+from decimal import Decimal
 from io import StringIO
 
 import openpyxl
@@ -6,12 +7,15 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 
 from budgetis.accounting.management.commands.import_mch2_functional_classification import DEFAULT_EXCEL_PATH
+from budgetis.accounting.models import Account
 from budgetis.accounting.models import AccountCodeMapping
 from budgetis.accounting.models import AccountGroup
 from budgetis.accounting.models import GroupResponsibility
+from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
 from budgetis.accounting.tests.factories import GroupResponsibilityFactory
 from budgetis.common.models import ChartScheme
+from budgetis.finance.models import AvailableYear
 from budgetis.users.tests.factories import UserFactory
 
 
@@ -169,6 +173,15 @@ class TestImportMch2FunctionalClassification:
         with pytest.raises(CommandError):
             call_command("import_mch2_functional_classification", str(tmp_path / "missing.xlsx"))
 
+    def test_raises_readable_error_when_sheet_missing(self, tmp_path):
+        workbook = openpyxl.Workbook()
+        workbook.active.title = "Fonctionnement"
+        path = tmp_path / "wrong-file.xlsx"
+        workbook.save(path)
+
+        with pytest.raises(CommandError, match="Available sheets: Fonctionnement"):
+            call_command("import_mch2_functional_classification", str(path))
+
     def test_builds_four_level_hierarchy(self, tmp_path):
         excel_path = _write_classification_excel(
             tmp_path,
@@ -285,6 +298,28 @@ class TestImportAccountCodeMapping:
         with pytest.raises(CommandError):
             call_command("import_account_code_mapping", str(tmp_path / "missing.xlsx"))
 
+    def test_raises_readable_error_when_sheet_missing(self, tmp_path):
+        workbook = openpyxl.Workbook()
+        workbook.active.title = "Classification fonctionnelle"
+        path = tmp_path / "wrong-file.xlsx"
+        workbook.save(path)
+
+        with pytest.raises(CommandError, match="Available sheets: Classification fonctionnelle"):
+            call_command("import_account_code_mapping", str(path))
+
+    def test_prompts_and_uses_chosen_sheet_when_interactive(self, tmp_path, monkeypatch):
+        excel_path = _write_mapping_excel(tmp_path, [(100, 301, 0, 1100, 3010, 0)])
+        workbook = openpyxl.load_workbook(excel_path)
+        workbook["Fonctionnement"].title = "Fonctionnement (nouveau)"
+        workbook.save(excel_path)
+        monkeypatch.setattr("sys.stdin.isatty", lambda: True)
+        monkeypatch.setattr("builtins.input", lambda prompt: "1")
+
+        out, _ = _run_mapping(excel_path)
+
+        assert "1 created, 0 unchanged" in out
+        assert AccountCodeMapping.objects.exists()
+
     def test_creates_mapping_from_both_sides_filled(self, tmp_path):
         excel_path = _write_mapping_excel(tmp_path, [(100, 301, 0, 1100, 3010, 0)])
 
@@ -356,3 +391,125 @@ class TestImportAccountCodeMapping:
 
         assert "2 created, 0 unchanged" in out
         assert AccountCodeMapping.objects.filter(mch1_function="100", mch1_nature="306").count() == 2  # noqa: PLR2004
+
+
+def _write_accounts_excel(tmp_path, rows):
+    """`rows` are (mch2_function, mch2_nature, mch2_sub_account, label)."""
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = "Fonctionnement"
+    sheet.append(["ADMIN1_N", "NAT1_N", "NAT2_N", "LIBELLÉ_N"])
+    for row in rows:
+        sheet.append(row)
+    path = tmp_path / "accounts.xlsx"
+    workbook.save(path)
+    return path
+
+
+def _run_accounts(excel_path, year, *, actuals=False, dry_run=False):
+    out, err = StringIO(), StringIO()
+    call_command(
+        "import_mch2_accounts",
+        str(excel_path),
+        year=year,
+        actuals=actuals,
+        dry_run=dry_run,
+        stdout=out,
+        stderr=err,
+    )
+    return out.getvalue(), err.getvalue()
+
+
+class TestImportMch2Accounts:
+    def test_raises_when_file_missing(self, tmp_path):
+        with pytest.raises(CommandError):
+            call_command("import_mch2_accounts", str(tmp_path / "missing.xlsx"), year=2027)
+
+    def test_creates_zero_value_budget_accounts(self, tmp_path):
+        excel_path = _write_accounts_excel(tmp_path, [(1100, 3010, 0, "Salaire")])
+
+        out, _ = _run_accounts(excel_path, 2027)
+
+        assert "1 created, 0 already existed" in out
+        account = Account.objects.get()
+        assert (account.function, account.nature, account.sub_account) == ("01100", "3010", "")
+        assert account.label == "Salaire"
+        assert account.scheme == ChartScheme.MCH2
+        assert account.is_budget is True
+        assert account.charges == Decimal("0.00")
+        assert account.revenues == Decimal("0.00")
+
+    def test_registers_available_year_as_mch2(self, tmp_path):
+        excel_path = _write_accounts_excel(tmp_path, [(1100, 3010, 0, "Salaire")])
+
+        _run_accounts(excel_path, 2027)
+
+        available_year = AvailableYear.objects.get(year=2027, type=AvailableYear.YearType.BUDGET)
+        assert available_year.scheme == ChartScheme.MCH2
+
+    def test_actuals_flag_creates_actuals_instead_of_budget(self, tmp_path):
+        excel_path = _write_accounts_excel(tmp_path, [(1100, 3010, 0, "Salaire")])
+
+        _run_accounts(excel_path, 2027, actuals=True)
+
+        account = Account.objects.get()
+        assert account.is_budget is False
+        assert AvailableYear.objects.filter(year=2027, type=AvailableYear.YearType.ACTUAL).exists()
+
+    def test_derives_expected_type_from_nature_prefix(self, tmp_path):
+        excel_path = _write_accounts_excel(
+            tmp_path,
+            [
+                (1100, 3010, 0, "Charge"),
+                (1100, 4010, 0, "Revenu"),
+            ],
+        )
+
+        _run_accounts(excel_path, 2027)
+
+        charge = Account.objects.get(nature="3010")
+        revenue = Account.objects.get(nature="4010")
+        assert charge.expected_type == Account.ExpectedType.CHARGE
+        assert revenue.expected_type == Account.ExpectedType.REVENUE
+
+    def test_deduplicates_repeated_mch2_target_from_a_merge(self, tmp_path):
+        excel_path = _write_accounts_excel(
+            tmp_path,
+            [
+                (96900, 3420, 0, "Fusion"),
+                (96900, 3420, 0, "Fusion"),
+            ],
+        )
+
+        out, _ = _run_accounts(excel_path, 2027)
+
+        assert "1 created, 0 already existed" in out
+        assert Account.objects.count() == 1
+
+    def test_dry_run_does_not_persist(self, tmp_path):
+        excel_path = _write_accounts_excel(tmp_path, [(1100, 3010, 0, "Salaire")])
+
+        _run_accounts(excel_path, 2027, dry_run=True)
+
+        assert not Account.objects.exists()
+        assert not AvailableYear.objects.exists()
+
+    def test_never_overwrites_an_existing_account(self, tmp_path):
+        AccountFactory(
+            scheme=ChartScheme.MCH2,
+            year=2027,
+            function="01100",
+            nature="3010",
+            sub_account="",
+            is_budget=True,
+            label="Real imported data",
+            charges=Decimal("5000.00"),
+        )
+        excel_path = _write_accounts_excel(tmp_path, [(1100, 3010, 0, "Salaire")])
+
+        out, _ = _run_accounts(excel_path, 2027)
+
+        assert "0 created, 1 already existed" in out
+        account = Account.objects.get()
+        assert account.label == "Real imported data"
+        assert account.charges == Decimal("5000.00")

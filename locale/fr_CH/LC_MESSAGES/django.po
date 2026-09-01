@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 10:39+0200\n"
+"POT-Creation-Date: 2026-09-01 14:57+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -245,15 +245,15 @@ msgstr "Compte"
 msgid "Accounts"
 msgstr "Comptes"
 
-#: budgetis/accounting/models.py:242
+#: budgetis/accounting/models.py:249
 msgid "Content"
 msgstr "Contenu"
 
-#: budgetis/accounting/models.py:246
+#: budgetis/accounting/models.py:253
 msgid "Account Comment"
 msgstr "Commentaire sur le compte"
 
-#: budgetis/accounting/models.py:247
+#: budgetis/accounting/models.py:254
 msgid "Account Comments"
 msgstr "Commentaires sur le compte"
 
@@ -344,7 +344,7 @@ msgstr "Nouveau"
 #: budgetis/accounting/templates/accounting/account_explorer.html:6
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:32
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:34
-#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:63
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:89
 #: budgetis/accounting/views/explore.py:77
 #: budgetis/core/templates/core/home.html:143 budgetis/templates/base.html:109
 msgid "Actuals"
@@ -367,7 +367,7 @@ msgstr "Commentaires"
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:10
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:33
-#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:75
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:101
 #: budgetis/bdi_import/models.py:55
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:29
 #: budgetis/core/templates/core/home.html:169 budgetis/finance/models.py:9
@@ -507,11 +507,28 @@ msgstr "Historique %(code)s – %(lbl)s"
 msgid "Close"
 msgstr "Fermer"
 
-#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:16
-msgid "Before the switch, this account came from:"
-msgstr "Avant la bascule, ce compte provenait de :"
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:15
+#, python-format
+msgid "Before %(year)s:"
+msgstr "Avant %(year)s :"
 
-#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:102
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:24
+msgid "History unavailable before the switch"
+msgstr "Historique indisponible avant la bascule"
+
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:26
+msgid ""
+"This account's MCH1 predecessor was also split across other MCH2 accounts, "
+"so its historical amount can't be divided automatically between them."
+msgstr ""
+"Le compte MCH1 d'origine s'est aussi réparti vers d'autres comptes MCH2, son "
+"montant historique ne peut donc pas être divisé automatiquement entre eux."
+
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:34
+msgid "also went to:"
+msgstr "s'est aussi réparti vers :"
+
+#: budgetis/accounting/templates/accounting/partials/account_history_modal.html:128
 msgid "Comments:"
 msgstr "Commentaires :"
 
@@ -1125,6 +1142,9 @@ msgstr "Cette adresse e-mail est déjà utilisée."
 #: budgetis/users/tests/test_views.py:73 budgetis/users/views.py:25
 msgid "Information successfully updated"
 msgstr "Informations mises à jour avec succès"
+
+#~ msgid "Before the switch, this account came from:"
+#~ msgstr "Avant la bascule, ce compte provenait de :"
 
 #~ msgid "Meta Group"
 #~ msgstr "Groupe de premier niveau"

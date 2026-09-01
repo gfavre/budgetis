@@ -87,6 +87,17 @@ class TestAccountSave:
         acc.refresh_from_db()
         assert acc.group == group
 
+    def test_ignores_a_same_code_collision_at_another_level(self):
+        # A group's code is only unique within its own level - a stray/unrelated
+        # group at a shallower level sharing the same code string must not make
+        # the deepest-level lookup raise MultipleObjectsReturned.
+        AccountGroupFactory(scheme=ChartScheme.MCH2, level=2, code="0110")
+        leaf = AccountGroupFactory(scheme=ChartScheme.MCH2, level=4, code="0110")
+        acc = AccountFactory.build(scheme=ChartScheme.MCH2, function="01100", group=None)
+        acc.save()
+        acc.refresh_from_db()
+        assert acc.group == leaf
+
 
 class TestAccountGroupHierarchy:
     def test_same_code_coexists_across_schemes_and_levels(self):
