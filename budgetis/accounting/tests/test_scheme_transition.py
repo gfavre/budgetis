@@ -2,6 +2,7 @@ import pytest
 
 from budgetis.accounting.scheme_transition import MappingKind
 from budgetis.accounting.scheme_transition import classify_mch2_account
+from budgetis.accounting.scheme_transition import comparison_flags
 from budgetis.accounting.scheme_transition import first_mch2_year
 from budgetis.accounting.tests.factories import AccountCodeMappingFactory
 from budgetis.accounting.tests.factories import AvailableYearFactory
@@ -132,3 +133,29 @@ class TestFirstMch2Year:
         AvailableYearFactory(year=2027, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH2)
 
         assert first_mch2_year(AvailableYear.YearType.ACTUAL) is None
+
+
+class TestComparisonFlags:
+    def test_budget_year_drops_both_comparisons_across_the_switch(self):
+        AvailableYearFactory(year=2027, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH2)
+        AvailableYearFactory(year=2026, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH1)
+        AvailableYearFactory(year=2025, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH1)
+
+        assert comparison_flags(2027, is_budget=True) == {"show_col2": False, "show_col3": False}
+
+    def test_actuals_year_keeps_same_year_budget_but_drops_prev_actuals(self):
+        AvailableYearFactory(year=2027, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH2)
+        AvailableYearFactory(year=2027, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH2)
+        AvailableYearFactory(year=2026, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH1)
+
+        assert comparison_flags(2027, is_budget=False) == {"show_col2": True, "show_col3": False}
+
+    def test_actuals_year_within_same_scheme_keeps_both_comparisons(self):
+        AvailableYearFactory(year=2026, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH1)
+        AvailableYearFactory(year=2026, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH1)
+        AvailableYearFactory(year=2025, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH1)
+
+        assert comparison_flags(2026, is_budget=False) == {"show_col2": True, "show_col3": True}
+
+    def test_unregistered_current_year_drops_both_comparisons(self):
+        assert comparison_flags(2099, is_budget=True) == {"show_col2": False, "show_col3": False}

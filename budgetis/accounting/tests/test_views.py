@@ -35,6 +35,18 @@ class TestAccountExplorerView:
         response = AccountExplorerView.as_view()(request)
         assert response.status_code == HTTPStatus.OK
 
+    def test_hides_prev_actuals_column_across_the_scheme_switch(self, rf):
+        AvailableYearFactory(year=2027, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH2)
+        AvailableYearFactory(year=2027, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH2)
+        AvailableYearFactory(year=2026, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH1)
+        request = rf.get("/", {"year": 2027})
+        request.user = UserFactory()
+
+        response = AccountExplorerView.as_view()(request)
+
+        assert response.context_data["show_col2"] is True
+        assert response.context_data["show_col3"] is False
+
 
 class TestBudgetExplorerView:
     def test_login_required(self, client):
@@ -47,6 +59,18 @@ class TestBudgetExplorerView:
         request.user = UserFactory()
         response = BudgetExplorerView.as_view()(request)
         assert response.status_code == HTTPStatus.OK
+
+    def test_hides_both_comparison_columns_across_the_scheme_switch(self, rf):
+        AvailableYearFactory(year=2027, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH2)
+        AvailableYearFactory(year=2026, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH1)
+        AvailableYearFactory(year=2025, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH1)
+        request = rf.get("/", {"year": 2027})
+        request.user = UserFactory()
+
+        response = BudgetExplorerView.as_view()(request)
+
+        assert response.context_data["show_col2"] is False
+        assert response.context_data["show_col3"] is False
 
 
 class TestBudgetByNatureView:

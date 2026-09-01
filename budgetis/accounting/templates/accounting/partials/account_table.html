@@ -6,16 +6,24 @@
       <th rowspan="2" class="text-start">N°</th>
       <th rowspan="2" class="text-start">{% trans "Designation" %}</th>
       <th colspan="2">{% blocktrans %}Actuals {{ year }}{% endblocktrans %}</th>
-      <th colspan="2">{% blocktrans %}Budget {{ year }}{% endblocktrans %}</th>
-      <th colspan="2">{% blocktrans with prev_y=year|add:"-1" %}Actuals {{ prev_y }}{% endblocktrans %}</th>
+      {% if show_col2 %}
+        <th colspan="2">{% blocktrans %}Budget {{ year }}{% endblocktrans %}</th>
+      {% endif %}
+      {% if show_col3 %}
+        <th colspan="2">{% blocktrans with prev_y=year|add:"-1" %}Actuals {{ prev_y }}{% endblocktrans %}</th>
+      {% endif %}
     </tr>
     <tr class="table-light text-center">
       <th>{% trans "Charges" %}</th>
       <th>{% trans "Revenues" %}</th>
-      <th>{% trans "Charges" %}</th>
-      <th>{% trans "Revenues" %}</th>
-      <th>{% trans "Charges" %}</th>
-      <th>{% trans "Revenues" %}</th>
+      {% if show_col2 %}
+        <th>{% trans "Charges" %}</th>
+        <th>{% trans "Revenues" %}</th>
+      {% endif %}
+      {% if show_col3 %}
+        <th>{% trans "Charges" %}</th>
+        <th>{% trans "Revenues" %}</th>
+      {% endif %}
     </tr>
   </thead>
   <tbody>
@@ -33,7 +41,9 @@
              data-bs-target="#accountHistoryModal">{{ row.account.label }}</a>
         </td>
         <td class="text-end">
-          {% with diff=row.col1_charges|percent_diff:row.col2_charges %}{{ diff|percent_diff_display }}{% endwith %}
+          {% if show_col2 %}
+            {% with diff=row.col1_charges|percent_diff:row.col2_charges %}{{ diff|percent_diff_display }}{% endwith %}
+          {% endif %}
           <button class="btn btn-sm btn-link no-print"
                   title="{% trans 'Comments' %}"
                   hx-get="{% url 'accounting:account-comments' row.account.id 'charges' %}"
@@ -48,43 +58,49 @@
           {{ row.col1_charges|format_money }}
         </td>
         <td class="text-end">
-          {% with diff=row.col1_revenues|percent_diff:row.col2_revenues %}{{ diff|percent_diff_display:True }}{% endwith %}
+          {% if show_col2 %}
+            {% with diff=row.col1_revenues|percent_diff:row.col2_revenues %}{{ diff|percent_diff_display:True }}{% endwith %}
+          {% endif %}
           {{ row.col1_revenues|format_money }}
         </td>
-        <td class="text-end">
-          {% if row.account.budget_id %}
-            <button class="btn btn-sm btn-link no-print"
-                    title="{% trans 'Comments' %}"
-                    hx-get="{% url 'accounting:account-comments' row.account.budget_id 'budget_charges' %}"
-                    hx-target="#accountCommentsModal .modal-content"
-                    data-bs-toggle="modal"
-                    data-bs-target="#accountCommentsModal">
-              <span id="comment-icon-{{ row.account.budget_id }}"
-                    class="{% if not row.account.budget_comment_count %}text-muted{% endif %}">
-                <i class="bi bi-chat-left-text"></i>
-              </span>
-            </button>
-          {% endif %}
-          {{ row.col2_charges|format_money }}
-        </td>
-        <td class="text-end">{{ row.col2_revenues|format_money }}</td>
-        <td class="text-end">
-          {% if row.account.prev_actual_id %}
-            <button class="btn btn-sm btn-link no-print"
-                    title="{% trans 'Comments' %}"
-                    hx-get="{% url 'accounting:account-comments' row.account.prev_actual_id 'charges' %}"
-                    hx-target="#accountCommentsModal .modal-content"
-                    data-bs-toggle="modal"
-                    data-bs-target="#accountCommentsModal">
-              <span id="comment-icon-{{ row.account.prev_actual_id }}"
-                    class="{% if not row.account.prev_actual_comment_count %}text-muted{% endif %}">
-                <i class="bi bi-chat-left-text"></i>
-              </span>
-            </button>
-          {% endif %}
-          {{ row.col3_charges|format_money }}
-        </td>
-        <td class="text-end">{{ row.col3_revenues|format_money }}</td>
+        {% if show_col2 %}
+          <td class="text-end">
+            {% if row.account.budget_id %}
+              <button class="btn btn-sm btn-link no-print"
+                      title="{% trans 'Comments' %}"
+                      hx-get="{% url 'accounting:account-comments' row.account.budget_id 'budget_charges' %}"
+                      hx-target="#accountCommentsModal .modal-content"
+                      data-bs-toggle="modal"
+                      data-bs-target="#accountCommentsModal">
+                <span id="comment-icon-{{ row.account.budget_id }}"
+                      class="{% if not row.account.budget_comment_count %}text-muted{% endif %}">
+                  <i class="bi bi-chat-left-text"></i>
+                </span>
+              </button>
+            {% endif %}
+            {{ row.col2_charges|format_money }}
+          </td>
+          <td class="text-end">{{ row.col2_revenues|format_money }}</td>
+        {% endif %}
+        {% if show_col3 %}
+          <td class="text-end">
+            {% if row.account.prev_actual_id %}
+              <button class="btn btn-sm btn-link no-print"
+                      title="{% trans 'Comments' %}"
+                      hx-get="{% url 'accounting:account-comments' row.account.prev_actual_id 'charges' %}"
+                      hx-target="#accountCommentsModal .modal-content"
+                      data-bs-toggle="modal"
+                      data-bs-target="#accountCommentsModal">
+                <span id="comment-icon-{{ row.account.prev_actual_id }}"
+                      class="{% if not row.account.prev_actual_comment_count %}text-muted{% endif %}">
+                  <i class="bi bi-chat-left-text"></i>
+                </span>
+              </button>
+            {% endif %}
+            {{ row.col3_charges|format_money }}
+          </td>
+          <td class="text-end">{{ row.col3_revenues|format_money }}</td>
+        {% endif %}
       </tr>
     {% endfor %}
   </tbody>
@@ -92,17 +108,25 @@
     <tr class="table-primary fw-bold">
       <td colspan="2">{{ code }} {{ label }}</td>
       <td class="text-end">
-        {% with diff=data.col1_charges|percent_diff:data.col2_charges %}{{ diff|percent_diff_display }}{% endwith %}
+        {% if show_col2 %}
+          {% with diff=data.col1_charges|percent_diff:data.col2_charges %}{{ diff|percent_diff_display }}{% endwith %}
+        {% endif %}
         {{ data.col1_charges|format_money }}
       </td>
       <td class="text-end">
-        {% with diff=data.col1_revenues|percent_diff:data.col2_revenues %}{{ diff|percent_diff_display }}{% endwith %}
+        {% if show_col2 %}
+          {% with diff=data.col1_revenues|percent_diff:data.col2_revenues %}{{ diff|percent_diff_display }}{% endwith %}
+        {% endif %}
         {{ data.col1_revenues|format_money }}
       </td>
-      <td class="text-end">{{ data.col2_charges|format_money }}</td>
-      <td class="text-end">{{ data.col2_revenues|format_money }}</td>
-      <td class="text-end">{{ data.col3_charges|format_money }}</td>
-      <td class="text-end">{{ data.col3_revenues|format_money }}</td>
+      {% if show_col2 %}
+        <td class="text-end">{{ data.col2_charges|format_money }}</td>
+        <td class="text-end">{{ data.col2_revenues|format_money }}</td>
+      {% endif %}
+      {% if show_col3 %}
+        <td class="text-end">{{ data.col3_charges|format_money }}</td>
+        <td class="text-end">{{ data.col3_revenues|format_money }}</td>
+      {% endif %}
     </tr>
   </tfoot>
 </table>

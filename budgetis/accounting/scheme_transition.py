@@ -61,3 +61,39 @@ def first_mch2_year(year_type: str) -> int | None:
     """The first year AvailableYear records as already using MCH2, for the given YearType."""
     available_year = AvailableYear.objects.filter(type=year_type, scheme=ChartScheme.MCH2).order_by("year").first()
     return available_year.year if available_year else None
+
+
+def _year_scheme(year: int) -> str | None:
+    """
+    The scheme used for a calendar year, regardless of whether that's known via
+    its budget or its actuals registration - a year's budget and actuals are
+    never in different schemes, so either registration answers the question.
+    """
+    return AvailableYear.objects.filter(year=year).values_list("scheme", flat=True).first()
+
+
+def _comparable(year: int, other_year: int) -> bool:
+    """Whether other_year can be shown next to year without silently comparing
+    across two different chart schemes."""
+    current_scheme = _year_scheme(year)
+    other_scheme = _year_scheme(other_year)
+    return current_scheme is not None and current_scheme == other_scheme
+
+
+def comparison_flags(year: int, *, is_budget: bool) -> dict[str, bool]:
+    """
+    Explorer tables show a year's own data (col1) plus two comparison columns.
+    A comparison column must be dropped entirely - not shown blank or zero -
+    when its year uses a different chart scheme than the one being reported,
+    since the two aren't meaningfully comparable at all.
+
+    Budget view: col2 = budget year-1, col3 = actuals year-2.
+    Actuals view: col2 = budget (same year), col3 = actuals year-1.
+    """
+    if is_budget:
+        show_col2 = _comparable(year, year - 1)
+        show_col3 = _comparable(year, year - 2)
+    else:
+        show_col2 = _comparable(year, year)
+        show_col3 = _comparable(year, year - 1)
+    return {"show_col2": show_col2, "show_col3": show_col3}

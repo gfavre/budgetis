@@ -9,16 +9,24 @@
           <th rowspan="2" class="text-start">N°</th>
           <th rowspan="2" class="text-start">{% trans "Designation" %}</th>
           <th colspan="2">{% blocktrans %}Actuals {{ year }}{% endblocktrans %}</th>
-          <th colspan="2">{% blocktrans %}Budget {{ year }}{% endblocktrans %}</th>
-          <th colspan="2">{% blocktrans with prev_y=year|add:"-1" %}Actuals {{ prev_y }}{% endblocktrans %}</th>
+          {% if show_col2 %}
+            <th colspan="2">{% blocktrans %}Budget {{ year }}{% endblocktrans %}</th>
+          {% endif %}
+          {% if show_col3 %}
+            <th colspan="2">{% blocktrans with prev_y=year|add:"-1" %}Actuals {{ prev_y }}{% endblocktrans %}</th>
+          {% endif %}
         </tr>
         <tr>
           <th>{% trans "Charges" %}</th>
           <th>{% trans "Revenues" %}</th>
-          <th>{% trans "Charges" %}</th>
-          <th>{% trans "Revenues" %}</th>
-          <th>{% trans "Charges" %}</th>
-          <th>{% trans "Revenues" %}</th>
+          {% if show_col2 %}
+            <th>{% trans "Charges" %}</th>
+            <th>{% trans "Revenues" %}</th>
+          {% endif %}
+          {% if show_col3 %}
+            <th>{% trans "Charges" %}</th>
+            <th>{% trans "Revenues" %}</th>
+          {% endif %}
         </tr>
       </thead>
       <thead class="table-primary fw-bold">
@@ -27,10 +35,14 @@
           <td>{% blocktrans with lbl=node.label %}Total {{ lbl }}{% endblocktrans %}</td>
           <td class="text-end">{{ node.col1_charges|format_money }}</td>
           <td class="text-end">{{ node.col1_revenues|format_money }}</td>
-          <td class="text-end">{{ node.col2_charges|format_money }}</td>
-          <td class="text-end">{{ node.col2_revenues|format_money }}</td>
-          <td class="text-end">{{ node.col3_charges|format_money }}</td>
-          <td class="text-end">{{ node.col3_revenues|format_money }}</td>
+          {% if show_col2 %}
+            <td class="text-end">{{ node.col2_charges|format_money }}</td>
+            <td class="text-end">{{ node.col2_revenues|format_money }}</td>
+          {% endif %}
+          {% if show_col3 %}
+            <td class="text-end">{{ node.col3_charges|format_money }}</td>
+            <td class="text-end">{{ node.col3_revenues|format_money }}</td>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -40,10 +52,14 @@
             <td>{{ child.label }}</td>
             <td class="text-end">{{ child.col1_charges|format_money }}</td>
             <td class="text-end">{{ child.col1_revenues|format_money }}</td>
-            <td class="text-end">{{ child.col2_charges|format_money }}</td>
-            <td class="text-end">{{ child.col2_revenues|format_money }}</td>
-            <td class="text-end">{{ child.col3_charges|format_money }}</td>
-            <td class="text-end">{{ child.col3_revenues|format_money }}</td>
+            {% if show_col2 %}
+              <td class="text-end">{{ child.col2_charges|format_money }}</td>
+              <td class="text-end">{{ child.col2_revenues|format_money }}</td>
+            {% endif %}
+            {% if show_col3 %}
+              <td class="text-end">{{ child.col3_charges|format_money }}</td>
+              <td class="text-end">{{ child.col3_revenues|format_money }}</td>
+            {% endif %}
           </tr>
         {% endfor %}
       </tbody>
