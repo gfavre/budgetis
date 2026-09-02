@@ -2,7 +2,7 @@
 
 {% if node.children %}
   {% if node.level == 1 %}
-    <h2>{{ node.code }} {{ node.label }}</h2>
+    <h2 id="group-{{ node.code }}">{{ node.code }} {{ node.label }}</h2>
     <table class="table table-bordered align-middle mb-5 mt-3">
       <thead class="table-light text-center">
         <tr>
@@ -49,7 +49,9 @@
         {% for child_code, child in node.children.items %}
           <tr>
             <td>{{ child_code }}</td>
-            <td>{{ child.label }}</td>
+            <td>
+              <a href="#group-{{ child_code }}">{{ child.label }}</a>
+            </td>
             <td class="text-end">{{ child.col1_charges|format_money }}</td>
             <td class="text-end">{{ child.col1_revenues|format_money }}</td>
             {% if show_col2 %}
@@ -69,14 +71,16 @@
     {% endfor %}
   {% else %}
     {% if node.level == 2 %}
-      <h3>{{ node.code }} {{ node.label }}</h3>
+      <h3 id="group-{{ node.code }}">{{ node.code }} {{ node.label }}</h3>
     {% else %}
-      <h4>{{ node.code }} {{ node.label }}</h4>
+      <h4 id="group-{{ node.code }}">{{ node.code }} {{ node.label }}</h4>
     {% endif %}
     {% for child_code, child in node.children.items %}
       {% include "accounting/partials/group_node.html" with node=child %}
     {% endfor %}
   {% endif %}
 {% else %}
-  {% include "accounting/partials/account_group_block.html" with code=node.code label=node.label data=node %}
+  <div id="group-{{ node.code }}">
+    {% include "accounting/partials/account_group_block.html" with code=node.code label=node.label data=node %}
+  </div>
 {% endif %}

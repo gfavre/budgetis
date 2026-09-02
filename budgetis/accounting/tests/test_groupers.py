@@ -184,9 +184,9 @@ class TestGroupNodeTemplateRendersBothDepths:
         row = _row(acc, col1_charges=Decimal("500"))
         html = self._render(build_grouped([row], 2024))
 
-        assert html.count("<h2>") == 1
-        assert html.count("<h3>") == 1
-        assert html.count("<h4>") == 0
+        assert html.count("<h2 ") == 1
+        assert html.count("<h3 ") == 1
+        assert html.count("<h4 ") == 0
         assert leaf.label in html
 
     def test_four_level_mch2_tree(self):
@@ -198,9 +198,9 @@ class TestGroupNodeTemplateRendersBothDepths:
         row = _row(acc, col1_charges=Decimal("500"))
         html = self._render(build_grouped([row], 2024))
 
-        assert html.count("<h2>") == 1
-        assert html.count("<h3>") == 1
-        assert html.count("<h4>") == 1
+        assert html.count("<h2 ") == 1
+        assert html.count("<h3 ") == 1
+        assert html.count("<h4 ") == 1
         assert leaf.label in html
 
 
