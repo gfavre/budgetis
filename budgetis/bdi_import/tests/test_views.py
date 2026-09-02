@@ -5,6 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
 from budgetis.bdi_import.models import AccountImportLog
+from budgetis.bdi_import.models import ColumnMapping
 from budgetis.bdi_import.tests.factories import AccountImportLogFactory
 from budgetis.common.models import ChartScheme
 from budgetis.users.tests.factories import UserFactory
@@ -84,3 +85,21 @@ class TestAccountMappingViewRedirect:
 
         assert response.status_code == HTTPStatus.FOUND
         assert response.url == reverse("bdi_import:account-import")
+
+
+class TestAccountMappingViewColumnMapping:
+    def test_total_field_is_always_derived_from_total_even_without_a_checkbox(self, client, monkeypatch):
+        # Regression: a separate "derive from total" checkbox used to be
+        # required alongside picking the "Total (signed)" field, and forgetting
+        # it silently zeroed every amount. The field itself now always implies it.
+        monkeypatch.setattr("budgetis.bdi_import.views.import_accounts_task.delay", lambda log_id: None)
+        client.force_login(UserFactory())
+        log = AccountImportLogFactory()
+
+        client.post(
+            reverse("bdi_import:account-mapping", kwargs={"log_id": log.id}),
+            {"column_map[Budget 2027]": ColumnMapping.Field.TOTAL},
+        )
+
+        mapping = ColumnMapping.objects.get(log=log, field=ColumnMapping.Field.TOTAL)
+        assert mapping.derived_from_total is True

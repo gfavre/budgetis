@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-02 12:06+0200\n"
+"POT-Creation-Date: 2026-09-02 13:47+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -800,11 +800,11 @@ msgstr "Correspondances des colonnes"
 msgid "The import file could not be found."
 msgstr "Le fichier d'importation n'a pas été trouvé."
 
-#: budgetis/bdi_import/tasks.py:91
+#: budgetis/bdi_import/tasks.py:94
 msgid "Import failed: "
 msgstr "L'importation a échoué : "
 
-#: budgetis/bdi_import/tasks.py:97
+#: budgetis/bdi_import/tasks.py:100
 msgid "Unexpected error: "
 msgstr "Erreur inattendue : "
 
@@ -830,11 +830,15 @@ msgstr "Modifier les paramètres d'importation"
 msgid "Ignore"
 msgstr "Ignorer"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:94
-msgid "Derive charges/revenues from total column (signed)"
-msgstr "Dériver les charges/recettes de la colonne \"total\" (signé)"
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:89
+msgid ""
+"Mapping a column to 'Total (signed)' always derives charges/revenues from "
+"its sign - positive is a charge, negative is a revenue."
+msgstr ""
+"Associer une colonne à « Total (signé) » en déduit toujours les charges et "
+"produits selon son signe - positif pour une charge, négatif pour un produit."
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:97
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:91
 msgid "Launch Import"
 msgstr "Lancer l'importation"
 
@@ -864,7 +868,7 @@ msgstr "Import Excel"
 msgid "Could not process the uploaded file: %(error)s"
 msgstr "Impossible de traiter le fichier téléchargé : %(error)s"
 
-#: budgetis/bdi_import/views.py:182
+#: budgetis/bdi_import/views.py:183
 msgid "Column mapping saved. Import will now be launched."
 msgstr ""
 "Le mappage des colonnes est sauvegardé. L'importation va maintenant être "
@@ -1171,6 +1175,9 @@ msgstr "Cette adresse e-mail est déjà utilisée."
 #: budgetis/users/tests/test_views.py:73 budgetis/users/views.py:25
 msgid "Information successfully updated"
 msgstr "Informations mises à jour avec succès"
+
+#~ msgid "Derive charges/revenues from total column (signed)"
+#~ msgstr "Dériver les charges/recettes de la colonne \"total\" (signé)"
 
 #~ msgid "Before the switch, this account came from:"
 #~ msgstr "Avant la bascule, ce compte provenait de :"

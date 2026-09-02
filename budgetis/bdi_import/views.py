@@ -160,7 +160,6 @@ class AccountMappingView(LoginRequiredMixin, View):
         log = get_object_or_404(AccountImportLog, pk=log_id)
         log.column_mappings.all().delete()
 
-        derived_from_total = request.POST.get("derived_from_total") == "on"
         column_map = {}
         for key in request.POST:
             if key.startswith("column_map[") and key.endswith("]"):
@@ -175,7 +174,9 @@ class AccountMappingView(LoginRequiredMixin, View):
                     log=log,
                     field=field,
                     column_name=column_name,
-                    derived_from_total=(field == ColumnMapping.Field.TOTAL and derived_from_total),
+                    # "Total (signed)" implies sign-derived charges/revenues by
+                    # definition - there is no other way to interpret that field.
+                    derived_from_total=(field == ColumnMapping.Field.TOTAL),
                 )
         import_accounts_task.delay(log.id)
 

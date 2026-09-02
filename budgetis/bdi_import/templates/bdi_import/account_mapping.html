@@ -85,15 +85,9 @@
             {% endfor %}
           </tbody>
         </table>
-        <div class="form-check mt-4">
-          <input class="form-check-input"
-                 type="checkbox"
-                 name="derived_from_total"
-                 id="derived_from_total" />
-          <label class="form-check-label" for="derived_from_total">
-            {% trans "Derive charges/revenues from total column (signed)" %}
-          </label>
-        </div>
+        <p class="text-muted small mt-4">
+          {% trans "Mapping a column to 'Total (signed)' always derives charges/revenues from its sign - positive is a charge, negative is a revenue." %}
+        </p>
         <button type="submit" class="btn btn-primary mt-4">{% trans "Launch Import" %}</button>
       </form>
     </main>

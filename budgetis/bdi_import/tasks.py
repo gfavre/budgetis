@@ -57,7 +57,10 @@ def import_accounts_task(self, log_id: int):  # noqa: PLR0915
     column_map = {m.field: m.column_name for m in mapping_qs}
 
     logger.info("[Import] Column map | log_id=%s | map=%s", log_id, column_map)
-    derived_from_total = any(m.field == "total" and m.derived_from_total for m in mapping_qs)
+    # "Total (signed)" only ever means sign-derived charges/revenues - derived
+    # straight from the mapping choice itself, not a separate flag that can be
+    # left unset by mistake (see ColumnMapping.derived_from_total).
+    derived_from_total = "total" in column_map
     logger.info(
         "[Import] Flags | derived_from_total=%s | log_id=%s",
         derived_from_total,
