@@ -55,7 +55,7 @@
               <div class="col-sm-8">{{ log.copy_comments|checkmark }}</div>
             </div>
           {% endif %}
-          <a href="{% url 'bdi_import:account-import' %}?edit={{ log.id }}"
+          <a href="{% url import_entry_url_name %}?edit={{ log.id }}"
              class="btn btn-outline-primary">{% trans "Edit import settings" %}</a>
         </div>
       </div>

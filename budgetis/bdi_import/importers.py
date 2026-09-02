@@ -2,10 +2,12 @@ import logging
 from decimal import Decimal
 
 import pandas as pd
+from django.contrib.auth import get_user_model
 
 from budgetis.accounting.models import Account
 from budgetis.accounting.models import AccountComment
 from budgetis.accounting.models import GroupResponsibility
+from budgetis.common.models import ChartScheme
 
 from .utils import safe_decimal
 
@@ -63,18 +65,57 @@ def build_source_account_map(source_year) -> dict:
     return {(acc.function, acc.nature, acc.sub_account): acc for acc in source_accounts}
 
 
-def process_account_row(row, column_map, derived_from_total):
-    raw_number = row.get(column_map.get("code", ""), "").strip()
+def _normalize_sub_account(value: str) -> str:
+    """An all-zero sub-account ("0", "00"...) means "no sub-account" - same
+    convention used everywhere else in this project (e.g. import_mch2_accounts)."""
+    value = value.strip()
+    return "" if value.isdigit() and int(value) == 0 else value
+
+
+def _extract_account_code(row, column_map) -> tuple[str, str, str] | None:
+    """
+    Returns (function, nature, sub_account), reading either a single combined
+    "function.nature[.sub]" column (the historical BDI-export shape) or three
+    separate columns (a manually-prepared sheet, e.g. Fctio/Nat/Ext MCH2).
+    """
+    if "code" in column_map:
+        raw_number = row.get(column_map["code"], "").strip()
+        if not raw_number:
+            return None
+        try:
+            return parse_account_code(raw_number)
+        except ValueError:
+            logger.warning("Invalid account code: %s", raw_number)
+            return None
+
+    if "function" in column_map and "nature" in column_map:
+        function = row.get(column_map["function"], "").strip()
+        nature = row.get(column_map["nature"], "").strip()
+        if not function or not nature:
+            return None
+        sub_account = _normalize_sub_account(row.get(column_map.get("sub_account", ""), ""))
+        return function, nature, sub_account
+
+    return None
+
+
+def _expected_type(charges: Decimal, revenues: Decimal) -> str:
+    if charges and revenues:
+        return Account.ExpectedType.BOTH
+    if charges:
+        return Account.ExpectedType.CHARGE
+    return Account.ExpectedType.REVENUE
+
+
+def process_account_row(row, column_map, derived_from_total, scheme=ChartScheme.MCH1):
     label = row.get(column_map.get("label", ""), "").strip()
-
-    if not raw_number or not label:
+    if not label:
         return None
 
-    try:
-        function, nature, sub_account = parse_account_code(raw_number)
-    except ValueError:
-        logger.warning("Invalid account code: %s", raw_number)
+    code = _extract_account_code(row, column_map)
+    if code is None:
         return None
+    function, nature, sub_account = code
 
     if not function or not function.isdigit():
         logger.warning("Non-numeric function: %s", function)
@@ -88,19 +129,14 @@ def process_account_row(row, column_map, derived_from_total):
         charges = safe_decimal(row.get(column_map.get("charges", ""), 0))
         revenues = -safe_decimal(row.get(column_map.get("revenues", ""), 0))
 
-    expected_type = (
-        Account.ExpectedType.BOTH
-        if charges and revenues
-        else Account.ExpectedType.CHARGE
-        if charges
-        else Account.ExpectedType.REVENUE
-    )
+    expected_type = _expected_type(charges, revenues)
 
     account_defaults = {
         "label": label,
         "charges": charges,
         "revenues": revenues,
         "expected_type": expected_type,
+        "scheme": scheme,
     }
 
     return function, nature, sub_account, account_defaults
@@ -139,6 +175,28 @@ def copy_group_responsibles(account, source_acc, year):
         )
 
 
+def assign_row_responsible(account, row, column_map, year):
+    """Map a per-row responsible trigram (e.g. a manually-prepared budget
+    sheet's own "Resp BUD" column) onto the account's group for this year."""
+    if "responsible" not in column_map or not account.group_id:
+        return
+
+    trigram = row.get(column_map["responsible"], "").strip().upper()
+    if not trigram:
+        return
+
+    user = get_user_model().objects.filter(trigram=trigram).first()
+    if not user:
+        logger.warning("Unknown trigram: %s", trigram)
+        return
+
+    GroupResponsibility.objects.update_or_create(
+        group=account.group,
+        year=year,
+        defaults={"responsible": user},
+    )
+
+
 def copy_account_comments(account, source_acc):
     if not source_acc:
         return
@@ -151,11 +209,40 @@ def copy_account_comments(account, source_acc):
         )
 
 
+def _accumulate_rows(account_rows, column_map, derived_from_total, scheme):
+    """
+    Group parsed rows by (function, nature, sub_account) and sum their charges/
+    revenues. A manually-prepared sheet can have several MCH1-origin rows
+    collapsing onto the same MCH2 target (a merge) - their amounts must add up,
+    not have the last one silently overwrite the others. The first row seen for
+    a key is kept as the representative row (label, responsible column).
+    """
+    accumulated: dict[tuple[str, str, str], dict] = {}
+    for _, row in account_rows.iterrows():
+        result = process_account_row(row, column_map, derived_from_total, scheme)
+        if result is None:
+            continue
+
+        function, nature, sub_account, account_defaults = result
+        key = (function, nature, sub_account)
+
+        if key not in accumulated:
+            accumulated[key] = {"defaults": account_defaults, "row": row}
+        else:
+            existing = accumulated[key]["defaults"]
+            existing["charges"] += account_defaults["charges"]
+            existing["revenues"] += account_defaults["revenues"]
+            existing["expected_type"] = _expected_type(existing["charges"], existing["revenues"])
+
+    return accumulated
+
+
 def import_accounts_from_dataframe(  # noqa: PLR0913
     account_rows: pd.DataFrame,
     year: int,
     *,
     is_budget: bool,
+    scheme: str = ChartScheme.MCH1,
     dry_run: bool = False,
     source_year=None,
     copy_responsibles: bool = True,
@@ -170,16 +257,12 @@ def import_accounts_from_dataframe(  # noqa: PLR0913
 
     account_rows = clean_dataframe(account_rows)
     source_accounts = build_source_account_map(source_year)
+    accumulated = _accumulate_rows(account_rows, column_map, derived_from_total, scheme)
 
-    for _, row in account_rows.iterrows():
-        result = process_account_row(row, column_map, derived_from_total)
-        if result is None:
-            continue
-
-        function, nature, sub_account, account_defaults = result
-
-        key = (function, nature, sub_account)
-        source_acc = source_accounts.get(key)
+    for (function, nature, sub_account), entry in accumulated.items():
+        account_defaults = entry["defaults"]
+        row = entry["row"]
+        source_acc = source_accounts.get((function, nature, sub_account))
 
         apply_source_overrides(account_defaults, source_acc, copy_labels, copy_visibility)
 
@@ -188,6 +271,8 @@ def import_accounts_from_dataframe(  # noqa: PLR0913
 
             if copy_responsibles:
                 copy_group_responsibles(account, source_acc, year)
+
+            assign_row_responsible(account, row, column_map, year)
 
             if copy_comments:
                 copy_account_comments(account, source_acc)

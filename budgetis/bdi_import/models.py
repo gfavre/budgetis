@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from budgetis.common.models import ChartScheme
 from budgetis.common.models import TimeStampedModel
 
 
@@ -12,8 +13,24 @@ class AccountImportLog(TimeStampedModel):
         SUCCESS = "success", _("Success")
         FAILED = "failed", _("Failed")
 
+    class ImportKind(models.TextChoices):
+        BDI = "bdi", _("BDI export")
+        EXCEL = "excel", _("Manual Excel")
+
+    kind = models.CharField(
+        max_length=10,
+        choices=ImportKind.choices,
+        default=ImportKind.BDI,
+        verbose_name=_("Kind"),
+    )
     year = models.PositiveIntegerField(verbose_name=_("Year"))
     is_budget = models.BooleanField(verbose_name=_("Is budget"))
+    scheme = models.CharField(
+        max_length=10,
+        choices=ChartScheme.choices,
+        default=ChartScheme.MCH1,
+        verbose_name=_("Scheme"),
+    )
     file = models.FileField(upload_to="imports/accounts/", verbose_name=_("Import file"))
 
     launched_by = models.ForeignKey(
@@ -59,10 +76,14 @@ class AccountImportLog(TimeStampedModel):
 class ColumnMapping(TimeStampedModel):
     class Field(models.TextChoices):
         CODE = "code", _("Account code")
+        FUNCTION = "function", _("Function")
+        NATURE = "nature", _("Nature")
+        SUB_ACCOUNT = "sub_account", _("Sub account")
         LABEL = "label", _("Account label")
         CHARGES = "charges", _("Charges")
         REVENUES = "revenues", _("Revenues")
         TOTAL = "total", _("Total (signed)")
+        RESPONSIBLE = "responsible", _("Responsible (trigram)")
 
     log = models.ForeignKey(
         "AccountImportLog",

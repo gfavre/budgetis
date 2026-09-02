@@ -8,6 +8,7 @@ from crispy_forms.layout import Submit
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from budgetis.common.models import ChartScheme
 from budgetis.finance.models import AvailableYear
 
 
@@ -16,6 +17,11 @@ class AccountImportForm(forms.Form):
     is_budget = forms.ChoiceField(
         label=_("Nature"),
         choices=[("budget", "Budget"), ("actual", "Comptes")],
+        widget=forms.RadioSelect,
+    )
+    scheme = forms.ChoiceField(
+        label=_("Chart of accounts"),
+        choices=ChartScheme.choices,
         widget=forms.RadioSelect,
     )
     source_year = forms.ModelChoiceField(
@@ -33,10 +39,11 @@ class AccountImportForm(forms.Form):
         label=_("Accounts list file"), help_text=_("Upload a CSV or XSLX file with account data.")
     )
 
-    def __init__(self, *args, edit_log=None, **kwargs):
+    def __init__(self, *args, edit_log=None, default_scheme=ChartScheme.MCH1, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields["year"].initial = date.today().year  # noqa: DTZ011
+        self.fields["scheme"].initial = default_scheme
 
         self.helper = FormHelper()
         self.helper.form_method = "post"
@@ -46,6 +53,7 @@ class AccountImportForm(forms.Form):
                 _("Import target"),
                 "year",
                 "is_budget",
+                "scheme",
             ),
             Fieldset(
                 _("Copy settings from another year"),

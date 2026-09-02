@@ -70,6 +70,7 @@ def import_accounts_task(self, log_id: int):  # noqa: PLR0915
             account_rows=account_rows,
             is_budget=log.is_budget,
             year=log.year,
+            scheme=log.scheme,
             dry_run=log.dry_run,
             source_year=log.source_year,
             copy_responsibles=log.copy_responsibles,
@@ -102,6 +103,7 @@ def import_accounts_task(self, log_id: int):  # noqa: PLR0915
     AvailableYear.objects.get_or_create(
         year=log.year,
         type=(log.is_budget and AvailableYear.YearType.BUDGET) or AvailableYear.YearType.ACTUAL,
+        defaults={"scheme": log.scheme},
     )
 
     log.status = AccountImportLog.Status.SUCCESS

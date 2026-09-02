@@ -43,11 +43,13 @@ class AccountImportLogAdmin(admin.ModelAdmin):
         "created_at",
         "year",
         "is_budget",
+        "scheme",
+        "kind",
         "launched_by",
         "dry_run",
         "status",
     )
-    list_filter = ("is_budget", "dry_run", "status", "year")
+    list_filter = ("kind", "scheme", "is_budget", "dry_run", "status", "year")
     search_fields = ("file", "message", "launched_by__username")
     readonly_fields = ("created_at", "status", "message")
     inlines = [ColumnMappingInline]

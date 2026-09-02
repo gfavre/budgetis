@@ -8,9 +8,11 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.views.generic import View
+
+from budgetis.common.models import ChartScheme
 
 from .forms import AccountImportForm
 from .models import AccountImportLog
@@ -24,9 +26,18 @@ class AccountImportView(LoginRequiredMixin, FormView):
     template_name = "bdi_import/account_import.html"
     form_class = AccountImportForm
     success_url = reverse_lazy("bdi_import:account-import")
+    import_kind = AccountImportLog.ImportKind.BDI
+    default_scheme = ChartScheme.MCH1
+    title = _("Import from BDI")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = self.title
+        return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        kwargs["default_scheme"] = self.default_scheme
         edit_id = self.request.GET.get("edit")
         if edit_id:
             with suppress(AccountImportLog.DoesNotExist):
@@ -43,6 +54,7 @@ class AccountImportView(LoginRequiredMixin, FormView):
                     {
                         "year": log.year,
                         "is_budget": "budget" if log.is_budget else "actual",
+                        "scheme": log.scheme,
                         "source_year": log.source_year,
                         "copy_responsibles": log.copy_responsibles,
                         "copy_labels": log.copy_labels,
@@ -58,12 +70,14 @@ class AccountImportView(LoginRequiredMixin, FormView):
         account_file = form.cleaned_data["account_file"]
         year = form.cleaned_data["year"]
         is_budget = form.cleaned_data["is_budget"] == "budget"
+        scheme = form.cleaned_data["scheme"]
 
         edit_id = self.request.GET.get("edit")
         if edit_id:
             log = get_object_or_404(AccountImportLog, pk=edit_id)
             log.year = year
             log.is_budget = is_budget
+            log.scheme = scheme
             log.source_year = form.cleaned_data.get("source_year")
             log.copy_responsibles = form.cleaned_data.get("copy_responsibles")
             log.copy_labels = form.cleaned_data.get("copy_labels")
@@ -81,6 +95,8 @@ class AccountImportView(LoginRequiredMixin, FormView):
                 log = AccountImportLog.objects.create(
                     year=year,
                     is_budget=is_budget,
+                    scheme=scheme,
+                    kind=self.import_kind,
                     launched_by=self.request.user,
                     dry_run=False,
                     file=account_file,
@@ -94,12 +110,33 @@ class AccountImportView(LoginRequiredMixin, FormView):
         return redirect("bdi_import:account-mapping", log_id=log.id)
 
 
+class ExcelImportView(AccountImportView):
+    """
+    Same pipeline as AccountImportView, for a manually-prepared Excel budget
+    sheet rather than a BDI software export - distinguished only by `kind`
+    (routes the mapping step's "back"/edit links to this screen) and its
+    column-mapping choices (function/nature/sub_account split across separate
+    columns, a per-row responsible trigram) that a BDI export never needs.
+    """
+
+    import_kind = AccountImportLog.ImportKind.EXCEL
+    default_scheme = ChartScheme.MCH2
+    title = _("Import Excel")
+
+
+IMPORT_ENTRY_URL_NAMES: dict[str, str] = {
+    AccountImportLog.ImportKind.BDI: "bdi_import:account-import",
+    AccountImportLog.ImportKind.EXCEL: "bdi_import:excel-import",
+}
+
+
 class AccountMappingView(LoginRequiredMixin, View):
     template_name = "bdi_import/account_mapping.html"
 
     def get(self, request, log_id):
         log = get_object_or_404(AccountImportLog, pk=log_id)
         path = log.file.path
+        entry_url_name = IMPORT_ENTRY_URL_NAMES[log.kind]
 
         try:
             uploaded_df = load_dataframe_with_header(path)
@@ -111,12 +148,13 @@ class AccountMappingView(LoginRequiredMixin, View):
                 "columns": list(uploaded_df.columns),
                 "preview_rows": preview_rows.to_dict(orient="records"),
                 "field_choices": ColumnMapping.Field.choices,
+                "import_entry_url_name": entry_url_name,
             }
             return render(request, self.template_name, context)
 
         except ValueError as exc:
             messages.error(request, _("Could not process the uploaded file: %(error)s") % {"error": str(exc)})
-            return redirect("bdi_import:account-import")
+            return redirect(entry_url_name)
 
     def post(self, request, log_id):
         log = get_object_or_404(AccountImportLog, pk=log_id)
@@ -142,4 +180,4 @@ class AccountMappingView(LoginRequiredMixin, View):
         import_accounts_task.delay(log.id)
 
         messages.success(request, _("Column mapping saved. Import will now be launched."))
-        return redirect("bdi_import:account-import")
+        return redirect(IMPORT_ENTRY_URL_NAMES[log.kind])
