@@ -9,6 +9,7 @@ NATURE_GROUPS = OrderedDict(
         (31, _("Goods, services, merchandise")),
         (32, _("Interest expense")),
         (33, _("Depreciation")),
+        (34, _("Financial charges")),
         (35, _("Reimbursements, contributions, and subsidies to public authorities")),
         (36, _("Aid and subsidies")),
         (38, _("Allocations to special funds and financing")),

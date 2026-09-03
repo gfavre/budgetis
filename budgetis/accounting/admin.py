@@ -19,6 +19,7 @@ from .models import AccountCodeMapping
 from .models import AccountComment
 from .models import AccountGroup
 from .models import GroupResponsibility
+from .models import NatureGroup
 
 
 REASSIGN_RESPONSIBLE_TEMPLATE = "accounting/admin/reassign_responsible.html"
@@ -230,6 +231,15 @@ class AccountGroupAdmin(admin.ModelAdmin):
             form = ReassignGroupResponsibleForm()
 
         return _reassign_responsible_response(self, request, queryset, form, _("Reassign responsible"))
+
+
+@admin.register(NatureGroup)
+class NatureGroupAdmin(admin.ModelAdmin):
+    list_display = ("code", "label", "scheme", "level", "parent", "updated_at")
+    list_filter = ("scheme", "level", "updated_at")
+    search_fields = ("label", "code")
+    autocomplete_fields = ("parent",)
+    search_help_text = _("Code or label")
 
 
 @admin.register(GroupResponsibility)

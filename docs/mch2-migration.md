@@ -123,7 +123,18 @@ once implemented — check `accounting/models.py` directly for current state.
   - `accounting/nature.py` (`NATURE_GROUPS`) and `groupers.py::_nature_group()` —
     2-digit nature-prefix grouping (30-49), used by the *nature*-axis explorer
     views (`account_by_nature_list.html` / `budget_by_nature_list.html`),
-    untouched by the `AccountGroup` merge (separate axis).
+    untouched by the `AccountGroup` merge (separate axis). **Resolved for MCH2**:
+    `NatureGroup` (`accounting/models.py`) is a second self-referential tree,
+    kept separate from `AccountGroup` because nature and function codes share
+    the same digits (e.g. both have a "30") and would collide in one table.
+    Imported via `import_mch2_nature_classification` from the same reference
+    file's **Compte de résultats - Charges/Revenus** sheets (421 nodes, levels
+    1-4). `groupers._nature_group_labels()` sources level-2 labels from
+    `NatureGroup` for MCH2 rows, falling back to the hand-written
+    `NATURE_GROUPS` dict for MCH1 (no equivalent reference file for it). This
+    also corrected several MCH1-era labels that didn't match the official MCH2
+    naming (e.g. "34 Charges financières" was entirely missing; "36"/"42"/"44"
+    were labeled with a different group's meaning).
   - `finance/builders.py` (`build_income_budget_canton_intercos_commune()`, the
     Sankey) and `finance/utils.py` — extensive hardcoded MCH1 nature ranges
     (`REVENUE_NATURE_RANGE=(400,499)`, `WAGES_NATURE_RANGE=(300,309)`, etc.) and

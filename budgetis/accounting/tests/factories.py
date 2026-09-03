@@ -8,6 +8,7 @@ from budgetis.accounting.models import AccountCodeMapping
 from budgetis.accounting.models import AccountComment
 from budgetis.accounting.models import AccountGroup
 from budgetis.accounting.models import GroupResponsibility
+from budgetis.accounting.models import NatureGroup
 from budgetis.common.models import ChartScheme
 from budgetis.finance.models import AvailableYear
 from budgetis.users.tests.factories import UserFactory
@@ -31,6 +32,17 @@ class AccountGroupFactory(DjangoModelFactory):
 
     class Meta:
         model = AccountGroup
+
+
+class NatureGroupFactory(DjangoModelFactory):
+    code = factory.Sequence(lambda n: str(300 + n))
+    label = factory.Faker("word")
+    scheme = ChartScheme.MCH2
+    level = 2
+    parent = None
+
+    class Meta:
+        model = NatureGroup
 
 
 class AccountFactory(DjangoModelFactory):

@@ -9,6 +9,7 @@ from django.views.generic import TemplateView
 
 from budgetis.accounting.groupers import build_grouped
 from budgetis.accounting.groupers import build_nature_grouped
+from budgetis.accounting.groupers import build_nature_tree
 from budgetis.accounting.groupers import build_summary
 from budgetis.accounting.loaders import ActualsLoader
 from budgetis.accounting.loaders import BudgetLoader
@@ -17,6 +18,7 @@ from budgetis.accounting.models import Account
 from budgetis.accounting.scheme_transition import comparison_flags
 
 from ..forms import AccountFilterForm
+from ..forms import NatureFilterForm
 
 
 class BaseExplorerView(LoginRequiredMixin, TemplateView):
@@ -29,6 +31,7 @@ class BaseExplorerView(LoginRequiredMixin, TemplateView):
     title = ""
     is_budget_view: bool = False
     loader_class: type[ActualsLoader | BudgetLoader] = ActualsLoader
+    form_class: type[AccountFilterForm] = AccountFilterForm
 
     def _get_default_year(self) -> int | None:
         return Account.objects.filter(is_budget=self.is_budget_view).aggregate(Max("year")).get("year__max")
@@ -36,7 +39,7 @@ class BaseExplorerView(LoginRequiredMixin, TemplateView):
     def _extra_context(self, year: int) -> dict[str, Any]:
         return {}
 
-    def _build(self, year: int, user, *, only_responsible: bool) -> dict[str, Any]:
+    def _build(self, year: int, user, *, only_responsible: bool, detail: bool = False) -> dict[str, Any]:
         loader = self.loader_class()
         rows = loader.load(year, user, only_responsible=only_responsible)
         grouped = build_grouped(rows, year)
@@ -48,23 +51,25 @@ class BaseExplorerView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        form = AccountFilterForm(self.request.GET or None)
+        form = self.form_class(self.request.GET or None)
         context["form"] = form
         context["title"] = self.title
 
         if form.is_valid():
             year = int(form.cleaned_data["year"])
             only = form.cleaned_data.get("only_responsible", False)
+            detail = form.cleaned_data.get("detail", False)
         else:
             year = self._get_default_year()
             only = form.initial.get("only_responsible", True)
+            detail = form.initial.get("detail", False)
             if year:
                 form.initial["year"] = year
                 if "year" in form.fields:
                     form.fields["year"].initial = year
 
         if year:
-            context.update(self._build(year, self.request.user, only_responsible=bool(only)))
+            context.update(self._build(year, self.request.user, only_responsible=bool(only), detail=bool(detail)))
             context["year"] = year
             context.update(comparison_flags(year, is_budget=self.is_budget_view))
             context.update(self._extra_context(year))
@@ -140,22 +145,25 @@ class BudgetByNatureView(BaseExplorerView):
     title = _("Budget by nature")
     is_budget_view = True
     loader_class = BudgetLoader
+    form_class = NatureFilterForm
 
     def _extra_context(self, year: int) -> dict[str, Any]:
         return {"previous_year": year - 1, "actuals_year": year - 2}
 
-    def _build(self, year: int, user, *, only_responsible: bool) -> dict[str, Any]:
+    def _build(self, year: int, user, *, only_responsible: bool, detail: bool = False) -> dict[str, Any]:
         rows = self.loader_class().load(year, user, only_responsible=False)
         grouped = build_nature_grouped(rows)
         return {
             "grouped": grouped,
+            "nature_tree": build_nature_tree(rows),
+            "detail": detail,
             "global_summary": build_summary(grouped),
             "last_import_text": get_last_import_info(year),
         }
 
 
 class BudgetByNaturePartialView(LoginRequiredMixin, FormView):
-    form_class = AccountFilterForm
+    form_class = NatureFilterForm
     template_name = "accounting/partials/budget_by_nature_list.html"
 
     def form_valid(self, form):
@@ -166,6 +174,8 @@ class BudgetByNaturePartialView(LoginRequiredMixin, FormView):
             self.get_context_data(
                 form=form,
                 grouped=grouped,
+                nature_tree=build_nature_tree(rows),
+                detail=bool(form.cleaned_data.get("detail")),
                 global_summary=build_summary(grouped),
                 year=year,
                 previous_year=year - 1,
@@ -181,22 +191,25 @@ class AccountByNatureView(BaseExplorerView):
     title = _("Actuals by nature")
     is_budget_view = False
     loader_class = ActualsLoader
+    form_class = NatureFilterForm
 
     def _extra_context(self, year: int) -> dict[str, Any]:
         return {"prev_year": year - 1}
 
-    def _build(self, year: int, user, *, only_responsible: bool) -> dict[str, Any]:
+    def _build(self, year: int, user, *, only_responsible: bool, detail: bool = False) -> dict[str, Any]:
         rows = self.loader_class().load(year, user, only_responsible=False)
         grouped = build_nature_grouped(rows)
         return {
             "grouped": grouped,
+            "nature_tree": build_nature_tree(rows),
+            "detail": detail,
             "global_summary": build_summary(grouped),
             "last_import_text": get_last_import_info(year),
         }
 
 
 class AccountByNaturePartialView(LoginRequiredMixin, FormView):
-    form_class = AccountFilterForm
+    form_class = NatureFilterForm
     template_name = "accounting/partials/account_by_nature_list.html"
 
     def form_valid(self, form):
@@ -207,6 +220,8 @@ class AccountByNaturePartialView(LoginRequiredMixin, FormView):
             self.get_context_data(
                 form=form,
                 grouped=grouped,
+                nature_tree=build_nature_tree(rows),
+                detail=bool(form.cleaned_data.get("detail")),
                 global_summary=build_summary(grouped),
                 year=year,
                 prev_year=year - 1,

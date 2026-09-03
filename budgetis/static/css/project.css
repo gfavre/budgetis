@@ -87,6 +87,14 @@ input[type="checkbox"] {
   height: 360px;
 }
 
+.nature-detail-row {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.nature-group-row > td {
+  border-top: 2px solid var(--bs-border-color, #dee2e6);
+}
+
 .chart-canvas {
   height: 100%;
 }

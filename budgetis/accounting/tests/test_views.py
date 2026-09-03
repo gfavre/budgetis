@@ -7,7 +7,9 @@ from django.urls import reverse
 from budgetis.accounting.tests.factories import AccountCodeMappingFactory
 from budgetis.accounting.tests.factories import AccountCommentFactory
 from budgetis.accounting.tests.factories import AccountFactory
+from budgetis.accounting.tests.factories import AccountGroupFactory
 from budgetis.accounting.tests.factories import AvailableYearFactory
+from budgetis.accounting.tests.factories import NatureGroupFactory
 from budgetis.accounting.views.explore import AccountExplorerView
 from budgetis.accounting.views.explore import BudgetExplorerView
 from budgetis.common.models import ChartScheme
@@ -123,6 +125,32 @@ class TestBudgetByNaturePartialView:
         response = client.post(reverse("accounting:budget-nature-partial"), {"year": 2024})
 
         assert response.content.decode().strip().startswith('<div id="budget-list">')
+
+    def test_level_3_rows_hidden_by_default(self, client):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2027, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH2)
+        level1 = NatureGroupFactory(level=1, code="3", label="Charges", parent=None)
+        level2 = NatureGroupFactory(level=2, code="30", label="Charges de personnel", parent=level1)
+        NatureGroupFactory(level=3, code="300", label="Autorités et commissions", parent=level2)
+        ag = AccountGroupFactory(scheme=ChartScheme.MCH2)
+        AccountFactory(scheme=ChartScheme.MCH2, group=ag, year=2027, is_budget=True, nature="3000")
+
+        response = client.post(reverse("accounting:budget-nature-partial"), {"year": 2027})
+
+        assert "Autorités et commissions" not in response.content.decode()
+
+    def test_level_3_rows_shown_when_detail_checked(self, client):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2027, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH2)
+        level1 = NatureGroupFactory(level=1, code="3", label="Charges", parent=None)
+        level2 = NatureGroupFactory(level=2, code="30", label="Charges de personnel", parent=level1)
+        NatureGroupFactory(level=3, code="300", label="Autorités et commissions", parent=level2)
+        ag = AccountGroupFactory(scheme=ChartScheme.MCH2)
+        AccountFactory(scheme=ChartScheme.MCH2, group=ag, year=2027, is_budget=True, nature="3000")
+
+        response = client.post(reverse("accounting:budget-nature-partial"), {"year": 2027, "detail": "on"})
+
+        assert "Autorités et commissions" in response.content.decode()
 
 
 # ── Comment views ────────────────────────────────────────────────────────────

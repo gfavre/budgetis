@@ -52,6 +52,39 @@ class AccountGroup(TimeStampedModel):
         return f"{self.code} - {self.label}"
 
 
+class NatureGroup(TimeStampedModel):
+    """
+    Represents one node of the nature classification hierarchy (e.g. 3 Charges,
+    30 Charges de personnel, 300 Autorités et commissions, 3000 Salaires des
+    autorités et commissions), imported from the canton's official MCH2
+    reference file. Kept as its own tree - rather than folded into AccountGroup
+    - because nature and function codes overlap (e.g. both have a "30"), so a
+    shared table would collide the two classifications.
+    """
+
+    id = models.BigAutoField(primary_key=True)
+    code = models.CharField(max_length=5, db_index=True)
+    label = models.CharField(max_length=150)
+    scheme = models.CharField(max_length=10, choices=ChartScheme.choices, default=ChartScheme.MCH2)
+    level = models.PositiveSmallIntegerField()
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="children",
+    )
+
+    class Meta:
+        unique_together = ("scheme", "level", "code")
+        ordering = ("scheme", "level", "code")
+        verbose_name = _("Nature Group")
+        verbose_name_plural = _("Nature Groups")
+
+    def __str__(self) -> str:
+        return f"{self.code} - {self.label}"
+
+
 class GroupResponsibility(models.Model):
     """
     Binds an AccountGroup to a municipal name (string) for a specific year.

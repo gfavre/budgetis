@@ -7,10 +7,14 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 
 from budgetis.accounting.management.commands.import_mch2_functional_classification import DEFAULT_EXCEL_PATH
+from budgetis.accounting.management.commands.import_mch2_nature_classification import (
+    DEFAULT_EXCEL_PATH as NATURE_DEFAULT_EXCEL_PATH,
+)
 from budgetis.accounting.models import Account
 from budgetis.accounting.models import AccountCodeMapping
 from budgetis.accounting.models import AccountGroup
 from budgetis.accounting.models import GroupResponsibility
+from budgetis.accounting.models import NatureGroup
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
 from budgetis.accounting.tests.factories import GroupResponsibilityFactory
@@ -272,6 +276,134 @@ class TestImportMch2FunctionalClassification:
             level: AccountGroup.objects.filter(scheme=ChartScheme.MCH2, level=level).count() for level in (1, 2, 3, 4)
         }
         assert counts == {1: 10, 2: 69, 3: 159, 4: 180}
+
+
+def _write_nature_excel(tmp_path, *, charges_rows=(), revenus_rows=()):
+    """`rows` are (groupe, compte, label) tuples, as they appear in the source sheets."""
+    workbook = openpyxl.Workbook()
+    charges_sheet = workbook.active
+    charges_sheet.title = "Compte de résultats - Charges"
+    charges_sheet.append(["Groupe", "Compte", "Désignation"])
+    charges_sheet.append(["COMPTE DE RÉSULTATS", None, None])
+    for row in charges_rows:
+        charges_sheet.append(row)
+
+    revenus_sheet = workbook.create_sheet("Compte de résultats - Revenus")
+    revenus_sheet.append(["Groupe", "Compte", "Désignation"])
+    revenus_sheet.append(["COMPTE DE RÉSULTATS", None, None])
+    for row in revenus_rows:
+        revenus_sheet.append(row)
+
+    path = tmp_path / "nature.xlsx"
+    workbook.save(path)
+    return path
+
+
+def _run_nature(excel_path, *, dry_run=False):
+    out, err = StringIO(), StringIO()
+    call_command("import_mch2_nature_classification", str(excel_path), dry_run=dry_run, stdout=out, stderr=err)
+    return out.getvalue(), err.getvalue()
+
+
+class TestImportMch2NatureClassification:
+    def test_raises_when_file_missing(self, tmp_path):
+        with pytest.raises(CommandError):
+            call_command("import_mch2_nature_classification", str(tmp_path / "missing.xlsx"))
+
+    def test_builds_four_level_hierarchy(self, tmp_path):
+        excel_path = _write_nature_excel(
+            tmp_path,
+            charges_rows=[
+                (3, None, "Charges"),
+                (30, None, "Charges de personnel"),
+                (300, None, "Autorités et commissions"),
+                (None, 3000, "Salaires des autorités et commissions"),
+            ],
+        )
+
+        out, _ = _run_nature(excel_path)
+
+        assert "4 created, 0 updated, 0 unchanged" in out
+        n1 = NatureGroup.objects.get(scheme=ChartScheme.MCH2, level=1, code="3")
+        n2 = NatureGroup.objects.get(scheme=ChartScheme.MCH2, level=2, code="30")
+        n3 = NatureGroup.objects.get(scheme=ChartScheme.MCH2, level=3, code="300")
+        n4 = NatureGroup.objects.get(scheme=ChartScheme.MCH2, level=4, code="3000")
+        assert n2.parent == n1
+        assert n3.parent == n2
+        assert n4.parent == n3
+        assert n4.label == "Salaires des autorités et commissions"
+
+    def test_charges_and_revenues_are_both_imported(self, tmp_path):
+        excel_path = _write_nature_excel(
+            tmp_path,
+            charges_rows=[(3, None, "Charges")],
+            revenus_rows=[(4, None, "Revenus")],
+        )
+
+        _run_nature(excel_path)
+
+        assert NatureGroup.objects.filter(scheme=ChartScheme.MCH2, level=1, code="3").exists()
+        assert NatureGroup.objects.filter(scheme=ChartScheme.MCH2, level=1, code="4").exists()
+
+    def test_skips_divider_rows(self, tmp_path):
+        # The source sheet uses a literal "----"/"----" row as a visual
+        # separator between subcategories - not a real account code.
+        excel_path = _write_nature_excel(
+            tmp_path,
+            charges_rows=[
+                (3, None, "Charges"),
+                (30, None, "Charges de personnel"),
+                (None, "----", "----"),
+                (31, None, "Charges de biens et services"),
+            ],
+        )
+
+        out, _ = _run_nature(excel_path)
+
+        assert "3 created, 0 updated, 0 unchanged" in out
+        assert not NatureGroup.objects.filter(code="----").exists()
+
+    def test_dry_run_does_not_persist(self, tmp_path):
+        excel_path = _write_nature_excel(tmp_path, charges_rows=[(3, None, "Charges")])
+
+        _run_nature(excel_path, dry_run=True)
+
+        assert not NatureGroup.objects.exists()
+
+    def test_rerun_is_unchanged(self, tmp_path):
+        excel_path = _write_nature_excel(tmp_path, charges_rows=[(3, None, "Charges")])
+        _run_nature(excel_path)
+
+        out, _ = _run_nature(excel_path)
+
+        assert "0 created, 0 updated, 1 unchanged" in out
+
+    def test_rerun_updates_changed_label(self, tmp_path):
+        excel_path = _write_nature_excel(tmp_path, charges_rows=[(3, None, "Charges")])
+        _run_nature(excel_path)
+        renamed_path = _write_nature_excel(tmp_path, charges_rows=[(3, None, "Charges bis")])
+
+        out, _ = _run_nature(renamed_path)
+
+        assert "0 created, 1 updated, 0 unchanged" in out
+        group = NatureGroup.objects.get(scheme=ChartScheme.MCH2, level=1, code="3")
+        assert group.label == "Charges bis"
+
+    def test_official_reference_file_has_documented_shape(self):
+        """
+        Locks in the canton reference file's node counts so a future edition of
+        the file surfaces here instead of silently producing a different
+        hierarchy shape (see docs/mch2-migration.md).
+        """
+        if not NATURE_DEFAULT_EXCEL_PATH.exists():
+            pytest.skip("Reference file not checked out")
+
+        _run_nature(NATURE_DEFAULT_EXCEL_PATH)
+
+        counts = {
+            level: NatureGroup.objects.filter(scheme=ChartScheme.MCH2, level=level).count() for level in (1, 2, 3, 4)
+        }
+        assert counts == {1: 2, 2: 19, 3: 98, 4: 302}
 
 
 def _write_mapping_excel(tmp_path, rows):

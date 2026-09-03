@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.admin import widgets as admin_widgets
 from django.contrib.auth import get_user_model
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from budgetis.finance.models import AvailableYear
@@ -43,6 +44,19 @@ class AccountFilterForm(forms.Form):
         self.fields["year"].choices = [("", _("- Select year -"))] + [
             (str(y), str(y)) for y in AvailableYear.objects.values_list("year", flat=True).distinct().order_by("-year")
         ]
+
+
+class NatureFilterForm(AccountFilterForm):
+    detail = forms.BooleanField(
+        required=False,
+        initial=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["detail"].label = format_html(
+            '<i class="bi bi-eye"></i> {}', _("Show sub-accounts (detail down to 3-digit nature codes)")
+        )
 
 
 class ReassignResponsibleFormBase(forms.Form):

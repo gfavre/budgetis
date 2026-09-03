@@ -8,6 +8,7 @@ from budgetis.accounting.tests.factories import AccountCodeMappingFactory
 from budgetis.accounting.tests.factories import AccountCommentFactory
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
+from budgetis.accounting.tests.factories import NatureGroupFactory
 from budgetis.common.models import ChartScheme
 
 
@@ -109,6 +110,21 @@ class TestAccountGroupHierarchy:
     def test_deleting_a_parent_with_children_is_protected(self):
         parent = AccountGroupFactory(level=1, parent=None)
         AccountGroupFactory(level=2, parent=parent)
+        with pytest.raises(ProtectedError):
+            parent.delete()
+
+
+class TestNatureGroupHierarchy:
+    def test_same_code_coexists_with_an_account_group(self):
+        # NatureGroup is a separate table precisely so a nature code like "30"
+        # doesn't collide with the unrelated function group of the same code.
+        AccountGroupFactory(scheme=ChartScheme.MCH2, level=1, code="30", parent=None)
+        nature_group = NatureGroupFactory(scheme=ChartScheme.MCH2, level=2, code="30", parent=None)
+        assert nature_group.id is not None
+
+    def test_deleting_a_parent_with_children_is_protected(self):
+        parent = NatureGroupFactory(level=1, parent=None)
+        NatureGroupFactory(level=2, parent=parent)
         with pytest.raises(ProtectedError):
             parent.delete()
 

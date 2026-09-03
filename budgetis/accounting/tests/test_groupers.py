@@ -7,10 +7,13 @@ from django.template.loader import render_to_string
 from budgetis.accounting.groupers import _nature_group
 from budgetis.accounting.groupers import build_grouped
 from budgetis.accounting.groupers import build_nature_grouped
+from budgetis.accounting.groupers import build_nature_tree
 from budgetis.accounting.groupers import build_summary
+from budgetis.accounting.nature import NATURE_GROUPS
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
 from budgetis.accounting.tests.factories import GroupResponsibilityFactory
+from budgetis.accounting.tests.factories import NatureGroupFactory
 from budgetis.accounting.views.data import AccountRow
 from budgetis.common.models import ChartScheme
 from budgetis.users.tests.factories import UserFactory
@@ -27,7 +30,9 @@ def _mch1_tree():
 pytestmark = pytest.mark.django_db
 
 NATURE_30 = 30
+NATURE_33 = 33
 NATURE_35 = 35
+NATURE_36 = 36
 TWO_ACCOUNTS = 2
 TWO_ROWS = 2
 
@@ -347,3 +352,106 @@ class TestBuildNatureGrouped:
     def test_empty_rows_returns_empty_dict(self):
         result = build_nature_grouped([])
         assert result == OrderedDict()
+
+    def test_mch2_rows_use_nature_group_model_label_over_hardcoded_dict(self):
+        # NATURE_GROUPS (the MCH1 fallback) has no "34" entry at all, and its
+        # "36" is mislabeled relative to the canton's official MCH2 reference -
+        # both must come from NatureGroup instead for MCH2 rows.
+        NatureGroupFactory(scheme=ChartScheme.MCH2, level=2, code="34", label="Charges financières")
+        NatureGroupFactory(scheme=ChartScheme.MCH2, level=2, code="36", label="Charges de transferts")
+        ag = AccountGroupFactory(scheme=ChartScheme.MCH2)
+        acc = AccountFactory(scheme=ChartScheme.MCH2, group=ag, nature="3400")
+        row = _row(acc, col1_charges=Decimal("500"))
+
+        result = build_nature_grouped([row])
+
+        assert result[34]["label"] == "Charges financières"
+        assert result[34]["code"] == "34"
+        assert result[34]["col1_charges"] == Decimal("500")
+        # Unlike MCH1's broad NATURE_GROUPS, the official MCH2 set is small and
+        # complete enough that an all-zero group is worth surfacing, not hiding.
+        assert result[NATURE_36]["col1_charges"] == Decimal("0")
+
+    def test_mch2_keeps_all_official_groups_even_when_all_zero(self):
+        NatureGroupFactory(scheme=ChartScheme.MCH2, level=2, code="33", label="Amortissements")
+        ag = AccountGroupFactory(scheme=ChartScheme.MCH2)
+        acc = AccountFactory(scheme=ChartScheme.MCH2, group=ag, nature="3300", charges=Decimal("0"))
+        row = _row(acc, col1_charges=Decimal("0"))
+
+        result = build_nature_grouped([row])
+
+        assert NATURE_33 in result
+        assert result[NATURE_33]["col1_charges"] == Decimal("0")
+
+    def test_mch1_rows_ignore_mch2_nature_group_rows(self):
+        NatureGroupFactory(scheme=ChartScheme.MCH2, level=2, code="30", label="Should not apply to MCH1")
+        ag = AccountGroupFactory(scheme=ChartScheme.MCH1)
+        acc = AccountFactory(scheme=ChartScheme.MCH1, group=ag, nature="300")
+        row = _row(acc, col1_charges=Decimal("500"))
+
+        result = build_nature_grouped([row])
+
+        assert result[30]["label"] == str(NATURE_GROUPS[30])
+
+
+class TestBuildNatureTree:
+    def test_empty_rows_returns_none(self):
+        assert build_nature_tree([]) is None
+
+    def test_mch1_rows_return_none(self):
+        # NATURE_GROUPS (MCH1's fallback) has no level 1/3 data to build a tree
+        # from - build_nature_grouped's flat table stays the report for it.
+        ag = AccountGroupFactory(scheme=ChartScheme.MCH1)
+        acc = AccountFactory(scheme=ChartScheme.MCH1, group=ag, nature="300")
+        row = _row(acc, col1_charges=Decimal("500"))
+
+        assert build_nature_tree([row]) is None
+
+    def test_builds_three_level_tree_and_aggregates_up(self):
+        level1 = NatureGroupFactory(level=1, code="3", label="Charges", parent=None)
+        level2 = NatureGroupFactory(level=2, code="30", label="Charges de personnel", parent=level1)
+        NatureGroupFactory(level=3, code="300", label="Autorités et commissions", parent=level2)
+        ag = AccountGroupFactory(scheme=ChartScheme.MCH2)
+        acc = AccountFactory(scheme=ChartScheme.MCH2, group=ag, nature="3000")
+        row = _row(acc, col1_charges=Decimal("500"))
+
+        tree = build_nature_tree([row])
+
+        assert tree is not None
+        l1 = tree["3"]
+        assert l1["label"] == "Charges"
+        assert l1["col1_charges"] == Decimal("500")
+        l2 = l1["children"]["30"]
+        assert l2["label"] == "Charges de personnel"
+        assert l2["col1_charges"] == Decimal("500")
+        l3 = l2["children"]["300"]
+        assert l3["label"] == "Autorités et commissions"
+        assert l3["col1_charges"] == Decimal("500")
+        assert l3["children"] == OrderedDict()
+
+    def test_keeps_all_official_groups_even_when_all_zero(self):
+        level1 = NatureGroupFactory(level=1, code="3", label="Charges", parent=None)
+        NatureGroupFactory(level=2, code="30", label="Charges de personnel", parent=level1)
+        NatureGroupFactory(level=2, code="31", label="Biens et services", parent=level1)
+        ag = AccountGroupFactory(scheme=ChartScheme.MCH2)
+        acc = AccountFactory(scheme=ChartScheme.MCH2, group=ag, nature="3000")
+        row = _row(acc, col1_charges=Decimal("500"))
+
+        tree = build_nature_tree([row])
+
+        assert tree is not None
+        assert "31" in tree["3"]["children"]
+        assert tree["3"]["children"]["31"]["col1_charges"] == Decimal("0")
+
+    def test_unmatched_nature_is_dropped_silently(self):
+        level1 = NatureGroupFactory(level=1, code="3", label="Charges", parent=None)
+        NatureGroupFactory(level=2, code="30", label="Charges de personnel", parent=level1)
+        ag = AccountGroupFactory(scheme=ChartScheme.MCH2)
+        acc = AccountFactory(scheme=ChartScheme.MCH2, group=ag, nature="9999")
+        row = _row(acc, col1_charges=Decimal("500"))
+
+        tree = build_nature_tree([row])
+
+        assert tree is not None
+        totals = sum(l1["col1_charges"] for l1 in tree.values())
+        assert totals == Decimal("0")

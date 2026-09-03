@@ -3,8 +3,10 @@ from decimal import Decimal
 
 from budgetis.accounting.models import AccountGroup
 from budgetis.accounting.models import GroupResponsibility
+from budgetis.accounting.models import NatureGroup
 from budgetis.accounting.nature import NATURE_GROUPS
 from budgetis.accounting.views.data import AccountRow
+from budgetis.common.models import ChartScheme
 
 
 _COLS = ("col1_charges", "col1_revenues", "col2_charges", "col2_revenues", "col3_charges", "col3_revenues")
@@ -167,22 +169,44 @@ def build_summary(grouped: OrderedDict) -> dict:
     return {"rows": rows, "totals": totals}
 
 
-def _nature_group(nature: int) -> int | None:
+def _nature_group(nature: int, valid_codes: dict | None = None) -> int | None:
     try:
         n = int(str(nature)[:2])
     except (TypeError, ValueError):
         return None
-    return n if n in NATURE_GROUPS else None
+    codes = NATURE_GROUPS if valid_codes is None else valid_codes
+    return n if n in codes else None
+
+
+def _nature_group_labels(scheme: str) -> tuple[dict, bool]:
+    """
+    MCH2 nature-group codes/labels come from the canton's official reference
+    file (see import_mch2_nature_classification), which is authoritative and
+    doesn't always match NATURE_GROUPS - a hand-written approximation kept
+    only as the MCH1 fallback, since no equivalent reference file exists for it.
+
+    Returns (labels, prune_empty_groups). NATURE_GROUPS lists every code ever
+    used across MCH1's history, so an unused one is pruned; the official MCH2
+    set is small and complete enough that an all-zero group (not yet budgeted)
+    is worth surfacing rather than hiding.
+    """
+    if scheme == ChartScheme.MCH2:
+        mch2_groups = NatureGroup.objects.filter(scheme=ChartScheme.MCH2, level=2)
+        if mch2_groups.exists():
+            return OrderedDict((int(g.code), g.label) for g in mch2_groups.order_by("code")), False
+    return NATURE_GROUPS, True
 
 
 def build_nature_grouped(rows: list[AccountRow]) -> OrderedDict:
     """Group AccountRows by nature code (30–49)."""
+    scheme = rows[0].account.scheme if rows else ChartScheme.MCH1
+    labels, prune_empty = _nature_group_labels(scheme)
     grouped = OrderedDict(
-        (gid, {"code": gid, "label": str(label), **_empty_totals()}) for gid, label in NATURE_GROUPS.items()
+        (gid, {"code": str(gid), "label": str(label), **_empty_totals()}) for gid, label in labels.items()
     )
 
     for row in rows:
-        gid = _nature_group(int(row.account.nature))
+        gid = _nature_group(int(row.account.nature), labels)
         if gid is None:
             continue
         entry = grouped[gid]
@@ -195,9 +219,61 @@ def build_nature_grouped(rows: list[AccountRow]) -> OrderedDict:
             entry["col2_revenues"] += row.col2_revenues
             entry["col3_revenues"] += row.col3_revenues
 
-    # remove empty rows
-    for gid in list(grouped):
-        if not any(grouped[gid][col] for col in _COLS):
-            grouped.pop(gid)
+    if prune_empty:
+        for gid in list(grouped):
+            if not any(grouped[gid][col] for col in _COLS):
+                grouped.pop(gid)
 
     return grouped
+
+
+def _nature_tree_skeleton(groups: list[NatureGroup]) -> tuple[dict, dict, dict]:
+    """Build empty nodes for every group, wired to their parent's children, indexed by (level, code)."""
+    code_by_id = {g.id: g.code for g in groups}
+    nodes = {
+        g.code: {"code": g.code, "label": g.label, "level": g.level, "children": OrderedDict(), **_empty_totals()}
+        for g in groups
+    }
+    roots: dict[str, dict] = {}
+    by_level: dict[int, dict] = {1: {}, 2: {}, 3: {}}
+    for g in sorted(groups, key=lambda g: g.level):
+        by_level[g.level][g.code] = nodes[g.code]
+        if g.parent_id:
+            nodes[code_by_id[g.parent_id]]["children"][g.code] = nodes[g.code]
+        else:
+            roots[g.code] = nodes[g.code]
+    return nodes, roots, by_level
+
+
+def build_nature_tree(rows: list[AccountRow]) -> OrderedDict | None:
+    """
+    Build a 3-level nature tree (1 Charges/Revenus -> 2 family -> 3 sub-family)
+    from the official MCH2 nature classification. Stops at level 3 by design -
+    level 4 (individual nature codes) is one step too deep for this report.
+
+    Returns None when the scheme has no NatureGroup data (MCH1's NATURE_GROUPS
+    fallback has no level 1/3 to build a tree from - build_nature_grouped's flat
+    table stays the report for it).
+    """
+    if not rows:
+        return None
+    scheme = rows[0].account.scheme
+    groups = list(NatureGroup.objects.filter(scheme=scheme, level__in=(1, 2, 3)))
+    if not groups:
+        return None
+
+    nodes, roots, by_level = _nature_tree_skeleton(groups)
+
+    for row in rows:
+        nature = str(row.account.nature)
+        for level in (1, 2, 3):
+            node = by_level[level].get(nature[:level])
+            if node is None:
+                continue
+            for col in _COLS:
+                node[col] += getattr(row, col)
+
+    for node in nodes.values():
+        node["children"] = OrderedDict(sorted(node["children"].items()))
+
+    return OrderedDict(sorted(roots.items()))
