@@ -1,7 +1,9 @@
+import base64
 from decimal import Decimal
 from http import HTTPStatus
 
 import pytest
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 
 from budgetis.accounting.tests.factories import AccountCodeMappingFactory
@@ -13,6 +15,7 @@ from budgetis.accounting.tests.factories import NatureGroupFactory
 from budgetis.accounting.views.explore import AccountExplorerView
 from budgetis.accounting.views.explore import BudgetExplorerView
 from budgetis.common.models import ChartScheme
+from budgetis.core.models import SiteConfiguration
 from budgetis.finance.models import AvailableYear
 from budgetis.users.tests.factories import UserFactory
 
@@ -48,6 +51,25 @@ class TestAccountExplorerView:
 
         assert response.context_data["show_col2"] is True
         assert response.context_data["show_col3"] is False
+
+    def test_nav_dropdowns_link_to_function_nature_and_import_views(self, client):
+        client.force_login(UserFactory())
+        one_pixel_png = base64.b64decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+        )
+        SiteConfiguration.objects.get_or_create(
+            pk=1, defaults={"logo": SimpleUploadedFile("logo.png", one_pixel_png, content_type="image/png")}
+        )
+
+        response = client.get(reverse("accounting:account-explorer"))
+
+        html = response.content.decode()
+        assert reverse("accounting:account-explorer") in html
+        assert reverse("accounting:natures") in html
+        assert reverse("accounting:budget-explorer") in html
+        assert reverse("accounting:budget-nature-explorer") in html
+        assert reverse("bdi_import:account-import") in html
+        assert reverse("bdi_import:excel-import") in html
 
 
 class TestBudgetExplorerView:

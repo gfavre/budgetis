@@ -67,8 +67,8 @@
     {% block javascript %}
       <!-- Bootstrap JS -->
       <script defer
-              src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.min.js"
-              integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
+              src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"
+              integrity="sha512-i9cEfJwUwViEPFKdC1enz4ZRGBj8YQo6QByFTF92YXHi7waCqyexvRD75S5NVTsSiTv7rKWqG9Y5eFxmRsOn0A=="
               crossorigin="anonymous"
               referrerpolicy="no-referrer"></script>
       <!-- Your stuff: Third-party javascript libraries go here -->
@@ -103,19 +103,57 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav me-auto">
                 {% if request.user.is_authenticated %}
-                  <li class="nav-item">
-                    <a class="nav-link {% navactive 'accounting:account-explorer' %}"
-                       href="{% url 'accounting:account-explorer' %}">
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% navactive 'accounting:account-explorer' %}{% navactive 'accounting:natures' %}"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
                       <i class="bi bi-journal-text me-1"></i>
                       {% trans "Actuals" %}
                     </a>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a class="dropdown-item {% navactive 'accounting:account-explorer' %}"
+                           href="{% url 'accounting:account-explorer' %}">
+                          <i class="bi bi-diagram-3 me-1"></i>
+                          {% trans "By function" %}
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item {% navactive 'accounting:natures' %}"
+                           href="{% url 'accounting:natures' %}">
+                          <i class="bi bi-tags me-1"></i>
+                          {% trans "By nature" %}
+                        </a>
+                      </li>
+                    </ul>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link {% navactive 'accounting:budget-explorer' %}"
-                       href="{% url 'accounting:budget-explorer' %}">
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% navactive 'accounting:budget-explorer' %}{% navactive 'accounting:budget-nature-explorer' %}"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
                       <i class="bi bi-graph-up me-1"></i>
                       {% trans "Budget" %}
                     </a>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a class="dropdown-item {% navactive 'accounting:budget-explorer' %}"
+                           href="{% url 'accounting:budget-explorer' %}">
+                          <i class="bi bi-diagram-3 me-1"></i>
+                          {% trans "By function" %}
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item {% navactive 'accounting:budget-nature-explorer' %}"
+                           href="{% url 'accounting:budget-nature-explorer' %}">
+                          <i class="bi bi-tags me-1"></i>
+                          {% trans "By nature" %}
+                        </a>
+                      </li>
+                    </ul>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link {% navactive 'finance:index' %}"
@@ -124,19 +162,31 @@
                       {% trans "Reporting" %}
                     </a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link {% navactive 'bdi_import:account-import' %}"
-                       href="{% url 'bdi_import:account-import' %}">
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% navactive 'bdi_import:account-import' %}{% navactive 'bdi_import:excel-import' %}"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false">
                       <i class="bi bi-upload me-1"></i>
-                      {% translate "Import from BDI" %}
+                      {% translate "Import" %}
                     </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link {% navactive 'bdi_import:excel-import' %}"
-                       href="{% url 'bdi_import:excel-import' %}">
-                      <i class="bi bi-file-earmark-spreadsheet me-1"></i>
-                      {% translate "Import Excel" %}
-                    </a>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <a class="dropdown-item {% navactive 'bdi_import:account-import' %}"
+                           href="{% url 'bdi_import:account-import' %}">
+                          <i class="bi bi-upload me-1"></i>
+                          {% translate "Import from BDI" %}
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item {% navactive 'bdi_import:excel-import' %}"
+                           href="{% url 'bdi_import:excel-import' %}">
+                          <i class="bi bi-file-earmark-spreadsheet me-1"></i>
+                          {% translate "Import Excel" %}
+                        </a>
+                      </li>
+                    </ul>
                   </li>
                 {% endif %}
               </ul>

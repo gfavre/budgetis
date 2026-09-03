@@ -138,9 +138,15 @@
           hx-post="{% url 'accounting:account-partial' %}"
           hx-target="#account-list"
           hx-swap="outerHTML"
-          hx-trigger="change delay:300ms from:input, change from:select">
+          hx-trigger="change delay:300ms from:input, change from:select"
+          hx-indicator="#explorer-loading">
       {% crispy form %}
     </form>
+    <span id="explorer-loading"
+          class="htmx-indicator spinner-border spinner-border-sm"
+          role="status">
+      <span class="visually-hidden">{% trans "Loading..." %}</span>
+    </span>
     <hr />
   </div>
   <div class="print-cover-page">
