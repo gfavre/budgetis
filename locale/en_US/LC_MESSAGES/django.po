@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-03 11:10+0200\n"
+"POT-Creation-Date: 2026-09-03 13:25+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -372,6 +372,15 @@ msgstr ""
 msgid "Actuals explorer"
 msgstr ""
 
+#: budgetis/accounting/templates/accounting/account_by_nature.html:98
+#: budgetis/accounting/templates/accounting/account_explorer.html:148
+#: budgetis/accounting/templates/accounting/budget_by_nature.html:99
+#: budgetis/accounting/templates/accounting/budget_explorer.html:147
+#: budgetis/accounting/templates/accounting/partials/account_list.html:167
+#: budgetis/accounting/templates/accounting/partials/comments_modal.html:24
+msgid "Loading..."
+msgstr ""
+
 #: budgetis/accounting/templates/accounting/account_comments_list.html:6
 #: budgetis/accounting/templates/accounting/partials/account_table.html:48
 #: budgetis/accounting/templates/accounting/partials/account_table.html:70
@@ -399,13 +408,13 @@ msgstr ""
 msgid "Accounts explorer"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/account_explorer.html:151
-#: budgetis/accounting/templates/accounting/budget_explorer.html:150
+#: budgetis/accounting/templates/accounting/account_explorer.html:157
+#: budgetis/accounting/templates/accounting/budget_explorer.html:156
 #, python-format
 msgid "Municipality of %(city)s"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/account_explorer.html:153
+#: budgetis/accounting/templates/accounting/account_explorer.html:159
 #: budgetis/accounting/templates/accounting/partials/account_list.html:36
 #: budgetis/accounting/templates/accounting/partials/account_table.html:8
 #: budgetis/accounting/templates/accounting/partials/group_node.html:11
@@ -413,8 +422,8 @@ msgstr ""
 msgid "Actuals %(year)s"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/account_explorer.html:154
-#: budgetis/accounting/templates/accounting/budget_explorer.html:153
+#: budgetis/accounting/templates/accounting/account_explorer.html:160
+#: budgetis/accounting/templates/accounting/budget_explorer.html:159
 msgid "Accounts by administrative function"
 msgstr ""
 
@@ -451,7 +460,7 @@ msgstr ""
 msgid "Budget explorer"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/budget_explorer.html:152
+#: budgetis/accounting/templates/accounting/budget_explorer.html:158
 #: budgetis/accounting/templates/accounting/partials/account_list.html:38
 #: budgetis/accounting/templates/accounting/partials/account_table.html:10
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:17
@@ -479,6 +488,7 @@ msgstr ""
 #: budgetis/accounting/templates/accounting/partials/budget_list.html:35
 #: budgetis/accounting/templates/accounting/partials/budget_table.html:27
 #: budgetis/accounting/templates/accounting/partials/group_node.html:10
+#: budgetis/templates/users/user_detail.html:42
 msgid "Designation"
 msgstr ""
 
@@ -517,6 +527,7 @@ msgid "comment"
 msgstr ""
 
 #: budgetis/accounting/templates/accounting/partials/account_comment_form.html:22
+#: budgetis/templates/users/user_detail.html:30
 msgid "Save"
 msgstr ""
 
@@ -562,11 +573,6 @@ msgstr ""
 #: budgetis/accounting/templates/accounting/partials/group_node.html:16
 #, python-format
 msgid "Actuals %(prev_y)s"
-msgstr ""
-
-#: budgetis/accounting/templates/accounting/partials/account_list.html:167
-#: budgetis/accounting/templates/accounting/partials/comments_modal.html:24
-msgid "Loading..."
 msgstr ""
 
 #: budgetis/accounting/templates/accounting/partials/account_list.html:169
@@ -1130,6 +1136,38 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
+#: budgetis/templates/users/user_detail.html:16
+msgid "My profile"
+msgstr ""
+
+#: budgetis/templates/users/user_detail.html:22
+msgid "Email"
+msgstr ""
+
+#: budgetis/templates/users/user_detail.html:26
+msgid "Change email"
+msgstr ""
+
+#: budgetis/templates/users/user_detail.html:35
+msgid "My responsibilities"
+msgstr ""
+
+#: budgetis/templates/users/user_detail.html:43
+msgid "View"
+msgstr ""
+
+#: budgetis/templates/users/user_detail.html:58
+msgid "View in Actuals"
+msgstr ""
+
+#: budgetis/templates/users/user_detail.html:63
+msgid "View in Budget"
+msgstr ""
+
+#: budgetis/templates/users/user_detail.html:73
+msgid "No responsibilities assigned."
+msgstr ""
+
 #: budgetis/users/adapters.py:71
 msgid "This account has been disabled."
 msgstr ""
@@ -1178,10 +1216,14 @@ msgstr ""
 msgid "email address"
 msgstr ""
 
+#: budgetis/users/models.py:29
+msgid "Trigram"
+msgstr ""
+
 #: budgetis/users/tests/test_forms.py:35
 msgid "This email has already been taken."
 msgstr ""
 
-#: budgetis/users/tests/test_views.py:73 budgetis/users/views.py:25
+#: budgetis/users/tests/test_views.py:76 budgetis/users/views.py:61
 msgid "Information successfully updated"
 msgstr ""

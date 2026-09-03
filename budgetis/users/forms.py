@@ -62,6 +62,12 @@ class UserAdminCreationForm(forms.ModelForm):
         return user
 
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("name", "trigram")
+
+
 class UserSignupForm(SignupForm):
     """
     Form that will be rendered on a user sign up section/screen.

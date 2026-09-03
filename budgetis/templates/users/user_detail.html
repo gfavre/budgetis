@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load static %}
+{% load static i18n crispy_forms_tags %}
 
 {% block title %}
   User:
@@ -8,24 +8,74 @@
 {% endblock title %}
 {% block content %}
   <div class="container">
-    <div class="row">
-      <div class="col-sm-12">
-        <h2>{{ object.name }}</h2>
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <h1 class="mb-4">{{ object.name|default:object.email }}</h1>
+        {% if object == request.user %}
+          <div class="card mb-4">
+            <div class="card-header fw-bold">{% trans "My profile" %}</div>
+            <div class="card-body">
+              <form method="post" action="{% url 'users:update' %}">
+                {% csrf_token %}
+                {{ profile_form|crispy }}
+                <div class="mb-3">
+                  <label class="form-label d-block">{% trans "Email" %}</label>
+                  <span class="me-2">{{ object.email }}</span>
+                  <a href="{% url 'account_email' %}"
+                     class="btn btn-sm btn-outline-primary"
+                     title="{% trans 'Change email' %}">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                </div>
+                <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+              </form>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header fw-bold">{% trans "My responsibilities" %}</div>
+            <div class="card-body">
+              {% if responsibility_sections %}
+                <table class="table table-bordered align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>N°</th>
+                      <th>{% trans "Designation" %}</th>
+                      <th class="text-center">{% trans "View" %}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for section in responsibility_sections %}
+                      <tr class="fw-bold table-light">
+                        <td colspan="3">{{ section.group.code }} - {{ section.group.label }}</td>
+                      </tr>
+                      {% for account in section.accounts %}
+                        <tr>
+                          <td>{{ account.full_code }}</td>
+                          <td class="ps-3">{{ account.label }}</td>
+                          <td class="text-center text-nowrap">
+                            <a href="{% url 'accounting:account-explorer' %}?year={{ account.year }}#group-{{ section.group.code }}"
+                               class="btn btn-sm btn-outline-primary me-1"
+                               title="{% trans 'View in Actuals' %}">
+                              <i class="bi bi-journal-text"></i>
+                            </a>
+                            <a href="{% url 'accounting:budget-explorer' %}?year={{ account.year }}#group-{{ section.group.code }}"
+                               class="btn btn-sm btn-outline-primary"
+                               title="{% trans 'View in Budget' %}">
+                              <i class="bi bi-graph-up"></i>
+                            </a>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              {% else %}
+                <p class="text-muted mb-0">{% trans "No responsibilities assigned." %}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
-    {% if object == request.user %}
-      <!-- Action buttons -->
-      <div class="row">
-        <div class="col-sm-12">
-          <a class="btn btn-primary" href="{% url 'users:update' %}" role="button">My Info</a>
-          <a class="btn btn-primary"
-             href="{% url 'account_email' %}"
-             role="button">E-Mail</a>
-          <a class="btn btn-primary" href="{% url 'mfa_index' %}" role="button">MFA</a>
-          <!-- Your Stuff: Custom user template urls -->
-        </div>
-      </div>
-      <!-- End Action buttons -->
-    {% endif %}
   </div>
 {% endblock content %}
