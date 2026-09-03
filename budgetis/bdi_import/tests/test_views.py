@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+import openpyxl
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
@@ -63,6 +64,34 @@ class TestAccountImportView:
         log = AccountImportLog.objects.get()
         assert log.kind == AccountImportLog.ImportKind.BDI
         assert log.scheme == ChartScheme.MCH1
+
+
+def _write_mapping_preview_excel(tmp_path):
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.append(["Code", "Libellé", "Charges", "Revenus"])
+    sheet.append(["720.351", "Aide sociale", 1000, 500])
+    path = tmp_path / "preview.xlsx"
+    workbook.save(path)
+    return path
+
+
+class TestAccountMappingViewGet:
+    def test_shows_sample_values_per_column(self, client, tmp_path, site_configuration_with_logo):
+        client.force_login(UserFactory())
+        excel_path = _write_mapping_preview_excel(tmp_path)
+        with excel_path.open("rb") as fh:
+            log = AccountImportLogFactory(
+                file=SimpleUploadedFile("preview.xlsx", fh.read(), content_type="application/vnd.ms-excel")
+            )
+
+        response = client.get(reverse("bdi_import:account-mapping", kwargs={"log_id": log.id}))
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["column_samples"]["Code"] == ["720.351"]
+        html = response.content.decode()
+        assert "Aide sociale" in html
+        assert "column_map[Code]" in html
 
 
 class TestAccountMappingViewRedirect:

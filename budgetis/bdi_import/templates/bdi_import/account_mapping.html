@@ -8,8 +8,143 @@
   .main-container {
     max-width: 100%;
   }
+
+  .preview-col.mapped {
+    background-color: color-mix(in srgb, var(--brand-color) 25%, white);
+  }
+
+  .preview-field-subtitle {
+    color: #36454f;
+  }
+
+  #launch-import-btn:disabled {
+    background-color: #adb5bd;
+    border-color: #adb5bd;
+    color: #fff;
+    opacity: 1;
+  }
+
+  /* theme.css swaps .btn-primary to --brand-color (the *other* gradient
+     color) on hover/focus - keep this button on its own brand-color-alt
+     hue instead, just darkened, so hover still gives feedback without
+     changing color. */
+  #launch-import-btn:not(:disabled):hover,
+  #launch-import-btn:not(:disabled):focus {
+    background-color: color-mix(in srgb, var(--brand-color-alt) 85%, black);
+    border-color: color-mix(in srgb, var(--brand-color-alt) 85%, black);
+  }
   </style>
 {% endblock extra_style %}
+{% block javascript %}
+  {{ block.super }}
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var selects = Array.prototype.slice.call(document.querySelectorAll('.mapping-field-select'));
+    if (!selects.length) {
+      return;
+    }
+    var ignoreOptionHtml = selects[0].options[0].outerHTML;
+    var optionGroups = Array.prototype.slice.call(selects[0].querySelectorAll('optgroup')).map(function (optgroup) {
+      return {
+        label: optgroup.label,
+        choices: Array.prototype.slice.call(optgroup.querySelectorAll('option')).map(function (opt) {
+          return { value: opt.value, label: opt.text };
+        }),
+      };
+    });
+    var requirementItems = Array.prototype.slice.call(document.querySelectorAll('#mapping-requirements li'));
+    var reminderBox = document.getElementById('mapping-reminder');
+    var reminderList = document.getElementById('mapping-reminder-list');
+    var launchButton = document.getElementById('launch-import-btn');
+
+    function selectedValues() {
+      var values = {};
+      selects.forEach(function (select) {
+        if (select.value) {
+          values[select.value] = select.dataset.col;
+        }
+      });
+      return values;
+    }
+
+    function optionSatisfied(spec, selected) {
+      if (!spec) {
+        return false;
+      }
+      return spec.split(',').every(function (field) {
+        return Boolean(selected[field]);
+      });
+    }
+
+    function refreshReminder(selected) {
+      var missing = requirementItems.filter(function (li) {
+        return !(
+          optionSatisfied(li.dataset.optionA, selected) || optionSatisfied(li.dataset.optionB, selected)
+        );
+      });
+      reminderBox.classList.toggle('d-none', missing.length === 0);
+      reminderList.innerHTML = '';
+      missing.forEach(function (li) {
+        var item = document.createElement('li');
+        item.textContent = li.textContent.trim();
+        reminderList.appendChild(item);
+      });
+      launchButton.disabled = missing.length > 0;
+    }
+
+    function refreshOptions() {
+      var selected = selectedValues();
+      selects.forEach(function (select) {
+        var current = select.value;
+        var html = ignoreOptionHtml;
+        optionGroups.forEach(function (group) {
+          var visibleChoices = group.choices.filter(function (choice) {
+            var takenByCol = selected[choice.value];
+            return !takenByCol || takenByCol === select.dataset.col;
+          });
+          if (visibleChoices.length) {
+            html += '<optgroup label="' + group.label + '">';
+            visibleChoices.forEach(function (choice) {
+              html += '<option value="' + choice.value + '">' + choice.label + '</option>';
+            });
+            html += '</optgroup>';
+          }
+        });
+        select.innerHTML = html;
+        select.value = current;
+      });
+    }
+
+    function syncPreview(select) {
+      var col = select.dataset.col;
+      var previewCells = document.querySelectorAll('.preview-col[data-col="' + CSS.escape(col) + '"]');
+      var subtitle = document.querySelector(
+        'th.preview-col[data-col="' + CSS.escape(col) + '"] .preview-field-subtitle'
+      );
+      var selectedOption = select.options[select.selectedIndex];
+      var label = selectedOption && selectedOption.value ? selectedOption.text : '';
+      previewCells.forEach(function (cell) {
+        cell.classList.toggle('mapped', Boolean(label));
+      });
+      if (subtitle) {
+        subtitle.textContent = label;
+      }
+    }
+
+    function onAnyChange() {
+      refreshOptions();
+      selects.forEach(syncPreview);
+      refreshReminder(selectedValues());
+    }
+
+    selects.forEach(function (select) {
+      select.addEventListener('change', onAnyChange);
+    });
+
+    onAnyChange();
+  });
+  </script>
+{% endblock javascript %}
 {% block main %}
   <div class="container-fluid">
     <main class="main-container">
@@ -61,35 +196,98 @@
       </div>
       <form method="post">
         {% csrf_token %}
-        <table class="table table-bordered align-middle">
-          <thead class="align-middle text-center">
-            <tr>
-              {% for col in columns %}
-                <th class="p-1">
-                  <div class="d-flex flex-column align-items-stretch">
-                    <select name="column_map[{{ col }}]" class="form-select form-select-sm mb-1">
-                      <option value="">({% trans "Ignore" %})</option>
-                      {% for val, label in field_choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
-                    </select>
-                    <small class="text-muted text-break">{{ col }}</small>
-                  </div>
-                </th>
-              {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for row in preview_rows %}
-              <tr>
-                {% for col in columns %}<td>{{ row|get_item:col }}</td>{% endfor %}
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-        <p class="text-muted small mt-4">
+        <div class="card mb-4">
+          <div class="card-header fw-bold">{% trans "Column mapping" %}</div>
+          <div class="card-body p-0">
+            <table class="table table-bordered table-sm align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>{% trans "Source column" %}</th>
+                  <th>{% trans "Sample values" %}</th>
+                  <th style="width: 260px;">{% trans "Field" %}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for col in columns %}
+                  <tr>
+                    <td class="fw-bold">{{ col }}</td>
+                    <td class="text-muted small">
+                      {% with samples=column_samples|get_item:col %}
+                        {% if samples %}
+                          {{ samples|join:", " }}
+                        {% else %}
+                          <em>{% trans "No data" %}</em>
+                        {% endif %}
+                      {% endwith %}
+                    </td>
+                    <td>
+                      <select name="column_map[{{ col }}]"
+                              class="form-select form-select-sm mapping-field-select"
+                              data-col="{{ col }}">
+                        <option value="">({% trans "Ignore" %})</option>
+                        {% for group_label, choices in field_groups %}
+                          <optgroup label="{{ group_label }}">
+                            {% for val, label in choices %}<option value="{{ val }}">{{ label }}</option>{% endfor %}
+                          </optgroup>
+                        {% endfor %}
+                      </select>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <ul id="mapping-requirements" class="d-none">
+          <li data-option-a="code" data-option-b="function,nature,sub_account">
+            {% trans "Account code, or the three MCH2 columns (Function, Nature, Sub account)" %}
+          </li>
+          <li data-option-a="label">{% trans "Account label" %}</li>
+          <li data-option-a="total" data-option-b="charges,revenues">
+            {% trans "Signed total, or both Charges and Revenues" %}
+          </li>
+        </ul>
+        <div id="mapping-reminder" class="alert alert-warning d-none">
+          <strong>{% trans "Still needed:" %}</strong>
+          <ul id="mapping-reminder-list" class="mb-0">
+          </ul>
+        </div>
+        <p class="text-muted small">
           {% trans "Mapping a column to 'Total (signed)' always derives charges/revenues from its sign - positive is a charge, negative is a revenue." %}
         </p>
-        <button type="submit" class="btn btn-primary mt-4">{% trans "Launch Import" %}</button>
+        <button type="submit"
+                id="launch-import-btn"
+                class="btn btn-primary mb-4"
+                disabled>{% trans "Launch Import" %}</button>
       </form>
+      <div class="card mb-4">
+        <div class="card-header fw-bold">{% trans "Data preview" %}</div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-bordered table-sm mb-0">
+              <thead class="table-light">
+                <tr>
+                  {% for col in columns %}
+                    <th class="text-nowrap preview-col" data-col="{{ col }}">
+                      {{ col }}
+                      <div class="small fw-normal preview-field-subtitle"></div>
+                    </th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in preview_rows %}
+                  <tr>
+                    {% for col in columns %}
+                      <td class="text-nowrap preview-col" data-col="{{ col }}">{{ row|get_item:col }}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
   <div class="container"></div>

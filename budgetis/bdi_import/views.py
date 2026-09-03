@@ -129,6 +129,21 @@ IMPORT_ENTRY_URL_NAMES: dict[str, str] = {
     AccountImportLog.ImportKind.EXCEL: "bdi_import:excel-import",
 }
 
+# Groups the mapping dropdown's options into optgroups, purely for readability
+# - not a model concern, this order/grouping has no bearing on import logic.
+_F = ColumnMapping.Field
+FIELD_GROUPS: list[tuple[str, list[ColumnMapping.Field]]] = [
+    (_("Account identity"), [_F.CODE, _F.FUNCTION, _F.NATURE, _F.SUB_ACCOUNT]),
+    (_("Account label"), [_F.LABEL]),
+    (_("Responsible"), [_F.RESPONSIBLE]),
+    (_("Amounts"), [_F.CHARGES, _F.REVENUES, _F.TOTAL]),
+]
+
+
+def _column_has_data(series) -> bool:
+    """A column is worth showing in the mapping UI only if it has any real value anywhere in the file."""
+    return bool(series.dropna().astype(str).str.strip().ne("").any())
+
 
 class AccountMappingView(LoginRequiredMixin, View):
     template_name = "bdi_import/account_mapping.html"
@@ -142,12 +157,20 @@ class AccountMappingView(LoginRequiredMixin, View):
             uploaded_df = load_dataframe_with_header(path)
             data_start_idx = find_first_significant_content_row(uploaded_df)
             preview_rows = uploaded_df.iloc[data_start_idx : data_start_idx + 10]
+            columns = [col for col in uploaded_df.columns if _column_has_data(uploaded_df[col])]
+            column_samples = {
+                col: [v for v in preview_rows[col].dropna().astype(str).tolist() if v][:3] for col in columns
+            }
+            field_groups = [
+                (group_label, [(field.value, field.label) for field in fields]) for group_label, fields in FIELD_GROUPS
+            ]
 
             context = {
                 "log": log,
-                "columns": list(uploaded_df.columns),
-                "preview_rows": preview_rows.to_dict(orient="records"),
-                "field_choices": ColumnMapping.Field.choices,
+                "columns": columns,
+                "column_samples": column_samples,
+                "preview_rows": preview_rows.fillna("").to_dict(orient="records"),
+                "field_groups": field_groups,
                 "import_entry_url_name": entry_url_name,
             }
             return render(request, self.template_name, context)
