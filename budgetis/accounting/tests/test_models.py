@@ -1,9 +1,11 @@
 from decimal import Decimal
 
 import pytest
+from django.core.management import call_command
 from django.db.models import ProtectedError
 
 from budgetis.accounting.models import AccountGroup
+from budgetis.accounting.models import NatureGroup
 from budgetis.accounting.tests.factories import AccountCodeMappingFactory
 from budgetis.accounting.tests.factories import AccountCommentFactory
 from budgetis.accounting.tests.factories import AccountFactory
@@ -114,6 +116,32 @@ class TestAccountGroupHierarchy:
             parent.delete()
 
 
+class TestAccountGroupFixture:
+    """
+    Locks in that the accountgroup_mch2 fixture (the canton's official
+    functional classification, dumped with --natural-foreign
+    --natural-primary) stays loadable and its parent links resolve correctly
+    through natural keys. See docs/mch2-migration.md for the documented shape.
+    """
+
+    MCH2_ACCOUNTGROUP_COUNT = 418
+
+    def test_loads_and_wires_parents_by_natural_key(self):
+        call_command("loaddata", "accountgroup_mch2")
+
+        assert AccountGroup.objects.filter(scheme=ChartScheme.MCH2).count() == self.MCH2_ACCOUNTGROUP_COUNT
+        leaf = AccountGroup.objects.get(scheme=ChartScheme.MCH2, level=4, code="0110")
+        level3 = leaf.parent
+        assert level3 is not None
+        assert level3.code == "011"
+        level2 = level3.parent
+        assert level2 is not None
+        assert level2.code == "01"
+        level1 = level2.parent
+        assert level1 is not None
+        assert level1.code == "0"
+
+
 class TestNatureGroupHierarchy:
     def test_same_code_coexists_with_an_account_group(self):
         # NatureGroup is a separate table precisely so a nature code like "30"
@@ -127,6 +155,31 @@ class TestNatureGroupHierarchy:
         NatureGroupFactory(level=2, parent=parent)
         with pytest.raises(ProtectedError):
             parent.delete()
+
+
+class TestNatureGroupFixture:
+    """
+    Locks in that the naturegroup_mch2 fixture (dumped with --natural-foreign
+    --natural-primary from the official import) stays loadable and that its
+    self-referential parent links resolve correctly through natural keys.
+    """
+
+    MCH2_NATUREGROUP_COUNT = 421
+
+    def test_loads_and_wires_parents_by_natural_key(self):
+        call_command("loaddata", "naturegroup_mch2")
+
+        assert NatureGroup.objects.filter(scheme=ChartScheme.MCH2).count() == self.MCH2_NATUREGROUP_COUNT
+        leaf = NatureGroup.objects.get(scheme=ChartScheme.MCH2, level=4, code="3010")
+        level3 = leaf.parent
+        assert level3 is not None
+        assert level3.code == "301"
+        level2 = level3.parent
+        assert level2 is not None
+        assert level2.code == "30"
+        level1 = level2.parent
+        assert level1 is not None
+        assert level1.code == "3"
 
 
 class TestAccountComment:

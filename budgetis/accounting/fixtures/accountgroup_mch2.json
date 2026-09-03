@@ -1,0 +1,6650 @@
+[
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.565Z",
+    "updated_at": "2026-09-01T09:35:08.565Z",
+    "code": "0",
+    "label": "Administration générale",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.635Z",
+    "updated_at": "2026-09-01T09:35:08.635Z",
+    "code": "1",
+    "label": "Ordre et sécurité publics, défense",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.692Z",
+    "updated_at": "2026-09-01T09:35:08.692Z",
+    "code": "2",
+    "label": "Formation",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.782Z",
+    "updated_at": "2026-09-01T09:35:08.782Z",
+    "code": "3",
+    "label": "Culture, sport et loisirs, église",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.842Z",
+    "updated_at": "2026-09-01T09:35:08.842Z",
+    "code": "4",
+    "label": "Santé",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.892Z",
+    "updated_at": "2026-09-01T09:35:08.892Z",
+    "code": "5",
+    "label": "Prévoyance sociale",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.030Z",
+    "updated_at": "2026-09-01T09:35:09.030Z",
+    "code": "6",
+    "label": "Trafic et télécommunications",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.117Z",
+    "updated_at": "2026-09-01T09:35:09.117Z",
+    "code": "7",
+    "label": "Protection de l’environnement et aménagement du territoire",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.203Z",
+    "updated_at": "2026-09-01T09:35:09.203Z",
+    "code": "8",
+    "label": "Économie publique",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.316Z",
+    "updated_at": "2026-09-01T09:35:09.316Z",
+    "code": "9",
+    "label": "Finances et impôts",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.567Z",
+    "updated_at": "2026-09-01T09:35:08.567Z",
+    "code": "01",
+    "label": "Législatif et exécutif",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "0"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.579Z",
+    "updated_at": "2026-09-01T09:35:08.579Z",
+    "code": "02",
+    "label": "Services généraux",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "0"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.614Z",
+    "updated_at": "2026-09-01T09:35:08.614Z",
+    "code": "03",
+    "label": "Relations avec l'étranger",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "0"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.636Z",
+    "updated_at": "2026-09-01T09:35:08.636Z",
+    "code": "11",
+    "label": "Sécurité publique",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "1"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.649Z",
+    "updated_at": "2026-09-01T09:35:08.649Z",
+    "code": "12",
+    "label": "Justice",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "1"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.654Z",
+    "updated_at": "2026-09-01T09:35:08.654Z",
+    "code": "13",
+    "label": "Exécution des peines",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "1"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.659Z",
+    "updated_at": "2026-09-01T09:35:08.659Z",
+    "code": "14",
+    "label": "Questions juridiques",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "1"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.664Z",
+    "updated_at": "2026-09-01T09:35:08.664Z",
+    "code": "15",
+    "label": "Service du feu",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "1"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.670Z",
+    "updated_at": "2026-09-01T09:35:08.670Z",
+    "code": "16",
+    "label": "Défense",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "1"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.683Z",
+    "updated_at": "2026-09-01T09:35:08.683Z",
+    "code": "18",
+    "label": "R&D ordre et sécurité publics, défense",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "1"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.694Z",
+    "updated_at": "2026-09-01T09:35:08.694Z",
+    "code": "21",
+    "label": "Scolarité obligatoire",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "2"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.727Z",
+    "updated_at": "2026-09-01T09:35:08.727Z",
+    "code": "22",
+    "label": "Ecoles spécialisées",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "2"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.733Z",
+    "updated_at": "2026-09-01T09:35:08.733Z",
+    "code": "23",
+    "label": "Formation professionnelle initiale",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "2"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.738Z",
+    "updated_at": "2026-09-01T09:35:08.738Z",
+    "code": "25",
+    "label": "Ecoles de formation générale",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "2"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.748Z",
+    "updated_at": "2026-09-01T09:35:08.748Z",
+    "code": "26",
+    "label": "Formation professionnelle supérieure",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "2"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.753Z",
+    "updated_at": "2026-09-01T09:35:08.753Z",
+    "code": "27",
+    "label": "Hautes écoles",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "2"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.765Z",
+    "updated_at": "2026-09-01T09:35:08.765Z",
+    "code": "28",
+    "label": "Recherche",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "2"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.773Z",
+    "updated_at": "2026-09-01T09:35:08.773Z",
+    "code": "29",
+    "label": "Formation, autres",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "2"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.784Z",
+    "updated_at": "2026-09-01T09:35:08.784Z",
+    "code": "31",
+    "label": "Héritage culturel",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.793Z",
+    "updated_at": "2026-09-01T09:35:08.793Z",
+    "code": "32",
+    "label": "Culture, autres",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.805Z",
+    "updated_at": "2026-09-01T09:35:08.805Z",
+    "code": "33",
+    "label": "Médias",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.816Z",
+    "updated_at": "2026-09-01T09:35:08.816Z",
+    "code": "34",
+    "label": "Sport et loisirs",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.828Z",
+    "updated_at": "2026-09-01T09:35:08.828Z",
+    "code": "35",
+    "label": "Églises et affaires religieuses",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.833Z",
+    "updated_at": "2026-09-01T09:35:08.833Z",
+    "code": "38",
+    "label": "R&D cultures, sport et loisirs, église",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.844Z",
+    "updated_at": "2026-09-01T09:35:08.844Z",
+    "code": "41",
+    "label": "Hôpitaux, homes médicalisés",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.856Z",
+    "updated_at": "2026-09-01T09:35:08.856Z",
+    "code": "42",
+    "label": "Soins ambulatoires et sauvetage",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.865Z",
+    "updated_at": "2026-09-01T09:35:08.865Z",
+    "code": "43",
+    "label": "Prévention",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.881Z",
+    "updated_at": "2026-09-01T09:35:08.881Z",
+    "code": "48",
+    "label": "R&D santé",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.886Z",
+    "updated_at": "2026-09-01T09:35:08.886Z",
+    "code": "49",
+    "label": "Santé publique, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.894Z",
+    "updated_at": "2026-09-01T09:35:08.894Z",
+    "code": "51",
+    "label": "Maladie et accident",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "5"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.909Z",
+    "updated_at": "2026-09-01T09:35:08.909Z",
+    "code": "52",
+    "label": "Invalidité",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "5"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.925Z",
+    "updated_at": "2026-09-01T09:35:08.925Z",
+    "code": "53",
+    "label": "Vieillesse et survivants",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "5"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.945Z",
+    "updated_at": "2026-09-01T09:35:08.945Z",
+    "code": "54",
+    "label": "Famille et jeunesse",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "5"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.965Z",
+    "updated_at": "2026-09-01T09:35:08.965Z",
+    "code": "55",
+    "label": "Chômage",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "5"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.982Z",
+    "updated_at": "2026-09-01T09:35:08.982Z",
+    "code": "56",
+    "label": "Logements sociaux",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "5"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.989Z",
+    "updated_at": "2026-09-01T09:35:08.989Z",
+    "code": "57",
+    "label": "Aide sociale et domaine de l’asile",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "5"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.010Z",
+    "updated_at": "2026-09-01T09:35:09.010Z",
+    "code": "58",
+    "label": "R&D prévoyance sociale",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "5"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.016Z",
+    "updated_at": "2026-09-01T09:35:09.016Z",
+    "code": "59",
+    "label": "Prévoyance sociale, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "5"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.032Z",
+    "updated_at": "2026-09-01T09:35:09.032Z",
+    "code": "61",
+    "label": "Circulation routière",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "6"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.063Z",
+    "updated_at": "2026-09-01T09:35:09.063Z",
+    "code": "62",
+    "label": "Transports publics",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "6"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.082Z",
+    "updated_at": "2026-09-01T09:35:09.082Z",
+    "code": "63",
+    "label": "Trafic, autres",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "6"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.100Z",
+    "updated_at": "2026-09-01T09:35:09.100Z",
+    "code": "64",
+    "label": "Télécommunications",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "6"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.106Z",
+    "updated_at": "2026-09-01T09:35:09.106Z",
+    "code": "68",
+    "label": "R&D trafic et télécommunications",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "6"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.120Z",
+    "updated_at": "2026-09-01T09:35:09.120Z",
+    "code": "71",
+    "label": "Approvisionnement en eau",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "7"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.128Z",
+    "updated_at": "2026-09-01T09:35:09.128Z",
+    "code": "72",
+    "label": "Traitement des eaux usées",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "7"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.134Z",
+    "updated_at": "2026-09-01T09:35:09.134Z",
+    "code": "73",
+    "label": "Gestion des déchets",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "7"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.143Z",
+    "updated_at": "2026-09-01T09:35:09.143Z",
+    "code": "74",
+    "label": "Aménagements",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "7"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.153Z",
+    "updated_at": "2026-09-01T09:35:09.153Z",
+    "code": "75",
+    "label": "Protection des espèces et du paysage",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "7"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.158Z",
+    "updated_at": "2026-09-01T09:35:09.158Z",
+    "code": "76",
+    "label": "Lutte contre la pollution de l’environnement",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "7"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.170Z",
+    "updated_at": "2026-09-01T09:35:09.170Z",
+    "code": "77",
+    "label": "Protection de l’environnement, autres",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "7"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.180Z",
+    "updated_at": "2026-09-01T09:35:09.180Z",
+    "code": "78",
+    "label": "R&D protection de l’environnement",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "7"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.190Z",
+    "updated_at": "2026-09-01T09:35:09.190Z",
+    "code": "79",
+    "label": "Aménagement du territoire",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "7"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.205Z",
+    "updated_at": "2026-09-01T09:35:09.205Z",
+    "code": "81",
+    "label": "Agriculture",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "8"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.240Z",
+    "updated_at": "2026-09-01T09:35:09.240Z",
+    "code": "82",
+    "label": "Sylviculture",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "8"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.245Z",
+    "updated_at": "2026-09-01T09:35:09.245Z",
+    "code": "83",
+    "label": "Chasse et pêche",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "8"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.250Z",
+    "updated_at": "2026-09-01T09:35:09.250Z",
+    "code": "84",
+    "label": "Tourisme",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "8"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.254Z",
+    "updated_at": "2026-09-01T09:35:09.254Z",
+    "code": "85",
+    "label": "Industrie, artisanat et commerce",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "8"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.263Z",
+    "updated_at": "2026-09-01T09:35:09.263Z",
+    "code": "86",
+    "label": "Banques et assurances",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "8"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.268Z",
+    "updated_at": "2026-09-01T09:35:09.268Z",
+    "code": "87",
+    "label": "Combustibles et énergie",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "8"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.287Z",
+    "updated_at": "2026-09-01T09:35:09.287Z",
+    "code": "88",
+    "label": "R&D activités économiques",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "8"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.307Z",
+    "updated_at": "2026-09-01T09:35:09.307Z",
+    "code": "89",
+    "label": "Autres exploitations artisanales",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "8"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.318Z",
+    "updated_at": "2026-09-01T09:35:09.318Z",
+    "code": "91",
+    "label": "Impôts",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "9"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.324Z",
+    "updated_at": "2026-09-01T09:35:09.324Z",
+    "code": "92",
+    "label": "Conventions fiscales",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "9"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.333Z",
+    "updated_at": "2026-09-01T09:35:09.333Z",
+    "code": "93",
+    "label": "Péréquation financière et compensation des charges",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "9"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.340Z",
+    "updated_at": "2026-09-01T09:35:09.340Z",
+    "code": "94",
+    "label": "Parts aux recettes de la Confédération",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "9"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.345Z",
+    "updated_at": "2026-09-01T09:35:09.345Z",
+    "code": "95",
+    "label": "Parts aux recettes, autres",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "9"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.350Z",
+    "updated_at": "2026-09-01T09:35:09.350Z",
+    "code": "96",
+    "label": "Administration de la fortune et de la dette",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "9"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.365Z",
+    "updated_at": "2026-09-01T09:35:09.365Z",
+    "code": "97",
+    "label": "Redistributions",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "9"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.370Z",
+    "updated_at": "2026-09-01T09:35:09.370Z",
+    "code": "99",
+    "label": "Postes non ventilables",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "9"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.569Z",
+    "updated_at": "2026-09-01T09:35:08.570Z",
+    "code": "011",
+    "label": "Législatif",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "01"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.574Z",
+    "updated_at": "2026-09-01T09:35:08.574Z",
+    "code": "012",
+    "label": "Exécutif",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "01"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.581Z",
+    "updated_at": "2026-09-01T09:35:08.581Z",
+    "code": "021",
+    "label": "Administration des finances et des contributions",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "02"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.587Z",
+    "updated_at": "2026-09-01T09:35:08.587Z",
+    "code": "022",
+    "label": "Service administratif",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "02"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.606Z",
+    "updated_at": "2026-09-01T09:35:08.606Z",
+    "code": "023",
+    "label": "Météorologie et topographie nationale",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "02"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.610Z",
+    "updated_at": "2026-09-01T09:35:08.610Z",
+    "code": "029",
+    "label": "Immeubles administratifs, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "02"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.616Z",
+    "updated_at": "2026-09-01T09:35:08.616Z",
+    "code": "031",
+    "label": "Relations politiques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "03"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.620Z",
+    "updated_at": "2026-09-01T09:35:08.620Z",
+    "code": "032",
+    "label": "Gestion civile des conflits",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "03"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.624Z",
+    "updated_at": "2026-09-01T09:35:08.624Z",
+    "code": "033",
+    "label": "Relations économiques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "03"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.627Z",
+    "updated_at": "2026-09-01T09:35:08.627Z",
+    "code": "034",
+    "label": "Coopération au développement",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "03"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.631Z",
+    "updated_at": "2026-09-01T09:35:08.631Z",
+    "code": "035",
+    "label": "Pays en transition, aide aux pays de l'Est",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "03"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.638Z",
+    "updated_at": "2026-09-01T09:35:08.638Z",
+    "code": "111",
+    "label": "Police et sécurité publique",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "11"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.642Z",
+    "updated_at": "2026-09-01T09:35:08.642Z",
+    "code": "112",
+    "label": "Sécurité routière",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "11"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.645Z",
+    "updated_at": "2026-09-01T09:35:08.645Z",
+    "code": "113",
+    "label": "Office de la circulation routière et de la navigation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "11"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.650Z",
+    "updated_at": "2026-09-01T09:35:08.650Z",
+    "code": "120",
+    "label": "Justice",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "12"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.655Z",
+    "updated_at": "2026-09-01T09:35:08.655Z",
+    "code": "130",
+    "label": "Exécution des peines",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "13"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.660Z",
+    "updated_at": "2026-09-01T09:35:08.660Z",
+    "code": "140",
+    "label": "Questions juridiques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "14"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.666Z",
+    "updated_at": "2026-09-01T09:35:08.666Z",
+    "code": "150",
+    "label": "Service du feu",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "15"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.672Z",
+    "updated_at": "2026-09-01T09:35:08.672Z",
+    "code": "161",
+    "label": "Défense militaire",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "16"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.675Z",
+    "updated_at": "2026-09-01T09:35:08.675Z",
+    "code": "162",
+    "label": "Défense civile",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "16"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.679Z",
+    "updated_at": "2026-09-01T09:35:08.679Z",
+    "code": "163",
+    "label": "Aide militaire à l'étranger, promotion de la paix",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "16"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.685Z",
+    "updated_at": "2026-09-01T09:35:08.685Z",
+    "code": "181",
+    "label": "R&D ordre et sécurité publics",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "18"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.688Z",
+    "updated_at": "2026-09-01T09:35:08.688Z",
+    "code": "182",
+    "label": "R&D défense",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "18"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.696Z",
+    "updated_at": "2026-09-01T09:35:08.696Z",
+    "code": "211",
+    "label": "Cycle élémentaire",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "21"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.700Z",
+    "updated_at": "2026-09-01T09:35:08.700Z",
+    "code": "212",
+    "label": "Degré primaire",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "21"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.703Z",
+    "updated_at": "2026-09-01T09:35:08.703Z",
+    "code": "213",
+    "label": "Degré secondaire I",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "21"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.707Z",
+    "updated_at": "2026-09-01T09:35:08.707Z",
+    "code": "214",
+    "label": "Écoles de musique",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "21"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.711Z",
+    "updated_at": "2026-09-01T09:35:08.711Z",
+    "code": "217",
+    "label": "Bâtiments scolaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "21"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.715Z",
+    "updated_at": "2026-09-01T09:35:08.715Z",
+    "code": "218",
+    "label": "Accueil de jour",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "21"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.719Z",
+    "updated_at": "2026-09-01T09:35:08.719Z",
+    "code": "219",
+    "label": "École obligatoire, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "21"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.729Z",
+    "updated_at": "2026-09-01T09:35:08.729Z",
+    "code": "220",
+    "label": "Ecoles spécialisées",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "22"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.735Z",
+    "updated_at": "2026-09-01T09:35:08.735Z",
+    "code": "230",
+    "label": "Formation professionnelle initiale",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "23"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.740Z",
+    "updated_at": "2026-09-01T09:35:08.740Z",
+    "code": "251",
+    "label": "Ecoles de maturité gymnasiale",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "25"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.744Z",
+    "updated_at": "2026-09-01T09:35:08.744Z",
+    "code": "252",
+    "label": "Ecoles de culture générale et autres écoles de formation générale",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "25"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.750Z",
+    "updated_at": "2026-09-01T09:35:08.750Z",
+    "code": "260",
+    "label": "Formation professionnelle supérieure",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "26"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.755Z",
+    "updated_at": "2026-09-01T09:35:08.755Z",
+    "code": "271",
+    "label": "Hautes écoles universitaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "27"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.759Z",
+    "updated_at": "2026-09-01T09:35:08.759Z",
+    "code": "272",
+    "label": "Hautes écoles pédagogiques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "27"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.762Z",
+    "updated_at": "2026-09-01T09:35:08.762Z",
+    "code": "273",
+    "label": "Hautes écoles spécialisées",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "27"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.767Z",
+    "updated_at": "2026-09-01T09:35:08.767Z",
+    "code": "281",
+    "label": "Recherche fondamentale",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "28"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.770Z",
+    "updated_at": "2026-09-01T09:35:08.770Z",
+    "code": "282",
+    "label": "R&D formation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "28"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.775Z",
+    "updated_at": "2026-09-01T09:35:08.775Z",
+    "code": "291",
+    "label": "Administration",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "29"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.779Z",
+    "updated_at": "2026-09-01T09:35:08.779Z",
+    "code": "299",
+    "label": "Formation, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "29"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.785Z",
+    "updated_at": "2026-09-01T09:35:08.785Z",
+    "code": "311",
+    "label": "Musées et arts plastiques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.789Z",
+    "updated_at": "2026-09-01T09:35:08.789Z",
+    "code": "312",
+    "label": "Conservation des monuments historiques et protection du patrimoine",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.794Z",
+    "updated_at": "2026-09-01T09:35:08.794Z",
+    "code": "321",
+    "label": "Bibliothèques et littérature",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "32"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.798Z",
+    "updated_at": "2026-09-01T09:35:08.798Z",
+    "code": "322",
+    "label": "Musique et théâtre",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "32"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.802Z",
+    "updated_at": "2026-09-01T09:35:08.802Z",
+    "code": "329",
+    "label": "Culture, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "32"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.807Z",
+    "updated_at": "2026-09-01T09:35:08.807Z",
+    "code": "331",
+    "label": "Film et cinéma",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "33"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.810Z",
+    "updated_at": "2026-09-01T09:35:08.810Z",
+    "code": "332",
+    "label": "Mass média",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "33"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.817Z",
+    "updated_at": "2026-09-01T09:35:08.817Z",
+    "code": "341",
+    "label": "Sport",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "34"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.821Z",
+    "updated_at": "2026-09-01T09:35:08.821Z",
+    "code": "342",
+    "label": "Loisirs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "34"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.830Z",
+    "updated_at": "2026-09-01T09:35:08.830Z",
+    "code": "350",
+    "label": "Églises et affaires religieuses",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "35"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.835Z",
+    "updated_at": "2026-09-01T09:35:08.835Z",
+    "code": "381",
+    "label": "R&D culture et médias",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "38"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.838Z",
+    "updated_at": "2026-09-01T09:35:08.838Z",
+    "code": "382",
+    "label": "R&D sport et loisirs, église",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "38"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.846Z",
+    "updated_at": "2026-09-01T09:35:08.846Z",
+    "code": "411",
+    "label": "Hôpitaux",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "41"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.849Z",
+    "updated_at": "2026-09-01T09:35:08.849Z",
+    "code": "412",
+    "label": "Homes médicalisés et maisons pour personnes âgées",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "41"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.853Z",
+    "updated_at": "2026-09-01T09:35:08.853Z",
+    "code": "413",
+    "label": "Cliniques psychiatriques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "41"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.858Z",
+    "updated_at": "2026-09-01T09:35:08.858Z",
+    "code": "421",
+    "label": "Soins ambulatoires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "42"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.861Z",
+    "updated_at": "2026-09-01T09:35:08.861Z",
+    "code": "422",
+    "label": "Services de sauvetage",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "42"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.867Z",
+    "updated_at": "2026-09-01T09:35:08.867Z",
+    "code": "431",
+    "label": "Prévention d’alcool et de drogue",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "43"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.870Z",
+    "updated_at": "2026-09-01T09:35:08.870Z",
+    "code": "432",
+    "label": "Lutte contre les maladies, autres",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "43"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.874Z",
+    "updated_at": "2026-09-01T09:35:08.874Z",
+    "code": "433",
+    "label": "Service médical des écoles",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "43"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.877Z",
+    "updated_at": "2026-09-01T09:35:08.877Z",
+    "code": "434",
+    "label": "Contrôle des denrées alimentaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "43"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.883Z",
+    "updated_at": "2026-09-01T09:35:08.883Z",
+    "code": "480",
+    "label": "R&D santé",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "48"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.888Z",
+    "updated_at": "2026-09-01T09:35:08.888Z",
+    "code": "490",
+    "label": "Santé publique, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "49"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.896Z",
+    "updated_at": "2026-09-01T09:35:08.896Z",
+    "code": "511",
+    "label": "Assurance-maladie",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "51"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.899Z",
+    "updated_at": "2026-09-01T09:35:08.899Z",
+    "code": "512",
+    "label": "Réductions de primes",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "51"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.902Z",
+    "updated_at": "2026-09-01T09:35:08.902Z",
+    "code": "513",
+    "label": "Assurance-accidents",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "51"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.906Z",
+    "updated_at": "2026-09-01T09:35:08.906Z",
+    "code": "514",
+    "label": "Assurance militaire",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "51"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.911Z",
+    "updated_at": "2026-09-01T09:35:08.911Z",
+    "code": "521",
+    "label": "Assurance-invalidité AI",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "52"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.914Z",
+    "updated_at": "2026-09-01T09:35:08.914Z",
+    "code": "522",
+    "label": "Prestations complémentaires AI",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "52"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.918Z",
+    "updated_at": "2026-09-01T09:35:08.918Z",
+    "code": "523",
+    "label": "Foyers pour invalides",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "52"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.921Z",
+    "updated_at": "2026-09-01T09:35:08.921Z",
+    "code": "524",
+    "label": "Prestations aux invalides",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "52"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.927Z",
+    "updated_at": "2026-09-01T09:35:08.927Z",
+    "code": "531",
+    "label": "Assurance vieillesse et survivants AVS",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "53"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.931Z",
+    "updated_at": "2026-09-01T09:35:08.931Z",
+    "code": "532",
+    "label": "Prestations complémentaires AVS",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "53"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.934Z",
+    "updated_at": "2026-09-01T09:35:08.934Z",
+    "code": "533",
+    "label": "Prestations aux retraités",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "53"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.937Z",
+    "updated_at": "2026-09-01T09:35:08.937Z",
+    "code": "534",
+    "label": "Logements pour aînés (sans soins)",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "53"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.941Z",
+    "updated_at": "2026-09-01T09:35:08.941Z",
+    "code": "535",
+    "label": "Prestations et contributions seniors",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "53"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.946Z",
+    "updated_at": "2026-09-01T09:35:08.946Z",
+    "code": "541",
+    "label": "Allocations familiales",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "54"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.951Z",
+    "updated_at": "2026-09-01T09:35:08.951Z",
+    "code": "542",
+    "label": "Assurance-maternité",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "54"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.954Z",
+    "updated_at": "2026-09-01T09:35:08.954Z",
+    "code": "543",
+    "label": "Avances et recouvrement des pensions alimentaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "54"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.958Z",
+    "updated_at": "2026-09-01T09:35:08.958Z",
+    "code": "544",
+    "label": "Mesures pour la jeunesse",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "54"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.961Z",
+    "updated_at": "2026-09-01T09:35:08.961Z",
+    "code": "545",
+    "label": "Prestations aux familles",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "54"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.967Z",
+    "updated_at": "2026-09-01T09:35:08.967Z",
+    "code": "551",
+    "label": "Assurance-chômage",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "55"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.971Z",
+    "updated_at": "2026-09-01T09:35:08.971Z",
+    "code": "552",
+    "label": "Prestations aux chômeurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "55"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.977Z",
+    "updated_at": "2026-09-01T09:35:08.977Z",
+    "code": "559",
+    "label": "Chômage, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "55"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.985Z",
+    "updated_at": "2026-09-01T09:35:08.985Z",
+    "code": "560",
+    "label": "Logements sociaux",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "56"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.991Z",
+    "updated_at": "2026-09-01T09:35:08.991Z",
+    "code": "571",
+    "label": "Aides",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "57"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.998Z",
+    "updated_at": "2026-09-01T09:35:08.998Z",
+    "code": "572",
+    "label": "Aide économique",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "57"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.001Z",
+    "updated_at": "2026-09-01T09:35:09.001Z",
+    "code": "573",
+    "label": "Politique en matière d’asile et de réfugiés",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "57"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.005Z",
+    "updated_at": "2026-09-01T09:35:09.005Z",
+    "code": "579",
+    "label": "Assistance, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "57"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.011Z",
+    "updated_at": "2026-09-01T09:35:09.012Z",
+    "code": "580",
+    "label": "R&D prévoyance sociale",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "58"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.017Z",
+    "updated_at": "2026-09-01T09:35:09.017Z",
+    "code": "591",
+    "label": "Allocations pour perte de gain APG",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "59"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.021Z",
+    "updated_at": "2026-09-01T09:35:09.021Z",
+    "code": "592",
+    "label": "Actions d’entraide dans le pays",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "59"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.026Z",
+    "updated_at": "2026-09-01T09:35:09.026Z",
+    "code": "593",
+    "label": "Actions d’entraide à l’étranger",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "59"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.034Z",
+    "updated_at": "2026-09-01T09:35:09.034Z",
+    "code": "611",
+    "label": "Routes nationales",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "61"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.038Z",
+    "updated_at": "2026-09-01T09:35:09.038Z",
+    "code": "612",
+    "label": "Routes principales selon le droit fédéral",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "61"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.042Z",
+    "updated_at": "2026-09-01T09:35:09.042Z",
+    "code": "613",
+    "label": "Routes cantonales, autres",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "61"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.048Z",
+    "updated_at": "2026-09-01T09:35:09.048Z",
+    "code": "615",
+    "label": "Routes communales",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "61"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.054Z",
+    "updated_at": "2026-09-01T09:35:09.054Z",
+    "code": "618",
+    "label": "Routes privées",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "61"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.059Z",
+    "updated_at": "2026-09-01T09:35:09.059Z",
+    "code": "619",
+    "label": "Routes, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "61"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.065Z",
+    "updated_at": "2026-09-01T09:35:09.065Z",
+    "code": "621",
+    "label": "Infrastructures des transports publics",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "62"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.069Z",
+    "updated_at": "2026-09-01T09:35:09.069Z",
+    "code": "622",
+    "label": "Trafic régional et d'agglomération",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "62"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.074Z",
+    "updated_at": "2026-09-01T09:35:09.074Z",
+    "code": "629",
+    "label": "Transports publics, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "62"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.083Z",
+    "updated_at": "2026-09-01T09:35:09.083Z",
+    "code": "631",
+    "label": "Navigation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "63"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.087Z",
+    "updated_at": "2026-09-01T09:35:09.087Z",
+    "code": "632",
+    "label": "Aviation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "63"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.091Z",
+    "updated_at": "2026-09-01T09:35:09.091Z",
+    "code": "633",
+    "label": "Autres systèmes de transport",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "63"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.096Z",
+    "updated_at": "2026-09-01T09:35:09.096Z",
+    "code": "634",
+    "label": "Planification générale des transports",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "63"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.102Z",
+    "updated_at": "2026-09-01T09:35:09.102Z",
+    "code": "640",
+    "label": "Télécommunications",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "64"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.109Z",
+    "updated_at": "2026-09-01T09:35:09.109Z",
+    "code": "681",
+    "label": "R&D trafic",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "68"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.113Z",
+    "updated_at": "2026-09-01T09:35:09.113Z",
+    "code": "682",
+    "label": "R&D télécommunications",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "68"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.122Z",
+    "updated_at": "2026-09-01T09:35:09.122Z",
+    "code": "710",
+    "label": "Approvisionnement en eau",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "71"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.131Z",
+    "updated_at": "2026-09-01T09:35:09.131Z",
+    "code": "720",
+    "label": "Traitement des eaux usées",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "72"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.136Z",
+    "updated_at": "2026-09-01T09:35:09.136Z",
+    "code": "730",
+    "label": "Gestion des déchets",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "73"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.145Z",
+    "updated_at": "2026-09-01T09:35:09.145Z",
+    "code": "741",
+    "label": "Corrections de cours d’eau",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "74"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.149Z",
+    "updated_at": "2026-09-01T09:35:09.149Z",
+    "code": "742",
+    "label": "Ouvrage de protection, autres",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "74"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.154Z",
+    "updated_at": "2026-09-01T09:35:09.154Z",
+    "code": "750",
+    "label": "Protection des espèces et du paysage",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "75"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.160Z",
+    "updated_at": "2026-09-01T09:35:09.160Z",
+    "code": "761",
+    "label": "Protection de l’air et du climat",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "76"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.165Z",
+    "updated_at": "2026-09-01T09:35:09.165Z",
+    "code": "769",
+    "label": "Autre lutte contre la pollution de l’environnement",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "76"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.172Z",
+    "updated_at": "2026-09-01T09:35:09.172Z",
+    "code": "771",
+    "label": "Cimetières, crématoires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "77"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.176Z",
+    "updated_at": "2026-09-01T09:35:09.176Z",
+    "code": "779",
+    "label": "Protection de l’environnement, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "77"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.182Z",
+    "updated_at": "2026-09-01T09:35:09.182Z",
+    "code": "781",
+    "label": "R&D protection de l’environnement",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "78"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.186Z",
+    "updated_at": "2026-09-01T09:35:09.186Z",
+    "code": "782",
+    "label": "R&D aménagement du territoire",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "78"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.192Z",
+    "updated_at": "2026-09-01T09:35:09.192Z",
+    "code": "790",
+    "label": "Aménagement du territoire",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "79"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.207Z",
+    "updated_at": "2026-09-01T09:35:09.207Z",
+    "code": "811",
+    "label": "Administration, exécution et contrôle",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "81"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.212Z",
+    "updated_at": "2026-09-01T09:35:09.212Z",
+    "code": "812",
+    "label": "Améliorations structurelles",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "81"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.216Z",
+    "updated_at": "2026-09-01T09:35:09.216Z",
+    "code": "813",
+    "label": "Améliorations de l'élevage",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "81"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.221Z",
+    "updated_at": "2026-09-01T09:35:09.221Z",
+    "code": "814",
+    "label": "Améliorations de la production végétale",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "81"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.225Z",
+    "updated_at": "2026-09-01T09:35:09.225Z",
+    "code": "815",
+    "label": "Mesures économiques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "81"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.228Z",
+    "updated_at": "2026-09-01T09:35:09.228Z",
+    "code": "816",
+    "label": "Paiements directs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "81"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.233Z",
+    "updated_at": "2026-09-01T09:35:09.233Z",
+    "code": "817",
+    "label": "Mesures sociales",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "81"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.236Z",
+    "updated_at": "2026-09-01T09:35:09.236Z",
+    "code": "818",
+    "label": "Économie alpestre",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "81"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.242Z",
+    "updated_at": "2026-09-01T09:35:09.242Z",
+    "code": "820",
+    "label": "Sylviculture",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "82"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.247Z",
+    "updated_at": "2026-09-01T09:35:09.247Z",
+    "code": "830",
+    "label": "Chasse et pêche",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "83"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.251Z",
+    "updated_at": "2026-09-01T09:35:09.251Z",
+    "code": "840",
+    "label": "Tourisme",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "84"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.256Z",
+    "updated_at": "2026-09-01T09:35:09.256Z",
+    "code": "850",
+    "label": "Industrie, artisanat et commerce",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "85"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.265Z",
+    "updated_at": "2026-09-01T09:35:09.265Z",
+    "code": "860",
+    "label": "Banques et assurances",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "86"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.270Z",
+    "updated_at": "2026-09-01T09:35:09.270Z",
+    "code": "871",
+    "label": "Électricité",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "87"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.274Z",
+    "updated_at": "2026-09-01T09:35:09.274Z",
+    "code": "872",
+    "label": "Gaz",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "87"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.278Z",
+    "updated_at": "2026-09-01T09:35:09.278Z",
+    "code": "873",
+    "label": "Énergie non électrique",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "87"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.282Z",
+    "updated_at": "2026-09-01T09:35:09.282Z",
+    "code": "879",
+    "label": "Énergie, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "87"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.290Z",
+    "updated_at": "2026-09-01T09:35:09.290Z",
+    "code": "881",
+    "label": "R&D agriculture",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "88"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.294Z",
+    "updated_at": "2026-09-01T09:35:09.294Z",
+    "code": "882",
+    "label": "R&D sylviculture, chasse et pêche",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "88"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.297Z",
+    "updated_at": "2026-09-01T09:35:09.297Z",
+    "code": "883",
+    "label": "R&D combustibles et énergie",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "88"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.302Z",
+    "updated_at": "2026-09-01T09:35:09.302Z",
+    "code": "884",
+    "label": "R&D autres activités économiques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "88"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.310Z",
+    "updated_at": "2026-09-01T09:35:09.310Z",
+    "code": "890",
+    "label": "Autres exploitations artisanales",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "89"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.320Z",
+    "updated_at": "2026-09-01T09:35:09.320Z",
+    "code": "910",
+    "label": "Impôts",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "91"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.327Z",
+    "updated_at": "2026-09-01T09:35:09.327Z",
+    "code": "920",
+    "label": "Conventions fiscales",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "92"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.336Z",
+    "updated_at": "2026-09-01T09:35:09.336Z",
+    "code": "930",
+    "label": "Péréquation financière et compensation des charges",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "93"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.342Z",
+    "updated_at": "2026-09-01T09:35:09.342Z",
+    "code": "940",
+    "label": "Parts aux recettes de la Confédération",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "94"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.347Z",
+    "updated_at": "2026-09-01T09:35:09.347Z",
+    "code": "950",
+    "label": "Parts aux recettes, autres, sans affectation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "95"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.352Z",
+    "updated_at": "2026-09-01T09:35:09.352Z",
+    "code": "961",
+    "label": "Intérêts",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "96"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.355Z",
+    "updated_at": "2026-09-01T09:35:09.355Z",
+    "code": "962",
+    "label": "Frais d’émission",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "96"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.358Z",
+    "updated_at": "2026-09-01T09:35:09.358Z",
+    "code": "963",
+    "label": "Immeubles du patrimoine financier",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "96"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.362Z",
+    "updated_at": "2026-09-01T09:35:09.362Z",
+    "code": "969",
+    "label": "Patrimoine financier, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "96"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.367Z",
+    "updated_at": "2026-09-01T09:35:09.367Z",
+    "code": "971",
+    "label": "Redistributions liées à la taxe sur le CO2",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "97"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.372Z",
+    "updated_at": "2026-09-01T09:35:09.372Z",
+    "code": "990",
+    "label": "Postes non ventilables",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "99"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.375Z",
+    "updated_at": "2026-09-01T09:35:09.375Z",
+    "code": "995",
+    "label": "Charges et revenus neutres",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "99"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.378Z",
+    "updated_at": "2026-09-01T09:35:09.378Z",
+    "code": "999",
+    "label": "Clôture",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "99"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.572Z",
+    "updated_at": "2026-09-01T09:35:08.572Z",
+    "code": "0110",
+    "label": "Législatif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "011"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.576Z",
+    "updated_at": "2026-09-01T09:35:08.576Z",
+    "code": "0120",
+    "label": "Exécutif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "012"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.584Z",
+    "updated_at": "2026-09-01T09:35:08.584Z",
+    "code": "0210",
+    "label": "Administration des finances et des contributions",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "021"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.590Z",
+    "updated_at": "2026-09-01T09:35:08.590Z",
+    "code": "0220",
+    "label": "Administration générale",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "022"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.592Z",
+    "updated_at": "2026-09-01T09:35:08.592Z",
+    "code": "0221",
+    "label": "Contrôle des habitants",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "022"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.594Z",
+    "updated_at": "2026-09-01T09:35:08.594Z",
+    "code": "0222",
+    "label": "Ressources humaines",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "022"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.597Z",
+    "updated_at": "2026-09-01T09:35:08.597Z",
+    "code": "0223",
+    "label": "Informatique et télécommunication",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "022"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.599Z",
+    "updated_at": "2026-09-01T09:35:08.599Z",
+    "code": "0224",
+    "label": "Terrains, gérances et bâtiments",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "022"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.602Z",
+    "updated_at": "2026-09-01T09:35:08.602Z",
+    "code": "0225",
+    "label": "Achats et économat",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "022"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.604Z",
+    "updated_at": "2026-09-01T09:35:08.604Z",
+    "code": "0229",
+    "label": "Services généraux, autres",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "022"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.608Z",
+    "updated_at": "2026-09-01T09:35:08.608Z",
+    "code": "0230",
+    "label": "Météorologie et topographie nationale",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "023"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.612Z",
+    "updated_at": "2026-09-01T09:35:08.612Z",
+    "code": "0290",
+    "label": "Immeubles administratifs, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "029"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.618Z",
+    "updated_at": "2026-09-01T09:35:08.618Z",
+    "code": "0310",
+    "label": "Relations politiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "031"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.622Z",
+    "updated_at": "2026-09-01T09:35:08.622Z",
+    "code": "0320",
+    "label": "Gestion civile des conflits",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "032"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.626Z",
+    "updated_at": "2026-09-01T09:35:08.626Z",
+    "code": "0330",
+    "label": "Relations économiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "033"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.629Z",
+    "updated_at": "2026-09-01T09:35:08.629Z",
+    "code": "0340",
+    "label": "Coopération au développement",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "034"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.633Z",
+    "updated_at": "2026-09-01T09:35:08.633Z",
+    "code": "0350",
+    "label": "Pays en transition, aide aux pays de l'Est",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "035"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.640Z",
+    "updated_at": "2026-09-01T09:35:08.640Z",
+    "code": "1110",
+    "label": "Police et sécurité publique",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "111"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.643Z",
+    "updated_at": "2026-09-01T09:35:08.643Z",
+    "code": "1120",
+    "label": "Sécurité routière",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "112"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.647Z",
+    "updated_at": "2026-09-01T09:35:08.647Z",
+    "code": "1130",
+    "label": "Office de la circulation routière et de la navigation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "113"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.652Z",
+    "updated_at": "2026-09-01T09:35:08.652Z",
+    "code": "1200",
+    "label": "Justice",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "120"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.657Z",
+    "updated_at": "2026-09-01T09:35:08.657Z",
+    "code": "1300",
+    "label": "Exécution des peines",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "130"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.662Z",
+    "updated_at": "2026-09-01T09:35:08.662Z",
+    "code": "1400",
+    "label": "Questions juridiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "140"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.668Z",
+    "updated_at": "2026-09-01T09:35:08.668Z",
+    "code": "1500",
+    "label": "Service du feu",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "150"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.673Z",
+    "updated_at": "2026-09-01T09:35:08.673Z",
+    "code": "1610",
+    "label": "Stands de tir",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "161"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.677Z",
+    "updated_at": "2026-09-01T09:35:08.677Z",
+    "code": "1620",
+    "label": "Défense civile",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "162"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.681Z",
+    "updated_at": "2026-09-01T09:35:08.681Z",
+    "code": "1630",
+    "label": "Aide militaire à l'étranger, promotion de la paix",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "163"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.686Z",
+    "updated_at": "2026-09-01T09:35:08.686Z",
+    "code": "1810",
+    "label": "R&D ordre et sécurité publics",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "181"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.690Z",
+    "updated_at": "2026-09-01T09:35:08.690Z",
+    "code": "1820",
+    "label": "R&D défense",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "182"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.698Z",
+    "updated_at": "2026-09-01T09:35:08.698Z",
+    "code": "2110",
+    "label": "Cycle élémentaire",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "211"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.701Z",
+    "updated_at": "2026-09-01T09:35:08.701Z",
+    "code": "2120",
+    "label": "Degré primaire",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "212"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.705Z",
+    "updated_at": "2026-09-01T09:35:08.705Z",
+    "code": "2130",
+    "label": "Degré secondaire I",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "213"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.709Z",
+    "updated_at": "2026-09-01T09:35:08.709Z",
+    "code": "2140",
+    "label": "Écoles de musique",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "214"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.713Z",
+    "updated_at": "2026-09-01T09:35:08.713Z",
+    "code": "2170",
+    "label": "Bâtiments scolaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "217"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.716Z",
+    "updated_at": "2026-09-01T09:35:08.716Z",
+    "code": "2180",
+    "label": "Accueil de jour",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "218"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.720Z",
+    "updated_at": "2026-09-01T09:35:08.720Z",
+    "code": "2190",
+    "label": "Bibliothèques scolaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "219"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.722Z",
+    "updated_at": "2026-09-01T09:35:08.722Z",
+    "code": "2191",
+    "label": "Transports d'élèves",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "219"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.724Z",
+    "updated_at": "2026-09-01T09:35:08.724Z",
+    "code": "2193",
+    "label": "Camps scolaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "219"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.725Z",
+    "updated_at": "2026-09-01T09:35:08.725Z",
+    "code": "2199",
+    "label": "École obligatoire, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "219"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.731Z",
+    "updated_at": "2026-09-01T09:35:08.731Z",
+    "code": "2200",
+    "label": "Ecoles spécialisées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "220"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.736Z",
+    "updated_at": "2026-09-01T09:35:08.736Z",
+    "code": "2300",
+    "label": "Formation professionnelle initiale",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "230"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.742Z",
+    "updated_at": "2026-09-01T09:35:08.742Z",
+    "code": "2510",
+    "label": "Ecoles de maturité gymnasiale",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "251"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.746Z",
+    "updated_at": "2026-09-01T09:35:08.746Z",
+    "code": "2520",
+    "label": "Ecoles de culture générale et autres écoles de formation générale",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "252"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.752Z",
+    "updated_at": "2026-09-01T09:35:08.752Z",
+    "code": "2600",
+    "label": "Formation professionnelle supérieure",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "260"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.757Z",
+    "updated_at": "2026-09-01T09:35:08.757Z",
+    "code": "2710",
+    "label": "Hautes écoles universitaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "271"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.760Z",
+    "updated_at": "2026-09-01T09:35:08.760Z",
+    "code": "2720",
+    "label": "Hautes écoles pédagogiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "272"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.764Z",
+    "updated_at": "2026-09-01T09:35:08.764Z",
+    "code": "2730",
+    "label": "Hautes écoles spécialisées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "273"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.768Z",
+    "updated_at": "2026-09-01T09:35:08.768Z",
+    "code": "2810",
+    "label": "Recherche fondamentale",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "281"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.772Z",
+    "updated_at": "2026-09-01T09:35:08.772Z",
+    "code": "2820",
+    "label": "R&D formation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "282"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.777Z",
+    "updated_at": "2026-09-01T09:35:08.777Z",
+    "code": "2910",
+    "label": "Administration",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "291"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.781Z",
+    "updated_at": "2026-09-01T09:35:08.781Z",
+    "code": "2990",
+    "label": "Formation, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "299"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.787Z",
+    "updated_at": "2026-09-01T09:35:08.787Z",
+    "code": "3110",
+    "label": "Musées et arts plastiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "311"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.791Z",
+    "updated_at": "2026-09-01T09:35:08.791Z",
+    "code": "3120",
+    "label": "Conservation des monuments historiques et protection du patrimoine",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "312"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.797Z",
+    "updated_at": "2026-09-01T09:35:08.797Z",
+    "code": "3210",
+    "label": "Bibliothèques et littérature",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "321"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.800Z",
+    "updated_at": "2026-09-01T09:35:08.800Z",
+    "code": "3220",
+    "label": "Musique et théâtre",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "322"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.804Z",
+    "updated_at": "2026-09-01T09:35:08.804Z",
+    "code": "3290",
+    "label": "Culture, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "329"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.809Z",
+    "updated_at": "2026-09-01T09:35:08.809Z",
+    "code": "3310",
+    "label": "Film et cinéma",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "331"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.812Z",
+    "updated_at": "2026-09-01T09:35:08.812Z",
+    "code": "3320",
+    "label": "Mass média",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "332"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.814Z",
+    "updated_at": "2026-09-01T09:35:08.814Z",
+    "code": "3321",
+    "label": "Distribution son et image",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "332"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.819Z",
+    "updated_at": "2026-09-01T09:35:08.819Z",
+    "code": "3410",
+    "label": "Sport",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "341"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.823Z",
+    "updated_at": "2026-09-01T09:35:08.823Z",
+    "code": "3420",
+    "label": "Parcs et promenades",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "342"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.825Z",
+    "updated_at": "2026-09-01T09:35:08.825Z",
+    "code": "3421",
+    "label": "Ludothèques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "342"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.826Z",
+    "updated_at": "2026-09-01T09:35:08.826Z",
+    "code": "3429",
+    "label": "Loisirs, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "342"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.831Z",
+    "updated_at": "2026-09-01T09:35:08.831Z",
+    "code": "3500",
+    "label": "Églises et affaires religieuses",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "350"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.836Z",
+    "updated_at": "2026-09-01T09:35:08.836Z",
+    "code": "3810",
+    "label": "R&D culture et médias",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "381"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.840Z",
+    "updated_at": "2026-09-01T09:35:08.840Z",
+    "code": "3820",
+    "label": "R&D sport et loisirs, église",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "382"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.848Z",
+    "updated_at": "2026-09-01T09:35:08.848Z",
+    "code": "4110",
+    "label": "Hôpitaux",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "411"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.851Z",
+    "updated_at": "2026-09-01T09:35:08.851Z",
+    "code": "4120",
+    "label": "Homes médicalisés et maisons pour personnes âgées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "412"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.854Z",
+    "updated_at": "2026-09-01T09:35:08.854Z",
+    "code": "4130",
+    "label": "Cliniques psychiatriques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "413"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.860Z",
+    "updated_at": "2026-09-01T09:35:08.860Z",
+    "code": "4210",
+    "label": "Soins ambulatoires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "421"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.863Z",
+    "updated_at": "2026-09-01T09:35:08.863Z",
+    "code": "4220",
+    "label": "Services de sauvetage",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "422"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.869Z",
+    "updated_at": "2026-09-01T09:35:08.869Z",
+    "code": "4310",
+    "label": "Prévention d’alcool et de drogue",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "431"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.872Z",
+    "updated_at": "2026-09-01T09:35:08.872Z",
+    "code": "4320",
+    "label": "Lutte contre les maladies, autres",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "432"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.875Z",
+    "updated_at": "2026-09-01T09:35:08.875Z",
+    "code": "4330",
+    "label": "Service médical des écoles",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "433"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.879Z",
+    "updated_at": "2026-09-01T09:35:08.879Z",
+    "code": "4340",
+    "label": "Contrôle des denrées alimentaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "434"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.884Z",
+    "updated_at": "2026-09-01T09:35:08.884Z",
+    "code": "4800",
+    "label": "R&D santé",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "480"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.890Z",
+    "updated_at": "2026-09-01T09:35:08.890Z",
+    "code": "4900",
+    "label": "Santé publique, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "490"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.898Z",
+    "updated_at": "2026-09-01T09:35:08.898Z",
+    "code": "5110",
+    "label": "Assurance-maladie",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "511"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.901Z",
+    "updated_at": "2026-09-01T09:35:08.901Z",
+    "code": "5120",
+    "label": "Réductions de primes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "512"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.904Z",
+    "updated_at": "2026-09-01T09:35:08.904Z",
+    "code": "5130",
+    "label": "Assurance-accidents",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "513"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.907Z",
+    "updated_at": "2026-09-01T09:35:08.907Z",
+    "code": "5140",
+    "label": "Assurance militaire",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "514"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.912Z",
+    "updated_at": "2026-09-01T09:35:08.912Z",
+    "code": "5210",
+    "label": "Assurance-invalidité AI",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "521"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.916Z",
+    "updated_at": "2026-09-01T09:35:08.916Z",
+    "code": "5220",
+    "label": "Prestations complémentaires AI",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "522"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.919Z",
+    "updated_at": "2026-09-01T09:35:08.919Z",
+    "code": "5230",
+    "label": "Foyers pour invalides",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "523"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.923Z",
+    "updated_at": "2026-09-01T09:35:08.923Z",
+    "code": "5240",
+    "label": "Prestations aux invalides",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "524"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.928Z",
+    "updated_at": "2026-09-01T09:35:08.928Z",
+    "code": "5310",
+    "label": "Assurance vieillesse et survivants AVS",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "531"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.932Z",
+    "updated_at": "2026-09-01T09:35:08.932Z",
+    "code": "5320",
+    "label": "Prestations complémentaires AVS",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "532"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.936Z",
+    "updated_at": "2026-09-01T09:35:08.936Z",
+    "code": "5330",
+    "label": "Prestations aux retraités",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "533"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.939Z",
+    "updated_at": "2026-09-01T09:35:08.939Z",
+    "code": "5340",
+    "label": "Logements pour aînés (sans soins)",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "534"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.943Z",
+    "updated_at": "2026-09-01T09:35:08.943Z",
+    "code": "5350",
+    "label": "Prestations et contributions seniors",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "535"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.949Z",
+    "updated_at": "2026-09-01T09:35:08.949Z",
+    "code": "5410",
+    "label": "Allocations familiales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "541"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.952Z",
+    "updated_at": "2026-09-01T09:35:08.952Z",
+    "code": "5420",
+    "label": "Assurance-maternité",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "542"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.956Z",
+    "updated_at": "2026-09-01T09:35:08.956Z",
+    "code": "5430",
+    "label": "Avances et recouvrement des pensions alimentaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "543"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.960Z",
+    "updated_at": "2026-09-01T09:35:08.960Z",
+    "code": "5440",
+    "label": "Mesures pour la jeunesse",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "544"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.964Z",
+    "updated_at": "2026-09-01T09:35:08.964Z",
+    "code": "5450",
+    "label": "Prestations aux familles",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "545"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.969Z",
+    "updated_at": "2026-09-01T09:35:08.969Z",
+    "code": "5510",
+    "label": "Assurance-chômage",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "551"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.974Z",
+    "updated_at": "2026-09-01T09:35:08.974Z",
+    "code": "5520",
+    "label": "Prestations aux chômeurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "552"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.980Z",
+    "updated_at": "2026-09-01T09:35:08.980Z",
+    "code": "5590",
+    "label": "Chômage – Office du travail",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "559"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.987Z",
+    "updated_at": "2026-09-01T09:35:08.987Z",
+    "code": "5600",
+    "label": "Logements sociaux",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "560"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:08.994Z",
+    "updated_at": "2026-09-01T09:35:08.994Z",
+    "code": "5710",
+    "label": "Aides",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "571"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.000Z",
+    "updated_at": "2026-09-01T09:35:09.000Z",
+    "code": "5720",
+    "label": "Aide économique",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "572"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.003Z",
+    "updated_at": "2026-09-01T09:35:09.003Z",
+    "code": "5730",
+    "label": "Politique en matière d’asile et de réfugiés",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "573"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.008Z",
+    "updated_at": "2026-09-01T09:35:09.008Z",
+    "code": "5790",
+    "label": "Administration des services sociaux",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "579"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.014Z",
+    "updated_at": "2026-09-01T09:35:09.014Z",
+    "code": "5800",
+    "label": "R&D prévoyance sociale",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "580"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.019Z",
+    "updated_at": "2026-09-01T09:35:09.019Z",
+    "code": "5910",
+    "label": "Allocations pour perte de gain APG",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "591"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.023Z",
+    "updated_at": "2026-09-01T09:35:09.023Z",
+    "code": "5920",
+    "label": "Actions d’entraide dans le pays",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "592"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.028Z",
+    "updated_at": "2026-09-01T09:35:09.028Z",
+    "code": "5930",
+    "label": "Actions d’entraide à l’étranger",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "593"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.036Z",
+    "updated_at": "2026-09-01T09:35:09.036Z",
+    "code": "6110",
+    "label": "Routes nationales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "611"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.040Z",
+    "updated_at": "2026-09-01T09:35:09.040Z",
+    "code": "6120",
+    "label": "Routes principales selon le droit fédéral",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "612"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.044Z",
+    "updated_at": "2026-09-01T09:35:09.044Z",
+    "code": "6130",
+    "label": "Routes cantonales, autres",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "613"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.050Z",
+    "updated_at": "2026-09-01T09:35:09.050Z",
+    "code": "6150",
+    "label": "Routes communales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "615"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.052Z",
+    "updated_at": "2026-09-01T09:35:09.052Z",
+    "code": "6151",
+    "label": "Places de stationnement",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "615"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.056Z",
+    "updated_at": "2026-09-01T09:35:09.056Z",
+    "code": "6180",
+    "label": "Routes privées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "618"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.061Z",
+    "updated_at": "2026-09-01T09:35:09.061Z",
+    "code": "6190",
+    "label": "Routes, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "619"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.067Z",
+    "updated_at": "2026-09-01T09:35:09.067Z",
+    "code": "6210",
+    "label": "Infrastructures des transports publics",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "621"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.071Z",
+    "updated_at": "2026-09-01T09:35:09.071Z",
+    "code": "6220",
+    "label": "Trafic régional et d'agglomération (canton)",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "622"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.076Z",
+    "updated_at": "2026-09-01T09:35:09.076Z",
+    "code": "6290",
+    "label": "Transports publics régionaux",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "629"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.078Z",
+    "updated_at": "2026-09-01T09:35:09.078Z",
+    "code": "6291",
+    "label": "Transports publics urbains",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "629"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.080Z",
+    "updated_at": "2026-09-01T09:35:09.080Z",
+    "code": "6299",
+    "label": "Transports publics, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "629"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.085Z",
+    "updated_at": "2026-09-01T09:35:09.085Z",
+    "code": "6310",
+    "label": "Navigation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "631"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.089Z",
+    "updated_at": "2026-09-01T09:35:09.089Z",
+    "code": "6320",
+    "label": "Aviation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "632"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.094Z",
+    "updated_at": "2026-09-01T09:35:09.094Z",
+    "code": "6330",
+    "label": "Autres systèmes de transport",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "633"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.098Z",
+    "updated_at": "2026-09-01T09:35:09.098Z",
+    "code": "6340",
+    "label": "Planification générale des transports",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "634"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.104Z",
+    "updated_at": "2026-09-01T09:35:09.104Z",
+    "code": "6400",
+    "label": "Télécommunications",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "640"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.111Z",
+    "updated_at": "2026-09-01T09:35:09.111Z",
+    "code": "6810",
+    "label": "R&D trafic",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "681"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.115Z",
+    "updated_at": "2026-09-01T09:35:09.115Z",
+    "code": "6820",
+    "label": "R&D télécommunications",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "682"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.124Z",
+    "updated_at": "2026-09-01T09:35:09.124Z",
+    "code": "7100",
+    "label": "Approvisionnement en eau",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "710"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.126Z",
+    "updated_at": "2026-09-01T09:35:09.126Z",
+    "code": "7101",
+    "label": "Fontaines publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "710"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.133Z",
+    "updated_at": "2026-09-01T09:35:09.133Z",
+    "code": "7200",
+    "label": "Traitement des eaux usées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "720"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.138Z",
+    "updated_at": "2026-09-01T09:35:09.138Z",
+    "code": "7300",
+    "label": "Gestion des déchets urbains",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "730"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.141Z",
+    "updated_at": "2026-09-01T09:35:09.141Z",
+    "code": "7301",
+    "label": "Gestion des déchets non urbains",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "730"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.147Z",
+    "updated_at": "2026-09-01T09:35:09.147Z",
+    "code": "7410",
+    "label": "Corrections de cours d’eau",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "741"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.151Z",
+    "updated_at": "2026-09-01T09:35:09.151Z",
+    "code": "7420",
+    "label": "Ouvrages de protection, autres",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "742"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.156Z",
+    "updated_at": "2026-09-01T09:35:09.156Z",
+    "code": "7500",
+    "label": "Protection des espèces et du paysage",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "750"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.163Z",
+    "updated_at": "2026-09-01T09:35:09.163Z",
+    "code": "7610",
+    "label": "Protection de l’air et du climat",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "761"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.167Z",
+    "updated_at": "2026-09-01T09:35:09.167Z",
+    "code": "7690",
+    "label": "Autre lutte contre la pollution de l’environnement",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "769"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.174Z",
+    "updated_at": "2026-09-01T09:35:09.174Z",
+    "code": "7710",
+    "label": "Cimetières, crématoires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "771"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.178Z",
+    "updated_at": "2026-09-01T09:35:09.178Z",
+    "code": "7790",
+    "label": "Protection de l’environnement, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "779"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.184Z",
+    "updated_at": "2026-09-01T09:35:09.184Z",
+    "code": "7810",
+    "label": "R&D protection de l’environnement",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "781"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.188Z",
+    "updated_at": "2026-09-01T09:35:09.188Z",
+    "code": "7820",
+    "label": "R&D aménagement du territoire",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "782"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.195Z",
+    "updated_at": "2026-09-01T09:35:09.195Z",
+    "code": "7900",
+    "label": "Aménagement du territoire, urbanisme et police des constructions",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "790"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.197Z",
+    "updated_at": "2026-09-01T09:35:09.197Z",
+    "code": "7901",
+    "label": "Service technique, d’ingénierie et du cadastre",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "790"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.198Z",
+    "updated_at": "2026-09-01T09:35:09.198Z",
+    "code": "7902",
+    "label": "Service d’architecture",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "790"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.200Z",
+    "updated_at": "2026-09-01T09:35:09.200Z",
+    "code": "7907",
+    "label": "Instances régionales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "790"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.209Z",
+    "updated_at": "2026-09-01T09:35:09.209Z",
+    "code": "8110",
+    "label": "Administration, exécution et contrôle",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "811"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.214Z",
+    "updated_at": "2026-09-01T09:35:09.214Z",
+    "code": "8120",
+    "label": "Améliorations structurelles",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "812"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.218Z",
+    "updated_at": "2026-09-01T09:35:09.218Z",
+    "code": "8130",
+    "label": "Améliorations de l'élevage",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "813"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.223Z",
+    "updated_at": "2026-09-01T09:35:09.223Z",
+    "code": "8140",
+    "label": "Améliorations de la production végétale",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "814"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.226Z",
+    "updated_at": "2026-09-01T09:35:09.226Z",
+    "code": "8150",
+    "label": "Mesures économiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "815"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.231Z",
+    "updated_at": "2026-09-01T09:35:09.231Z",
+    "code": "8160",
+    "label": "Paiements directs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "816"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.235Z",
+    "updated_at": "2026-09-01T09:35:09.235Z",
+    "code": "8170",
+    "label": "Mesures sociales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "817"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.238Z",
+    "updated_at": "2026-09-01T09:35:09.238Z",
+    "code": "8180",
+    "label": "Économie alpestre",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "818"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.243Z",
+    "updated_at": "2026-09-01T09:35:09.243Z",
+    "code": "8200",
+    "label": "Sylviculture",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "820"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.248Z",
+    "updated_at": "2026-09-01T09:35:09.248Z",
+    "code": "8300",
+    "label": "Chasse et pêche",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "830"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.253Z",
+    "updated_at": "2026-09-01T09:35:09.253Z",
+    "code": "8400",
+    "label": "Tourisme",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "840"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.259Z",
+    "updated_at": "2026-09-01T09:35:09.259Z",
+    "code": "8500",
+    "label": "Industrie, artisanat et commerce",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "850"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.261Z",
+    "updated_at": "2026-09-01T09:35:09.261Z",
+    "code": "8501",
+    "label": "Vignes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "850"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.267Z",
+    "updated_at": "2026-09-01T09:35:09.267Z",
+    "code": "8600",
+    "label": "Banques et assurances",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "860"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.272Z",
+    "updated_at": "2026-09-01T09:35:09.272Z",
+    "code": "8710",
+    "label": "Électricité",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "871"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.276Z",
+    "updated_at": "2026-09-01T09:35:09.276Z",
+    "code": "8720",
+    "label": "Gaz",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "872"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.280Z",
+    "updated_at": "2026-09-01T09:35:09.280Z",
+    "code": "8730",
+    "label": "Énergie non électrique",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "873"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.285Z",
+    "updated_at": "2026-09-01T09:35:09.285Z",
+    "code": "8790",
+    "label": "Énergie, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "879"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.292Z",
+    "updated_at": "2026-09-01T09:35:09.292Z",
+    "code": "8810",
+    "label": "R&D agriculture",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "881"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.296Z",
+    "updated_at": "2026-09-01T09:35:09.296Z",
+    "code": "8820",
+    "label": "R&D sylviculture, chasse et pêche",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "882"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.300Z",
+    "updated_at": "2026-09-01T09:35:09.300Z",
+    "code": "8830",
+    "label": "R&D combustibles et énergie",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "883"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.305Z",
+    "updated_at": "2026-09-01T09:35:09.305Z",
+    "code": "8840",
+    "label": "R&D autres activités économiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "884"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.313Z",
+    "updated_at": "2026-09-01T09:35:09.313Z",
+    "code": "8900",
+    "label": "Autres exploitations artisanales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "890"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.321Z",
+    "updated_at": "2026-09-01T09:35:09.321Z",
+    "code": "9100",
+    "label": "Impôts",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "910"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.330Z",
+    "updated_at": "2026-09-01T09:35:09.330Z",
+    "code": "9200",
+    "label": "Conventions fiscales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "920"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.337Z",
+    "updated_at": "2026-09-01T09:35:09.337Z",
+    "code": "9300",
+    "label": "Péréquation financière et compensation des charges",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "930"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.343Z",
+    "updated_at": "2026-09-01T09:35:09.343Z",
+    "code": "9400",
+    "label": "Parts aux recettes de la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "940"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.349Z",
+    "updated_at": "2026-09-01T09:35:09.349Z",
+    "code": "9500",
+    "label": "Parts aux recettes, autres, sans affectation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "950"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.353Z",
+    "updated_at": "2026-09-01T09:35:09.353Z",
+    "code": "9610",
+    "label": "Intérêts",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "961"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.357Z",
+    "updated_at": "2026-09-01T09:35:09.357Z",
+    "code": "9620",
+    "label": "Frais d’émission",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "962"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.360Z",
+    "updated_at": "2026-09-01T09:35:09.360Z",
+    "code": "9630",
+    "label": "Immeubles du patrimoine financier",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "963"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.363Z",
+    "updated_at": "2026-09-01T09:35:09.363Z",
+    "code": "9690",
+    "label": "Patrimoine financier, non mentionné ailleurs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "969"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.369Z",
+    "updated_at": "2026-09-01T09:35:09.369Z",
+    "code": "9710",
+    "label": "Redistributions liées à la taxe sur le CO2",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "971"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.373Z",
+    "updated_at": "2026-09-01T09:35:09.373Z",
+    "code": "9900",
+    "label": "Postes non ventilables",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "990"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.377Z",
+    "updated_at": "2026-09-01T09:35:09.377Z",
+    "code": "9950",
+    "label": "Charges et revenus neutres",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "995"
+    ]
+  }
+},
+{
+  "model": "accounting.accountgroup",
+  "fields": {
+    "created_at": "2026-09-01T09:35:09.380Z",
+    "updated_at": "2026-09-01T09:35:09.380Z",
+    "code": "9990",
+    "label": "Clôture",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "999"
+    ]
+  }
+}
+]

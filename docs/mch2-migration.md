@@ -109,8 +109,23 @@ once implemented — check `accounting/models.py` directly for current state.
   transition year (budget 2027 vs comptes 2026) rather than auto-translate
   amounts across schemes.
 - **Importing the canton's reference classification data** (the 10/69/159/180
-  N1-N4 rows) into `AccountGroup` for `scheme=MCH2` — needed before any real MCH2
-  account can resolve its group via `Account.save()`, not done yet.
+  N1-N4 rows) into `AccountGroup` for `scheme=MCH2` — **done**
+  (`import_mch2_functional_classification`, commit c11da66). Both this and the
+  nature classification (`NatureGroup`, see above) are fixed, official
+  reference data, so each also ships as a fixture with natural keys
+  (`(scheme, level, code)`, see `AccountGroup.natural_key`/`NatureGroup.natural_key`)
+  under `budgetis/accounting/fixtures/`: `accountgroup_mch2.json` (418 rows) and
+  `naturegroup_mch2.json` (421 rows), loadable via `manage.py loaddata
+  accountgroup_mch2 naturegroup_mch2` without needing the canton's Excel file
+  checked out. Not auto-loaded by a migration on purpose - the real MCH2
+  codes/levels those fixtures use (e.g. nature family "30", function "0")
+  would collide with whatever a test creates via `AccountGroupFactory`/
+  `NatureGroupFactory` if pre-seeded into the test database.
+  When `accountgroup_mch2.json` was first dumped, the local dev DB had 51
+  orphaned `scheme=MCH2, level=2, parent=None` rows with garbage labels (MCH1
+  nature codes formatted as floats, e.g. `"311.0"`) left over from earlier
+  one-off bootstrapping - referenced by zero accounts, excluded from the
+  fixture. Worth deleting from any DB carrying the same leftovers.
 - **MCH1-hardcoded nature-range logic**, confirmed by exploration to assume
   3-digit MCH1 codes and silently misclassify or zero-out MCH2 rows once they
   exist:

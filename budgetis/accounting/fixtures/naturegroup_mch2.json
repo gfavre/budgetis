@@ -1,0 +1,6730 @@
+[
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.212Z",
+    "updated_at": "2026-09-02T20:15:35.212Z",
+    "code": "3",
+    "label": "Charges",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.217Z",
+    "updated_at": "2026-09-02T20:15:35.217Z",
+    "code": "30",
+    "label": "Charges de personnel",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.220Z",
+    "updated_at": "2026-09-02T20:15:35.220Z",
+    "code": "300",
+    "label": "Autorités et commissions",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "30"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.224Z",
+    "updated_at": "2026-09-02T20:15:35.224Z",
+    "code": "3000",
+    "label": "Salaires des autorités et commissions",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "300"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.227Z",
+    "updated_at": "2026-09-02T20:15:35.227Z",
+    "code": "301",
+    "label": "Salaires du personnel administratif et d'exploitation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "30"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.231Z",
+    "updated_at": "2026-09-02T20:15:35.231Z",
+    "code": "3010",
+    "label": "Salaires du personnel administratif et d'exploitation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "301"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.234Z",
+    "updated_at": "2026-09-02T20:15:35.234Z",
+    "code": "302",
+    "label": "Salaires des enseignants",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "30"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.237Z",
+    "updated_at": "2026-09-02T20:15:35.237Z",
+    "code": "3020",
+    "label": "Salaires des enseignants",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "302"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.241Z",
+    "updated_at": "2026-09-02T20:15:35.241Z",
+    "code": "303",
+    "label": "Travailleur·euse·s temporaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "30"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.245Z",
+    "updated_at": "2026-09-02T20:15:35.245Z",
+    "code": "3030",
+    "label": "Travailleur·euse·s temporaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "303"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.247Z",
+    "updated_at": "2026-09-02T20:15:35.247Z",
+    "code": "304",
+    "label": "Allocations",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "30"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.249Z",
+    "updated_at": "2026-09-02T20:15:35.249Z",
+    "code": "3040",
+    "label": "Allocations pour enfants et allocations de formation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "304"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.251Z",
+    "updated_at": "2026-09-02T20:15:35.251Z",
+    "code": "3042",
+    "label": "Indemnités de repas",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "304"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.253Z",
+    "updated_at": "2026-09-02T20:15:35.253Z",
+    "code": "3043",
+    "label": "Indemnités de logement",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "304"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.255Z",
+    "updated_at": "2026-09-02T20:15:35.255Z",
+    "code": "3049",
+    "label": "Autres indemnités forfaitaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "304"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.257Z",
+    "updated_at": "2026-09-02T20:15:35.257Z",
+    "code": "305",
+    "label": "Cotisations patronales",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "30"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.259Z",
+    "updated_at": "2026-09-02T20:15:35.259Z",
+    "code": "3050",
+    "label": "Cotisations patronales AVS, AI, APG, AC, frais administratifs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "305"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.262Z",
+    "updated_at": "2026-09-02T20:15:35.262Z",
+    "code": "3052",
+    "label": "Cotisations patronales aux caisses de pensions",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "305"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.265Z",
+    "updated_at": "2026-09-02T20:15:35.265Z",
+    "code": "3053",
+    "label": "Cotisations patronales aux assurances-accidents",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "305"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.269Z",
+    "updated_at": "2026-09-02T20:15:35.269Z",
+    "code": "3054",
+    "label": "Cotisations patronales aux caisses d’allocations familiales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "305"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.272Z",
+    "updated_at": "2026-09-02T20:15:35.272Z",
+    "code": "3055",
+    "label": "Cotisations patronales aux assurances d'indemnité journalière maladie",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "305"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.276Z",
+    "updated_at": "2026-09-02T20:15:35.276Z",
+    "code": "3056",
+    "label": "Cotisations patronales aux primes de caisse maladie",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "305"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.279Z",
+    "updated_at": "2026-09-02T20:15:35.279Z",
+    "code": "3059",
+    "label": "Autres cotisations patronales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "305"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.282Z",
+    "updated_at": "2026-09-02T20:15:35.282Z",
+    "code": "306",
+    "label": "Prestations de l’organisation qui emploie",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "30"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.285Z",
+    "updated_at": "2026-09-02T20:15:35.285Z",
+    "code": "3060",
+    "label": "Pensions",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "306"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.288Z",
+    "updated_at": "2026-09-02T20:15:35.288Z",
+    "code": "3061",
+    "label": "Rentes ou parts de rente",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "306"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.292Z",
+    "updated_at": "2026-09-02T20:15:35.292Z",
+    "code": "3062",
+    "label": "Allocations de renchérissement sur rentes et parts de rente",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "306"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.295Z",
+    "updated_at": "2026-09-02T20:15:35.295Z",
+    "code": "3063",
+    "label": "Rentes d'accident et successions de rentes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "306"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.298Z",
+    "updated_at": "2026-09-02T20:15:35.298Z",
+    "code": "3064",
+    "label": "Rentes transitoires et complémentaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "306"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.301Z",
+    "updated_at": "2026-09-02T20:15:35.301Z",
+    "code": "3069",
+    "label": "Autres prestations de l'employeur",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "306"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.305Z",
+    "updated_at": "2026-09-02T20:15:35.305Z",
+    "code": "309",
+    "label": "Autres charges de personnel",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "30"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.308Z",
+    "updated_at": "2026-09-02T20:15:35.308Z",
+    "code": "3090",
+    "label": "Formation et perfectionnement du personnel",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "309"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.311Z",
+    "updated_at": "2026-09-02T20:15:35.311Z",
+    "code": "3091",
+    "label": "Recrutement du personnel",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "309"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.315Z",
+    "updated_at": "2026-09-02T20:15:35.315Z",
+    "code": "3099",
+    "label": "Autres charges de personnel",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "309"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.317Z",
+    "updated_at": "2026-09-02T20:15:35.317Z",
+    "code": "31",
+    "label": "Charges de biens et services et autres charges d’exploitation",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.319Z",
+    "updated_at": "2026-09-02T20:15:35.319Z",
+    "code": "310",
+    "label": "Charges de matières et de marchandises",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.322Z",
+    "updated_at": "2026-09-02T20:15:35.322Z",
+    "code": "3100",
+    "label": "Matériel de bureau",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "310"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.326Z",
+    "updated_at": "2026-09-02T20:15:35.326Z",
+    "code": "3101",
+    "label": "Matériel d'exploitation, fournitures",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "310"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.329Z",
+    "updated_at": "2026-09-02T20:15:35.329Z",
+    "code": "3102",
+    "label": "Imprimés, publications",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "310"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.332Z",
+    "updated_at": "2026-09-02T20:15:35.332Z",
+    "code": "3103",
+    "label": "Littérature spécialisée, magazines",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "310"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.334Z",
+    "updated_at": "2026-09-02T20:15:35.334Z",
+    "code": "3104",
+    "label": "Matériel didactique",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "310"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.337Z",
+    "updated_at": "2026-09-02T20:15:35.337Z",
+    "code": "3105",
+    "label": "Denrées alimentaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "310"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.340Z",
+    "updated_at": "2026-09-02T20:15:35.340Z",
+    "code": "3106",
+    "label": "Matériel médical et de laboratoire",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "310"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.342Z",
+    "updated_at": "2026-09-02T20:15:35.342Z",
+    "code": "3109",
+    "label": "Autres charges de matériel et de marchandises",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "310"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.345Z",
+    "updated_at": "2026-09-02T20:15:35.345Z",
+    "code": "311",
+    "label": "Immobilisations n’étant pas portées à l'actif",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.347Z",
+    "updated_at": "2026-09-02T20:15:35.347Z",
+    "code": "3110",
+    "label": "Meubles et appareils de bureau",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "311"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.349Z",
+    "updated_at": "2026-09-02T20:15:35.349Z",
+    "code": "3111",
+    "label": "Machines, appareils et véhicules",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "311"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.351Z",
+    "updated_at": "2026-09-02T20:15:35.351Z",
+    "code": "3112",
+    "label": "Vêtements, linge, rideaux, vaisselle",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "311"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.353Z",
+    "updated_at": "2026-09-02T20:15:35.353Z",
+    "code": "3113",
+    "label": "Matériel informatique",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "311"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.355Z",
+    "updated_at": "2026-09-02T20:15:35.355Z",
+    "code": "3115",
+    "label": "Bétail",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "311"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.358Z",
+    "updated_at": "2026-09-02T20:15:35.358Z",
+    "code": "3116",
+    "label": "Appareils médicaux et de laboratoire",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "311"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.362Z",
+    "updated_at": "2026-09-02T20:15:35.362Z",
+    "code": "3118",
+    "label": "Immobilisations incorporelles",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "311"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.366Z",
+    "updated_at": "2026-09-02T20:15:35.366Z",
+    "code": "3119",
+    "label": "Autres immobilisations n’étant pas portées à l’actif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "311"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.370Z",
+    "updated_at": "2026-09-02T20:15:35.370Z",
+    "code": "312",
+    "label": "Alimentation et élimination de biens-fonds, PA",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.373Z",
+    "updated_at": "2026-09-02T20:15:35.373Z",
+    "code": "3120",
+    "label": "Alimentation et élimination de biens-fonds, PA",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "312"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.375Z",
+    "updated_at": "2026-09-02T20:15:35.375Z",
+    "code": "313",
+    "label": "Prestations de services et honoraires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.378Z",
+    "updated_at": "2026-09-02T20:15:35.378Z",
+    "code": "3130",
+    "label": "Prestations de services de tiers",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "313"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.380Z",
+    "updated_at": "2026-09-02T20:15:35.380Z",
+    "code": "3131",
+    "label": "Planifications et projections de tiers",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "313"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.382Z",
+    "updated_at": "2026-09-02T20:15:35.382Z",
+    "code": "3132",
+    "label": "Honoraires conseils externes, expertises, spécialistes, etc.",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "313"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.384Z",
+    "updated_at": "2026-09-02T20:15:35.384Z",
+    "code": "3133",
+    "label": "Charges d’utilisation informatiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "313"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.386Z",
+    "updated_at": "2026-09-02T20:15:35.386Z",
+    "code": "3134",
+    "label": "Primes d’assurances choses",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "313"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.391Z",
+    "updated_at": "2026-09-02T20:15:35.391Z",
+    "code": "3135",
+    "label": "Charges de prestations de services pour personnes en garde",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "313"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.394Z",
+    "updated_at": "2026-09-02T20:15:35.394Z",
+    "code": "3136",
+    "label": "Honoraires de l'activité de médecine privée",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "313"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.396Z",
+    "updated_at": "2026-09-02T20:15:35.396Z",
+    "code": "3137",
+    "label": "Impôts, taxes et émoluments",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "313"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.398Z",
+    "updated_at": "2026-09-02T20:15:35.398Z",
+    "code": "3138",
+    "label": "Cours, examens et conseils",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "313"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.401Z",
+    "updated_at": "2026-09-02T20:15:35.401Z",
+    "code": "3139",
+    "label": "Examens de fin d'apprentissage",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "313"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.405Z",
+    "updated_at": "2026-09-02T20:15:35.405Z",
+    "code": "314",
+    "label": "Gros entretien et entretien courant",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.409Z",
+    "updated_at": "2026-09-02T20:15:35.409Z",
+    "code": "3140",
+    "label": "Entretien des terrains",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "314"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.413Z",
+    "updated_at": "2026-09-02T20:15:35.413Z",
+    "code": "3141",
+    "label": "Entretien des routes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "314"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.416Z",
+    "updated_at": "2026-09-02T20:15:35.416Z",
+    "code": "3142",
+    "label": "Entretien des ports et aménagements de cours d’eau",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "314"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.419Z",
+    "updated_at": "2026-09-02T20:15:35.419Z",
+    "code": "3143",
+    "label": "Entretien d’autres travaux de génie civil",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "314"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.423Z",
+    "updated_at": "2026-09-02T20:15:35.423Z",
+    "code": "3144",
+    "label": "Entretien des bâtiments, immeubles",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "314"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.428Z",
+    "updated_at": "2026-09-02T20:15:35.428Z",
+    "code": "3145",
+    "label": "Entretien des forêts, alpages et vignes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "314"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.430Z",
+    "updated_at": "2026-09-02T20:15:35.430Z",
+    "code": "3149",
+    "label": "Entretien d’autres immobilisations corporelles",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "314"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.432Z",
+    "updated_at": "2026-09-02T20:15:35.432Z",
+    "code": "315",
+    "label": "Entretien des biens meubles et immobilisations incorporelles",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.435Z",
+    "updated_at": "2026-09-02T20:15:35.435Z",
+    "code": "3150",
+    "label": "Entretien de meubles et appareils de bureau",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "315"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.437Z",
+    "updated_at": "2026-09-02T20:15:35.437Z",
+    "code": "3151",
+    "label": "Entretien de machines, appareils, véhicules",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "315"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.441Z",
+    "updated_at": "2026-09-02T20:15:35.441Z",
+    "code": "3153",
+    "label": "Entretien informatique, matériel",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "315"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.444Z",
+    "updated_at": "2026-09-02T20:15:35.444Z",
+    "code": "3156",
+    "label": "Entretien des appareils médicaux et de laboratoire",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "315"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.448Z",
+    "updated_at": "2026-09-02T20:15:35.448Z",
+    "code": "3158",
+    "label": "Entretien des immobilisations incorporelles",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "315"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.451Z",
+    "updated_at": "2026-09-02T20:15:35.451Z",
+    "code": "3159",
+    "label": "Entretien d’autres biens meubles et immobilisations incorporelles",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "315"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.455Z",
+    "updated_at": "2026-09-02T20:15:35.455Z",
+    "code": "316",
+    "label": "Loyers, leasing, baux à ferme, frais d'utilisation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.459Z",
+    "updated_at": "2026-09-02T20:15:35.459Z",
+    "code": "3160",
+    "label": "Loyers et baux à ferme des biens-fonds",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "316"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.462Z",
+    "updated_at": "2026-09-02T20:15:35.462Z",
+    "code": "3161",
+    "label": "Loyers, frais d’utilisations des immobilisations",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "316"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.466Z",
+    "updated_at": "2026-09-02T20:15:35.466Z",
+    "code": "3162",
+    "label": "Primes de leasing opérationnel",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "316"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.469Z",
+    "updated_at": "2026-09-02T20:15:35.469Z",
+    "code": "3169",
+    "label": "Autres loyers et frais d'utilisation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "316"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.474Z",
+    "updated_at": "2026-09-02T20:15:35.474Z",
+    "code": "317",
+    "label": "Remboursements de frais",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.479Z",
+    "updated_at": "2026-09-02T20:15:35.479Z",
+    "code": "3170",
+    "label": "Remboursements de frais effectifs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "317"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.483Z",
+    "updated_at": "2026-09-02T20:15:35.483Z",
+    "code": "3171",
+    "label": "Excursions, voyages scolaires et camps",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "317"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.486Z",
+    "updated_at": "2026-09-02T20:15:35.486Z",
+    "code": "318",
+    "label": "Réévaluations sur créances",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.489Z",
+    "updated_at": "2026-09-02T20:15:35.489Z",
+    "code": "3180",
+    "label": "Réévaluations sur créances",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "318"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.492Z",
+    "updated_at": "2026-09-02T20:15:35.492Z",
+    "code": "3181",
+    "label": "Pertes sur créances effectives",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "318"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.496Z",
+    "updated_at": "2026-09-02T20:15:35.496Z",
+    "code": "319",
+    "label": "Autres charges d’exploitation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "31"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.500Z",
+    "updated_at": "2026-09-02T20:15:35.500Z",
+    "code": "3190",
+    "label": "Prestations de dommages et intérêts",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "319"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.502Z",
+    "updated_at": "2026-09-02T20:15:35.502Z",
+    "code": "3192",
+    "label": "Indemnisations de droits",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "319"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.505Z",
+    "updated_at": "2026-09-02T20:15:35.505Z",
+    "code": "3199",
+    "label": "Autres charges d’exploitation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "319"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.508Z",
+    "updated_at": "2026-09-02T20:15:35.508Z",
+    "code": "33",
+    "label": "Amortissements du patrimoine administratif",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.512Z",
+    "updated_at": "2026-09-02T20:15:35.512Z",
+    "code": "330",
+    "label": "Amortissements des immobilisations corporelles PA",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "33"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.515Z",
+    "updated_at": "2026-09-02T20:15:35.515Z",
+    "code": "3300",
+    "label": "Amortissements planifiés des immobilisations corporelles PA",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "330"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.517Z",
+    "updated_at": "2026-09-02T20:15:35.517Z",
+    "code": "3301",
+    "label": "Amortissements non planifiés des immobilisations corporelles PA",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "330"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.520Z",
+    "updated_at": "2026-09-02T20:15:35.520Z",
+    "code": "332",
+    "label": "Amortissements des immobilisations incorporelles PA",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "33"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.524Z",
+    "updated_at": "2026-09-02T20:15:35.524Z",
+    "code": "3320",
+    "label": "Amortissements planifiés des immobilisations incorporelles PA",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "332"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.527Z",
+    "updated_at": "2026-09-02T20:15:35.527Z",
+    "code": "3321",
+    "label": "Amortissements non planifiés des immobilisations incorporelles PA",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "332"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.531Z",
+    "updated_at": "2026-09-02T20:15:35.531Z",
+    "code": "34",
+    "label": "Charges financières",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.533Z",
+    "updated_at": "2026-09-02T20:15:35.533Z",
+    "code": "340",
+    "label": "Charges d’intérêts",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "34"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.537Z",
+    "updated_at": "2026-09-02T20:15:35.537Z",
+    "code": "3400",
+    "label": "Intérêts passifs des engagements courants",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "340"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.541Z",
+    "updated_at": "2026-09-02T20:15:35.541Z",
+    "code": "3401",
+    "label": "Intérêts passifs des engagements financiers",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "340"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.544Z",
+    "updated_at": "2026-09-02T20:15:35.544Z",
+    "code": "3409",
+    "label": "Autres intérêts passifs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "340"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.547Z",
+    "updated_at": "2026-09-02T20:15:35.547Z",
+    "code": "341",
+    "label": "Pertes réalisées sur PF",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "34"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.550Z",
+    "updated_at": "2026-09-02T20:15:35.550Z",
+    "code": "3410",
+    "label": "Pertes réalisées sur les placements financier PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "341"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.554Z",
+    "updated_at": "2026-09-02T20:15:35.554Z",
+    "code": "3411",
+    "label": "Pertes réalisées sur immobilisations PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "341"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.558Z",
+    "updated_at": "2026-09-02T20:15:35.558Z",
+    "code": "3419",
+    "label": "Autres pertes réalisées sur patrimoine financier",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "341"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.563Z",
+    "updated_at": "2026-09-02T20:15:35.563Z",
+    "code": "342",
+    "label": "Frais d'approvisionnement en capitaux et frais administratifs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "34"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.566Z",
+    "updated_at": "2026-09-02T20:15:35.566Z",
+    "code": "3420",
+    "label": "Acquisition et administration de capital",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "342"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.569Z",
+    "updated_at": "2026-09-02T20:15:35.569Z",
+    "code": "343",
+    "label": "Charges pour biens-fonds PF",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "34"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.571Z",
+    "updated_at": "2026-09-02T20:15:35.571Z",
+    "code": "3430",
+    "label": "Travaux d'entretien, biens-fonds PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "343"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.575Z",
+    "updated_at": "2026-09-02T20:15:35.575Z",
+    "code": "3431",
+    "label": "Entretien courant, biens-fonds PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "343"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.579Z",
+    "updated_at": "2026-09-02T20:15:35.579Z",
+    "code": "3439",
+    "label": "Autres charges des biens-fonds PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "343"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.582Z",
+    "updated_at": "2026-09-02T20:15:35.582Z",
+    "code": "344",
+    "label": "Réévaluations (moins-values) et amortissements d'immobilisations PF",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "34"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.585Z",
+    "updated_at": "2026-09-02T20:15:35.585Z",
+    "code": "3440",
+    "label": "Réévaluations (moins-values) de placements financiers PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "344"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.590Z",
+    "updated_at": "2026-09-02T20:15:35.590Z",
+    "code": "3441",
+    "label": "Réévaluations (moins-values) et amortissements d'immobilisations PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "344"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.594Z",
+    "updated_at": "2026-09-02T20:15:35.594Z",
+    "code": "349",
+    "label": "Autres charges financières",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "34"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.598Z",
+    "updated_at": "2026-09-02T20:15:35.598Z",
+    "code": "3499",
+    "label": "Autres charges financières",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "349"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.601Z",
+    "updated_at": "2026-09-02T20:15:35.601Z",
+    "code": "35",
+    "label": "Attributions aux fonds et financements spéciaux",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.605Z",
+    "updated_at": "2026-09-02T20:15:35.605Z",
+    "code": "351",
+    "label": "Attributions aux fonds et financements spéciaux",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "35"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.609Z",
+    "updated_at": "2026-09-02T20:15:35.609Z",
+    "code": "3510",
+    "label": "Attributions aux financements spéciaux",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "351"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.613Z",
+    "updated_at": "2026-09-02T20:15:35.613Z",
+    "code": "3511",
+    "label": "Attributions aux fonds",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "351"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.616Z",
+    "updated_at": "2026-09-02T20:15:35.616Z",
+    "code": "3512",
+    "label": "Attributions aux legs et fondations sans personnalité juridique",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "351"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.619Z",
+    "updated_at": "2026-09-02T20:15:35.619Z",
+    "code": "36",
+    "label": "Charges de transferts",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.623Z",
+    "updated_at": "2026-09-02T20:15:35.623Z",
+    "code": "360",
+    "label": "Parts de revenus destinées à des tiers",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "36"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.626Z",
+    "updated_at": "2026-09-02T20:15:35.626Z",
+    "code": "3600",
+    "label": "Parts de revenus destinées à la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "360"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.629Z",
+    "updated_at": "2026-09-02T20:15:35.629Z",
+    "code": "3601",
+    "label": "Parts de revenus destinées aux cantons et aux concordats",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "360"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.632Z",
+    "updated_at": "2026-09-02T20:15:35.632Z",
+    "code": "3602",
+    "label": "Parts de revenus destinées aux communes et aux associations intercommunales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "360"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.635Z",
+    "updated_at": "2026-09-02T20:15:35.635Z",
+    "code": "3603",
+    "label": "Parts de revenus destinées aux assurances sociales publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "360"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.640Z",
+    "updated_at": "2026-09-02T20:15:35.640Z",
+    "code": "3604",
+    "label": "Parts de revenus destinées aux entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "360"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.644Z",
+    "updated_at": "2026-09-02T20:15:35.644Z",
+    "code": "361",
+    "label": "Dédommagements à des collectivités publiques et à des tiers",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "36"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.647Z",
+    "updated_at": "2026-09-02T20:15:35.647Z",
+    "code": "3610",
+    "label": "Dédommagements à la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "361"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.649Z",
+    "updated_at": "2026-09-02T20:15:35.649Z",
+    "code": "3611",
+    "label": "Dédommagements aux cantons et concordats",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "361"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.652Z",
+    "updated_at": "2026-09-02T20:15:35.652Z",
+    "code": "3612",
+    "label": "Dédommagements aux communes et associations intercommunales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "361"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.656Z",
+    "updated_at": "2026-09-02T20:15:35.656Z",
+    "code": "3613",
+    "label": "Dédommagements aux assurances sociales publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "361"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.660Z",
+    "updated_at": "2026-09-02T20:15:35.660Z",
+    "code": "3614",
+    "label": "Dédommagements aux entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "361"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.665Z",
+    "updated_at": "2026-09-02T20:15:35.665Z",
+    "code": "3615",
+    "label": "Dédommagements aux entreprises privées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "361"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.669Z",
+    "updated_at": "2026-09-02T20:15:35.669Z",
+    "code": "3616",
+    "label": "Dédommagements aux organisations privées à but non lucratif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "361"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.672Z",
+    "updated_at": "2026-09-02T20:15:35.672Z",
+    "code": "362",
+    "label": "Péréquation financière et compensation des charges",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "36"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.677Z",
+    "updated_at": "2026-09-02T20:15:35.677Z",
+    "code": "3620",
+    "label": "A la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "362"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.681Z",
+    "updated_at": "2026-09-02T20:15:35.681Z",
+    "code": "3621",
+    "label": "Péréquation financière et compensation des charges aux cantons et concordats",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "362"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.684Z",
+    "updated_at": "2026-09-02T20:15:35.684Z",
+    "code": "3622",
+    "label": "Péréquation financière et compensation des charges aux communes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "362"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.688Z",
+    "updated_at": "2026-09-02T20:15:35.688Z",
+    "code": "3624",
+    "label": "Aux entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "362"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.693Z",
+    "updated_at": "2026-09-02T20:15:35.693Z",
+    "code": "363",
+    "label": "Subventions à des collectivités et à des tiers",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "36"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.697Z",
+    "updated_at": "2026-09-02T20:15:35.697Z",
+    "code": "3630",
+    "label": "Subventions à la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "363"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.701Z",
+    "updated_at": "2026-09-02T20:15:35.701Z",
+    "code": "3631",
+    "label": "Subventions accordées aux cantons et aux concordats",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "363"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.704Z",
+    "updated_at": "2026-09-02T20:15:35.704Z",
+    "code": "3632",
+    "label": "Subventions accordées aux communes et associations intercommunales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "363"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.709Z",
+    "updated_at": "2026-09-02T20:15:35.709Z",
+    "code": "3633",
+    "label": "Subventions accordées aux assurances sociales publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "363"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.713Z",
+    "updated_at": "2026-09-02T20:15:35.713Z",
+    "code": "3634",
+    "label": "Subventions accordées aux entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "363"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.716Z",
+    "updated_at": "2026-09-02T20:15:35.716Z",
+    "code": "3635",
+    "label": "Subventions accordées aux entreprises privées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "363"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.719Z",
+    "updated_at": "2026-09-02T20:15:35.719Z",
+    "code": "3636",
+    "label": "Subventions accordées aux organisations privées à but non lucratif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "363"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.724Z",
+    "updated_at": "2026-09-02T20:15:35.724Z",
+    "code": "3637",
+    "label": "Subventions accordées aux ménages privés",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "363"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.728Z",
+    "updated_at": "2026-09-02T20:15:35.728Z",
+    "code": "3638",
+    "label": "Subventions accordées à l'étranger",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "363"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.732Z",
+    "updated_at": "2026-09-02T20:15:35.732Z",
+    "code": "366",
+    "label": "Amortissements des subventions d’investissement",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "36"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.735Z",
+    "updated_at": "2026-09-02T20:15:35.735Z",
+    "code": "3660",
+    "label": "Amortissements planifiés des subventions d'investissement",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "366"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.739Z",
+    "updated_at": "2026-09-02T20:15:35.739Z",
+    "code": "3661",
+    "label": "Amortissements non planifiés des subventions d'investissement",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "366"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.744Z",
+    "updated_at": "2026-09-02T20:15:35.744Z",
+    "code": "369",
+    "label": "Autres charges de transferts",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "36"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.748Z",
+    "updated_at": "2026-09-02T20:15:35.748Z",
+    "code": "3690",
+    "label": "Autres charges de transferts",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "369"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.753Z",
+    "updated_at": "2026-09-02T20:15:35.753Z",
+    "code": "3699",
+    "label": "Redistributions",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "369"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.757Z",
+    "updated_at": "2026-09-02T20:15:35.757Z",
+    "code": "37",
+    "label": "Subventions redistribuées",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.762Z",
+    "updated_at": "2026-09-02T20:15:35.762Z",
+    "code": "370",
+    "label": "Octroi de subventions à redistribuer",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "37"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.766Z",
+    "updated_at": "2026-09-02T20:15:35.766Z",
+    "code": "3700",
+    "label": "Subventions distribuées à la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "370"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.771Z",
+    "updated_at": "2026-09-02T20:15:35.771Z",
+    "code": "3701",
+    "label": "Subventions distribuées aux cantons et concordats",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "370"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.776Z",
+    "updated_at": "2026-09-02T20:15:35.776Z",
+    "code": "3702",
+    "label": "Subventions redistribuées aux communes et associations intercommunales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "370"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.780Z",
+    "updated_at": "2026-09-02T20:15:35.780Z",
+    "code": "3703",
+    "label": "Subventions distribuées aux assurances sociales publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "370"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.783Z",
+    "updated_at": "2026-09-02T20:15:35.783Z",
+    "code": "3704",
+    "label": "Subventions redistribuées aux entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "370"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.787Z",
+    "updated_at": "2026-09-02T20:15:35.787Z",
+    "code": "3705",
+    "label": "Subventions redistribuées aux entreprises privées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "370"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.790Z",
+    "updated_at": "2026-09-02T20:15:35.790Z",
+    "code": "3706",
+    "label": "Subventions redistribuées aux organisations privées à but non lucratif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "370"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.795Z",
+    "updated_at": "2026-09-02T20:15:35.795Z",
+    "code": "3707",
+    "label": "Subventions redistribuées aux ménages privés",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "370"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.798Z",
+    "updated_at": "2026-09-02T20:15:35.798Z",
+    "code": "3708",
+    "label": "Subventions redistribuées à l’étranger",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "370"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.802Z",
+    "updated_at": "2026-09-02T20:15:35.802Z",
+    "code": "38",
+    "label": "Charges extraordinaires",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.806Z",
+    "updated_at": "2026-09-02T20:15:35.806Z",
+    "code": "380",
+    "label": "Charges de personnel extraordinaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "38"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.811Z",
+    "updated_at": "2026-09-02T20:15:35.811Z",
+    "code": "3800",
+    "label": "Charges de personnel extraordinaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "380"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.815Z",
+    "updated_at": "2026-09-02T20:15:35.815Z",
+    "code": "381",
+    "label": "Charges de biens, services et charges d'exploitation extraordinaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "38"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.820Z",
+    "updated_at": "2026-09-02T20:15:35.820Z",
+    "code": "3810",
+    "label": "Charges de biens, services et charges d'exploitation extraordinaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "381"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.824Z",
+    "updated_at": "2026-09-02T20:15:35.824Z",
+    "code": "3811",
+    "label": "Charges de biens, services et charges d'exploitation extraordinaires; réévaluations",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "381"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.828Z",
+    "updated_at": "2026-09-02T20:15:35.828Z",
+    "code": "384",
+    "label": "Charges financières extraordinaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "38"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.833Z",
+    "updated_at": "2026-09-02T20:15:35.833Z",
+    "code": "3840",
+    "label": "Charges financières extraordinaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "384"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.837Z",
+    "updated_at": "2026-09-02T20:15:35.837Z",
+    "code": "3841",
+    "label": "Charges financières extraordinaires, réévaluations extraordinaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "384"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.843Z",
+    "updated_at": "2026-09-02T20:15:35.843Z",
+    "code": "386",
+    "label": "Charges de transfert extraordinaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "38"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.848Z",
+    "updated_at": "2026-09-02T20:15:35.848Z",
+    "code": "3860",
+    "label": "Charges de transfert extraordinaires; Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "386"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.852Z",
+    "updated_at": "2026-09-02T20:15:35.852Z",
+    "code": "3861",
+    "label": "Charges de transfert extraordinaires ; cantons",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "386"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.856Z",
+    "updated_at": "2026-09-02T20:15:35.856Z",
+    "code": "3862",
+    "label": "Charges de transfert extraordinaires ; communes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "386"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.860Z",
+    "updated_at": "2026-09-02T20:15:35.860Z",
+    "code": "3863",
+    "label": "Charges de transfert extraordinaires; assurances sociales publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "386"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.864Z",
+    "updated_at": "2026-09-02T20:15:35.864Z",
+    "code": "3864",
+    "label": "Charges de transfert extraordinaires; entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "386"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.866Z",
+    "updated_at": "2026-09-02T20:15:35.866Z",
+    "code": "3865",
+    "label": "Charges de transfert extraordinaires; entreprises privées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "386"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.868Z",
+    "updated_at": "2026-09-02T20:15:35.868Z",
+    "code": "3866",
+    "label": "Charges de transfert extraordinaires; organisations privées à but non lucratif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "386"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.870Z",
+    "updated_at": "2026-09-02T20:15:35.870Z",
+    "code": "3867",
+    "label": "Charges de transferts extraordinaires à des tiers",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "386"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.873Z",
+    "updated_at": "2026-09-02T20:15:35.873Z",
+    "code": "3868",
+    "label": "Charges de transfert extraordinaires; étranger",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "386"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.875Z",
+    "updated_at": "2026-09-02T20:15:35.875Z",
+    "code": "389",
+    "label": "Attributions au capital propre",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "38"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.879Z",
+    "updated_at": "2026-09-02T20:15:35.879Z",
+    "code": "3893",
+    "label": "Attributions aux préfinancements et amortissements supplémentaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "389"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.883Z",
+    "updated_at": "2026-09-02T20:15:35.883Z",
+    "code": "3894",
+    "label": "Attributions à la réserve de politique budgétaire",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "389"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.887Z",
+    "updated_at": "2026-09-02T20:15:35.887Z",
+    "code": "3898",
+    "label": "Attributions aux autres capitaux propres",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "389"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.891Z",
+    "updated_at": "2026-09-02T20:15:35.891Z",
+    "code": "3899",
+    "label": "Amortissement du découvert du bilan",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "389"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.894Z",
+    "updated_at": "2026-09-02T20:15:35.894Z",
+    "code": "39",
+    "label": "Imputations internes",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "3"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.897Z",
+    "updated_at": "2026-09-02T20:15:35.897Z",
+    "code": "390",
+    "label": "Imputations internes pour l'approvisionnement en matériel et en marchandises",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "39"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.901Z",
+    "updated_at": "2026-09-02T20:15:35.901Z",
+    "code": "3900",
+    "label": "Imputations internes pour l'approvisionnement en matériel et en marchandises",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "390"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.905Z",
+    "updated_at": "2026-09-02T20:15:35.905Z",
+    "code": "391",
+    "label": "Imputations internes pour prestations de service",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "39"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.908Z",
+    "updated_at": "2026-09-02T20:15:35.908Z",
+    "code": "3910",
+    "label": "Imputations internes pour prestations de service",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "391"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.911Z",
+    "updated_at": "2026-09-02T20:15:35.911Z",
+    "code": "392",
+    "label": "Imputations internes pour bail à ferme, loyers, frais d'utilisation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "39"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.914Z",
+    "updated_at": "2026-09-02T20:15:35.914Z",
+    "code": "3920",
+    "label": "Imputations internes pour bail à ferme, loyers, frais d'utilisation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "392"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.917Z",
+    "updated_at": "2026-09-02T20:15:35.917Z",
+    "code": "393",
+    "label": "Imputations internes pour frais administratifs et d'exploitation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "39"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.919Z",
+    "updated_at": "2026-09-02T20:15:35.919Z",
+    "code": "3930",
+    "label": "Imputations internes pour frais administratifs et d'exploitation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "393"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.922Z",
+    "updated_at": "2026-09-02T20:15:35.922Z",
+    "code": "394",
+    "label": "Imputations internes pour intérêts et charges financières théoriques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "39"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.925Z",
+    "updated_at": "2026-09-02T20:15:35.925Z",
+    "code": "3940",
+    "label": "Imputations internes pour intérêts et charges financières théoriques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "394"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.927Z",
+    "updated_at": "2026-09-02T20:15:35.927Z",
+    "code": "395",
+    "label": "Imputations internes pour amortissements",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "39"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.930Z",
+    "updated_at": "2026-09-02T20:15:35.930Z",
+    "code": "3950",
+    "label": "Imputations internes pour amortissements",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "395"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.932Z",
+    "updated_at": "2026-09-02T20:15:35.932Z",
+    "code": "398",
+    "label": "Transferts internes entre services",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "39"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.935Z",
+    "updated_at": "2026-09-02T20:15:35.935Z",
+    "code": "3980",
+    "label": "Transferts internes entre services",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "398"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.937Z",
+    "updated_at": "2026-09-02T20:15:35.937Z",
+    "code": "399",
+    "label": "Autres imputations internes",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "39"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.939Z",
+    "updated_at": "2026-09-02T20:15:35.939Z",
+    "code": "3990",
+    "label": "Autres imputations internes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "399"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.942Z",
+    "updated_at": "2026-09-02T20:15:35.942Z",
+    "code": "4",
+    "label": "Revenus",
+    "scheme": "mch2",
+    "level": 1,
+    "parent": null
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.945Z",
+    "updated_at": "2026-09-02T20:15:35.945Z",
+    "code": "40",
+    "label": "Revenus fiscaux",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.948Z",
+    "updated_at": "2026-09-02T20:15:35.948Z",
+    "code": "400",
+    "label": "Impôts directs, personnes physiques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "40"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.950Z",
+    "updated_at": "2026-09-02T20:15:35.950Z",
+    "code": "4000",
+    "label": "Impôts sur le revenu, personnes physiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "400"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.953Z",
+    "updated_at": "2026-09-02T20:15:35.953Z",
+    "code": "4001",
+    "label": "Impôts sur la fortune, personnes physiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "400"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.957Z",
+    "updated_at": "2026-09-02T20:15:35.957Z",
+    "code": "4002",
+    "label": "Impôts à la source, personnes physiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "400"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.960Z",
+    "updated_at": "2026-09-02T20:15:35.960Z",
+    "code": "4008",
+    "label": "Impôts des personnes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "400"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.964Z",
+    "updated_at": "2026-09-02T20:15:35.964Z",
+    "code": "4009",
+    "label": "Autres impôts directs, personnes physiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "400"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.968Z",
+    "updated_at": "2026-09-02T20:15:35.968Z",
+    "code": "401",
+    "label": "Impôts directs, personnes morales",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "40"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.971Z",
+    "updated_at": "2026-09-02T20:15:35.971Z",
+    "code": "4010",
+    "label": "Impôts sur le bénéfice, personnes morales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "401"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.974Z",
+    "updated_at": "2026-09-02T20:15:35.974Z",
+    "code": "4011",
+    "label": "Impôts sur le capital, personnes morales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "401"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.976Z",
+    "updated_at": "2026-09-02T20:15:35.976Z",
+    "code": "4012",
+    "label": "Impôts à la source, personnes morales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "401"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.979Z",
+    "updated_at": "2026-09-02T20:15:35.979Z",
+    "code": "4019",
+    "label": "Autres impôts directs, personnes morales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "401"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.982Z",
+    "updated_at": "2026-09-02T20:15:35.982Z",
+    "code": "402",
+    "label": "Autres impôts direct",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "40"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.985Z",
+    "updated_at": "2026-09-02T20:15:35.985Z",
+    "code": "4020",
+    "label": "Impôt anticipé (uniquement Confédération)",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "402"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.988Z",
+    "updated_at": "2026-09-02T20:15:35.988Z",
+    "code": "4021",
+    "label": "Impôts fonciers",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "402"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.991Z",
+    "updated_at": "2026-09-02T20:15:35.991Z",
+    "code": "4022",
+    "label": "Impôts sur les gains en capital",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "402"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.994Z",
+    "updated_at": "2026-09-02T20:15:35.994Z",
+    "code": "4023",
+    "label": "Droits de mutation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "402"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:35.999Z",
+    "updated_at": "2026-09-02T20:15:35.999Z",
+    "code": "4024",
+    "label": "Impôts sur les successions et donations",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "402"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.000Z",
+    "updated_at": "2026-09-02T20:15:36.000Z",
+    "code": "4025",
+    "label": "Impôt sur les maisons de jeu et machines à sous",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "402"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.002Z",
+    "updated_at": "2026-09-02T20:15:36.002Z",
+    "code": "403",
+    "label": "Impôts sur la propriété et sur les charges",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "40"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.004Z",
+    "updated_at": "2026-09-02T20:15:36.004Z",
+    "code": "4030",
+    "label": "Taxes routières",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "403"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.006Z",
+    "updated_at": "2026-09-02T20:15:36.006Z",
+    "code": "4031",
+    "label": "Impôt sur les bateaux",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "403"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.008Z",
+    "updated_at": "2026-09-02T20:15:36.008Z",
+    "code": "4032",
+    "label": "Impôts sur les divertissements",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "403"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.010Z",
+    "updated_at": "2026-09-02T20:15:36.010Z",
+    "code": "4033",
+    "label": "Impôts sur les chiens",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "403"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.012Z",
+    "updated_at": "2026-09-02T20:15:36.012Z",
+    "code": "4039",
+    "label": "Autres impôts sur la propriété et les charges",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "403"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.013Z",
+    "updated_at": "2026-09-02T20:15:36.013Z",
+    "code": "41",
+    "label": "Patentes et concessions",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.015Z",
+    "updated_at": "2026-09-02T20:15:36.015Z",
+    "code": "410",
+    "label": "Régales et monopoles",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "41"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.017Z",
+    "updated_at": "2026-09-02T20:15:36.017Z",
+    "code": "4100",
+    "label": "Régales et monopoles",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "410"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.019Z",
+    "updated_at": "2026-09-02T20:15:36.019Z",
+    "code": "411",
+    "label": "Banque nationale Suisse",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "41"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.021Z",
+    "updated_at": "2026-09-02T20:15:36.021Z",
+    "code": "4110",
+    "label": "Part au bénéfice net de la BNS",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "411"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.023Z",
+    "updated_at": "2026-09-02T20:15:36.023Z",
+    "code": "412",
+    "label": "Concessions",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "41"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.025Z",
+    "updated_at": "2026-09-02T20:15:36.025Z",
+    "code": "4120",
+    "label": "Patentes et concessions",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "412"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.027Z",
+    "updated_at": "2026-09-02T20:15:36.027Z",
+    "code": "42",
+    "label": "Taxes et redevances",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.029Z",
+    "updated_at": "2026-09-02T20:15:36.029Z",
+    "code": "420",
+    "label": "Taxes de compensation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "42"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.031Z",
+    "updated_at": "2026-09-02T20:15:36.031Z",
+    "code": "4200",
+    "label": "Taxes de compensation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "420"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.033Z",
+    "updated_at": "2026-09-02T20:15:36.033Z",
+    "code": "421",
+    "label": "Emoluments pour actes administratifs",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "42"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.034Z",
+    "updated_at": "2026-09-02T20:15:36.034Z",
+    "code": "4210",
+    "label": "Emoluments pour actes administratifs",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "421"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.036Z",
+    "updated_at": "2026-09-02T20:15:36.036Z",
+    "code": "422",
+    "label": "Taxes pour hôpitaux et établissements médicaux sociaux, subventions aux frais de pension",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "42"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.038Z",
+    "updated_at": "2026-09-02T20:15:36.038Z",
+    "code": "4220",
+    "label": "Taxes et subventions aux frais de pension",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "422"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.040Z",
+    "updated_at": "2026-09-02T20:15:36.040Z",
+    "code": "4221",
+    "label": "Paiements pour prestations particulières",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "422"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.042Z",
+    "updated_at": "2026-09-02T20:15:36.042Z",
+    "code": "423",
+    "label": "Frais d'écolage et taxes de cours",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "42"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.044Z",
+    "updated_at": "2026-09-02T20:15:36.044Z",
+    "code": "4230",
+    "label": "Frais d'écolage",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "423"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.045Z",
+    "updated_at": "2026-09-02T20:15:36.045Z",
+    "code": "4231",
+    "label": "Taxes de cours",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "423"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.047Z",
+    "updated_at": "2026-09-02T20:15:36.047Z",
+    "code": "424",
+    "label": "Taxes d’utilisation et prestations de service",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "42"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.051Z",
+    "updated_at": "2026-09-02T20:15:36.051Z",
+    "code": "4240",
+    "label": "Taxes d’utilisation et prestations de service",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "424"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.054Z",
+    "updated_at": "2026-09-02T20:15:36.054Z",
+    "code": "425",
+    "label": "Recettes sur ventes",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "42"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.058Z",
+    "updated_at": "2026-09-02T20:15:36.058Z",
+    "code": "4250",
+    "label": "Ventes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "425"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.063Z",
+    "updated_at": "2026-09-02T20:15:36.063Z",
+    "code": "426",
+    "label": "Remboursements et participations de tiers",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "42"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.067Z",
+    "updated_at": "2026-09-02T20:15:36.067Z",
+    "code": "4260",
+    "label": "Remboursements et participations de tiers",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "426"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.072Z",
+    "updated_at": "2026-09-02T20:15:36.072Z",
+    "code": "427",
+    "label": "Amendes",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "42"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.076Z",
+    "updated_at": "2026-09-02T20:15:36.076Z",
+    "code": "4270",
+    "label": "Amendes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "427"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.079Z",
+    "updated_at": "2026-09-02T20:15:36.079Z",
+    "code": "429",
+    "label": "Autres taxes",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "42"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.084Z",
+    "updated_at": "2026-09-02T20:15:36.084Z",
+    "code": "4290",
+    "label": "Autres taxes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "429"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.089Z",
+    "updated_at": "2026-09-02T20:15:36.089Z",
+    "code": "43",
+    "label": "Revenus divers",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.094Z",
+    "updated_at": "2026-09-02T20:15:36.094Z",
+    "code": "430",
+    "label": "Revenus d’exploitation divers",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "43"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.098Z",
+    "updated_at": "2026-09-02T20:15:36.098Z",
+    "code": "4300",
+    "label": "Honoraires de l'activité de médecine privée",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "430"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.102Z",
+    "updated_at": "2026-09-02T20:15:36.102Z",
+    "code": "4301",
+    "label": "Actifs saisis",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "430"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.105Z",
+    "updated_at": "2026-09-02T20:15:36.105Z",
+    "code": "4309",
+    "label": "Autres revenus d’exploitation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "430"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.110Z",
+    "updated_at": "2026-09-02T20:15:36.110Z",
+    "code": "431",
+    "label": "Activation des prestations propres",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "43"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.114Z",
+    "updated_at": "2026-09-02T20:15:36.114Z",
+    "code": "4310",
+    "label": "Prestations propres sur immobilisation corporelles portées à l’actif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "431"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.119Z",
+    "updated_at": "2026-09-02T20:15:36.119Z",
+    "code": "4311",
+    "label": "Prestations propres sur immobilisation incorporelles portées à l'actif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "431"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.124Z",
+    "updated_at": "2026-09-02T20:15:36.124Z",
+    "code": "4312",
+    "label": "Frais de projection portés à l'actif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "431"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.128Z",
+    "updated_at": "2026-09-02T20:15:36.128Z",
+    "code": "432",
+    "label": "Variations des stocks",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "43"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.132Z",
+    "updated_at": "2026-09-02T20:15:36.132Z",
+    "code": "4320",
+    "label": "Variations de stocks, produits semi-finis et finis",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "432"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.136Z",
+    "updated_at": "2026-09-02T20:15:36.136Z",
+    "code": "4321",
+    "label": "Variations de stocks, travaux commencés (prestations de service)",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "432"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.140Z",
+    "updated_at": "2026-09-02T20:15:36.140Z",
+    "code": "4329",
+    "label": "Autres variations de stocks",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "432"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.145Z",
+    "updated_at": "2026-09-02T20:15:36.145Z",
+    "code": "439",
+    "label": "Autres revenus",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "43"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.150Z",
+    "updated_at": "2026-09-02T20:15:36.150Z",
+    "code": "4390",
+    "label": "Autres revenus",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "439"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.155Z",
+    "updated_at": "2026-09-02T20:15:36.155Z",
+    "code": "44",
+    "label": "Revenus financiers",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.160Z",
+    "updated_at": "2026-09-02T20:15:36.160Z",
+    "code": "440",
+    "label": "Revenus des intérêts",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "44"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.165Z",
+    "updated_at": "2026-09-02T20:15:36.165Z",
+    "code": "4400",
+    "label": "Intérêts des liquidités",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "440"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.168Z",
+    "updated_at": "2026-09-02T20:15:36.168Z",
+    "code": "4401",
+    "label": "Intérêts des créances et comptes courants",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "440"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.172Z",
+    "updated_at": "2026-09-02T20:15:36.172Z",
+    "code": "4402",
+    "label": "Intérêts des placements financiers",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "440"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.177Z",
+    "updated_at": "2026-09-02T20:15:36.177Z",
+    "code": "4409",
+    "label": "Autres intérêts du patrimoine financier",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "440"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.180Z",
+    "updated_at": "2026-09-02T20:15:36.180Z",
+    "code": "441",
+    "label": "Gains réalisés PF",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "44"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.185Z",
+    "updated_at": "2026-09-02T20:15:36.185Z",
+    "code": "4410",
+    "label": "Gains provenant des ventes des placements financiers PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "441"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.190Z",
+    "updated_at": "2026-09-02T20:15:36.190Z",
+    "code": "4411",
+    "label": "Gain provenant des ventes des immobilisations PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "441"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.196Z",
+    "updated_at": "2026-09-02T20:15:36.196Z",
+    "code": "4419",
+    "label": "Autres gains sur patrimoine financier",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "441"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.200Z",
+    "updated_at": "2026-09-02T20:15:36.200Z",
+    "code": "442",
+    "label": "Revenus de participations PF",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "44"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.204Z",
+    "updated_at": "2026-09-02T20:15:36.204Z",
+    "code": "4420",
+    "label": "Dividendes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "442"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.208Z",
+    "updated_at": "2026-09-02T20:15:36.208Z",
+    "code": "4429",
+    "label": "Autres revenus de participations",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "442"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.210Z",
+    "updated_at": "2026-09-02T20:15:36.210Z",
+    "code": "443",
+    "label": "Produits des immeubles du PF",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "44"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.212Z",
+    "updated_at": "2026-09-02T20:15:36.212Z",
+    "code": "4430",
+    "label": "Loyers et fermages, immeubles du PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "443"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.215Z",
+    "updated_at": "2026-09-02T20:15:36.215Z",
+    "code": "4431",
+    "label": "Paiement pour appartements de service PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "443"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.219Z",
+    "updated_at": "2026-09-02T20:15:36.219Z",
+    "code": "4432",
+    "label": "Paiements pour utilisations des immeubles PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "443"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.223Z",
+    "updated_at": "2026-09-02T20:15:36.223Z",
+    "code": "4439",
+    "label": "Autres produits des immeubles, PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "443"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.227Z",
+    "updated_at": "2026-09-02T20:15:36.227Z",
+    "code": "444",
+    "label": "Réévaluations, immobilisations PF",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "44"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.231Z",
+    "updated_at": "2026-09-02T20:15:36.231Z",
+    "code": "4440",
+    "label": "Réévaluations d'autres placements financiers PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "444"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.234Z",
+    "updated_at": "2026-09-02T20:15:36.234Z",
+    "code": "4441",
+    "label": "Réévaluations des prêts PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "444"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.237Z",
+    "updated_at": "2026-09-02T20:15:36.237Z",
+    "code": "4442",
+    "label": "Réévaluations de participations PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "444"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.241Z",
+    "updated_at": "2026-09-02T20:15:36.241Z",
+    "code": "4443",
+    "label": "Réévaluations d'immeubles PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "444"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.245Z",
+    "updated_at": "2026-09-02T20:15:36.245Z",
+    "code": "4449",
+    "label": "Réévaluations d'autres immobilisations corporelles et incorporelles du PF",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "444"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.249Z",
+    "updated_at": "2026-09-02T20:15:36.249Z",
+    "code": "445",
+    "label": "Revenus financiers de prêts et de participations du PA",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "44"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.252Z",
+    "updated_at": "2026-09-02T20:15:36.252Z",
+    "code": "4450",
+    "label": "Revenus provenant de prêts PA",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "445"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.256Z",
+    "updated_at": "2026-09-02T20:15:36.256Z",
+    "code": "4451",
+    "label": "Revenus provenant de participations PA",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "445"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.260Z",
+    "updated_at": "2026-09-02T20:15:36.260Z",
+    "code": "446",
+    "label": "Revenus financiers d'entreprises publiques et associations de communes",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "44"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.264Z",
+    "updated_at": "2026-09-02T20:15:36.264Z",
+    "code": "4460",
+    "label": "Exploitations publiques de la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "446"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.267Z",
+    "updated_at": "2026-09-02T20:15:36.267Z",
+    "code": "4461",
+    "label": "Entreprises publiques des cantons avec forme juridique de droit public, concordats",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "446"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.271Z",
+    "updated_at": "2026-09-02T20:15:36.271Z",
+    "code": "4462",
+    "label": "Associations intercommunales, entreprises communales autonomes et non autonomes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "446"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.275Z",
+    "updated_at": "2026-09-02T20:15:36.275Z",
+    "code": "4463",
+    "label": "Entreprises publiques comme société anonyme ou autre forme d'organisation de droit privé",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "446"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.278Z",
+    "updated_at": "2026-09-02T20:15:36.278Z",
+    "code": "4464",
+    "label": "Banque nationale Suisse",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "446"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.281Z",
+    "updated_at": "2026-09-02T20:15:36.281Z",
+    "code": "4468",
+    "label": "Entreprises publiques à l'étranger",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "446"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.285Z",
+    "updated_at": "2026-09-02T20:15:36.285Z",
+    "code": "4469",
+    "label": "Autres entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "446"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.288Z",
+    "updated_at": "2026-09-02T20:15:36.288Z",
+    "code": "447",
+    "label": "Produit des immeubles PA",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "44"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.291Z",
+    "updated_at": "2026-09-02T20:15:36.291Z",
+    "code": "4470",
+    "label": "Loyers et fermages des biens-fonds PA",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "447"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.295Z",
+    "updated_at": "2026-09-02T20:15:36.295Z",
+    "code": "4471",
+    "label": "Paiement pour appartements de service PA",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "447"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.298Z",
+    "updated_at": "2026-09-02T20:15:36.298Z",
+    "code": "4472",
+    "label": "Paiements pour utilisations des immeubles PA",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "447"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.301Z",
+    "updated_at": "2026-09-02T20:15:36.301Z",
+    "code": "4479",
+    "label": "Autres revenus, biens-fonds PA",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "447"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.304Z",
+    "updated_at": "2026-09-02T20:15:36.304Z",
+    "code": "448",
+    "label": "Revenus des immeubles loués",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "44"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.307Z",
+    "updated_at": "2026-09-02T20:15:36.307Z",
+    "code": "4480",
+    "label": "Loyers des immeubles loués",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "448"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.310Z",
+    "updated_at": "2026-09-02T20:15:36.310Z",
+    "code": "4489",
+    "label": "Autres revenus des biens-fonds loués",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "448"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.313Z",
+    "updated_at": "2026-09-02T20:15:36.313Z",
+    "code": "449",
+    "label": "Autres revenus financiers",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "44"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.316Z",
+    "updated_at": "2026-09-02T20:15:36.316Z",
+    "code": "4499",
+    "label": "Autres revenus financiers",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "449"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.319Z",
+    "updated_at": "2026-09-02T20:15:36.319Z",
+    "code": "45",
+    "label": "Prélèvements sur les fonds et financements spéciaux",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.322Z",
+    "updated_at": "2026-09-02T20:15:36.322Z",
+    "code": "451",
+    "label": "Prélèvements sur les fonds et financements spéciaux",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "45"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.327Z",
+    "updated_at": "2026-09-02T20:15:36.327Z",
+    "code": "4510",
+    "label": "Prélèvements sur les financements spéciaux",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "451"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.331Z",
+    "updated_at": "2026-09-02T20:15:36.331Z",
+    "code": "4511",
+    "label": "Prélèvements sur les fonds",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "451"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.335Z",
+    "updated_at": "2026-09-02T20:15:36.335Z",
+    "code": "4512",
+    "label": "Prélèvements sur les legs et fondations sans personnalité juridique",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "451"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.338Z",
+    "updated_at": "2026-09-02T20:15:36.338Z",
+    "code": "46",
+    "label": "Revenus de transferts",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.342Z",
+    "updated_at": "2026-09-02T20:15:36.342Z",
+    "code": "460",
+    "label": "Parts aux revenus",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "46"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.346Z",
+    "updated_at": "2026-09-02T20:15:36.346Z",
+    "code": "4600",
+    "label": "Parts aux revenus de la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "460"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.350Z",
+    "updated_at": "2026-09-02T20:15:36.350Z",
+    "code": "4601",
+    "label": "Parts aux revenus des cantons et concordats",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "460"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.354Z",
+    "updated_at": "2026-09-02T20:15:36.354Z",
+    "code": "4602",
+    "label": "Parts aux revenus des communes et associations intercommunales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "460"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.358Z",
+    "updated_at": "2026-09-02T20:15:36.358Z",
+    "code": "4603",
+    "label": "Parts aux revenus des assurances sociales publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "460"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.362Z",
+    "updated_at": "2026-09-02T20:15:36.362Z",
+    "code": "4604",
+    "label": "Parts aux revenus des entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "460"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.367Z",
+    "updated_at": "2026-09-02T20:15:36.367Z",
+    "code": "461",
+    "label": "Dédommagements de collectivités publiques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "46"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.370Z",
+    "updated_at": "2026-09-02T20:15:36.370Z",
+    "code": "4610",
+    "label": "Dédommagements de la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "461"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.374Z",
+    "updated_at": "2026-09-02T20:15:36.374Z",
+    "code": "4611",
+    "label": "Dédommagements des cantons et concordats",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "461"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.378Z",
+    "updated_at": "2026-09-02T20:15:36.378Z",
+    "code": "4612",
+    "label": "Dédommagements des communes et associations intercommunales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "461"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.381Z",
+    "updated_at": "2026-09-02T20:15:36.381Z",
+    "code": "4613",
+    "label": "Indemnités des assurances sociales publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "461"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.384Z",
+    "updated_at": "2026-09-02T20:15:36.384Z",
+    "code": "4614",
+    "label": "Indemnités des entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "461"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.388Z",
+    "updated_at": "2026-09-02T20:15:36.388Z",
+    "code": "4619",
+    "label": "Remboursement de dédommagements de provenance inconnue",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "461"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.392Z",
+    "updated_at": "2026-09-02T20:15:36.392Z",
+    "code": "462",
+    "label": "Péréquation financière et compensation des charges",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "46"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.396Z",
+    "updated_at": "2026-09-02T20:15:36.396Z",
+    "code": "4620",
+    "label": "de la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "462"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.400Z",
+    "updated_at": "2026-09-02T20:15:36.400Z",
+    "code": "4621",
+    "label": "Péréquation financière et compensation des charges des cantons et concordats",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "462"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.403Z",
+    "updated_at": "2026-09-02T20:15:36.403Z",
+    "code": "4622",
+    "label": "Péréquation financière et compensation des charges des communes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "462"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.409Z",
+    "updated_at": "2026-09-02T20:15:36.409Z",
+    "code": "4624",
+    "label": "des entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "462"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.412Z",
+    "updated_at": "2026-09-02T20:15:36.412Z",
+    "code": "463",
+    "label": "Subventions de collectivités et de tiers",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "46"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.416Z",
+    "updated_at": "2026-09-02T20:15:36.416Z",
+    "code": "4630",
+    "label": "Subventions de la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "463"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.420Z",
+    "updated_at": "2026-09-02T20:15:36.420Z",
+    "code": "4631",
+    "label": "Subventions des cantons et concordats",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "463"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.424Z",
+    "updated_at": "2026-09-02T20:15:36.424Z",
+    "code": "4632",
+    "label": "Subventions des communes et associations intercommunales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "463"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.428Z",
+    "updated_at": "2026-09-02T20:15:36.428Z",
+    "code": "4633",
+    "label": "Subventions des assurances sociales publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "463"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.431Z",
+    "updated_at": "2026-09-02T20:15:36.431Z",
+    "code": "4634",
+    "label": "Subventions des entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "463"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.435Z",
+    "updated_at": "2026-09-02T20:15:36.435Z",
+    "code": "4635",
+    "label": "Subventions des entreprises privées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "463"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.438Z",
+    "updated_at": "2026-09-02T20:15:36.438Z",
+    "code": "4636",
+    "label": "Subventions des organisations privées à but non lucratif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "463"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.442Z",
+    "updated_at": "2026-09-02T20:15:36.442Z",
+    "code": "4637",
+    "label": "Subventions des ménages privés",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "463"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.445Z",
+    "updated_at": "2026-09-02T20:15:36.445Z",
+    "code": "4638",
+    "label": "Subventions provenant de l’étranger",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "463"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.449Z",
+    "updated_at": "2026-09-02T20:15:36.449Z",
+    "code": "469",
+    "label": "Autres revenus de transferts",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "46"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.452Z",
+    "updated_at": "2026-09-02T20:15:36.452Z",
+    "code": "4690",
+    "label": "Autres revenus de transferts",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "469"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.455Z",
+    "updated_at": "2026-09-02T20:15:36.455Z",
+    "code": "4699",
+    "label": "Redistributions",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "469"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.459Z",
+    "updated_at": "2026-09-02T20:15:36.459Z",
+    "code": "47",
+    "label": "Subventions à redistribuer",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.464Z",
+    "updated_at": "2026-09-02T20:15:36.464Z",
+    "code": "470",
+    "label": "Réception de subventions à redistribuer",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "47"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.468Z",
+    "updated_at": "2026-09-02T20:15:36.468Z",
+    "code": "4700",
+    "label": "Subventions à redistribuer de la Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "470"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.472Z",
+    "updated_at": "2026-09-02T20:15:36.472Z",
+    "code": "4701",
+    "label": "Subventions à redistribuer de cantons et concordats",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "470"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.476Z",
+    "updated_at": "2026-09-02T20:15:36.476Z",
+    "code": "4702",
+    "label": "Subventions à redistribuer de communes et associations intercommunales",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "470"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.479Z",
+    "updated_at": "2026-09-02T20:15:36.479Z",
+    "code": "4703",
+    "label": "Subventions à redistribuer des assurances sociales publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "470"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.484Z",
+    "updated_at": "2026-09-02T20:15:36.484Z",
+    "code": "4704",
+    "label": "Subventions à redistribuer d’entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "470"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.487Z",
+    "updated_at": "2026-09-02T20:15:36.487Z",
+    "code": "4705",
+    "label": "Subventions à redistribuer d’entreprises privées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "470"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.490Z",
+    "updated_at": "2026-09-02T20:15:36.490Z",
+    "code": "4706",
+    "label": "Subventions à redistribuer d’organisations privées à but non lucratif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "470"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.495Z",
+    "updated_at": "2026-09-02T20:15:36.495Z",
+    "code": "4707",
+    "label": "Subventions à redistribuer de ménages privés",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "470"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.499Z",
+    "updated_at": "2026-09-02T20:15:36.499Z",
+    "code": "4708",
+    "label": "Subventions à redistribuer provenant de l’étranger",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "470"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.501Z",
+    "updated_at": "2026-09-02T20:15:36.501Z",
+    "code": "48",
+    "label": "Revenus extraordinaires",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.504Z",
+    "updated_at": "2026-09-02T20:15:36.504Z",
+    "code": "481",
+    "label": "Revenus extraordinaires de patentes, concessions",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "48"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.506Z",
+    "updated_at": "2026-09-02T20:15:36.506Z",
+    "code": "4810",
+    "label": "Revenus de patentes extraordinaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "481"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.509Z",
+    "updated_at": "2026-09-02T20:15:36.509Z",
+    "code": "4811",
+    "label": "Revenus de concessions extraordinaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "481"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.513Z",
+    "updated_at": "2026-09-02T20:15:36.513Z",
+    "code": "482",
+    "label": "Contributions extraordinaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "48"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.517Z",
+    "updated_at": "2026-09-02T20:15:36.517Z",
+    "code": "4820",
+    "label": "Contributions extraordinaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "482"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.521Z",
+    "updated_at": "2026-09-02T20:15:36.521Z",
+    "code": "483",
+    "label": "Revenus divers et extraordinaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "48"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.525Z",
+    "updated_at": "2026-09-02T20:15:36.525Z",
+    "code": "4830",
+    "label": "Revenus divers et extraordinaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "483"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.529Z",
+    "updated_at": "2026-09-02T20:15:36.529Z",
+    "code": "484",
+    "label": "Revenus financiers extraordinaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "48"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.532Z",
+    "updated_at": "2026-09-02T20:15:36.532Z",
+    "code": "4840",
+    "label": "Revenus financiers extraordinaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "484"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.534Z",
+    "updated_at": "2026-09-02T20:15:36.534Z",
+    "code": "4841",
+    "label": "Revenus financiers comptables extraordinaires, Réévaluations extraordinaires",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "484"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.537Z",
+    "updated_at": "2026-09-02T20:15:36.537Z",
+    "code": "486",
+    "label": "Revenus de transferts extraordinaires",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "48"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.540Z",
+    "updated_at": "2026-09-02T20:15:36.540Z",
+    "code": "4860",
+    "label": "Revenus de transferts extraordinaires; Confédération",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "486"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.544Z",
+    "updated_at": "2026-09-02T20:15:36.544Z",
+    "code": "4861",
+    "label": "Revenus de transferts extraordinaires ; cantons",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "486"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.549Z",
+    "updated_at": "2026-09-02T20:15:36.549Z",
+    "code": "4862",
+    "label": "Revenus de transferts extraordinaires ; communes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "486"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.554Z",
+    "updated_at": "2026-09-02T20:15:36.554Z",
+    "code": "4863",
+    "label": "Revenus de transfert extraordinaires; assurances sociales publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "486"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.557Z",
+    "updated_at": "2026-09-02T20:15:36.557Z",
+    "code": "4864",
+    "label": "Revenus de transferts extraordinaires; entreprises publiques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "486"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.560Z",
+    "updated_at": "2026-09-02T20:15:36.560Z",
+    "code": "4865",
+    "label": "Revenus de transferts extraordinaires; entreprises privées",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "486"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.564Z",
+    "updated_at": "2026-09-02T20:15:36.564Z",
+    "code": "4866",
+    "label": "Revenus de transferts extraordinaires; organisations privées à but non lucratif",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "486"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.569Z",
+    "updated_at": "2026-09-02T20:15:36.569Z",
+    "code": "4867",
+    "label": "Revenus de transferts extraordinaires de tiers",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "486"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.573Z",
+    "updated_at": "2026-09-02T20:15:36.573Z",
+    "code": "4868",
+    "label": "Revenus de transferts extraordinaires; étranger",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "486"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.576Z",
+    "updated_at": "2026-09-02T20:15:36.576Z",
+    "code": "489",
+    "label": "Prélèvements sur le capital propre",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "48"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.578Z",
+    "updated_at": "2026-09-02T20:15:36.578Z",
+    "code": "4893",
+    "label": "Prélèvements sur les préfinancements et les amortissements supplémentaires cumulés",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "489"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.582Z",
+    "updated_at": "2026-09-02T20:15:36.582Z",
+    "code": "4894",
+    "label": "Prélèvements sur la réserve de politique budgétaire",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "489"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.585Z",
+    "updated_at": "2026-09-02T20:15:36.585Z",
+    "code": "4898",
+    "label": "Prélèvements sur les autres capitaux propres",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "489"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.589Z",
+    "updated_at": "2026-09-02T20:15:36.590Z",
+    "code": "4899",
+    "label": "Prélèvements sur le résultat cumulé de l'année précédente",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "489"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.594Z",
+    "updated_at": "2026-09-02T20:15:36.594Z",
+    "code": "49",
+    "label": "Imputations internes",
+    "scheme": "mch2",
+    "level": 2,
+    "parent": [
+      "mch2",
+      1,
+      "4"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.597Z",
+    "updated_at": "2026-09-02T20:15:36.597Z",
+    "code": "490",
+    "label": "Imputations internes pour l'approvisionnement en matériel et en marchandises",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "49"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.601Z",
+    "updated_at": "2026-09-02T20:15:36.601Z",
+    "code": "4900",
+    "label": "Imputations internes pour l'approvisionnement en matériel et en marchandises",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "490"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.605Z",
+    "updated_at": "2026-09-02T20:15:36.605Z",
+    "code": "491",
+    "label": "Imputations internes pour prestations de service",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "49"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.610Z",
+    "updated_at": "2026-09-02T20:15:36.610Z",
+    "code": "4910",
+    "label": "Imputations internes pour prestations de service",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "491"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.614Z",
+    "updated_at": "2026-09-02T20:15:36.614Z",
+    "code": "492",
+    "label": "Imputations internes pour bail à ferme, loyers, frais d'utilisation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "49"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.619Z",
+    "updated_at": "2026-09-02T20:15:36.619Z",
+    "code": "4920",
+    "label": "Imputations internes pour bail à ferme, loyers, frais d'utilisation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "492"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.625Z",
+    "updated_at": "2026-09-02T20:15:36.625Z",
+    "code": "493",
+    "label": "Imputations internes pour frais administratifs et d'exploitation",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "49"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.628Z",
+    "updated_at": "2026-09-02T20:15:36.628Z",
+    "code": "4930",
+    "label": "Imputations internes pour frais administratifs et d'exploitation",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "493"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.632Z",
+    "updated_at": "2026-09-02T20:15:36.632Z",
+    "code": "494",
+    "label": "Imputations internes pour intérêts et charges financières théoriques",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "49"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.636Z",
+    "updated_at": "2026-09-02T20:15:36.636Z",
+    "code": "4940",
+    "label": "Imputations internes pour intérêts et charges financières théoriques",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "494"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.640Z",
+    "updated_at": "2026-09-02T20:15:36.640Z",
+    "code": "495",
+    "label": "Imputations internes pour amortissements",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "49"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.644Z",
+    "updated_at": "2026-09-02T20:15:36.644Z",
+    "code": "4950",
+    "label": "Imputations internes pour amortissements",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "495"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.647Z",
+    "updated_at": "2026-09-02T20:15:36.647Z",
+    "code": "498",
+    "label": "Transferts internes entre services",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "49"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.649Z",
+    "updated_at": "2026-09-02T20:15:36.649Z",
+    "code": "4980",
+    "label": "Transferts internes entre services",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "498"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.653Z",
+    "updated_at": "2026-09-02T20:15:36.653Z",
+    "code": "499",
+    "label": "Autres imputations internes",
+    "scheme": "mch2",
+    "level": 3,
+    "parent": [
+      "mch2",
+      2,
+      "49"
+    ]
+  }
+},
+{
+  "model": "accounting.naturegroup",
+  "fields": {
+    "created_at": "2026-09-02T20:15:36.657Z",
+    "updated_at": "2026-09-02T20:15:36.657Z",
+    "code": "4990",
+    "label": "Autres imputations internes",
+    "scheme": "mch2",
+    "level": 4,
+    "parent": [
+      "mch2",
+      3,
+      "499"
+    ]
+  }
+}
+]

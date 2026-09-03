@@ -18,6 +18,11 @@ DEPRECIATION_LT = 700
 MCH2_GROUP_CODE_LENGTH = 4
 
 
+class AccountGroupManager(models.Manager["AccountGroup"]):
+    def get_by_natural_key(self, scheme: str, level: int, code: str) -> "AccountGroup":
+        return self.get(scheme=scheme, level=level, code=code)
+
+
 class AccountGroup(TimeStampedModel):
     """
     Represents one node of the functional classification hierarchy (e.g. MetaGroup
@@ -27,6 +32,11 @@ class AccountGroup(TimeStampedModel):
     go (3 for MCH1, 4 for MCH2). The deepest level of a given scheme is the one a
     municipal officer is responsible for (see GroupResponsibility) and the one
     Account.group points to.
+
+    Only the MCH2 rows are official, portable reference data (the canton's
+    "Classification fonctionnelle" - see import_mch2_functional_classification
+    and the accountgroup_mch2 fixture); MCH1 rows are Genolier-specific and
+    imported alongside its own accounts instead.
     """
 
     id = models.BigAutoField(primary_key=True)
@@ -42,6 +52,8 @@ class AccountGroup(TimeStampedModel):
         related_name="children",
     )
 
+    objects = AccountGroupManager()
+
     class Meta:
         unique_together = ("scheme", "level", "code")
         ordering = ("scheme", "level", "code")
@@ -50,6 +62,14 @@ class AccountGroup(TimeStampedModel):
 
     def __str__(self) -> str:
         return f"{self.code} - {self.label}"
+
+    def natural_key(self) -> tuple[str, int, str]:
+        return (self.scheme, self.level, self.code)
+
+
+class NatureGroupManager(models.Manager["NatureGroup"]):
+    def get_by_natural_key(self, scheme: str, level: int, code: str) -> "NatureGroup":
+        return self.get(scheme=scheme, level=level, code=code)
 
 
 class NatureGroup(TimeStampedModel):
@@ -60,6 +80,11 @@ class NatureGroup(TimeStampedModel):
     reference file. Kept as its own tree - rather than folded into AccountGroup
     - because nature and function codes overlap (e.g. both have a "30"), so a
     shared table would collide the two classifications.
+
+    Fixed, official reference data (see import_mch2_nature_classification and
+    the naturegroup_mch2 fixture) - the natural key lets it ship as a portable,
+    diffable fixture (dumpdata --natural-foreign --natural-primary) instead of
+    every environment needing the canton's Excel file to seed itself.
     """
 
     id = models.BigAutoField(primary_key=True)
@@ -75,6 +100,8 @@ class NatureGroup(TimeStampedModel):
         related_name="children",
     )
 
+    objects = NatureGroupManager()
+
     class Meta:
         unique_together = ("scheme", "level", "code")
         ordering = ("scheme", "level", "code")
@@ -83,6 +110,9 @@ class NatureGroup(TimeStampedModel):
 
     def __str__(self) -> str:
         return f"{self.code} - {self.label}"
+
+    def natural_key(self) -> tuple[str, int, str]:
+        return (self.scheme, self.level, self.code)
 
 
 class GroupResponsibility(models.Model):
