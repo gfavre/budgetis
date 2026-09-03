@@ -2,6 +2,19 @@
 
 {% load crispy_forms_tags %}
 
+{% block extra_style %}
+  <style>
+  /* theme.css swaps .btn-primary to --brand-color (the *other* gradient
+     color) on hover/focus - keep this button on its own brand-color-alt
+     hue instead, just darkened, so hover still gives feedback without
+     changing color. */
+  #submit-id-submit:not(:disabled):hover,
+  #submit-id-submit:not(:disabled):focus {
+    background-color: color-mix(in srgb, var(--brand-color-alt) 85%, black);
+    border-color: color-mix(in srgb, var(--brand-color-alt) 85%, black);
+  }
+  </style>
+{% endblock extra_style %}
 {% block content %}
   <h1>{{ title }}</h1>
   <form method="post" enctype="multipart/form-data">
