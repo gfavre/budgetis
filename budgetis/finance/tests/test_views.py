@@ -68,6 +68,22 @@ class TestSankeyView:
         assert by_year[2026] == ChartScheme.MCH2
         assert by_year[2025] == ChartScheme.MCH1
 
+    def test_regular_user_does_not_see_the_settings_link(self, client, site_configuration_with_logo):
+        client.force_login(UserFactory())
+
+        response = client.get(reverse("finance:index"))
+
+        assert reverse("finance:sankey-rules") not in response.content.decode()
+
+    def test_user_with_permission_sees_the_settings_link(self, client, site_configuration_with_logo):
+        user = UserFactory()
+        _grant_view_sankey_category(user)
+        client.force_login(user)
+
+        response = client.get(reverse("finance:index"))
+
+        assert reverse("finance:sankey-rules") in response.content.decode()
+
 
 class TestSankeyRulesView:
     def test_login_required(self, client):

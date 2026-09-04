@@ -313,3 +313,46 @@ class TestUserManagementView:
         response = client.get(_management_url())
 
         assert member in response.context["bourse_members"]
+
+
+class TestUserManagementNavLink:
+    """The "Users" nav link (base.html) must only appear for users who can act on that page."""
+
+    def test_regular_user_does_not_see_the_nav_link(self, client, user: User, site_configuration_with_logo):
+        client.force_login(user)
+
+        response = client.get(reverse("users:detail", kwargs={"pk": user.pk}))
+
+        assert _management_url() not in response.content.decode()
+
+    def test_admin_sees_the_nav_link(self, client, user: User, site_configuration_with_logo):
+        _grant(user, "add_user", "users")
+        client.force_login(user)
+
+        response = client.get(reverse("users:detail", kwargs={"pk": user.pk}))
+
+        assert _management_url() in response.content.decode()
+
+    def test_bourse_member_sees_the_nav_link(self, client, user: User, site_configuration_with_logo):
+        _grant(user, "change_group", "auth")
+        client.force_login(user)
+
+        response = client.get(reverse("users:detail", kwargs={"pk": user.pk}))
+
+        assert _management_url() in response.content.decode()
+
+    def test_regular_user_does_not_see_the_django_admin_link(self, client, user: User, site_configuration_with_logo):
+        client.force_login(user)
+
+        response = client.get(reverse("users:detail", kwargs={"pk": user.pk}))
+
+        assert reverse("admin:index") not in response.content.decode()
+
+    def test_staff_user_sees_the_django_admin_link(self, client, user: User, site_configuration_with_logo):
+        user.is_staff = True
+        user.save(update_fields=["is_staff"])
+        client.force_login(user)
+
+        response = client.get(reverse("users:detail", kwargs={"pk": user.pk}))
+
+        assert reverse("admin:index") in response.content.decode()
