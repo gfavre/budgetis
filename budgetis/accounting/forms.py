@@ -86,6 +86,21 @@ class ReassignGroupResponsibleForm(ReassignResponsibleFormBase):
         ]
 
 
+class AccountAmountForm(forms.Form):
+    """Edits a single charges/revenues Decimal field, named dynamically by `kind` in the view."""
+
+    amount = forms.DecimalField(
+        label=_("Amount"),
+        max_digits=15,
+        decimal_places=2,
+        # localize=False: an <input type="number"> requires a period decimal
+        # separator - Django's fr-CH locale otherwise renders (and expects)
+        # a comma, which the input then silently rejects and shows empty.
+        localize=False,
+        widget=forms.NumberInput(attrs={"step": "0.01", "class": "form-control text-end"}),
+    )
+
+
 class AccountCommentForm(forms.ModelForm):
     class Meta:
         model = AccountComment

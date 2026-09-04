@@ -194,7 +194,7 @@ def _category_breakdown_html(entries: list[CategoryEntry]) -> str:
     return "<br>".join(f"{category.name} : CHF {format_money(value)}" for category, value, _detail in rows)
 
 
-def _push_node(  # noqa: PLR0913
+def _push_node(  # noqa: PLR0913, PLR0917
     idx: dict[str, int],
     labels: list[str],
     nodes: list[dict[str, object]],
@@ -227,7 +227,7 @@ def _push_node(  # noqa: PLR0913
     node_colors.append(color)
 
 
-def _add_link(  # noqa: PLR0913
+def _add_link(  # noqa: PLR0913, PLR0917
     idx: dict[str, int],
     links: list[dict[str, float | str]],
     link_colors: list[str],

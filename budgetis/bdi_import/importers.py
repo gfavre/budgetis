@@ -151,7 +151,7 @@ def apply_source_overrides(defaults, source_acc, copy_labels, copy_visibility):
         defaults["visible_in_report"] = source_acc.visible_in_report
 
 
-def persist_account(year, function, nature, sub_account, is_budget, defaults):  # noqa:PLR0913
+def persist_account(year, function, nature, sub_account, is_budget, defaults):  # noqa: PLR0913, PLR0917
     account, _ = Account.objects.update_or_create(
         year=year,
         function=function,

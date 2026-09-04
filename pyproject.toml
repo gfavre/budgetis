@@ -1,6 +1,6 @@
 [project]
 name = "budgetis"
-version = "1.1.0"
+version = "1.2.0"
 description = "Gestion des comptes et du budget communal"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -8,7 +8,10 @@ dependencies = [
     "argon2-cffi>=25.1.0",
     "celery>=5.5.3",
     "crispy-bootstrap5>=2025.6",
-    "django>=5.2.3,<6.0",
+    # Stay on the 5.2 LTS line (long-term support, ~3 years) rather than 6.x
+    # (a regular release, ~16 months of support) - the right tradeoff for a
+    # production app that isn't upgraded on a tight cadence.
+    "django>=5.2.17,<5.3",
     "django-allauth[mfa]>=65.9.0",
     "django-anymail[postmark]>=13.0",
     "django-axes>=8.0.0",
@@ -160,10 +163,6 @@ ignore = [
   "S101", # Use of assert detected https://docs.astral.sh/ruff/rules/assert/
   "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
   "SIM102", # sometimes it's better to nest
-  "UP038", # Checks for uses of isinstance/issubclass that take a tuple
-          # of types for comparison.
-          # Deactivated because it can make the code slow:
-          # https://github.com/astral-sh/ruff/issues/7871
   "PLC0415",  # Allow function-scope imports when necessary
   "COM812",
   "G004", # Use of f-strings in logging calls
@@ -172,12 +171,6 @@ ignore = [
   "TID252", # import relative modules,
   "FBT002", # Boolean default positional argument in function definition
   "RUF002", # Docstring contains ambiguous `’` (RIGHT SINGLE QUOTATION MARK) => wtf!
-  "PD901", # df
-]
-# The fixes in extend-unsafe-fixes will require
-# provide the `--unsafe-fixes` flag when fixing.
-extend-unsafe-fixes = [
-  "UP038",
 ]
 
 [tool.ruff.lint.isort]
@@ -199,10 +192,21 @@ split-on-trailing-comma = true
 dev = [
     "black>=25.1.0",
     "coverage>=7.9.1",
-    "django-debug-toolbar>=5.2.0",
-    "django-stubs[compatible-mypy]>=5.2.1",
+    # >=7.0 unconditionally imports django.contrib.gis's postgis adapter from
+    # the SQL panel, which crashes at import time (OSError, not caught) on
+    # any machine whose libgdal install doesn't match Python's architecture -
+    # unrelated to this project, which doesn't use GeoDjango.
+    "django-debug-toolbar>=5.2.0,<7.0",
+    # mypy 2.x + django-stubs 6.x together get much stricter about the
+    # factory_boy stub gap (DjangoModelFactory() resolving to the factory
+    # class, not the model instance) - it goes from ~17 pre-existing errors
+    # to 139, spread across nearly every test file. Fixing that for real
+    # means adding cast() at every factory call site project-wide, which is
+    # its own undertaking, not something to do as a side effect of a version
+    # bump - so this stays on the 5.x/1.x lines until that's done deliberately.
+    "django-stubs[compatible-mypy]>=5.2.1,<6.0",
     "ipdb>=0.13.13",
-    "mypy>=1.16.1",
+    "mypy>=1.16.1,<2.0",
     "watchfiles>=1.1.0",
     "werkzeug[watchdog]>=3.1.3",
     "djlint>=1.36.4",

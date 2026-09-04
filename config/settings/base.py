@@ -1,4 +1,3 @@
-# ruff: noqa: ERA001
 """Base settings to build other settings files upon."""
 
 import ssl

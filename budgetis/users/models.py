@@ -22,7 +22,11 @@ class User(AbstractUser):
     name = CharField(_("Name of User"), blank=True, max_length=255)
     first_name = None  # type: ignore[assignment]
     last_name = None  # type: ignore[assignment]
-    email = EmailField(_("email address"), unique=True)
+    email = EmailField(
+        _("email address"),
+        unique=True,
+        error_messages={"unique": _("This email has already been taken.")},
+    )
     username = None  # type: ignore[assignment]
 
     is_municipal = models.BooleanField(default=False)

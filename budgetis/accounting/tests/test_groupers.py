@@ -184,7 +184,7 @@ class TestGroupNodeTemplateRendersBothDepths:
         )
 
     def test_three_level_mch1_tree(self):
-        level1, level2, leaf = _mch1_tree()
+        _level1, _level2, leaf = _mch1_tree()
         acc = AccountFactory(group=leaf)
         row = _row(acc, col1_charges=Decimal("500"))
         html = self._render(build_grouped([row], 2024))

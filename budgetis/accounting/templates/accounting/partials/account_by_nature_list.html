@@ -140,27 +140,15 @@
           <tr>
             <td>{{ row.code }}</td>
             <td>{{ row.label }}</td>
-            <td class="text-end">
-              {% if row.col1_charges %}{{ row.col1_charges|format_money }}{% endif %}
-            </td>
-            <td class="text-end">
-              {% if row.col1_revenues %}{{ row.col1_revenues|format_money }}{% endif %}
-            </td>
+            <td class="text-end">{% if row.col1_charges %}{{ row.col1_charges|format_money }}{% endif %}</td>
+            <td class="text-end">{% if row.col1_revenues %}{{ row.col1_revenues|format_money }}{% endif %}</td>
             {% if show_col2 %}
-              <td class="text-end">
-                {% if row.col2_charges %}{{ row.col2_charges|format_money }}{% endif %}
-              </td>
-              <td class="text-end">
-                {% if row.col2_revenues %}{{ row.col2_revenues|format_money }}{% endif %}
-              </td>
+              <td class="text-end">{% if row.col2_charges %}{{ row.col2_charges|format_money }}{% endif %}</td>
+              <td class="text-end">{% if row.col2_revenues %}{{ row.col2_revenues|format_money }}{% endif %}</td>
             {% endif %}
             {% if show_col3 %}
-              <td class="text-end">
-                {% if row.col3_charges %}{{ row.col3_charges|format_money }}{% endif %}
-              </td>
-              <td class="text-end">
-                {% if row.col3_revenues %}{{ row.col3_revenues|format_money }}{% endif %}
-              </td>
+              <td class="text-end">{% if row.col3_charges %}{{ row.col3_charges|format_money }}{% endif %}</td>
+              <td class="text-end">{% if row.col3_revenues %}{{ row.col3_revenues|format_money }}{% endif %}</td>
             {% endif %}
           </tr>
         {% endfor %}

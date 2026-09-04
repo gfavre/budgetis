@@ -44,7 +44,8 @@
           {% if show_col2 %}
             {% with diff=row.col1_charges|percent_diff:row.col2_charges %}{{ diff|percent_diff_display }}{% endwith %}
           {% endif %}
-          <button class="btn btn-sm btn-link no-print"
+          <button type="button"
+                  class="btn btn-sm btn-link no-print"
                   title="{% trans 'Comments' %}"
                   hx-get="{% url 'accounting:account-comments' row.account.id 'charges' %}"
                   hx-target="#accountCommentsModal .modal-content"
@@ -66,7 +67,8 @@
         {% if show_col2 %}
           <td class="text-end">
             {% if row.account.budget_id %}
-              <button class="btn btn-sm btn-link no-print"
+              <button type="button"
+                      class="btn btn-sm btn-link no-print"
                       title="{% trans 'Comments' %}"
                       hx-get="{% url 'accounting:account-comments' row.account.budget_id 'budget_charges' %}"
                       hx-target="#accountCommentsModal .modal-content"
@@ -85,7 +87,8 @@
         {% if show_col3 %}
           <td class="text-end">
             {% if row.account.prev_actual_id %}
-              <button class="btn btn-sm btn-link no-print"
+              <button type="button"
+                      class="btn btn-sm btn-link no-print"
                       title="{% trans 'Comments' %}"
                       hx-get="{% url 'accounting:account-comments' row.account.prev_actual_id 'charges' %}"
                       hx-target="#accountCommentsModal .modal-content"

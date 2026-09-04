@@ -50,9 +50,8 @@ def load_account_dataframe(path: str) -> pd.DataFrame:
         dataframe = pd.read_excel(path, dtype=str)
     else:
         exception_message = _(
-            "Unsupported file extension: %(extension)s. Supported extensions are .csv and .xlsx.",
-            {"extension": extension},
-        )
+            "Unsupported file extension: %(extension)s. Supported extensions are .csv and .xlsx."
+        ) % {"extension": extension}
         raise ValueError(exception_message)
 
     dataframe = dataframe.fillna("")

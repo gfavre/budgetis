@@ -5,6 +5,33 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-09-04
+
+### Added
+
+- **In-place budget editing**: charges and revenues for the current budget
+  year can now be edited directly from the budget-by-function explorer -
+  click an amount, type the new value, press Enter or click away to save.
+  Restricted to a new "Bourse" permission group (bundling this together
+  with the existing Sankey-configuration permissions), so other municipal
+  officers still see a read-only figure. Prior years' budgets and actuals
+  stay locked.
+
+### Changed
+
+- Every dependency, including Django, refreshed to its latest version -
+  Django stays on the 5.2 LTS line (long-term support) rather than
+  jumping to the newer, short-support 6.x line, since this app isn't
+  upgraded on a tight cadence.
+
+### Fixed
+
+- Uploading a file with an unsupported extension in the BDI import
+  crashed with an unrelated error instead of showing the intended
+  message.
+- A duplicate email address showed Django's generic uniqueness error
+  instead of the intended, friendlier message.
+
 ## [1.1.0] - 2026-09-04
 
 ### Added

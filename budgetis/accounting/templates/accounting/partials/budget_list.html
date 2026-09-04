@@ -90,20 +90,14 @@
       </tr>
       <tr>
         <td colspan="2" class="text-right">{% trans "Revenue surplus" %}</td>
-        <td>
-          {% if global_summary.totals.col1_diff > 0 %}{{ global_summary.totals.col1_diff|format_money_abs }}{% endif %}
-        </td>
+        <td>{% if global_summary.totals.col1_diff > 0 %}{{ global_summary.totals.col1_diff|format_money_abs }}{% endif %}</td>
         <td></td>
         {% if show_col2 %}
-          <td>
-            {% if global_summary.totals.col2_diff > 0 %}{{ global_summary.totals.col2_diff|format_money_abs }}{% endif %}
-          </td>
+          <td>{% if global_summary.totals.col2_diff > 0 %}{{ global_summary.totals.col2_diff|format_money_abs }}{% endif %}</td>
           <td></td>
         {% endif %}
         {% if show_col3 %}
-          <td>
-            {% if global_summary.totals.col3_diff > 0 %}{{ global_summary.totals.col3_diff|format_money_abs }}{% endif %}
-          </td>
+          <td>{% if global_summary.totals.col3_diff > 0 %}{{ global_summary.totals.col3_diff|format_money_abs }}{% endif %}</td>
           <td></td>
         {% endif %}
       </tr>

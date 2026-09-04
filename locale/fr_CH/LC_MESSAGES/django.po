@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 14:22+0200\n"
+"POT-Creation-Date: 2026-09-04 17:54+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -75,6 +75,12 @@ msgstr "Afficher le détail (natures à 3 chiffres)"
 #: budgetis/bdi_import/views.py:138
 msgid "Responsible"
 msgstr "Responsable"
+
+#: budgetis/accounting/forms.py:93
+#, fuzzy
+#| msgid "Amounts"
+msgid "Amount"
+msgstr "Montants"
 
 #: budgetis/accounting/loaders.py:31
 msgid "budget"
@@ -388,20 +394,20 @@ msgstr "Explorateur de comptes"
 #: budgetis/accounting/templates/accounting/account_explorer.html:148
 #: budgetis/accounting/templates/accounting/budget_by_nature.html:99
 #: budgetis/accounting/templates/accounting/budget_explorer.html:147
-#: budgetis/accounting/templates/accounting/partials/account_list.html:167
+#: budgetis/accounting/templates/accounting/partials/account_list.html:161
 #: budgetis/accounting/templates/accounting/partials/comments_modal.html:24
 #: budgetis/finance/templates/finance/sankey_rules.html:126
 msgid "Loading..."
 msgstr "Chargement..."
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:6
-#: budgetis/accounting/templates/accounting/partials/account_table.html:48
-#: budgetis/accounting/templates/accounting/partials/account_table.html:70
-#: budgetis/accounting/templates/accounting/partials/account_table.html:89
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:94
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:111
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:131
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:147
+#: budgetis/accounting/templates/accounting/partials/account_table.html:49
+#: budgetis/accounting/templates/accounting/partials/account_table.html:72
+#: budgetis/accounting/templates/accounting/partials/account_table.html:92
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:95
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:117
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:142
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:159
 msgid "Comments"
 msgstr "Commentaires"
 
@@ -505,17 +511,17 @@ msgstr "Comptes par nature"
 msgid "Designation"
 msgstr "Désignation"
 
-#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:183
+#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:171
 #: budgetis/accounting/templates/accounting/partials/account_list.html:94
-#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:183
+#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:171
 #: budgetis/accounting/templates/accounting/partials/budget_list.html:92
 msgid "Revenue surplus"
 msgstr "Excédent de recettes"
 
-#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:202
-#: budgetis/accounting/templates/accounting/partials/account_list.html:113
-#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:202
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:111
+#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:190
+#: budgetis/accounting/templates/accounting/partials/account_list.html:107
+#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:190
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:105
 msgid "Excess expense"
 msgstr "Excédent de charges"
 
@@ -592,10 +598,14 @@ msgstr "Compte de fonctionnement"
 msgid "Actuals %(prev_y)s"
 msgstr "Comptes %(prev_y)s"
 
-#: budgetis/accounting/templates/accounting/partials/account_list.html:169
+#: budgetis/accounting/templates/accounting/partials/account_list.html:163
 #: budgetis/accounting/templates/accounting/partials/comments_modal.html:26
 msgid "Loading comments..."
 msgstr "Chargement des commentaires..."
+
+#: budgetis/accounting/templates/accounting/partials/amount_cell.html:8
+msgid "Click to edit"
+msgstr "Cliquer pour modifier"
 
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:19
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:119
@@ -934,7 +944,7 @@ msgstr ""
 "Extension de fichier non prise en charge : %(extension)s. Les extensions "
 "prises en charge sont .csv et .xlsx."
 
-#: budgetis/bdi_import/utils.py:111
+#: budgetis/bdi_import/utils.py:110
 msgid "No sufficiently filled data row found."
 msgstr "Aucune ligne de données suffisamment remplie n'a été trouvée."
 
@@ -1180,7 +1190,8 @@ msgstr ""
 
 #: budgetis/finance/models.py:102
 msgid "Leave blank to match any subaccount under this function/nature."
-msgstr "Laisser vide pour correspondre à tout sous-compte de cette fonction/nature."
+msgstr ""
+"Laisser vide pour correspondre à tout sous-compte de cette fonction/nature."
 
 #: budgetis/finance/models.py:109
 #, fuzzy
@@ -1390,17 +1401,17 @@ msgstr "Les mots de passe ne correspondent pas."
 msgid "Name of User"
 msgstr "Nom de l'utilisateur"
 
-#: budgetis/users/models.py:25
+#: budgetis/users/models.py:26
 msgid "email address"
 msgstr "adresse e-mail"
 
-#: budgetis/users/models.py:29
-msgid "Trigram"
-msgstr "Trigramme"
-
-#: budgetis/users/tests/test_forms.py:35
+#: budgetis/users/models.py:28 budgetis/users/tests/test_forms.py:35
 msgid "This email has already been taken."
 msgstr "Cette adresse e-mail est déjà utilisée."
+
+#: budgetis/users/models.py:33
+msgid "Trigram"
+msgstr "Trigramme"
 
 #: budgetis/users/tests/test_views.py:76 budgetis/users/views.py:61
 msgid "Information successfully updated"

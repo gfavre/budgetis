@@ -27,13 +27,15 @@
               <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
             </div>
             <div class="btn-group btn-group-sm" role="group">
-              <button class="btn btn-outline-secondary"
+              <button type="button"
+                      class="btn btn-outline-secondary"
                       hx-get="{% url 'accounting:account-comment-edit' comment.id %}"
                       hx-target="#accountCommentsModal .modal-content"
                       title="Modifier">
                 <i class="bi bi-pencil"></i>
               </button>
-              <button class="btn btn-outline-danger"
+              <button type="button"
+                      class="btn btn-outline-danger"
                       hx-get="{% url 'accounting:account-comment-delete' comment.id %}"
                       hx-target="#accountCommentsModal .modal-content"
                       title="Supprimer">
@@ -48,7 +50,8 @@
     {% endif %}
   </div>
   <div class="modal-footer">
-    <button class="btn btn-primary"
+    <button type="button"
+            class="btn btn-primary"
             hx-get="{% url 'accounting:account-comment-create' account.id kind %}"
             hx-target="#accountCommentsModal .modal-content">
       <i class="bi bi-plus text-white me-1"></i> Ajouter un commentaire

@@ -5,6 +5,7 @@ from .views.comments import AccountCommentCreateView
 from .views.comments import AccountCommentDeleteView
 from .views.comments import AccountCommentEditView
 from .views.comments import AccountCommentsView
+from .views.edit import AccountAmountEditView
 from .views.explore import AccountByNaturePartialView
 from .views.explore import AccountByNatureView
 from .views.explore import AccountExplorerView
@@ -30,6 +31,11 @@ urlpatterns = [
     path("accounts-nature/", AccountByNatureView.as_view(), name="natures"),
     path("accounts-nature/partial/", AccountByNaturePartialView.as_view(), name="accounts-nature-partial"),
     path("history/<int:account_id>/", account_history_modal, name="account-history"),
+    path(
+        "budgets/<int:account_id>/<str:kind>/edit/",
+        AccountAmountEditView.as_view(),
+        name="account-amount-edit",
+    ),
     path(
         "comments/<int:pk>/edit/",
         AccountCommentEditView.as_view(),

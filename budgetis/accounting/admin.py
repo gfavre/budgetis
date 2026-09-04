@@ -251,7 +251,10 @@ class GroupResponsibilityAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         formfield = super().formfield_for_foreignkey(db_field, request, **kwargs)
         if db_field.name == "responsible":
-            formfield.label_from_instance = lambda obj: str(obj)
+            # Not `= str` directly: django-stubs types label_from_instance as
+            # a bound method, so a plain callable reassignment needs the
+            # lambda wrapper to satisfy mypy (method-assign).
+            formfield.label_from_instance = lambda obj: str(obj)  # noqa: PLW0108
         return formfield
 
     def get_queryset(self, request):

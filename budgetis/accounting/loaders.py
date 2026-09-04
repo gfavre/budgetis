@@ -182,7 +182,7 @@ class BudgetLoader(BaseLoader):
             p = prev_map.get(key)
             a = act_map.get(key)
             acc.budget_id = acc.id
-            acc.budget_comment_count = acc.comment_count or 0  # type: ignore[attr-defined]
+            acc.budget_comment_count = acc.comment_count or 0
             acc.actuals_id = a.id if a else None
             acc.actuals_comment_count = a.comment_count if a else 0
             rows.append(

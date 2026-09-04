@@ -90,7 +90,8 @@
           {% if show_col2 %}
             {% with diff=row.col1_charges|percent_diff:row.col2_charges %}{{ diff|percent_diff_display }}{% endwith %}
           {% endif %}
-          <button class="btn btn-sm btn-link"
+          <button type="button"
+                  class="btn btn-sm btn-link"
                   title="{% trans 'Comments' %}"
                   hx-get="{% url 'accounting:account-comments' row.account.id 'charges' %}"
                   hx-target="#accountCommentsModal .modal-content"
@@ -101,13 +102,18 @@
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
-          {{ row.col1_charges|money_cell:row.col1_revenues }}
+          {% if perms.accounting.change_account %}
+            {% include "accounting/partials/amount_cell.html" with account=row.account kind="charges" %}
+          {% else %}
+            {{ row.col1_charges|money_cell:row.col1_revenues }}
+          {% endif %}
         </td>
         <td class="text-end">
           {% if show_col2 %}
             {% with diff=row.col1_revenues|percent_diff:row.col2_revenues %}{{ diff|percent_diff_display:True }}{% endwith %}
           {% endif %}
-          <button class="btn btn-sm btn-link no-print"
+          <button type="button"
+                  class="btn btn-sm btn-link no-print"
                   title="{% trans 'Comments' %}"
                   hx-get="{% url 'accounting:account-comments' row.account.id 'revenues' %}"
                   hx-target="#accountCommentsModal .modal-content"
@@ -118,7 +124,11 @@
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
-          {{ row.col1_revenues|money_cell:row.col1_charges }}
+          {% if perms.accounting.change_account %}
+            {% include "accounting/partials/amount_cell.html" with account=row.account kind="revenues" %}
+          {% else %}
+            {{ row.col1_revenues|money_cell:row.col1_charges }}
+          {% endif %}
         </td>
         {% if show_col2 %}
           <td class="text-end">{{ row.col2_charges|money_cell:row.col2_revenues }}</td>
@@ -127,7 +137,8 @@
         {% if show_col3 %}
           <td class="text-end">
             {% if row.account.actuals_id %}
-              <button class="btn btn-sm btn-link no-print"
+              <button type="button"
+                      class="btn btn-sm btn-link no-print"
                       title="{% trans 'Comments' %}"
                       hx-get="{% url 'accounting:account-comments' row.account.actuals_id 'charges' %}"
                       hx-target="#accountCommentsModal .modal-content"
@@ -143,7 +154,8 @@
           </td>
           <td class="text-end">
             {% if row.account.actuals_id %}
-              <button class="btn btn-sm btn-link no-print"
+              <button type="button"
+                      class="btn btn-sm btn-link no-print"
                       title="{% trans 'Comments' %}"
                       hx-get="{% url 'accounting:account-comments' row.account.actuals_id 'revenues' %}"
                       hx-target="#accountCommentsModal .modal-content"

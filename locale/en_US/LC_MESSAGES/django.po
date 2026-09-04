@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 14:22+0200\n"
+"POT-Creation-Date: 2026-09-04 17:54+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +69,10 @@ msgstr ""
 #: budgetis/accounting/templates/accounting/partials/budget_group_block.html:9
 #: budgetis/bdi_import/views.py:138
 msgid "Responsible"
+msgstr ""
+
+#: budgetis/accounting/forms.py:93
+msgid "Amount"
 msgstr ""
 
 #: budgetis/accounting/loaders.py:31
@@ -382,20 +386,20 @@ msgstr ""
 #: budgetis/accounting/templates/accounting/account_explorer.html:148
 #: budgetis/accounting/templates/accounting/budget_by_nature.html:99
 #: budgetis/accounting/templates/accounting/budget_explorer.html:147
-#: budgetis/accounting/templates/accounting/partials/account_list.html:167
+#: budgetis/accounting/templates/accounting/partials/account_list.html:161
 #: budgetis/accounting/templates/accounting/partials/comments_modal.html:24
 #: budgetis/finance/templates/finance/sankey_rules.html:126
 msgid "Loading..."
 msgstr ""
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:6
-#: budgetis/accounting/templates/accounting/partials/account_table.html:48
-#: budgetis/accounting/templates/accounting/partials/account_table.html:70
-#: budgetis/accounting/templates/accounting/partials/account_table.html:89
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:94
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:111
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:131
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:147
+#: budgetis/accounting/templates/accounting/partials/account_table.html:49
+#: budgetis/accounting/templates/accounting/partials/account_table.html:72
+#: budgetis/accounting/templates/accounting/partials/account_table.html:92
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:95
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:117
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:142
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:159
 msgid "Comments"
 msgstr ""
 
@@ -499,17 +503,17 @@ msgstr ""
 msgid "Designation"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:183
+#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:171
 #: budgetis/accounting/templates/accounting/partials/account_list.html:94
-#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:183
+#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:171
 #: budgetis/accounting/templates/accounting/partials/budget_list.html:92
 msgid "Revenue surplus"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:202
-#: budgetis/accounting/templates/accounting/partials/account_list.html:113
-#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:202
-#: budgetis/accounting/templates/accounting/partials/budget_list.html:111
+#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:190
+#: budgetis/accounting/templates/accounting/partials/account_list.html:107
+#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:190
+#: budgetis/accounting/templates/accounting/partials/budget_list.html:105
 msgid "Excess expense"
 msgstr ""
 
@@ -584,9 +588,13 @@ msgstr ""
 msgid "Actuals %(prev_y)s"
 msgstr ""
 
-#: budgetis/accounting/templates/accounting/partials/account_list.html:169
+#: budgetis/accounting/templates/accounting/partials/account_list.html:163
 #: budgetis/accounting/templates/accounting/partials/comments_modal.html:26
 msgid "Loading comments..."
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/amount_cell.html:8
+msgid "Click to edit"
 msgstr ""
 
 #: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html:19
@@ -915,7 +923,7 @@ msgid ""
 "and .xlsx."
 msgstr ""
 
-#: budgetis/bdi_import/utils.py:111
+#: budgetis/bdi_import/utils.py:110
 msgid "No sufficiently filled data row found."
 msgstr ""
 
@@ -1359,16 +1367,16 @@ msgstr ""
 msgid "Name of User"
 msgstr ""
 
-#: budgetis/users/models.py:25
+#: budgetis/users/models.py:26
 msgid "email address"
 msgstr ""
 
-#: budgetis/users/models.py:29
-msgid "Trigram"
+#: budgetis/users/models.py:28 budgetis/users/tests/test_forms.py:35
+msgid "This email has already been taken."
 msgstr ""
 
-#: budgetis/users/tests/test_forms.py:35
-msgid "This email has already been taken."
+#: budgetis/users/models.py:33
+msgid "Trigram"
 msgstr ""
 
 #: budgetis/users/tests/test_views.py:76 budgetis/users/views.py:61
