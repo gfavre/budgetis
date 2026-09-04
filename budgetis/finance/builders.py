@@ -218,7 +218,12 @@ def _push_node(  # noqa: PLR0913
     name = _node_label(str(label), value)
     idx[key] = len(labels)
     labels.append(name)
-    nodes.append({"name": name, "hover": hover, "depth": depth})
+    # `label`/`amount_display` duplicate what's already embedded as HTML in
+    # `name` (Plotly's own node label), as plain strings - so a source/sink
+    # node's client-side custom label (see sankey.html) doesn't need to
+    # parse that HTML back apart.
+    amount_display = _fmt_chf_short(value) if value > 0 else ""
+    nodes.append({"name": name, "hover": hover, "depth": depth, "label": str(label), "amount_display": amount_display})
     node_colors.append(color)
 
 

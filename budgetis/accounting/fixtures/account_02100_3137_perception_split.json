@@ -1,0 +1,50 @@
+[
+{
+  "model": "accounting.account",
+  "pk": null,
+  "fields": {
+    "created_at": "2026-09-04T13:31:07.226Z",
+    "updated_at": "2026-09-04T13:31:07.227Z",
+    "year": 2027,
+    "function": "02100",
+    "nature": "3137",
+    "sub_account": "01",
+    "label": "Emoluments - Impôts",
+    "group": [
+      "mch2",
+      4,
+      "0210"
+    ],
+    "scheme": "mch2",
+    "is_budget": true,
+    "charges": "0.00",
+    "revenues": "0.00",
+    "expected_type": "charges",
+    "visible_in_report": true
+  }
+},
+{
+  "model": "accounting.account",
+  "pk": null,
+  "fields": {
+    "created_at": "2026-09-04T13:31:07.229Z",
+    "updated_at": "2026-09-04T13:31:07.229Z",
+    "year": 2027,
+    "function": "02100",
+    "nature": "3137",
+    "sub_account": "02",
+    "label": "Emoluments -  Imputation étrangers IIE",
+    "group": [
+      "mch2",
+      4,
+      "0210"
+    ],
+    "scheme": "mch2",
+    "is_budget": true,
+    "charges": "0.00",
+    "revenues": "0.00",
+    "expected_type": "charges",
+    "visible_in_report": true
+  }
+}
+]
