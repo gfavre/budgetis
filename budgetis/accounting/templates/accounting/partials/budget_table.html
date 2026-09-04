@@ -101,7 +101,11 @@
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
-          {{ row.col1_charges|money_cell:row.col1_revenues }}
+          {% if perms.accounting.change_account %}
+            {% include "accounting/partials/amount_cell.html" with account=row.account kind="charges" %}
+          {% else %}
+            {{ row.col1_charges|money_cell:row.col1_revenues }}
+          {% endif %}
         </td>
         <td class="text-end">
           {% if show_col2 %}
@@ -118,7 +122,11 @@
               <i class="bi bi-chat-left-text"></i>
             </span>
           </button>
-          {{ row.col1_revenues|money_cell:row.col1_charges }}
+          {% if perms.accounting.change_account %}
+            {% include "accounting/partials/amount_cell.html" with account=row.account kind="revenues" %}
+          {% else %}
+            {{ row.col1_revenues|money_cell:row.col1_charges }}
+          {% endif %}
         </td>
         {% if show_col2 %}
           <td class="text-end">{{ row.col2_charges|money_cell:row.col2_revenues }}</td>

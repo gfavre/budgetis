@@ -1,0 +1,15 @@
+{% load money i18n %}
+
+<span id="amount-cell-{{ account.id }}-{{ kind }}"
+      class="amount-cell"
+      hx-get="{% url 'accounting:account-amount-edit' account.id kind %}"
+      hx-target="#amount-cell-{{ account.id }}-{{ kind }}"
+      hx-swap="outerHTML"
+      title="{% trans 'Click to edit' %}"
+      role="button">
+  {% if kind == "charges" %}
+    {{ account.charges|money_cell:account.revenues }}
+  {% else %}
+    {{ account.revenues|money_cell:account.charges }}
+  {% endif %}
+</span>

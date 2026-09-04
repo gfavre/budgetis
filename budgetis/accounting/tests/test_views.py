@@ -1,9 +1,12 @@
 import base64
+import re
 from decimal import Decimal
 from http import HTTPStatus
 
 import pytest
+from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import Client
 from django.urls import reverse
 
 from budgetis.accounting.tests.factories import AccountCodeMappingFactory
@@ -536,3 +539,158 @@ class TestAccountHistoryModal:
         assert response.context["comptes"] == "[0.0, 50.0]"
         assert response.context["pre_mch2_origins"] == []
         assert response.context["split_origins"] == []
+
+
+# ── In-place budget amount editing ──────────────────────────────────────────
+
+
+def _grant_change_account(user):
+    permission = Permission.objects.get(codename="change_account", content_type__app_label="accounting")
+    user.user_permissions.add(permission)
+
+
+def _amount_edit_url(account, kind):
+    return reverse("accounting:account-amount-edit", args=[account.pk, kind])
+
+
+class TestAccountAmountEditView:
+    def test_login_required(self, client):
+        account = AccountFactory(is_budget=True)
+        response = client.get(_amount_edit_url(account, "charges"))
+        assert response.status_code == HTTPStatus.FOUND
+        assert LOGIN_URL in response.url
+
+    def test_authenticated_without_permission_is_forbidden(self, client, site_configuration_with_logo):
+        client.force_login(UserFactory())
+        account = AccountFactory(is_budget=True)
+
+        response = client.get(_amount_edit_url(account, "charges"))
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+
+    def test_get_returns_form_prefilled_with_current_amount(self, client):
+        user = UserFactory()
+        _grant_change_account(user)
+        client.force_login(user)
+        account = AccountFactory(is_budget=True, charges=Decimal("1234.50"))
+
+        response = client.get(_amount_edit_url(account, "charges"))
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["form"].initial["amount"] == Decimal("1234.50")
+
+    def test_edit_form_includes_a_csrf_token_htmx_can_post_back(self, site_configuration_with_logo):
+        """
+        The input posts via hx-post directly on itself (no <form>), so
+        Django's test Client - which skips CSRF enforcement by default -
+        can't catch a missing/unreachable token the way a real browser
+        would. Enforce it here to prove the rendered csrfmiddlewaretoken
+        input is both present and actually usable for the POST htmx sends.
+        """
+        client = Client(enforce_csrf_checks=True)
+        user = UserFactory()
+        _grant_change_account(user)
+        client.force_login(user)
+        account = AccountFactory(is_budget=True, charges=Decimal("100.00"))
+
+        form_response = client.get(_amount_edit_url(account, "charges"))
+        match = re.search(r'name="csrfmiddlewaretoken" value="([^"]+)"', form_response.content.decode())
+        assert match, "expected a csrfmiddlewaretoken input in the rendered edit form"
+
+        response = client.post(
+            _amount_edit_url(account, "charges"), {"amount": "250.00", "csrfmiddlewaretoken": match[1]}
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        account.refresh_from_db()
+        assert account.charges == Decimal("250.00")
+
+    def test_unknown_kind_is_not_found(self, client, site_configuration_with_logo):
+        user = UserFactory()
+        _grant_change_account(user)
+        client.force_login(user)
+        account = AccountFactory(is_budget=True)
+
+        response = client.get(_amount_edit_url(account, "not-a-kind"))
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
+
+    def test_actuals_account_is_not_editable(self, client, site_configuration_with_logo):
+        user = UserFactory()
+        _grant_change_account(user)
+        client.force_login(user)
+        account = AccountFactory(is_budget=False)
+
+        response = client.get(_amount_edit_url(account, "charges"))
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
+
+    def test_post_saves_charges_and_returns_display_cell(self, client):
+        user = UserFactory()
+        _grant_change_account(user)
+        client.force_login(user)
+        account = AccountFactory(is_budget=True, charges=Decimal("100.00"), revenues=Decimal("0.00"))
+
+        response = client.post(_amount_edit_url(account, "charges"), {"amount": "2500.75"})
+
+        assert response.status_code == HTTPStatus.OK
+        account.refresh_from_db()
+        assert account.charges == Decimal("2500.75")
+        assert f'id="amount-cell-{account.pk}-charges"' in response.content.decode()
+
+    def test_post_saves_revenues_without_touching_charges(self, client):
+        user = UserFactory()
+        _grant_change_account(user)
+        client.force_login(user)
+        account = AccountFactory(is_budget=True, charges=Decimal("100.00"), revenues=Decimal("0.00"))
+
+        response = client.post(_amount_edit_url(account, "revenues"), {"amount": "42.00"})
+
+        assert response.status_code == HTTPStatus.OK
+        account.refresh_from_db()
+        assert account.revenues == Decimal("42.00")
+        assert account.charges == Decimal("100.00")
+
+    def test_post_invalid_amount_returns_error_without_saving(self, client):
+        user = UserFactory()
+        _grant_change_account(user)
+        client.force_login(user)
+        account = AccountFactory(is_budget=True, charges=Decimal("100.00"))
+
+        response = client.post(_amount_edit_url(account, "charges"), {"amount": "not-a-number"})
+
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+        account.refresh_from_db()
+        assert account.charges == Decimal("100.00")
+
+    def test_post_without_permission_is_forbidden_and_does_not_save(self, client, site_configuration_with_logo):
+        client.force_login(UserFactory())
+        account = AccountFactory(is_budget=True, charges=Decimal("100.00"))
+
+        response = client.post(_amount_edit_url(account, "charges"), {"amount": "9999.00"})
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        account.refresh_from_db()
+        assert account.charges == Decimal("100.00")
+
+
+class TestBudgetExplorerAmountEditability:
+    def test_editable_cell_shown_for_user_with_permission(self, client, site_configuration_with_logo):
+        user = UserFactory()
+        _grant_change_account(user)
+        client.force_login(user)
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.BUDGET)
+        account = AccountFactory(is_budget=True, year=2024, group=AccountGroupFactory(level=1, parent=None))
+
+        response = client.get(reverse("accounting:budget-explorer"), {"year": 2024, "only_responsible": ""})
+
+        assert f'id="amount-cell-{account.pk}-charges"' in response.content.decode()
+
+    def test_plain_cell_shown_for_user_without_permission(self, client, site_configuration_with_logo):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.BUDGET)
+        account = AccountFactory(is_budget=True, year=2024, group=AccountGroupFactory(level=1, parent=None))
+
+        response = client.get(reverse("accounting:budget-explorer"), {"year": 2024, "only_responsible": ""})
+
+        assert f'id="amount-cell-{account.pk}-charges"' not in response.content.decode()

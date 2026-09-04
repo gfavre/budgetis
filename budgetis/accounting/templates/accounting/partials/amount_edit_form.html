@@ -1,0 +1,20 @@
+{% load i18n %}
+
+<span id="amount-cell-{{ account.id }}-{{ kind }}" class="d-inline-block">
+  {% csrf_token %}
+  <input type="number"
+         step="0.01"
+         name="amount"
+         value="{{ form.amount.value|default_if_none:''|stringformat:'s' }}"
+         class="form-control text-end d-inline-block{% if form.amount.errors %} is-invalid{% endif %}"
+         style="width: 7rem;
+                font-size: 1rem;
+                padding: 0.1rem 0.4rem"
+         autofocus
+         hx-post="{% url 'accounting:account-amount-edit' account.id kind %}"
+         hx-trigger="keyup[key=='Enter'], blur"
+         hx-target="#amount-cell-{{ account.id }}-{{ kind }}"
+         hx-include="#amount-cell-{{ account.id }}-{{ kind }} [name='csrfmiddlewaretoken']"
+         hx-swap="outerHTML" />
+  {% if form.amount.errors %}<div class="invalid-feedback d-block">{{ form.amount.errors.0 }}</div>{% endif %}
+</span>

@@ -1,0 +1,26 @@
+[
+{
+  "model": "auth.group",
+  "pk": null,
+  "fields": {
+    "name": "Bourse",
+    "permissions": [
+      [
+        "change_account",
+        "accounting",
+        "account"
+      ],
+      [
+        "change_sankeycategory",
+        "finance",
+        "sankeycategory"
+      ],
+      [
+        "view_sankeycategory",
+        "finance",
+        "sankeycategory"
+      ]
+    ]
+  }
+}
+]
