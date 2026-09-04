@@ -1,0 +1,24 @@
+{% load i18n %}
+
+<tbody id="rules-account-code-{{ category.pk }}"
+       {% if oob %}hx-swap-oob="true"{% endif %}>
+  {% for rule in rules %}
+    <tr>
+      <td>{{ rule.function }}</td>
+      <td>{{ rule.nature }}</td>
+      <td>{{ rule.sub_account|default:"—" }}</td>
+      <td class="text-end">
+        <a href="#"
+           hx-get="{% url 'finance:sankey-rule-edit' 'account-code' rule.pk %}?scheme={{ scheme }}"
+           hx-target="#sankeyRuleModal .modal-content"
+           hx-swap="innerHTML"
+           data-bs-toggle="modal"
+           data-bs-target="#sankeyRuleModal"><i class="bi bi-pencil"></i></a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr>
+      <td colspan="4" class="text-muted fst-italic">{% trans "No rule for this scheme yet." %}</td>
+    </tr>
+  {% endfor %}
+</tbody>

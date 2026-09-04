@@ -7,25 +7,38 @@
   <script src="https://cdn.plot.ly/plotly-3.5.0.min.js" defer></script>
 {% endblock javascript %}
 {% block content %}
-  <div class="d-flex gap-3 align-items-center mb-3">
-    <div class="d-flex align-items-center gap-2">
-      <label class="form-label mb-0" for="year">{% trans "Year" %}</label>
-      <select id="year" class="form-select form-select-sm w-auto">
-        {% for y in available_years %}
-          <option value="{{ y }}"{% if y == default_year %} selected{% endif %}>{{ y }}</option>
-        {% endfor %}
-      </select>
+  <div class="d-flex gap-3">
+    <div class="d-flex flex-column gap-3 flex-shrink-0" style="width:9rem">
+      <div>
+        <label class="form-label mb-1" for="year">{% trans "Year" %}</label>
+        <select id="year" class="form-select form-select-sm w-100">
+          {% for y in available_years %}
+            <option value="{{ y.year }}"
+                    data-scheme="{{ y.scheme }}"
+                    {% if y.year == default_year %}selected{% endif %}>{{ y.year }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-check mb-0">
+        <input id="is_budget" class="form-check-input" type="checkbox" />
+        <label class="form-check-label" for="is_budget">{% trans "Budget" %}</label>
+      </div>
+      <a id="sm-export" href="#" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-download me-1"></i>SankeyMATIC
+      </a>
+      {% if perms.finance.view_sankeycategory %}
+        <a id="sankey-config-link"
+           href="{% url 'finance:sankey-rules' %}"
+           class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-sliders me-1"></i>{% trans "Settings" %}
+        </a>
+      {% endif %}
     </div>
-    <div class="form-check mb-0">
-      <input id="is_budget" class="form-check-input" type="checkbox" />
-      <label class="form-check-label" for="is_budget">{% trans "Budget" %}</label>
+    <div class="flex-grow-1">
+      <div id="chart" class="d-none" style="width:100%;height:85vh"></div>
+      <div id="no-data" class="text-center text-muted py-5">{% trans "Données non disponibles." %}</div>
     </div>
-    <a id="sm-export" href="#" class="btn btn-sm btn-outline-secondary ms-2">
-      <i class="bi bi-download me-1"></i>SankeyMATIC
-    </a>
   </div>
-  <div id="chart" class="d-none" style="width:100%;height:75vh"></div>
-  <div id="no-data" class="text-center text-muted py-5">{% trans "Données non disponibles." %}</div>
   <script type="module">
   const $ = (q) => document.querySelector(q);
 
@@ -41,6 +54,104 @@
     return resp.json();
   }
 
+  // Column x per node "depth" (0 = leftmost) - a *hint*, not an exact
+  // position (see arrangement: "snap" below). Without it, Plotly's
+  // auto-layout places a node by hop-count from any source, which pushes a
+  // node reached via a shortcut (e.g. Dotations, linked straight from
+  // Household) all the way to the rightmost column - see builders.py.
+  // Column 3 stops at 0.82, not 1, leaving room inside the plot area itself
+  // for that column's labels instead of them sitting on top of the nodes.
+  const DEPTH_X = { 0: 0.02, 1: 0.28, 2: 0.55, 3: 0.82 };
+
+  function computeNodeX(nodes) {
+    return nodes.map(n => DEPTH_X[n.depth ?? 0] ?? 0.5);
+  }
+
+  // Plotly always draws a node's native label just outside its own thin
+  // bar - but for a node with a flow attached on that same side (a
+  // pass-through hub, or a leaf whose one flow starts right where the label
+  // would go), "just outside the bar" still lands on top of that flow's
+  // color. That's fine for wide hub nodes (white bold text reads well on a
+  // big flow), but not for a source/sink leaf, where the label ends up
+  // squeezed against the flow's curve. For those - nodes with a flow on
+  // only one side - we hide the native label and draw our own on the empty
+  // side instead (left of a pure source, right of a pure sink).
+  const NODE_LABEL_GAP = 8;
+
+  function renderOutsideLabels(svg, data) {
+    svg.querySelectorAll(".outside-node-label").forEach(el => el.remove());
+    const ctm = svg.getScreenCTM();
+    if (!ctm) return;
+    const inverse = ctm.inverse();
+    const point = svg.createSVGPoint();
+
+    const hasOutgoing = new Set(data.links.map(l => l.source));
+    const hasIncoming = new Set(data.links.map(l => l.target));
+
+    svg.querySelectorAll(".sankey-node").forEach(group => {
+      // Plotly doesn't render a `.sankey-node` element for a zero-value
+      // node (e.g. a category with no accounts posted this year) - so DOM
+      // position and data.nodes[] index silently drift apart by however
+      // many were skipped before this one. D3 (which Plotly draws with)
+      // binds each element's source datum as `.__data__`, and Plotly's own
+      // sankey layout puts the *true* data.nodes[] index on it - undocumented,
+      // but it's the only reliable way back to the right node (confirmed via
+      // Plotly's own official docs/GitHub issues: there's no public API for
+      // this - issue plotly/plotly.js#7445 is an open, unresolved request
+      // for outside-positioned Sankey labels).
+      const trueIndex = group.__data__.index;
+      const isSourceOnly = hasOutgoing.has(trueIndex) && !hasIncoming.has(trueIndex);
+      const isSinkOnly = hasIncoming.has(trueIndex) && !hasOutgoing.has(trueIndex);
+      if (!isSourceOnly && !isSinkOnly) return;
+
+      const rect = group.querySelector(".node-rect");
+      if (!rect) return;
+      const nativeLabel = group.querySelector(".node-label");
+      if (nativeLabel) nativeLabel.style.display = "none";
+
+      const box = rect.getBoundingClientRect();
+      const onRight = isSinkOnly;
+      point.x = onRight ? box.right + NODE_LABEL_GAP : box.left - NODE_LABEL_GAP;
+      point.y = box.top + box.height / 2;
+      const p = point.matrixTransform(inverse);
+
+      const name = data.nodes[trueIndex].label;
+      // Two lines (name + amount) need real vertical room - for a thin
+      // node (small value, packed next to other small nodes), that second
+      // line collides with the neighboring node's label. Below the
+      // threshold, drop the amount rather than let labels overlap.
+      const amount = box.height >= 24 ? data.nodes[trueIndex].amount_display : "";
+      const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      text.setAttribute("class", "outside-node-label");
+      text.setAttribute("text-anchor", onRight ? "start" : "end");
+      text.setAttribute("font-family", "var(--bs-body-font-family)");
+
+      const nameTspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+      nameTspan.setAttribute("x", p.x);
+      nameTspan.setAttribute("y", p.y);
+      nameTspan.setAttribute("dy", amount ? "-0.3em" : "0.35em");
+      nameTspan.setAttribute("font-size", "13");
+      nameTspan.setAttribute("font-weight", "600");
+      nameTspan.setAttribute("fill", "#333");
+      nameTspan.textContent = name;
+      text.appendChild(nameTspan);
+
+      if (amount) {
+        const amountTspan = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+        amountTspan.setAttribute("x", p.x);
+        amountTspan.setAttribute("dy", "1.2em");
+        amountTspan.setAttribute("font-size", "12");
+        amountTspan.setAttribute("fill", "#666");
+        amountTspan.textContent = amount;
+        text.appendChild(amountTspan);
+      }
+
+      svg.appendChild(text);
+    });
+  }
+
+  let lastChartData = null;
+
   async function drawBuckets() {
     const data = await fetchBuckets();
     const hasData = data && data.links && data.links.length > 0;
@@ -49,33 +160,66 @@
     $("#no-data").classList.toggle("d-none", hasData);
     if (!hasData) return;
 
+    const x = computeNodeX(data.nodes);
     const trace = {
       type: "sankey",
-      arrangement: "freeform",
+      // "snap" (not "freeform"): freeform places nodes at the exact x/y
+      // given with no collision avoidance, so an evenly-spaced y would
+      // overlap badly whenever nodes sharing a column have very different
+      // values (e.g. Canton at several million next to a small Dotation
+      // category). "snap" keeps x as a column hint but lets Plotly compute
+      // y itself, spacing nodes to fit their value-proportional height.
+      arrangement: "snap",
       node: {
         label: data.nodes.map(n => n.name),
+        customdata: data.nodes.map(n => n.hover || n.name),
         color: data.node_colors,
+        x,
         pad: 14,
         thickness: 22,
         line: { width: 0.5, color: "rgba(0,0,0,0.25)" },
         labelfont: { size: 18, color: "#111" },
-        hoverinfo: "none",
+        hovertemplate: "%{customdata}<extra></extra>",
       },
       link: {
         source: data.links.map(l => l.source),
         target: data.links.map(l => l.target),
         value: data.links.map(l => l.value),
+        customdata: data.links.map(l => l.hover || ""),
         color: data.link_colors,
-        hovertemplate: "%{value:' .0f} CHF<extra></extra>",
+        hovertemplate: "%{value:' .0f} CHF<br />%{customdata}<extra></extra>",
       },
     };
 
-    Plotly.newPlot(
-      "chart",
+    lastChartData = data;
+    const chartEl = document.getElementById("chart");
+    await Plotly.newPlot(
+      chartEl,
       [trace],
-      { font: { size: 16, family: "var(--bs-body-font-family)" } },
+      {
+        font: { size: 16, family: "var(--bs-body-font-family)" },
+        margin: { l: 140, r: 140, t: 20, b: 20 },
+      },
       { responsive: true }
     );
+
+    // `Plotly.newPlot(...)` resolving is only the *initial* draw - with
+    // `responsive: true`, Plotly then resizes the plot to fit its
+    // container via an internal ResizeObserver, asynchronously and after
+    // this point, so calling renderOutsideLabels only here would use
+    // coordinates Plotly was about to replace and land labels nowhere near
+    // their node once that settles (and again on every later window
+    // resize). "plotly_afterplot" fires after each of those redraws too -
+    // `.on` only exists once newPlot has initialized the div, hence
+    // (re-)attaching it here rather than once at module load.
+    chartEl.removeAllListeners("plotly_afterplot");
+    chartEl.on("plotly_afterplot", () => {
+      const svg = chartEl.querySelector("svg.main-svg");
+      if (svg && lastChartData) renderOutsideLabels(svg, lastChartData);
+    });
+
+    const svg = chartEl.querySelector("svg.main-svg");
+    if (svg) renderOutsideLabels(svg, data);
   }
 
   function updateExportLink() {
@@ -86,8 +230,20 @@
     $("#sm-export").href = "{% url 'finance:sankeymatic_export' %}?" + params.toString();
   }
 
-  $("#year").addEventListener("change", () => { drawBuckets(); updateExportLink(); });
-  $("#is_budget").addEventListener("change", () => { drawBuckets(); updateExportLink(); });
-  window.addEventListener("load", () => { drawBuckets(); updateExportLink(); });
+  function updateConfigLink() {
+    const configLink = $("#sankey-config-link");
+    if (!configLink) return;
+    const selectedOption = $("#year").selectedOptions[0];
+    const scheme = selectedOption ? selectedOption.dataset.scheme : "";
+    const url = new URL(configLink.href, window.location.origin);
+    if (scheme) url.searchParams.set("scheme", scheme);
+    configLink.href = url.pathname + url.search;
+  }
+
+  function updateLinks() { updateExportLink(); updateConfigLink(); }
+
+  $("#year").addEventListener("change", () => { drawBuckets(); updateLinks(); });
+  $("#is_budget").addEventListener("change", () => { drawBuckets(); updateLinks(); });
+  window.addEventListener("load", () => { drawBuckets(); updateLinks(); });
   </script>
 {% endblock content %}

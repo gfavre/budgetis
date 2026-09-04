@@ -5,255 +5,81 @@ from decimal import Decimal
 from decimal import InvalidOperation
 from typing import TYPE_CHECKING
 
-from django.core.exceptions import FieldDoesNotExist
-from django.db.models import Q
-from django.db.models import QuerySet
-from django.db.models import Sum
+from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
+
+from budgetis.accounting.templatetags.money import format_money
+
+from .models import SankeyCategory
+from .models import SankeyFlow
+from .rules import aggregate_by_category
 
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from django.db.models import QuerySet
 
     from budgetis.accounting.models import Account
 
+# A resolved leaf category with its amount and pre-rendered hover breakdown.
+CategoryEntry = tuple[SankeyCategory, Decimal, str]
+
 # ----- Constants -------------------------------------------------------------
+# Only the diagram's fixed structure (the four hubs, and the result/profit/loss
+# handling) stays as code. Every leaf category (Salaires, AISGE, Péréquation...)
+# is now data - see SankeyCategory and its rule models.
 MIN_VAL = 0.5
+MAX_BREAKDOWN_LINES = 15
 
-REVENUE_NATURE_RANGE = (400, 499)
-IMPOTS_NATURE_RANGE = (400, 409)
-IMPOTS_NATURE_EXCLUDE = (402, 404, 405)
-TAXES_NATURE_RANGE = (430, 439)
-INTERESTS_NATURE = (422, 424)
-RENTALS_NATURE = (423, 425, 427)
-FUNDS_WITHDRAWAL_NATURE_RANGE = (480, 489)
-
-
-WAGES_NATURE_RANGE = (300, 309)
-GOODS_NATURE_RANGE = (310, 319)
-INTERESTS_NATURE_RANGE = (320, 329)
-AIDS_NATURE_RANGE = (360, 369)
-
-
-SOCIAL_SECURITY = "720.351"
-PEREQUATION = "220.352"
-POLICE = "600.351"
-# 430.351 CHARGES CANTONALES S. HIVERNAL
-
-AISGE = [
-    "500.352",
-    "510.352",
-    "510.366",
-    "520.352",
-    "520.366",
-    "520.352",
-    "530.351",
-    "530.451",
-    "550.352",
-    "560.352",
-    "570.352",
-]
-APEC = ("460.352", "460.352.1")
-TRANSPORTS_REGION = "180.351"
-RAT = ("710.365.1",)
-ASSOCIATIONS = (
-    "160.352",  # Région Nyoin - taxes de séjour
-    # "310.351",  # Feu bactérien
-    "320.352",  # La Colline
-    "320.352.1",  # Fondation bois de chênes
-    "440.352",  # Centre funéraire de Nyon
-    "540.352",  # Orientation Professionneéée  => Evelyne
-    "580.352",  # Autres paroisses  => Evelyne
-    "650.352",  # SDIS Nyon-Dôle  => Pscal
-    "660.352",  # ORPC  => André
-    "710.352",  # CSR  => Evelyne
-    "720.352",  # ARAS  = Evelyne
-    "810.352",  # SAPAN
-    "810.352.1",  # Eaudici
-)
-
-
-COLOR_IMPOTS = "#246BCE"
-COLOR_RANDOM = "#5B9BD6"  # bleu clair, dérivé de COLOR_IMPOTS
-COLOR_TAXES = "#F57C00"
-COLOR_RENTALS = "#6D4C41"
-COLOR_INTERESTS_REV = "#9E9E9E"  # absent de l'export manuel
-COLOR_OTHERS = "#AAAAAA"
-COLOR_FUNDS_WITHDRAWAL = "#6366F1"  # absent de l'export manuel
-
-# --- Budget (hub central) ---
 COLOR_BUDGET = "#555555"
 COLOR_BUDGET_LINKS = "#888888"
 
-# --- Canton ---
 COLOR_CANTON = "#447B30"
 COLOR_CANTON_LINKS = "#6DA44D"
 
-COLOR_CANTON_SOCIAL = "#6DA44D"
-COLOR_CANTON_EQUALIZATION = "#2E5A20"
-COLOR_CANTON_POLICE = "#8BC06C"
-
-# --- Intercommunalités ---
 COLOR_INTERCOS = "#B55239"
 COLOR_INTERCOS_LINKS = "#CD6E4D"
 
-COLOR_INTERCOS_AISGE = "#94402D"
-COLOR_INTERCOS_APEC = "#B55239"
-COLOR_INTERCOS_TRANSPORTS = "#CD6E4D"
-COLOR_INTERCOS_RAT = "#B97258"
-COLOR_INTERCOS_OTHER = "#E7A38C"
-
-# --- Commune ---
 COLOR_COMMUNE = "#D4AF37"
 COLOR_COMMUNE_LINKS = "#E7C970"
 
-COLOR_COMMUNE_WAGES = "#D4AF37"
-COLOR_COMMUNE_GOODS = "#E7C970"
-COLOR_COMMUNE_INTERESTS = "#D4C07E"
-COLOR_COMMUNE_AIDS = "#D4A337"
-COLOR_COMMUNE_DOTATIONS = "#D49C37"
-
-# --- Résultat ---
+COLOR_PROFIT = "#447B30"
 COLOR_RESULT = "#000000"
-COLOR_PROFIT = "#447B30"  # vert canton pour un résultat positif
 
 LABEL_HOUSEHOLD = _("Municipal household")
 LABEL_CANTON = _("Canton")
 LABEL_INTERCOMMUNALITIES = _("Intercommunalities")
 LABEL_COMMUNE = _("Commune")
-
-LABEL_SOCIAL = _("Social security")
-LABEL_EQUALIZATION = _("Equalization")
-LABEL_POLICE = _("Police")
-
-LABEL_AISGE = "AISGE"  # acronym stays the same
-LABEL_APEC = "APEC"
-LABEL_TRANSPORTS = _("Regional transports")
-LABEL_RAT = "RAT"
-LABEL_ASSOCIATIONS = _("Associations")
-LABEL_INTERCOS_OTHER = _("Other intercommunalities")
-
-LABEL_WAGES = _("Wages")
-LABEL_GOODS = _("Goods and services")
-LABEL_INTERESTS = _("Interests")
-LABEL_AIDS = _("Aids and subsidies")
-LABEL_DOTATIONS = _("Depreciation & allocations")
-
-LABEL_TAXES_GENERAL = _("Taxes (general)")
-LABEL_TAXES_RANDOM = _("Random taxes")
-LABEL_TAXES_USAGE = _("Levies (usage-based)")
-LABEL_RENTALS = _("Rentals")
-LABEL_REVENUES_OTHER = _("Other revenues")
-LABEL_FUNDS_WITHDRAWAL = _("Fund withdrawals")
-
-LABEL_RESULT = _("Cash result")
 LABEL_RESULT_HUB = _("Result")
-LABEL_AMORT = _("Amortizations")
-LABEL_FUNDS = _("Fund allocations")
 LABEL_PROFIT = _("Profit")
+LABEL_LOSS = _("Loss")
 
-# Canton keys
-KEY_SOCIAL = "social"
-KEY_EQUALIZATION = "equalization"
-KEY_POLICE = "police"
-KEY_TOTAL = "total"
-
-# Intercommunalities keys
-KEY_AISGE = "aisge"
-KEY_APEC = "apec"
-KEY_TRANSPORTS = "transports_region"
-KEY_RAT = "rat"
-KEY_INTERCOS_OTHER = "other_intercommunalities"
-
-# Commune keys
-KEY_WAGES = "wages"
-KEY_GOODS = "goods_services"
-KEY_INTERESTS = "interests"
-KEY_AIDS = "aids"
-KEY_DOTATIONS = "dotations"
-
-# Revenue bucket keys (from nature ranges)
-KEY_IMPOTS = "taxes_general"
-KEY_RANDOMS = "random_taxes"
-KEY_LEVIES = "levies_usage"
-KEY_RENTALS = "rentals"
-KEY_INTERESTS_REV = "interests_revenues"
-KEY_OTHERS_REV = "other_revenues"
-KEY_FUNDS_WITHDRAWAL = "funds_withdrawal"
-KEY_RESULT = "result"
-
-KEY_AMORT = "amortizations"
-KEY_FUNDS = "fund_allocations"
-KEY_PROFIT = "profit"
-
+# SankeyMATIC exports a plain-text format for an external tool, always in
+# French, independent of the app's own active language - kept separate from
+# the translatable LABEL_* constants above, which drive the in-app Plotly view.
+SM_LABEL_HOUSEHOLD = "Ménage communal"
+SM_LABEL_CANTON = "Canton"
+SM_LABEL_INTERCOMMUNALITIES = "Intercommunalités"
+SM_LABEL_COMMUNE = "Commune"
+SM_LABEL_PROFIT = "Bénéfice"
+SM_LABEL_LOSS = "Perte"
 
 NODE_HOUSEHOLD = "household"
 NODE_CANTON = "canton"
 NODE_INTERCOS = "intercommunities"
 NODE_COMMUNE = "commune"
 NODE_RESULT = "result"
+KEY_PROFIT = "profit"
 
-KEY_LOSS = "loss"
+# Diagram columns (left to right), used as the node "depth" hint so a node
+# reached by a shortcut path (Dotations, Result - both linked directly from
+# Household) stops at the hub column instead of Plotly's auto-layout pushing
+# it out to the rightmost column by hop-count heuristics.
+DEPTH_REVENUE_LEAF = 0
+DEPTH_HOUSEHOLD = 1
+DEPTH_HUB = 2
+DEPTH_HUB_LEAF = 3
 
-# ----- SankeyMATIC labels and colors -----------------------------------------
-
-SM_LABELS: dict[str, str] = {
-    NODE_HOUSEHOLD: "Ménage communal",
-    KEY_IMPOTS: "Impôts",
-    KEY_RANDOMS: "Impôts aléatoires",
-    KEY_LEVIES: "Taxes",
-    KEY_RENTALS: "Locations",
-    KEY_INTERESTS_REV: "Intérêts revenus",
-    KEY_FUNDS_WITHDRAWAL: "Prélèvements sur fonds",
-    KEY_OTHERS_REV: "Autres recettes",
-    NODE_CANTON: "Canton",
-    NODE_INTERCOS: "Intercommunalités",
-    NODE_COMMUNE: "Commune",
-    KEY_EQUALIZATION: "Péréquation",
-    KEY_SOCIAL: "Facture sociale",
-    KEY_POLICE: "Police cantonale",
-    KEY_AISGE: "AISGE",
-    KEY_APEC: "APEC",
-    KEY_RAT: "RAT",
-    KEY_TRANSPORTS: "Transports région",
-    KEY_INTERCOS_OTHER: "Diverses associations",
-    KEY_WAGES: "Salaires",
-    KEY_GOODS: "Biens / services",
-    KEY_AIDS: "Aides et subventions",
-    KEY_DOTATIONS: "Amortissements & attribution aux fonds",
-    KEY_INTERESTS: "Intérêts bancaires",
-    KEY_PROFIT: "Bénéfice",
-    KEY_LOSS: "Perte",
-}
-
-SM_COLORS: dict[str, str] = {
-    NODE_HOUSEHOLD: COLOR_BUDGET,
-    KEY_IMPOTS: COLOR_IMPOTS,
-    KEY_RANDOMS: COLOR_RANDOM,
-    KEY_LEVIES: COLOR_TAXES,
-    KEY_RENTALS: COLOR_RENTALS,
-    KEY_INTERESTS_REV: COLOR_INTERESTS_REV,
-    KEY_FUNDS_WITHDRAWAL: COLOR_FUNDS_WITHDRAWAL,
-    KEY_OTHERS_REV: COLOR_OTHERS,
-    NODE_CANTON: COLOR_CANTON,
-    NODE_INTERCOS: COLOR_INTERCOS,
-    NODE_COMMUNE: COLOR_COMMUNE,
-    KEY_EQUALIZATION: COLOR_CANTON_EQUALIZATION,
-    KEY_SOCIAL: COLOR_CANTON_SOCIAL,
-    KEY_POLICE: COLOR_CANTON_POLICE,
-    KEY_AISGE: COLOR_INTERCOS_AISGE,
-    KEY_APEC: COLOR_INTERCOS_APEC,
-    KEY_RAT: COLOR_INTERCOS_RAT,
-    KEY_TRANSPORTS: COLOR_INTERCOS_TRANSPORTS,
-    KEY_INTERCOS_OTHER: COLOR_INTERCOS_OTHER,
-    KEY_WAGES: COLOR_COMMUNE_WAGES,
-    KEY_GOODS: COLOR_COMMUNE_GOODS,
-    KEY_AIDS: COLOR_COMMUNE_AIDS,
-    KEY_DOTATIONS: COLOR_FUNDS_WITHDRAWAL,
-    KEY_INTERESTS: COLOR_COMMUNE_INTERESTS,
-    KEY_PROFIT: COLOR_PROFIT,
-    KEY_LOSS: COLOR_RESULT,
-}
+# ----- SankeyMATIC export settings --------------------------------------------
 
 SM_SETTINGS = """\
 === Settings ===
@@ -325,81 +151,6 @@ def to_rounded_float(val, q: str = "0.01") -> float:
     return float(val.quantize(Decimal(q), rounding=ROUND_HALF_UP))
 
 
-def parse_fn_code(code: str) -> tuple[int, int, str | None]:
-    """
-    Parse a 'function.nature[.subaccount]' code.
-
-    Args:
-        code: A string like '720.351' or '460.352.1'.
-
-    Returns:
-        Tuple (function, nature, subaccount or None).
-    """
-    parts = code.split(".")
-    if len(parts) <= 1:
-        msg = f"Invalid code: {code}"
-        raise ValueError(msg)
-    function = int(parts[0])
-    nature = int(parts[1])
-    subaccount = parts[2] if len(parts) >= 3 else None  # noqa: PLR2004
-    return function, nature, subaccount
-
-
-def q_from_code(qs: QuerySet[Account], code: str) -> Q:
-    fn, nat, sub = parse_fn_code(code)
-    base = Q(function=fn, nature=nat)
-    if sub:
-        try:
-            qs.model._meta.get_field("subaccount")  # noqa: SLF001
-            return base & Q(subaccount=sub)
-        except FieldDoesNotExist:
-            return base
-    return base
-
-
-def q_from_codes(qs: QuerySet[Account], codes: Iterable[str]) -> Q:
-    q = Q()
-    for c in codes:
-        q |= q_from_code(qs, c)
-    return q
-
-
-def sum_field(qs: QuerySet[Account], flt: Q, field: str) -> Decimal:
-    return qs.filter(flt).aggregate(v=Sum(field))["v"] or Decimal("0")
-
-
-def sum_amount_for_codes(
-    qs: QuerySet,
-    codes: Iterable[str],
-    *,
-    field: str = "charges",
-) -> Decimal:
-    """
-    Sum a monetary field over entries matching any of the given 'F.N[.S]' codes.
-
-    Args:
-        qs: Base queryset already filtered (e.g., year, is_budget=False).
-        codes: Iterable of 'F.N[.S]' codes.
-        field: Model field to sum ('charges' or 'revenues').
-
-    Returns:
-        Decimal sum (0 if nothing matches).
-    """
-    if not codes:
-        return Decimal("0")
-    flt = q_from_codes(qs, codes)
-    return qs.filter(flt).aggregate(v=Sum(field))["v"] or Decimal("0")
-
-
-def codes_with_nature(codes: Iterable[str], target_nature: int) -> list[str]:
-    out = []
-    for c in codes:
-        _f, n, _s = parse_fn_code(c)
-        if n == target_nature:
-            out.append(c)
-    return out
-
-
 def _fmt_chf_short(value: Decimal) -> str:
     """Return CHF amount with K/M suffix."""
     v = value.copy_abs()
@@ -410,202 +161,156 @@ def _fmt_chf_short(value: Decimal) -> str:
     return f"CHF{n}K"
 
 
-def _compute_bucket_sums(qs: QuerySet[Account]) -> dict[str, Decimal]:
-    """Sum revenues per bucket (no merge)."""
-    base = qs.filter(nature__range=REVENUE_NATURE_RANGE)
-    impots = base.filter(nature__range=IMPOTS_NATURE_RANGE).exclude(nature__in=IMPOTS_NATURE_EXCLUDE).aggregate(
-        v=Sum("revenues")
-    )["v"] or Decimal("0")
-    randoms = base.filter(nature__in=IMPOTS_NATURE_EXCLUDE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
-    levies = base.filter(nature__range=TAXES_NATURE_RANGE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
-    rentals = base.filter(nature__in=RENTALS_NATURE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
-    interests = base.filter(nature__in=INTERESTS_NATURE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
-    funds_withdrawal = base.filter(nature__range=FUNDS_WITHDRAWAL_NATURE_RANGE).aggregate(v=Sum("revenues"))[
-        "v"
-    ] or Decimal("0")
-    others = base.exclude(nature__range=IMPOTS_NATURE_RANGE).exclude(nature__range=TAXES_NATURE_RANGE).exclude(
-        nature__in=RENTALS_NATURE + INTERESTS_NATURE
-    ).exclude(nature__range=FUNDS_WITHDRAWAL_NATURE_RANGE).aggregate(v=Sum("revenues"))["v"] or Decimal("0")
-    return {
-        KEY_IMPOTS: impots,
-        KEY_RANDOMS: randoms,
-        KEY_LEVIES: levies,
-        KEY_RENTALS: rentals,
-        KEY_INTERESTS_REV: interests,
-        KEY_FUNDS_WITHDRAWAL: funds_withdrawal,
-        KEY_OTHERS_REV: others,
-    }
-
-
-def compute_canton_breakdown(qs: QuerySet) -> dict[str, Decimal]:
-    """
-    Compute Canton sub-accounts using constants 'F.N[.S]'.
-    Uses 'charges' sums.
-
-    Returns:
-        Dict with keys: 'social', 'perequation', 'police', 'total'.
-    """
-    social = sum_amount_for_codes(qs, [SOCIAL_SECURITY], field="charges")
-    pereq = sum_amount_for_codes(qs, [PEREQUATION], field="charges")
-    police = sum_amount_for_codes(qs, [POLICE], field="charges")
-    total = social + pereq + police
-    return {
-        KEY_SOCIAL: max(Decimal("0"), social),
-        KEY_EQUALIZATION: max(Decimal("0"), pereq),
-        KEY_POLICE: max(Decimal("0"), police),
-        KEY_TOTAL: max(Decimal("0"), total),
-    }
-
-
-def compute_intercos(qs: QuerySet[Account]) -> dict:
-    """
-    Calcule AISGE, APEC, Transports région et 'autres intercommunalités' (nature 350-359),
-    en excluant tout ce qui est déjà classé (Canton + AISGE + APEC + Transports).
-    Sums on 'charges'.
-    """
-    # Blocs identifiés par codes F.N[.S]
-    q_aisge = q_from_codes(qs, AISGE)
-    q_apec = q_from_codes(qs, APEC)
-    q_trans = q_from_codes(qs, [TRANSPORTS_REGION])
-    q_rat = q_from_codes(qs, RAT)
-
-    # Les 3 'Canton' sont aussi en nature 351/352 -> à exclure d'intercos.autres
-    q_canton = q_from_codes(qs, [SOCIAL_SECURITY, PEREQUATION, POLICE])
-
-    # Base "intercos" = toutes natures 350-359
-    q_intercos_base = Q(nature__range=(350, 359))
-
-    # Exclusions déjà traitées (RAT est en nature 365, hors base, mais exclu par cohérence)
-    q_exclude = q_aisge | q_apec | q_trans | q_rat | q_canton
-
-    # "autres intercos" = base - exclusions
-    q_intercos_autres = q_intercos_base & ~q_exclude
-
-    aisge = sum_field(qs, q_aisge, "charges")
-    apec = sum_field(qs, q_apec, "charges")
-    trans = sum_field(qs, q_trans, "charges")
-    rat = sum_field(qs, q_rat, "charges")
-    autres = sum_field(qs, q_intercos_autres, "charges")
-
-    total = aisge + apec + trans + rat + autres
-
-    return {
-        KEY_AISGE: max(Decimal("0"), aisge),
-        KEY_APEC: max(Decimal("0"), apec),
-        KEY_TRANSPORTS: max(Decimal("0"), trans),
-        KEY_RAT: max(Decimal("0"), rat),
-        KEY_INTERCOS_OTHER: max(Decimal("0"), autres),
-        KEY_TOTAL: max(Decimal("0"), total),
-    }
-
-
-def compute_commune_breakdown(qs: QuerySet[Account]) -> dict:
-    """
-    Commune par nature (charges):
-      - 301–309  -> salaires
-      - 310–319  -> biens
-      - 320–329  -> interets
-      - 360–369  -> aides  (en excluant les codes AISGE *.366 et RAT 710.365.1)
-    """
-
-    def rng(a: int, b: int) -> Decimal:
-        return qs.filter(nature__range=(a, b)).aggregate(v=Sum("charges"))["v"] or Decimal("0")
-
-    wages = rng(*WAGES_NATURE_RANGE)
-    goods = rng(*GOODS_NATURE_RANGE)
-    interests = rng(*INTERESTS_NATURE_RANGE)
-
-    q_aides_base = Q(nature__range=AIDS_NATURE_RANGE)
-    aisge_366_codes = codes_with_nature(AISGE, 366)
-    q_excl_aisge_366 = q_from_codes(qs, aisge_366_codes) if aisge_366_codes else Q()
-    q_excl_rat = q_from_codes(qs, RAT)
-    aids = sum_field(qs, q_aides_base & ~q_excl_aisge_366 & ~q_excl_rat, "charges")
-
-    # Amortissements (330-349) + attributions aux fonds/charges extraordinaires (370-399)
-    dotations = (qs.filter(nature__range=(330, 349)).aggregate(v=Sum("charges"))["v"] or Decimal("0")) + (
-        qs.filter(nature__range=(370, 399)).aggregate(v=Sum("charges"))["v"] or Decimal("0")
-    )
-
-    total = wages + goods + interests + aids + dotations
-
-    return {
-        KEY_WAGES: max(Decimal("0"), wages),
-        KEY_GOODS: max(Decimal("0"), goods),
-        KEY_INTERESTS: max(Decimal("0"), interests),
-        KEY_AIDS: max(Decimal("0"), aids),
-        KEY_DOTATIONS: max(Decimal("0"), dotations),
-        KEY_TOTAL: max(Decimal("0"), total),
-    }
-
-
 def _node_label(label: str, val: Decimal) -> str:
     return f"<sub>{label}</sub><br>{_fmt_chf_short(val)}" if val > 0 else label
+
+
+def _account_code(account: Account) -> str:
+    code = f"{account.function}.{account.nature}"
+    if account.sub_account:
+        code += f".{account.sub_account}"
+    return code
+
+
+def _account_breakdown_html(accounts: list[Account], field: str) -> str:
+    """Hover text listing which accounts feed a leaf category, largest first."""
+    rows = [(account, getattr(account, field) or Decimal("0")) for account in accounts]
+    rows = [(account, amount) for account, amount in rows if amount]
+    rows.sort(key=lambda row: row[1], reverse=True)
+
+    lines = [
+        f"{_account_code(account)} {account.label} : CHF {format_money(amount)}"
+        for account, amount in rows[:MAX_BREAKDOWN_LINES]
+    ]
+    hidden_count = len(rows) - MAX_BREAKDOWN_LINES
+    if hidden_count > 0:
+        lines.append(gettext("+ %(count)d more") % {"count": hidden_count})
+    return "<br>".join(lines)
+
+
+def _category_breakdown_html(entries: list[CategoryEntry]) -> str:
+    """Hover text listing which categories feed a hub node, largest first."""
+    rows = sorted((entry for entry in entries if entry[1] > 0), key=lambda entry: entry[1], reverse=True)
+    return "<br>".join(f"{category.name} : CHF {format_money(value)}" for category, value, _detail in rows)
 
 
 def _push_node(  # noqa: PLR0913
     idx: dict[str, int],
     labels: list[str],
-    nodes: list[dict[str, str]],
+    nodes: list[dict[str, object]],
     node_colors: list[str],
     key: str,
     label: str,
     value: Decimal,
     color: str,
+    hover: str = "",
+    depth: int = 0,
 ) -> None:
     """
-    Append a node with a stable key and a formatted label; update color & index map.
+    Append a node with a stable key and a formatted label; update color &
+    index map. `depth` is the node's intended column (0 = leftmost) - without
+    it, Plotly's auto-layout places a node by how many hops it took to reach
+    it from any source, which pushes a node reached via a *shortcut* path
+    (e.g. Dotations, linked directly from Household) all the way to the
+    rightmost column instead of the hub-level column it logically belongs to.
     """
     value = Decimal("0") if value is None else Decimal(str(value))
     name = _node_label(str(label), value)
     idx[key] = len(labels)
     labels.append(name)
-    nodes.append({"name": name})
+    # `label`/`amount_display` duplicate what's already embedded as HTML in
+    # `name` (Plotly's own node label), as plain strings - so a source/sink
+    # node's client-side custom label (see sankey.html) doesn't need to
+    # parse that HTML back apart.
+    amount_display = _fmt_chf_short(value) if value > 0 else ""
+    nodes.append({"name": name, "hover": hover, "depth": depth, "label": str(label), "amount_display": amount_display})
     node_colors.append(color)
 
 
 def _add_link(  # noqa: PLR0913
     idx: dict[str, int],
-    links: list[dict[str, float]],
+    links: list[dict[str, float | str]],
     link_colors: list[str],
     src_key: str,
     dst_key: str,
     value: Decimal,
     color: str,
+    hover: str = "",
 ) -> None:
-    """
-    Add a link if value > 0, using stable node keys.
-    """
+    """Add a link if value > 0, using stable node keys."""
     if value and value > 0:
-        links.append({"source": idx[src_key], "target": idx[dst_key], "value": float(value)})
+        links.append({"source": idx[src_key], "target": idx[dst_key], "value": float(value), "hover": hover})
         link_colors.append(color)
 
 
-def build_sankeymatic_export(qs: QuerySet, year: int, *, is_budget: bool = False) -> str:  # noqa: C901, PLR0915
-    """Generate a SankeyMATIC-compatible text file for the given year/type."""
+def _category_totals(qs: QuerySet[Account], scheme: str) -> dict[str, list[CategoryEntry]]:
+    """
+    Resolves every account to its Sankey category, sums charges/revenues per
+    category, and groups the result by flow block (all categories of a flow
+    are included even at zero, so the diagram's shape stays stable year to
+    year regardless of which buckets happen to carry money).
+    """
+    totals = aggregate_by_category(qs, scheme)
+    field_by_flow: dict[str, str] = {
+        SankeyFlow.REVENUE: "revenues",
+        SankeyFlow.CANTON: "charges",
+        SankeyFlow.INTERCOMMUNALITY: "charges",
+        SankeyFlow.COMMUNE: "charges",
+        SankeyFlow.DOTATION: "charges",
+    }
+
+    by_flow: dict[str, list[CategoryEntry]] = {flow: [] for flow in field_by_flow}
+    for category in SankeyCategory.objects.filter(flow__in=field_by_flow):
+        field = field_by_flow[category.flow]
+        entry = totals.get(category)
+        if entry is None:
+            amount = Decimal("0")
+            breakdown = ""
+        else:
+            raw_amount = entry["revenues"] if field == "revenues" else entry["charges"]
+            amount = max(Decimal("0"), raw_amount)
+            breakdown = _account_breakdown_html(entry["accounts"], field)
+        by_flow[category.flow].append((category, amount, breakdown))
+
+    return by_flow
+
+
+def build_sankeymatic_export(  # noqa: PLR0915
+    qs: QuerySet[Account], year: int, scheme: str, *, is_budget: bool = False
+) -> str:
+    """Generate a SankeyMATIC-compatible text file for the given year/type/scheme."""
     from datetime import UTC
     from datetime import datetime
 
-    rev = _compute_bucket_sums(qs)
-    canton = compute_canton_breakdown(qs)
-    inter = compute_intercos(qs)
-    commune = compute_commune_breakdown(qs)
+    by_flow = _category_totals(qs, scheme)
+    revenue, canton, intercos, commune, dotations = (
+        by_flow[SankeyFlow.REVENUE],
+        by_flow[SankeyFlow.CANTON],
+        by_flow[SankeyFlow.INTERCOMMUNALITY],
+        by_flow[SankeyFlow.COMMUNE],
+        by_flow[SankeyFlow.DOTATION],
+    )
 
-    total_canton = canton[KEY_TOTAL]
-    total_inter = inter[KEY_TOTAL]
-    dotations = commune[KEY_DOTATIONS]
-    total_commune = commune[KEY_TOTAL] - dotations
-    total_out = total_canton + total_inter + commune[KEY_TOTAL]
-    total_left = sum(rev.values())
+    total_left = sum((v for _c, v, _d in revenue), Decimal("0"))
+    total_canton = sum((v for _c, v, _d in canton), Decimal("0"))
+    total_intercos = sum((v for _c, v, _d in intercos), Decimal("0"))
+    total_commune = sum((v for _c, v, _d in commune), Decimal("0"))
+    total_dotations = sum((v for _c, v, _d in dotations), Decimal("0"))
+    total_out = total_canton + total_intercos + total_commune + total_dotations
     remainder = total_left - total_out
 
     def k(val: Decimal) -> int:
         return round(float(val) / 1000)
 
-    def flow(src: str, dst: str, val: Decimal) -> str | None:
+    def flow_line(src: str, dst: str, val: Decimal) -> str | None:
         n = k(val)
-        return f"{SM_LABELS[src]} [{n}] {SM_LABELS[dst]}" if n > 0 else None
+        return f"{src} [{n}] {dst}" if n > 0 else None
 
-    hub = NODE_HOUSEHOLD
+    household = SM_LABEL_HOUSEHOLD
+    canton_label = SM_LABEL_CANTON
+    intercos_label = SM_LABEL_INTERCOMMUNALITIES
+    commune_label = SM_LABEL_COMMUNE
+
     type_label = "Budget" if is_budget else "Comptes"
     now = datetime.now(tz=UTC).strftime("%d/%m/%Y %H:%M:%S")
     lines = [
@@ -617,224 +322,223 @@ def build_sankeymatic_export(qs: QuerySet, year: int, *, is_budget: bool = False
         "",
     ]
 
-    revenue_keys = [
-        KEY_IMPOTS,
-        KEY_RANDOMS,
-        KEY_LEVIES,
-        KEY_RENTALS,
-        KEY_INTERESTS_REV,
-        KEY_OTHERS_REV,
-        KEY_FUNDS_WITHDRAWAL,
-    ]
-    lines.extend(filter(None, (flow(key, hub, rev[key]) for key in revenue_keys)))
+    lines.extend(filter(None, (flow_line(c.name, household, v) for c, v, _d in revenue)))
     if remainder < -MIN_VAL:
-        lines.append(f"{SM_LABELS[KEY_LOSS]} [{k(abs(remainder))}] {SM_LABELS[hub]}")
+        lines.append(f"{SM_LABEL_LOSS} [{k(abs(remainder))}] {household}")
     lines.append("")
 
-    major_outputs = [(NODE_CANTON, total_canton), (NODE_INTERCOS, total_inter), (NODE_COMMUNE, total_commune)]
-    lines.extend(filter(None, (flow(hub, key, val) for key, val in major_outputs)))
+    lines.extend(
+        filter(
+            None,
+            [
+                flow_line(household, canton_label, total_canton),
+                flow_line(household, intercos_label, total_intercos),
+                flow_line(household, commune_label, total_commune),
+            ],
+        )
+    )
     if remainder > MIN_VAL:
-        lines.append(f"{SM_LABELS[hub]} [{k(remainder)}] {SM_LABELS[KEY_PROFIT]}")
+        lines.append(f"{household} [{k(remainder)}] {SM_LABEL_PROFIT}")
     lines.append("")
 
-    canton_keys = [KEY_EQUALIZATION, KEY_SOCIAL, KEY_POLICE]
-    lines.extend(filter(None, (flow(NODE_CANTON, key, canton[key]) for key in canton_keys)))
+    lines.extend(filter(None, (flow_line(canton_label, c.name, v) for c, v, _d in canton)))
     lines.append("")
-
-    intercos_keys = [KEY_AISGE, KEY_APEC, KEY_RAT, KEY_TRANSPORTS, KEY_INTERCOS_OTHER]
-    lines.extend(filter(None, (flow(NODE_INTERCOS, key, inter[key]) for key in intercos_keys)))
+    lines.extend(filter(None, (flow_line(intercos_label, c.name, v) for c, v, _d in intercos)))
     lines.append("")
-
-    commune_keys = [KEY_WAGES, KEY_GOODS, KEY_AIDS, KEY_INTERESTS]
-    lines.extend(filter(None, (flow(NODE_COMMUNE, key, commune[key]) for key in commune_keys)))
+    lines.extend(filter(None, (flow_line(commune_label, c.name, v) for c, v, _d in commune)))
     lines.append("")
-
-    # Dotations come directly from Ménage communal (not a third-party payment)
-    dotations_line = flow(hub, KEY_DOTATIONS, dotations)
-    if dotations_line:
-        lines.append(dotations_line)
-        lines.append("")
-
-    used: set[str] = set()
-    for key in revenue_keys:
-        if k(rev[key]) > 0:
-            used.add(key)
-    if remainder < -MIN_VAL:
-        used.add(KEY_LOSS)
-    elif remainder > MIN_VAL:
-        used.add(KEY_PROFIT)
-    if k(dotations) > 0:
-        used.add(KEY_DOTATIONS)
-    for group, keys in [
-        ([NODE_HOUSEHOLD, NODE_CANTON, NODE_INTERCOS, NODE_COMMUNE], None),
-        ([KEY_EQUALIZATION, KEY_SOCIAL, KEY_POLICE], canton),
-        ([KEY_AISGE, KEY_APEC, KEY_RAT, KEY_TRANSPORTS, KEY_INTERCOS_OTHER], inter),
-        ([KEY_WAGES, KEY_GOODS, KEY_AIDS, KEY_INTERESTS], commune),
-    ]:
-        for key in group:
-            if keys is None or k(keys.get(key, Decimal(0))) > 0:
-                used.add(key)
+    lines.extend(filter(None, (flow_line(household, c.name, v) for c, v, _d in dotations)))
+    lines.append("")
 
     lines.append("// === Colors ===")
     lines.append("")
-    lines.extend(f":{label} {SM_COLORS[key]}" for key, label in SM_LABELS.items() if key in used)
+    lines.append(f":{household} {COLOR_BUDGET}")
+    lines.append(f":{canton_label} {COLOR_CANTON}")
+    lines.append(f":{intercos_label} {COLOR_INTERCOS}")
+    lines.append(f":{commune_label} {COLOR_COMMUNE}")
+    if remainder < -MIN_VAL:
+        lines.append(f":{SM_LABEL_LOSS} {COLOR_RESULT}")
+    elif remainder > MIN_VAL:
+        lines.append(f":{SM_LABEL_PROFIT} {COLOR_PROFIT}")
+    seen: set[str] = set()
+    for category, value, _detail in [*revenue, *canton, *intercos, *commune, *dotations]:
+        if k(value) > 0 and category.name not in seen:
+            lines.append(f":{category.name} {category.color}")
+            seen.add(category.name)
     lines.append("")
     lines.append(SM_SETTINGS)
 
     return "\n".join(lines)
 
 
-def build_income_budget_canton_intercos_commune(qs: QuerySet[Account]) -> dict:  # noqa: PLR0915
+def build_income_budget_canton_intercos_commune(qs: QuerySet[Account], scheme: str) -> dict:
     """
     Sankey auto-layout with index mapping (no magic numbers).
 
-    Left (revenues, fixed order) -> Budget ->
-      - Canton -> (Sécurité sociale, Péréquation, Police)
-      - Intercommunalités -> (AISGE, APEC, Transports région, Associations, Autres intercommunalités)
-      - Commune -> (Salaires, Biens & services, Intérêts, Aides & subventions)
+    Left (revenue categories, data-driven) -> Household ->
+      - Canton -> (canton categories, data-driven)
+      - Intercommunalités -> (intercommunality categories, data-driven)
+      - Commune -> (commune categories, data-driven)
+    Dotations flow directly from Household (not a third-party payment).
     """
-    rev = _compute_bucket_sums(qs)
-    canton = compute_canton_breakdown(qs)
-    inter = compute_intercos(qs)
-    commune = compute_commune_breakdown(qs)
+    by_flow = _category_totals(qs, scheme)
+    revenue, canton, intercos, commune, dotations = (
+        by_flow[SankeyFlow.REVENUE],
+        by_flow[SankeyFlow.CANTON],
+        by_flow[SankeyFlow.INTERCOMMUNALITY],
+        by_flow[SankeyFlow.COMMUNE],
+        by_flow[SankeyFlow.DOTATION],
+    )
 
-    left = [
-        (KEY_IMPOTS, LABEL_TAXES_GENERAL, COLOR_IMPOTS),
-        (KEY_RANDOMS, LABEL_TAXES_RANDOM, COLOR_RANDOM),
-        (KEY_LEVIES, LABEL_TAXES_USAGE, COLOR_TAXES),
-        (KEY_RENTALS, LABEL_RENTALS, COLOR_RENTALS),
-        (KEY_INTERESTS_REV, LABEL_INTERESTS, COLOR_INTERESTS_REV),
-        (KEY_OTHERS_REV, LABEL_REVENUES_OTHER, COLOR_OTHERS),
-        (KEY_FUNDS_WITHDRAWAL, LABEL_FUNDS_WITHDRAWAL, COLOR_FUNDS_WITHDRAWAL),
-    ]
-    left_vals = [max(Decimal("0"), rev[k]) for k, _lbl, _c in left]
-    total_left = sum(left_vals)
-    total_canton = max(Decimal("0"), canton[KEY_TOTAL])
-    total_inter = max(Decimal("0"), inter[KEY_TOTAL])
-    dotations = max(Decimal("0"), commune[KEY_DOTATIONS])
-    total_commune = max(Decimal("0"), commune[KEY_TOTAL] - dotations)
+    total_left = sum((v for _c, v, _d in revenue), Decimal("0"))
+    total_canton = sum((v for _c, v, _d in canton), Decimal("0"))
+    total_intercos = sum((v for _c, v, _d in intercos), Decimal("0"))
+    total_commune = sum((v for _c, v, _d in commune), Decimal("0"))
+    total_dotations = sum((v for _c, v, _d in dotations), Decimal("0"))
 
-    # --- build nodes (use stable keys, render labels with values)
+    # Hub-level hover: which leaf categories feed this hub, largest first -
+    # leaf-level hover (per category/link) instead lists the accounts behind it.
+    household_hover = _category_breakdown_html(revenue)
+    canton_hover = _category_breakdown_html(canton)
+    intercos_hover = _category_breakdown_html(intercos)
+    commune_hover = _category_breakdown_html(commune)
+
     idx: dict[str, int] = {}
     labels: list[str] = []
-    nodes: list[dict[str, str]] = []
+    nodes: list[dict[str, object]] = []
     node_colors: list[str] = []
-    links: list[dict[str, float]] = []
+    links: list[dict[str, float | str]] = []
     link_colors: list[str] = []
 
-    # Left revenue nodes
-    for i, (k, lbl, col) in enumerate(left):
-        _push_node(idx, labels, nodes, node_colors, k, lbl, left_vals[i], col)
+    def node_key(category: SankeyCategory) -> str:
+        return f"category-{category.pk}"
 
-    # Hubs
-    _push_node(idx, labels, nodes, node_colors, NODE_HOUSEHOLD, LABEL_HOUSEHOLD, total_left, COLOR_BUDGET)
-    _push_node(idx, labels, nodes, node_colors, NODE_CANTON, LABEL_CANTON, total_canton, COLOR_CANTON)
-    _push_node(idx, labels, nodes, node_colors, NODE_INTERCOS, LABEL_INTERCOMMUNALITIES, total_inter, COLOR_INTERCOS)
-    _push_node(idx, labels, nodes, node_colors, NODE_COMMUNE, LABEL_COMMUNE, total_commune, COLOR_COMMUNE)
+    for category, value, detail in revenue:
+        _push_node(
+            idx,
+            labels,
+            nodes,
+            node_colors,
+            node_key(category),
+            category.name,
+            value,
+            category.color,
+            detail,
+            DEPTH_REVENUE_LEAF,
+        )
 
-    # Canton leaves
-    _push_node(idx, labels, nodes, node_colors, KEY_SOCIAL, LABEL_SOCIAL, canton[KEY_SOCIAL], COLOR_CANTON_SOCIAL)
     _push_node(
         idx,
         labels,
         nodes,
         node_colors,
-        KEY_EQUALIZATION,
-        LABEL_EQUALIZATION,
-        canton[KEY_EQUALIZATION],
-        COLOR_CANTON_EQUALIZATION,
+        NODE_HOUSEHOLD,
+        LABEL_HOUSEHOLD,
+        total_left,
+        COLOR_BUDGET,
+        household_hover,
+        DEPTH_HOUSEHOLD,
     )
-    _push_node(idx, labels, nodes, node_colors, KEY_POLICE, LABEL_POLICE, canton[KEY_POLICE], COLOR_CANTON_POLICE)
-
-    # Intercos leaves
-    _push_node(idx, labels, nodes, node_colors, KEY_AISGE, LABEL_AISGE, inter[KEY_AISGE], COLOR_INTERCOS_AISGE)
-    _push_node(idx, labels, nodes, node_colors, KEY_APEC, LABEL_APEC, inter[KEY_APEC], COLOR_INTERCOS_APEC)
     _push_node(
         idx,
         labels,
         nodes,
         node_colors,
-        KEY_TRANSPORTS,
-        LABEL_TRANSPORTS,
-        inter[KEY_TRANSPORTS],
-        COLOR_INTERCOS_TRANSPORTS,
+        NODE_CANTON,
+        LABEL_CANTON,
+        total_canton,
+        COLOR_CANTON,
+        canton_hover,
+        DEPTH_HUB,
     )
-    _push_node(idx, labels, nodes, node_colors, KEY_RAT, LABEL_RAT, inter[KEY_RAT], COLOR_INTERCOS_RAT)
     _push_node(
         idx,
         labels,
         nodes,
         node_colors,
-        KEY_INTERCOS_OTHER,
-        LABEL_INTERCOS_OTHER,
-        inter[KEY_INTERCOS_OTHER],
-        COLOR_INTERCOS_OTHER,
+        NODE_INTERCOS,
+        LABEL_INTERCOMMUNALITIES,
+        total_intercos,
+        COLOR_INTERCOS,
+        intercos_hover,
+        DEPTH_HUB,
     )
-
-    # Commune leaves (without dotations — see below)
-    _push_node(idx, labels, nodes, node_colors, KEY_WAGES, LABEL_WAGES, commune[KEY_WAGES], COLOR_COMMUNE_WAGES)
-    _push_node(idx, labels, nodes, node_colors, KEY_GOODS, LABEL_GOODS, commune[KEY_GOODS], COLOR_COMMUNE_GOODS)
     _push_node(
         idx,
         labels,
         nodes,
         node_colors,
-        KEY_INTERESTS,
-        LABEL_INTERESTS,
-        commune[KEY_INTERESTS],
-        COLOR_COMMUNE_INTERESTS,
+        NODE_COMMUNE,
+        LABEL_COMMUNE,
+        total_commune,
+        COLOR_COMMUNE,
+        commune_hover,
+        DEPTH_HUB,
     )
-    _push_node(idx, labels, nodes, node_colors, KEY_AIDS, LABEL_AIDS, commune[KEY_AIDS], COLOR_COMMUNE_AIDS)
 
-    for i, (k, _lbl, col) in enumerate(left):
-        _add_link(idx, links, link_colors, k, NODE_HOUSEHOLD, left_vals[i], col)
+    for category, value, detail in [*canton, *intercos, *commune]:
+        _push_node(
+            idx,
+            labels,
+            nodes,
+            node_colors,
+            node_key(category),
+            category.name,
+            value,
+            category.color,
+            detail,
+            DEPTH_HUB_LEAF,
+        )
 
-    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_CANTON, total_canton, COLOR_BUDGET_LINKS)
-    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_INTERCOS, total_inter, COLOR_BUDGET_LINKS)
-    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_COMMUNE, total_commune, COLOR_BUDGET_LINKS)
+    for category, value, detail in revenue:
+        _add_link(idx, links, link_colors, node_key(category), NODE_HOUSEHOLD, value, category.color, detail)
 
-    _add_link(idx, links, link_colors, NODE_CANTON, KEY_SOCIAL, canton[KEY_SOCIAL], COLOR_CANTON_LINKS)
-    _add_link(idx, links, link_colors, NODE_CANTON, KEY_EQUALIZATION, canton[KEY_EQUALIZATION], COLOR_CANTON_LINKS)
-    _add_link(idx, links, link_colors, NODE_CANTON, KEY_POLICE, canton[KEY_POLICE], COLOR_CANTON_LINKS)
-
-    _add_link(idx, links, link_colors, NODE_INTERCOS, KEY_AISGE, inter[KEY_AISGE], COLOR_INTERCOS_LINKS)
-    _add_link(idx, links, link_colors, NODE_INTERCOS, KEY_APEC, inter[KEY_APEC], COLOR_INTERCOS_LINKS)
-    _add_link(idx, links, link_colors, NODE_INTERCOS, KEY_TRANSPORTS, inter[KEY_TRANSPORTS], COLOR_INTERCOS_LINKS)
-    _add_link(idx, links, link_colors, NODE_INTERCOS, KEY_RAT, inter[KEY_RAT], COLOR_INTERCOS_LINKS)
+    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_CANTON, total_canton, COLOR_BUDGET_LINKS, canton_hover)
     _add_link(
-        idx, links, link_colors, NODE_INTERCOS, KEY_INTERCOS_OTHER, inter[KEY_INTERCOS_OTHER], COLOR_INTERCOS_LINKS
+        idx, links, link_colors, NODE_HOUSEHOLD, NODE_INTERCOS, total_intercos, COLOR_BUDGET_LINKS, intercos_hover
     )
+    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_COMMUNE, total_commune, COLOR_BUDGET_LINKS, commune_hover)
 
-    _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_WAGES, commune[KEY_WAGES], COLOR_COMMUNE_LINKS)
-    _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_GOODS, commune[KEY_GOODS], COLOR_COMMUNE_LINKS)
-    _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_INTERESTS, commune[KEY_INTERESTS], COLOR_COMMUNE_LINKS)
-    _add_link(idx, links, link_colors, NODE_COMMUNE, KEY_AIDS, commune[KEY_AIDS], COLOR_COMMUNE_LINKS)
+    for category, value, detail in canton:
+        _add_link(idx, links, link_colors, NODE_CANTON, node_key(category), value, COLOR_CANTON_LINKS, detail)
+    for category, value, detail in intercos:
+        _add_link(idx, links, link_colors, NODE_INTERCOS, node_key(category), value, COLOR_INTERCOS_LINKS, detail)
+    for category, value, detail in commune:
+        _add_link(idx, links, link_colors, NODE_COMMUNE, node_key(category), value, COLOR_COMMUNE_LINKS, detail)
 
-    # --- result (cash surplus after all classified charges, before dotations)
-    total_out = total_canton + total_inter + commune[KEY_TOTAL]
+    # --- result (cash surplus/deficit after all classified flows, before dotations)
+    total_out = total_canton + total_intercos + total_commune + total_dotations
     remainder = total_left - total_out
     if abs(remainder) > MIN_VAL:
-        _push_node(idx, labels, nodes, node_colors, NODE_RESULT, LABEL_RESULT_HUB, remainder, COLOR_PROFIT)
-        _push_node(idx, labels, nodes, node_colors, KEY_PROFIT, LABEL_PROFIT, remainder, COLOR_PROFIT)
+        _push_node(
+            idx, labels, nodes, node_colors, NODE_RESULT, LABEL_RESULT_HUB, remainder, COLOR_PROFIT, "", DEPTH_HUB
+        )
+        _push_node(
+            idx, labels, nodes, node_colors, KEY_PROFIT, LABEL_PROFIT, remainder, COLOR_PROFIT, "", DEPTH_HUB_LEAF
+        )
         _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_RESULT, remainder, COLOR_BUDGET_LINKS)
         _add_link(idx, links, link_colors, NODE_RESULT, KEY_PROFIT, remainder, COLOR_PROFIT)
 
-    # Dotations go directly from Ménage communal, below the result (not a third-party payment)
-    _push_node(
-        idx,
-        labels,
-        nodes,
-        node_colors,
-        KEY_DOTATIONS,
-        LABEL_DOTATIONS,
-        dotations,
-        COLOR_COMMUNE_DOTATIONS,
-    )
-    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, KEY_DOTATIONS, dotations, COLOR_BUDGET_LINKS)
+    # Dotations go directly from Household (not a third-party payment), but
+    # stop at the hub column - like Canton/Intercos/Commune, not a leaf level.
+    for category, value, detail in dotations:
+        _push_node(
+            idx,
+            labels,
+            nodes,
+            node_colors,
+            node_key(category),
+            category.name,
+            value,
+            category.color,
+            detail,
+            DEPTH_HUB,
+        )
+        _add_link(idx, links, link_colors, NODE_HOUSEHOLD, node_key(category), value, COLOR_BUDGET_LINKS, detail)
 
     return {
-        "nodes": nodes,  # [{"name": "Label<br>CHF…"}, ...]
-        "links": links,  # [{"source": i, "target": j, "value": ...}, ...]
+        "nodes": nodes,
+        "links": links,
         "link_colors": link_colors,
         "node_colors": node_colors,
     }

@@ -5,6 +5,47 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-09-04
+
+### Added
+
+- **Sankey configuration page**: an overview, per accounting scheme, of
+  exactly how each Sankey category is built - its nature-range, function +
+  nature, exact-code and label rules - reachable from a "Réglages" button on
+  the Sankey page, pre-filtered to whichever scheme the selected year uses.
+  Every rule and category is editable in place (no more redirect to Django
+  admin), restricted to finance staff via a dedicated permission.
+- **Sankey hover breakdowns**: hovering a node or link now shows which
+  accounts or categories feed it, largest first, instead of just a total.
+- A new rule type distinguishes accounts that share the same MCH2 nature but
+  are actually paid to different bodies depending on which municipal
+  function pays - needed for intercommunal association dues (AISGE, APEC,
+  RAT...) that all share nature 3612.
+
+### Changed
+
+- Sankey branches reached directly from the household with no further
+  breakdown (dotations, result) now stop at the same column as
+  Canton/Intercommunalities/Commune, instead of being pushed all the way to
+  the diagram's rightmost column.
+- Sankey node labels for a category with nothing upstream or downstream of
+  it (a pure revenue source, or a leaf with nothing feeding out of it) are
+  now drawn beside the node instead of overlapping the flow's color.
+- The main content area now uses more of the available width on larger
+  screens.
+- Sankey page controls (year, budget toggle, exports, settings) moved into a
+  narrow left column, giving the chart itself more vertical room.
+
+### Fixed
+
+- Several buttons across the app used the secondary (yellow) accent color
+  instead of the intended primary (green) one.
+- A handful of MCH2 accounts were mapped to the wrong Sankey category
+  (UAPE and a tax-collection fee account were both misclassified as
+  unrelated categories) due to a crosswalk artifact from the MCH1 import.
+- Missing or duplicated French translations across the new Sankey
+  configuration screens.
+
 ## [1.0.0] - 2026-09-01
 
 First production release, for the municipality of Genolier.

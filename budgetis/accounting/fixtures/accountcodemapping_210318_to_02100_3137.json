@@ -1,0 +1,30 @@
+[
+{
+  "model": "accounting.accountcodemapping",
+  "pk": null,
+  "fields": {
+    "created_at": "2026-09-04T13:31:07.229Z",
+    "updated_at": "2026-09-04T13:31:07.229Z",
+    "mch1_function": "210",
+    "mch1_nature": "318",
+    "mch1_sub_account": "",
+    "mch2_function": "02100",
+    "mch2_nature": "3137",
+    "mch2_sub_account": "01"
+  }
+},
+{
+  "model": "accounting.accountcodemapping",
+  "pk": null,
+  "fields": {
+    "created_at": "2026-09-04T13:31:07.230Z",
+    "updated_at": "2026-09-04T13:31:07.230Z",
+    "mch1_function": "210",
+    "mch1_nature": "318",
+    "mch1_sub_account": "",
+    "mch2_function": "02100",
+    "mch2_nature": "3137",
+    "mch2_sub_account": "02"
+  }
+}
+]
