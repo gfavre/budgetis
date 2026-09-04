@@ -4,6 +4,8 @@ import pytest
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
 from django.contrib.messages.middleware import MessageMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.http import HttpRequest
@@ -16,6 +18,7 @@ from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
 from budgetis.accounting.tests.factories import GroupResponsibilityFactory
 from budgetis.users.forms import UserAdminChangeForm
+from budgetis.users.models import BOURSE_GROUP_NAME
 from budgetis.users.models import User
 from budgetis.users.tests.factories import UserFactory
 from budgetis.users.views import UserRedirectView
@@ -24,6 +27,15 @@ from budgetis.users.views import user_detail_view
 
 
 pytestmark = pytest.mark.django_db
+
+
+def _grant(user, codename, app_label):
+    permission = Permission.objects.get(codename=codename, content_type__app_label=app_label)
+    user.user_permissions.add(permission)
+
+
+def _management_url():
+    return reverse("users:management")
 
 
 class TestUserUpdateView:
@@ -200,3 +212,104 @@ class TestUserDetailView:
         assert "#group-720" in html
         assert reverse("accounting:account-explorer") in html
         assert reverse("accounting:budget-explorer") in html
+
+
+class TestUserManagementView:
+    def test_anonymous_user_is_redirected_to_login(self, client):
+        response = client.get(_management_url())
+
+        login_url = reverse(settings.LOGIN_URL)
+        assert response.status_code == HTTPStatus.FOUND
+        assert response.url == f"{login_url}?next={_management_url()}"
+
+    def test_user_with_neither_permission_gets_forbidden(self, client, user: User):
+        client.force_login(user)
+
+        response = client.get(_management_url())
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+
+    def test_user_with_only_invite_permission_sees_only_that_section(self, client, user: User):
+        _grant(user, "add_user", "users")
+        client.force_login(user)
+
+        response = client.get(_management_url())
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["can_invite"] is True
+        assert response.context["can_nominate"] is False
+
+    def test_user_with_only_nominate_permission_sees_only_that_section(self, client, user: User):
+        _grant(user, "change_group", "auth")
+        client.force_login(user)
+
+        response = client.get(_management_url())
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["can_invite"] is False
+        assert response.context["can_nominate"] is True
+
+    def test_invite_creates_a_user(self, client, user: User):
+        _grant(user, "add_user", "users")
+        client.force_login(user)
+
+        response = client.post(
+            _management_url(),
+            {
+                "invite_submit": "1",
+                "email": "future@example.com",
+                "name": "Future Municipal",
+                "trigram": "FUT",
+            },
+        )
+
+        assert response.status_code == HTTPStatus.FOUND
+        assert User.objects.filter(email="future@example.com").exists()
+
+    def test_invite_without_permission_is_forbidden_and_does_not_create_a_user(self, client, user: User):
+        _grant(user, "change_group", "auth")
+        client.force_login(user)
+
+        response = client.post(
+            _management_url(),
+            {
+                "invite_submit": "1",
+                "email": "future@example.com",
+                "name": "Future Municipal",
+                "trigram": "FUT",
+            },
+        )
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        assert not User.objects.filter(email="future@example.com").exists()
+
+    def test_nominate_adds_an_existing_user_to_the_bourse_group(self, client, user: User):
+        _grant(user, "change_group", "auth")
+        client.force_login(user)
+        candidate = UserFactory()
+
+        response = client.post(_management_url(), {"nominate_submit": "1", "user": candidate.pk})
+
+        assert response.status_code == HTTPStatus.FOUND
+        assert candidate.groups.filter(name=BOURSE_GROUP_NAME).exists()
+
+    def test_nominate_without_permission_is_forbidden_and_does_not_change_groups(self, client, user: User):
+        _grant(user, "add_user", "users")
+        client.force_login(user)
+        candidate = UserFactory()
+
+        response = client.post(_management_url(), {"nominate_submit": "1", "user": candidate.pk})
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        assert not candidate.groups.filter(name=BOURSE_GROUP_NAME).exists()
+
+    def test_bourse_members_are_listed(self, client, user: User):
+        _grant(user, "change_group", "auth")
+        client.force_login(user)
+        bourse = Group.objects.create(name=BOURSE_GROUP_NAME)
+        member = UserFactory(name="Existing Member")
+        member.groups.add(bourse)
+
+        response = client.get(_management_url())
+
+        assert member in response.context["bourse_members"]

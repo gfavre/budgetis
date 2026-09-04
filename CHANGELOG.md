@@ -5,6 +5,17 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-09-04
+
+### Added
+
+- **User management page**: a new "Users" page (linked from the nav bar)
+  lets an admin invite a future municipal officer or finance staff member
+  by email - no Django-admin access required, and the created account can
+  never be an admin itself. Any current member of the "Bourse" permission
+  group can also nominate an existing user into that group themselves,
+  without needing an admin - a self-service co-optation flow.
+
 ## [1.2.0] - 2026-09-04
 
 ### Added

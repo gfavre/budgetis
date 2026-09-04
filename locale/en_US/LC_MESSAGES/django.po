@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 17:54+0200\n"
+"POT-Creation-Date: 2026-09-04 18:34+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1051,7 +1051,7 @@ msgstr ""
 
 #: budgetis/core/templates/core/home_public.html:71
 #: budgetis/templates/allauth/layouts/entrance.html:13
-#: budgetis/templates/base.html:241
+#: budgetis/templates/base.html:250
 msgid "Sign In"
 msgstr ""
 
@@ -1207,6 +1207,7 @@ msgid "No rule for this scheme yet."
 msgstr ""
 
 #: budgetis/finance/templates/finance/partials/sankey_rule_form.html:6
+#: budgetis/templates/users/user_management.html:37
 msgid "Add"
 msgstr ""
 
@@ -1283,11 +1284,15 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: budgetis/templates/base.html:229
+#: budgetis/templates/base.html:230 budgetis/users/apps.py:9
+msgid "Users"
+msgstr ""
+
+#: budgetis/templates/base.html:238
 msgid "My Profile"
 msgstr ""
 
-#: budgetis/templates/base.html:235
+#: budgetis/templates/base.html:244
 msgid "Sign Out"
 msgstr ""
 
@@ -1323,6 +1328,38 @@ msgstr ""
 msgid "No responsibilities assigned."
 msgstr ""
 
+#: budgetis/templates/users/user_management.html:6
+#: budgetis/templates/users/user_management.html:9
+msgid "User management"
+msgstr ""
+
+#: budgetis/templates/users/user_management.html:14
+msgid "Invite a user"
+msgstr ""
+
+#: budgetis/templates/users/user_management.html:17
+msgid ""
+"Creates an account for a future municipal officer or finance staff member. "
+"They will sign in with their Microsoft account."
+msgstr ""
+
+#: budgetis/templates/users/user_management.html:22
+msgid "Invite"
+msgstr ""
+
+#: budgetis/templates/users/user_management.html:31
+msgid "Add to the Bourse"
+msgstr ""
+
+#: budgetis/templates/users/user_management.html:33
+msgid ""
+"Grants an existing user access to budget editing and Sankey configuration."
+msgstr ""
+
+#: budgetis/templates/users/user_management.html:41
+msgid "Current members"
+msgstr ""
+
 #: budgetis/users/adapters.py:71
 msgid "This account has been disabled."
 msgstr ""
@@ -1343,42 +1380,60 @@ msgstr ""
 msgid "Important dates"
 msgstr ""
 
-#: budgetis/users/apps.py:9
-msgid "Users"
-msgstr ""
-
-#: budgetis/users/forms.py:25
+#: budgetis/users/forms.py:29
 msgid "Password"
 msgstr ""
 
-#: budgetis/users/forms.py:30
+#: budgetis/users/forms.py:34
 msgid "Password confirmation"
 msgstr ""
 
-#: budgetis/users/forms.py:49
+#: budgetis/users/forms.py:53
 msgid "Password is required for admins."
 msgstr ""
 
-#: budgetis/users/forms.py:51
+#: budgetis/users/forms.py:55
 msgid "Passwords don't match."
 msgstr ""
 
-#: budgetis/users/models.py:22
+#: budgetis/users/forms.py:79
+msgid "Add to the Bourse group"
+msgstr ""
+
+#: budgetis/users/forms.py:81
+msgid "Grants access to budget editing and Sankey configuration."
+msgstr ""
+
+#: budgetis/users/forms.py:103
+msgid "User"
+msgstr ""
+
+#: budgetis/users/models.py:29
 msgid "Name of User"
 msgstr ""
 
-#: budgetis/users/models.py:26
+#: budgetis/users/models.py:33
 msgid "email address"
 msgstr ""
 
-#: budgetis/users/models.py:28 budgetis/users/tests/test_forms.py:35
+#: budgetis/users/models.py:35 budgetis/users/tests/test_forms.py:41
 msgid "This email has already been taken."
 msgstr ""
 
-#: budgetis/users/models.py:33
+#: budgetis/users/models.py:40
 msgid "Trigram"
 msgstr ""
 
-#: budgetis/users/tests/test_views.py:76 budgetis/users/views.py:61
+#: budgetis/users/tests/test_views.py:88 budgetis/users/views.py:73
 msgid "Information successfully updated"
+msgstr ""
+
+#: budgetis/users/views.py:133
+#, python-format
+msgid "%(email)s has been invited."
+msgstr ""
+
+#: budgetis/users/views.py:143
+#, python-format
+msgid "%(user)s is now part of the Bourse."
 msgstr ""

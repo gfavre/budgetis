@@ -1,10 +1,14 @@
+from typing import cast
+
 from allauth.account.forms import SignupForm
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django import forms
 from django.contrib.auth import forms as admin_forms
+from django.contrib.auth.models import Group
 from django.forms import EmailField
 from django.utils.translation import gettext_lazy as _
 
+from .models import BOURSE_GROUP_NAME
 from .models import User
 
 
@@ -60,6 +64,61 @@ class UserAdminCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class UserInviteForm(forms.ModelForm):
+    """
+    Creates a new account for someone who hasn't signed in yet - no password
+    field: sign-in is Microsoft SSO only (see MunicipalSocialAccountAdapter),
+    and the account activates itself the first time that email logs in
+    there. `is_staff`/`is_superuser` are deliberately not exposed here (only
+    via Django admin) - an account created this way can never be an admin.
+    """
+
+    add_to_bourse = forms.BooleanField(
+        label=_("Add to the Bourse group"),
+        required=False,
+        help_text=_("Grants access to budget editing and Sankey configuration."),
+    )
+
+    class Meta:
+        model = User
+        fields = ("email", "name", "trigram", "is_municipal")
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_unusable_password()
+        if commit:
+            user.save()
+            if self.cleaned_data["add_to_bourse"]:
+                bourse, _created = Group.objects.get_or_create(name=BOURSE_GROUP_NAME)
+                user.groups.add(bourse)
+        return user
+
+
+class BourseNominationForm(forms.Form):
+    """Adds an existing user to the Bourse group - see BOURSE_GROUP_NAME."""
+
+    user = forms.ModelChoiceField(
+        label=_("User"),
+        queryset=User.objects.none(),  # set in __init__, needs the DB
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        queryset = (
+            User.objects.filter(is_active=True).exclude(groups__name=BOURSE_GROUP_NAME).order_by("name", "email")
+        )
+        field = cast("forms.ModelChoiceField", self.fields["user"])
+        field.queryset = queryset
+        # Not `= str` directly: django-stubs types label_from_instance as a
+        # bound method, so mypy flags a plain callable reassignment
+        # (method-assign) unless it's wrapped in a lambda.
+        field.label_from_instance = lambda obj: str(obj)  # noqa: PLW0108
+
+    def save(self):
+        bourse, _created = Group.objects.get_or_create(name=BOURSE_GROUP_NAME)
+        self.cleaned_data["user"].groups.add(bourse)
 
 
 class UserProfileForm(forms.ModelForm):

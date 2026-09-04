@@ -222,6 +222,15 @@
                       {% translate "Admin" %}</a>
                     </li>
                   {% endif %}
+                  {% if perms.users.add_user or perms.auth.change_group %}
+                    <li class="nav-item">
+                      <a class="nav-link {% navactive 'users:management' %}"
+                         href="{% url 'users:management' %}">
+                        <i class="bi bi-people me-1"></i>
+                        {% translate "Users" %}
+                      </a>
+                    </li>
+                  {% endif %}
                   <li class="nav-item">
                     <a class="nav-link k {% navactive 'users:detail' %}"
                        href="{% url 'users:detail' request.user.pk %}">

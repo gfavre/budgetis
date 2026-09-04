@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags i18n %}
+
+{% block title %}
+  {% trans "User management" %}
+{% endblock title %}
+{% block content %}
+  <h1>{% trans "User management" %}</h1>
+  <div class="row">
+    {% if can_invite %}
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <div class="card-header">{% trans "Invite a user" %}</div>
+          <div class="card-body">
+            <p class="text-muted">
+              {% trans "Creates an account for a future municipal officer or finance staff member. They will sign in with their Microsoft account." %}
+            </p>
+            <form method="post" action="{% url 'users:management' %}">
+              {% csrf_token %}
+              {{ invite_form|crispy }}
+              <button type="submit" name="invite_submit" class="btn btn-primary">{% trans "Invite" %}</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    {% if can_nominate %}
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <div class="card-header">{% trans "Add to the Bourse" %}</div>
+          <div class="card-body">
+            <p class="text-muted">{% trans "Grants an existing user access to budget editing and Sankey configuration." %}</p>
+            <form method="post" action="{% url 'users:management' %}">
+              {% csrf_token %}
+              {{ nomination_form|crispy }}
+              <button type="submit" name="nominate_submit" class="btn btn-primary">{% trans "Add" %}</button>
+            </form>
+            {% if bourse_members %}
+              <hr />
+              <h6>{% trans "Current members" %}</h6>
+              <ul class="list-unstyled mb-0">
+                {% for member in bourse_members %}<li>{{ member }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock content %}

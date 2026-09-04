@@ -1,18 +1,30 @@
 from collections import defaultdict
 
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import PermissionDenied
 from django.db.models import Max
 from django.db.models import QuerySet
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
 from django.views.generic import RedirectView
+from django.views.generic import TemplateView
 from django.views.generic import UpdateView
 
 from budgetis.accounting.models import Account
+from budgetis.users.forms import BourseNominationForm
+from budgetis.users.forms import UserInviteForm
 from budgetis.users.forms import UserProfileForm
+from budgetis.users.models import BOURSE_GROUP_NAME
 from budgetis.users.models import User
+
+
+INVITE_PERMISSION = "users.add_user"
+NOMINATE_PERMISSION = "auth.change_group"
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
@@ -80,3 +92,57 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 user_redirect_view = UserRedirectView.as_view()
+
+
+class UserManagementView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    """
+    Combines two independently permission-gated actions on one page: inviting
+    new accounts (admin-only, `users.add_user`) and nominating existing users
+    into the Bourse group (any current Bourse member, `auth.change_group`).
+    """
+
+    template_name = "users/user_management.html"
+    permission_required = (INVITE_PERMISSION, NOMINATE_PERMISSION)
+
+    def has_permission(self):
+        perms = self.get_permission_required()
+        return any(self.request.user.has_perm(perm) for perm in perms)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["can_invite"] = self.request.user.has_perm(INVITE_PERMISSION)
+        context["can_nominate"] = self.request.user.has_perm(NOMINATE_PERMISSION)
+        context.setdefault("invite_form", UserInviteForm())
+        context.setdefault("nomination_form", BourseNominationForm())
+        context["bourse_members"] = User.objects.filter(groups__name=BOURSE_GROUP_NAME).order_by("name", "email")
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if "invite_submit" in request.POST:
+            return self._handle_invite(request)
+        if "nominate_submit" in request.POST:
+            return self._handle_nomination(request)
+        raise PermissionDenied
+
+    def _handle_invite(self, request):
+        if not request.user.has_perm(INVITE_PERMISSION):
+            raise PermissionDenied
+        form = UserInviteForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, _("%(email)s has been invited.") % {"email": user.email})
+            return redirect("users:management")
+        return self.render_to_response(self.get_context_data(invite_form=form))
+
+    def _handle_nomination(self, request):
+        if not request.user.has_perm(NOMINATE_PERMISSION):
+            raise PermissionDenied
+        form = BourseNominationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _("%(user)s is now part of the Bourse.") % {"user": form.cleaned_data["user"]})
+            return redirect("users:management")
+        return self.render_to_response(self.get_context_data(nomination_form=form))
+
+
+user_management_view = UserManagementView.as_view()

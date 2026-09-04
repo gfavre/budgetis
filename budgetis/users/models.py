@@ -11,6 +11,13 @@ from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
 
 
+# The auth.Group name for finance staff (see budgetis/users/fixtures/group_bourse.json)
+# - bundles budget-editing and Sankey-configuration permissions, plus
+# auth.change_group itself, which is what lets an existing Bourse member
+# nominate another user into the group (see forms.BourseNominationForm).
+BOURSE_GROUP_NAME = "Bourse"
+
+
 class User(AbstractUser):
     """
     Default custom user model for Budgetis.
