@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from budgetis.finance.tests.factories import SankeyAccountCodeRuleFactory
 from budgetis.finance.tests.factories import SankeyCategoryFactory
+from budgetis.finance.tests.factories import SankeyFunctionNatureRuleFactory
 from budgetis.finance.tests.factories import SankeyLabelRuleFactory
 from budgetis.finance.tests.factories import SankeyNatureRangeRuleFactory
 
@@ -23,6 +24,13 @@ class TestSankeyNatureRangeRuleAdmin:
     def test_changelist(self, admin_client):
         SankeyNatureRangeRuleFactory()
         response = admin_client.get(reverse("admin:finance_sankeynaturerangerule_changelist"))
+        assert response.status_code == HTTPStatus.OK
+
+
+class TestSankeyFunctionNatureRuleAdmin:
+    def test_changelist(self, admin_client):
+        SankeyFunctionNatureRuleFactory()
+        response = admin_client.get(reverse("admin:finance_sankeyfunctionnaturerule_changelist"))
         assert response.status_code == HTTPStatus.OK
 
 

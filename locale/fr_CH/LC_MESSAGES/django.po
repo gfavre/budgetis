@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-03 14:34+0200\n"
+"POT-Creation-Date: 2026-09-04 06:42+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -51,8 +51,8 @@ msgstr "Comptabilité"
 #: budgetis/accounting/forms.py:35 budgetis/accounting/forms.py:80
 #: budgetis/accounting/models.py:204 budgetis/bdi_import/forms.py:16
 #: budgetis/bdi_import/models.py:26
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:135
-#: budgetis/finance/models.py:12
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:156
+#: budgetis/finance/models.py:13
 #: budgetis/finance/templates/finance/sankey.html:12
 msgid "Year"
 msgstr "Année"
@@ -153,15 +153,16 @@ msgid "Both charges and revenues"
 msgstr "Charges et produits"
 
 #: budgetis/accounting/models.py:205 budgetis/bdi_import/models.py:79
+#: budgetis/finance/models.py:96
 msgid "Function"
 msgstr "Fonction"
 
 #: budgetis/accounting/models.py:206 budgetis/bdi_import/forms.py:18
-#: budgetis/bdi_import/models.py:80
+#: budgetis/bdi_import/models.py:80 budgetis/finance/models.py:97
 msgid "Nature"
 msgstr "Nature"
 
-#: budgetis/accounting/models.py:207
+#: budgetis/accounting/models.py:207 budgetis/finance/models.py:101
 msgid "Subaccount"
 msgstr "Sous-compte"
 
@@ -174,7 +175,7 @@ msgid "Group"
 msgstr "Groupe"
 
 #: budgetis/accounting/models.py:214 budgetis/bdi_import/models.py:32
-#: budgetis/finance/models.py:15
+#: budgetis/finance/models.py:16
 msgid "Scheme"
 msgstr ""
 
@@ -404,8 +405,8 @@ msgstr "Commentaires"
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:119
 #: budgetis/accounting/templates/accounting/partials/account_history_modal.html:160
 #: budgetis/bdi_import/models.py:72
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:143
-#: budgetis/core/templates/core/home.html:169 budgetis/finance/models.py:9
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:164
+#: budgetis/core/templates/core/home.html:169 budgetis/finance/models.py:10
 #: budgetis/finance/templates/finance/sankey.html:21
 #: budgetis/templates/base.html:139
 msgid "Budget"
@@ -643,7 +644,7 @@ msgid "Chart of accounts"
 msgstr "Plan comptable"
 
 #: budgetis/bdi_import/forms.py:28
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:152
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:173
 msgid "Copy settings from"
 msgstr "Copier les paramètres de"
 
@@ -654,7 +655,7 @@ msgstr ""
 "paramètres (le cas échéant)."
 
 #: budgetis/bdi_import/forms.py:33 budgetis/bdi_import/models.py:61
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:156
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:177
 msgid "Copy responsibles"
 msgstr "Copier les responsables"
 
@@ -663,12 +664,12 @@ msgid "Copy account labels"
 msgstr "Copier les libellés de comptes"
 
 #: budgetis/bdi_import/forms.py:35 budgetis/bdi_import/models.py:63
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:164
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:185
 msgid "Copy visibility"
 msgstr "Copier la visibilité"
 
 #: budgetis/bdi_import/forms.py:36 budgetis/bdi_import/models.py:64
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:168
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:189
 msgid "Copy comments"
 msgstr "Copier les commentaires"
 
@@ -765,7 +766,7 @@ msgid "Source year"
 msgstr "Année source"
 
 #: budgetis/bdi_import/models.py:62
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:160
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:181
 msgid "Copy labels"
 msgstr "Copier les libellés"
 
@@ -778,7 +779,7 @@ msgid "Account import logs"
 msgstr "Journaux d'importation de comptes"
 
 #: budgetis/bdi_import/models.py:72
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:145
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:166
 msgid "Actual"
 msgstr "Compte"
 
@@ -791,7 +792,7 @@ msgid "Sub account"
 msgstr "Sous-compte"
 
 #: budgetis/bdi_import/models.py:82
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:224
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:245
 #: budgetis/bdi_import/views.py:137
 msgid "Account label"
 msgstr "Libellé"
@@ -828,7 +829,7 @@ msgstr ""
 "déduire les charges/recettes."
 
 #: budgetis/bdi_import/models.py:112
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:179
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:200
 msgid "Column mapping"
 msgstr "Correspondances des colonnes"
 
@@ -848,58 +849,60 @@ msgstr "L'importation a échoué : "
 msgid "Unexpected error: "
 msgstr "Erreur inattendue : "
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:130
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:151
 #, python-format
 msgid "Map columns to fields for %(logname)s"
 msgstr "Associer les colonnes aux champs pour %(logname)s"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:132
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:153
 msgid "Import Settings"
 msgstr "Paramètres d'importation"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:139
-#: budgetis/finance/models.py:13
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:160
+#: budgetis/finance/models.py:14
 msgid "Type"
 msgstr "Type"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:173
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:194
 msgid "Edit import settings"
 msgstr "Modifier les paramètres d'importation"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:184
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:205
 msgid "Source column"
 msgstr "Colonne source"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:185
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:206
 msgid "Sample values"
 msgstr "Exemples de valeurs"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:186
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:207
 msgid "Field"
 msgstr "Champ"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:198
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:219
 msgid "No data"
 msgstr "Aucune donnée"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:206
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:227
 msgid "Ignore"
 msgstr "Ignorer"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:222
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:243
 msgid "Account code, or the three MCH2 columns (Function, Nature, Sub account)"
-msgstr "Le code du compte, ou les trois colonnes MCH2 (Fonction, Nature, Sous-compte)"
-"Le code du compte, ou les trois colonnes MCH2 (Fonction, Nature, Sous-compte)"
+msgstr ""
+"Le code du compte, ou les trois colonnes MCH2 (Fonction, Nature, Sous-"
+"compte)Le code du compte, ou les trois colonnes MCH2 (Fonction, Nature, Sous-"
+"compte)"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:226
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:247
 msgid "Signed total, or both Charges and Revenues"
 msgstr "Le montant signé, ou les charges et les produits"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:230
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:251
 msgid "Still needed:"
 msgstr "Encore nécessaire :"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:234
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:256
 msgid ""
 "Mapping a column to 'Total (signed)' always derives charges/revenues from "
 "its sign - positive is a charge, negative is a revenue."
@@ -907,11 +910,11 @@ msgstr ""
 "Associer une colonne à « Total (signé) » en déduit toujours les charges et "
 "produits selon son signe - positif pour une charge, négatif pour un produit."
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:237
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:261
 msgid "Launch Import"
 msgstr "Lancer l'importation"
 
-#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:241
+#: budgetis/bdi_import/templates/bdi_import/account_mapping.html:264
 msgid "Data preview"
 msgstr "Aperçu des données"
 
@@ -1060,125 +1063,130 @@ msgstr ""
 msgid "Sign In"
 msgstr "S'identifier"
 
-#: budgetis/finance/builders.py:120
+#: budgetis/finance/builders.py:48
 msgid "Municipal household"
 msgstr "Ménage communal"
 
-#: budgetis/finance/builders.py:121
+#: budgetis/finance/builders.py:49 budgetis/finance/models.py:34
 msgid "Canton"
 msgstr "Canton"
 
-#: budgetis/finance/builders.py:122
+#: budgetis/finance/builders.py:50
 msgid "Intercommunalities"
 msgstr "Intercommunalités"
 
-#: budgetis/finance/builders.py:123
+#: budgetis/finance/builders.py:51 budgetis/finance/models.py:36
 msgid "Commune"
 msgstr "Commune"
 
-#: budgetis/finance/builders.py:125
-msgid "Social security"
-msgstr "Sécurité sociale"
-
-#: budgetis/finance/builders.py:126
-msgid "Equalization"
-msgstr "Péréquation"
-
-#: budgetis/finance/builders.py:127
-msgid "Police"
-msgstr "Police"
-
-#: budgetis/finance/builders.py:131
-msgid "Regional transports"
-msgstr "Transports régionaux"
-
-#: budgetis/finance/builders.py:133
-msgid "Associations"
-msgstr "Associations"
-
-#: budgetis/finance/builders.py:134
-msgid "Other intercommunalities"
-msgstr "Autres intercommunalités"
-
-#: budgetis/finance/builders.py:136
-msgid "Wages"
-msgstr "Salaires"
-
-#: budgetis/finance/builders.py:137
-msgid "Goods and services"
-msgstr "Biens et services"
-
-#: budgetis/finance/builders.py:138
-msgid "Interests"
-msgstr "Intérêts"
-
-#: budgetis/finance/builders.py:139
-msgid "Aids and subsidies"
-msgstr "Aides et subventions"
-
-#: budgetis/finance/builders.py:140
-msgid "Depreciation & allocations"
-msgstr "Amortissements et attributions"
-
-#: budgetis/finance/builders.py:142
-msgid "Taxes (general)"
-msgstr "Impôts"
-
-#: budgetis/finance/builders.py:143
-msgid "Random taxes"
-msgstr "Impôts aléatoires"
-
-#: budgetis/finance/builders.py:144
-msgid "Levies (usage-based)"
-msgstr "Taxes"
-
-#: budgetis/finance/builders.py:145
-msgid "Rentals"
-msgstr "Locations"
-
-#: budgetis/finance/builders.py:146
-msgid "Other revenues"
-msgstr "Autres recettes"
-
-#: budgetis/finance/builders.py:147
-msgid "Fund withdrawals"
-msgstr ""
-
-#: budgetis/finance/builders.py:149
-msgid "Cash result"
-msgstr "Résultat de trésorerie"
-
-#: budgetis/finance/builders.py:150
+#: budgetis/finance/builders.py:52
 msgid "Result"
 msgstr "Résultat"
 
-#: budgetis/finance/builders.py:151
-msgid "Amortizations"
-msgstr "Amortissements"
-
-#: budgetis/finance/builders.py:152
-msgid "Fund allocations"
-msgstr "Affectation des fonds"
-
-#: budgetis/finance/builders.py:153
+#: budgetis/finance/builders.py:53
 msgid "Profit"
 msgstr "Bénéfice"
 
-#: budgetis/finance/models.py:10
+#: budgetis/finance/builders.py:54
+msgid "Loss"
+msgstr ""
+
+#: budgetis/finance/builders.py:178
+#, python-format
+msgid "+ %(count)d more"
+msgstr "+ %(count)d autres"
+
+#: budgetis/finance/models.py:11
 msgid "Comptes"
 msgstr "Comptes"
 
-#: budgetis/finance/models.py:17
+#: budgetis/finance/models.py:18
 msgid "Created at"
 msgstr "Créé à"
 
-#: budgetis/finance/models.py:20
+#: budgetis/finance/models.py:21
 msgid "Available year"
 msgstr "Année disponible"
 
-#: budgetis/finance/models.py:21
+#: budgetis/finance/models.py:22
 msgid "Available years"
 msgstr "Années disponibles"
+
+#: budgetis/finance/models.py:33
+#, fuzzy
+#| msgid "Revenues"
+msgid "Revenue"
+msgstr "Produits"
+
+#: budgetis/finance/models.py:35
+#, fuzzy
+#| msgid "Intercommunalities"
+msgid "Intercommunality"
+msgstr "Intercommunalités"
+
+#: budgetis/finance/models.py:37
+#, fuzzy
+#| msgid "Amortizations"
+msgid "Dotation"
+msgstr "Amortissements"
+
+#: budgetis/finance/models.py:54
+msgid "Sankey category"
+msgstr ""
+
+#: budgetis/finance/models.py:55
+msgid "Sankey categories"
+msgstr ""
+
+#: budgetis/finance/models.py:70
+#, fuzzy
+#| msgid "By nature"
+msgid "From nature"
+msgstr "Par nature"
+
+#: budgetis/finance/models.py:71
+#, fuzzy
+#| msgid "By nature"
+msgid "To nature"
+msgstr "Par nature"
+
+#: budgetis/finance/models.py:77
+msgid "Sankey nature range rule"
+msgstr ""
+
+#: budgetis/finance/models.py:78
+msgid "Sankey nature range rules"
+msgstr ""
+
+#: budgetis/finance/models.py:102
+msgid "Leave blank to match any subaccount under this function/nature."
+msgstr ""
+
+#: budgetis/finance/models.py:109
+#, fuzzy
+#| msgid "Account code"
+msgid "Sankey account code rule"
+msgstr "Code du compte"
+
+#: budgetis/finance/models.py:110
+msgid "Sankey account code rules"
+msgstr ""
+
+#: budgetis/finance/models.py:129
+msgid "Label contains"
+msgstr ""
+
+#: budgetis/finance/models.py:129
+msgid "Case-insensitive substring match."
+msgstr ""
+
+#: budgetis/finance/models.py:135
+msgid "Sankey label rule"
+msgstr ""
+
+#: budgetis/finance/models.py:136
+msgid "Sankey label rules"
+msgstr ""
 
 #: budgetis/finance/templates/finance/sankey.html:28
 msgid "Données non disponibles."
@@ -1292,3 +1300,57 @@ msgstr "Cette adresse e-mail est déjà utilisée."
 #: budgetis/users/tests/test_views.py:76 budgetis/users/views.py:61
 msgid "Information successfully updated"
 msgstr "Informations mises à jour avec succès"
+
+#~ msgid "Social security"
+#~ msgstr "Sécurité sociale"
+
+#~ msgid "Equalization"
+#~ msgstr "Péréquation"
+
+#~ msgid "Police"
+#~ msgstr "Police"
+
+#~ msgid "Regional transports"
+#~ msgstr "Transports régionaux"
+
+#~ msgid "Associations"
+#~ msgstr "Associations"
+
+#~ msgid "Other intercommunalities"
+#~ msgstr "Autres intercommunalités"
+
+#~ msgid "Wages"
+#~ msgstr "Salaires"
+
+#~ msgid "Goods and services"
+#~ msgstr "Biens et services"
+
+#~ msgid "Interests"
+#~ msgstr "Intérêts"
+
+#~ msgid "Aids and subsidies"
+#~ msgstr "Aides et subventions"
+
+#~ msgid "Depreciation & allocations"
+#~ msgstr "Amortissements et attributions"
+
+#~ msgid "Taxes (general)"
+#~ msgstr "Impôts"
+
+#~ msgid "Random taxes"
+#~ msgstr "Impôts aléatoires"
+
+#~ msgid "Levies (usage-based)"
+#~ msgstr "Taxes"
+
+#~ msgid "Rentals"
+#~ msgstr "Locations"
+
+#~ msgid "Other revenues"
+#~ msgstr "Autres recettes"
+
+#~ msgid "Cash result"
+#~ msgstr "Résultat de trésorerie"
+
+#~ msgid "Fund allocations"
+#~ msgstr "Affectation des fonds"

@@ -9,6 +9,7 @@ from budgetis.finance.rules import SankeyRuleResolver
 from budgetis.finance.rules import aggregate_by_category
 from budgetis.finance.tests.factories import SankeyAccountCodeRuleFactory
 from budgetis.finance.tests.factories import SankeyCategoryFactory
+from budgetis.finance.tests.factories import SankeyFunctionNatureRuleFactory
 from budgetis.finance.tests.factories import SankeyLabelRuleFactory
 from budgetis.finance.tests.factories import SankeyNatureRangeRuleFactory
 
@@ -41,6 +42,63 @@ class TestSankeyRuleResolver:
         resolver = SankeyRuleResolver(ChartScheme.MCH1)
 
         assert resolver.category_for(account) == code_category
+
+    def test_exact_code_rule_beats_function_nature_rule(self):
+        code_category = SankeyCategoryFactory()
+        function_nature_category = SankeyCategoryFactory()
+        SankeyAccountCodeRuleFactory(scheme=ChartScheme.MCH2, function="90000", nature="9000", category=code_category)
+        SankeyFunctionNatureRuleFactory(
+            scheme=ChartScheme.MCH2,
+            function_prefix="900",
+            nature_start=9000,
+            nature_end=9000,
+            category=function_nature_category,
+        )
+        account = AccountFactory.build(function="90000", nature="9000", sub_account="")
+
+        resolver = SankeyRuleResolver(ChartScheme.MCH2)
+
+        assert resolver.category_for(account) == code_category
+
+    def test_function_nature_rule_beats_label_and_range_rules(self):
+        function_nature_category = SankeyCategoryFactory()
+        label_category = SankeyCategoryFactory()
+        range_category = SankeyCategoryFactory()
+        SankeyFunctionNatureRuleFactory(
+            scheme=ChartScheme.MCH2,
+            function_prefix="900",
+            nature_start=9000,
+            nature_end=9000,
+            category=function_nature_category,
+        )
+        SankeyLabelRuleFactory(scheme=ChartScheme.MCH2, pattern="quelconque", category=label_category)
+        SankeyNatureRangeRuleFactory(
+            scheme=ChartScheme.MCH2, nature_start=9000, nature_end=9099, category=range_category
+        )
+        account = AccountFactory.build(function="90000", nature="9000", label="Autre chose quelconque")
+
+        resolver = SankeyRuleResolver(ChartScheme.MCH2)
+
+        assert resolver.category_for(account) == function_nature_category
+
+    def test_function_nature_rule_requires_matching_function_prefix(self):
+        function_nature_category = SankeyCategoryFactory()
+        range_category = SankeyCategoryFactory()
+        SankeyFunctionNatureRuleFactory(
+            scheme=ChartScheme.MCH2,
+            function_prefix="900",
+            nature_start=9000,
+            nature_end=9000,
+            category=function_nature_category,
+        )
+        SankeyNatureRangeRuleFactory(
+            scheme=ChartScheme.MCH2, nature_start=9000, nature_end=9099, category=range_category
+        )
+        account = AccountFactory.build(function="91000", nature="9000")
+
+        resolver = SankeyRuleResolver(ChartScheme.MCH2)
+
+        assert resolver.category_for(account) == range_category
 
     def test_label_rule_beats_range_rule(self):
         label_category = SankeyCategoryFactory()

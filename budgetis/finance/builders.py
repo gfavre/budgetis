@@ -5,7 +5,10 @@ from decimal import Decimal
 from decimal import InvalidOperation
 from typing import TYPE_CHECKING
 
+from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
+
+from budgetis.accounting.templatetags.money import format_money
 
 from .models import SankeyCategory
 from .models import SankeyFlow
@@ -17,11 +20,15 @@ if TYPE_CHECKING:
 
     from budgetis.accounting.models import Account
 
+# A resolved leaf category with its amount and pre-rendered hover breakdown.
+CategoryEntry = tuple[SankeyCategory, Decimal, str]
+
 # ----- Constants -------------------------------------------------------------
 # Only the diagram's fixed structure (the four hubs, and the result/profit/loss
 # handling) stays as code. Every leaf category (Salaires, AISGE, Péréquation...)
 # is now data - see SankeyCategory and its rule models.
 MIN_VAL = 0.5
+MAX_BREAKDOWN_LINES = 15
 
 COLOR_BUDGET = "#555555"
 COLOR_BUDGET_LINKS = "#888888"
@@ -149,6 +156,35 @@ def _node_label(label: str, val: Decimal) -> str:
     return f"<sub>{label}</sub><br>{_fmt_chf_short(val)}" if val > 0 else label
 
 
+def _account_code(account: Account) -> str:
+    code = f"{account.function}.{account.nature}"
+    if account.sub_account:
+        code += f".{account.sub_account}"
+    return code
+
+
+def _account_breakdown_html(accounts: list[Account], field: str) -> str:
+    """Hover text listing which accounts feed a leaf category, largest first."""
+    rows = [(account, getattr(account, field) or Decimal("0")) for account in accounts]
+    rows = [(account, amount) for account, amount in rows if amount]
+    rows.sort(key=lambda row: row[1], reverse=True)
+
+    lines = [
+        f"{_account_code(account)} {account.label} : CHF {format_money(amount)}"
+        for account, amount in rows[:MAX_BREAKDOWN_LINES]
+    ]
+    hidden_count = len(rows) - MAX_BREAKDOWN_LINES
+    if hidden_count > 0:
+        lines.append(gettext("+ %(count)d more") % {"count": hidden_count})
+    return "<br>".join(lines)
+
+
+def _category_breakdown_html(entries: list[CategoryEntry]) -> str:
+    """Hover text listing which categories feed a hub node, largest first."""
+    rows = sorted((entry for entry in entries if entry[1] > 0), key=lambda entry: entry[1], reverse=True)
+    return "<br>".join(f"{category.name} : CHF {format_money(value)}" for category, value, _detail in rows)
+
+
 def _push_node(  # noqa: PLR0913
     idx: dict[str, int],
     labels: list[str],
@@ -158,32 +194,34 @@ def _push_node(  # noqa: PLR0913
     label: str,
     value: Decimal,
     color: str,
+    hover: str = "",
 ) -> None:
     """Append a node with a stable key and a formatted label; update color & index map."""
     value = Decimal("0") if value is None else Decimal(str(value))
     name = _node_label(str(label), value)
     idx[key] = len(labels)
     labels.append(name)
-    nodes.append({"name": name})
+    nodes.append({"name": name, "hover": hover})
     node_colors.append(color)
 
 
 def _add_link(  # noqa: PLR0913
     idx: dict[str, int],
-    links: list[dict[str, float]],
+    links: list[dict[str, float | str]],
     link_colors: list[str],
     src_key: str,
     dst_key: str,
     value: Decimal,
     color: str,
+    hover: str = "",
 ) -> None:
     """Add a link if value > 0, using stable node keys."""
     if value and value > 0:
-        links.append({"source": idx[src_key], "target": idx[dst_key], "value": float(value)})
+        links.append({"source": idx[src_key], "target": idx[dst_key], "value": float(value), "hover": hover})
         link_colors.append(color)
 
 
-def _category_totals(qs: QuerySet[Account], scheme: str) -> dict[str, list[tuple[SankeyCategory, Decimal]]]:
+def _category_totals(qs: QuerySet[Account], scheme: str) -> dict[str, list[CategoryEntry]]:
     """
     Resolves every account to its Sankey category, sums charges/revenues per
     category, and groups the result by flow block (all categories of a flow
@@ -199,11 +237,18 @@ def _category_totals(qs: QuerySet[Account], scheme: str) -> dict[str, list[tuple
         SankeyFlow.DOTATION: "charges",
     }
 
-    by_flow: dict[str, list[tuple[SankeyCategory, Decimal]]] = {flow: [] for flow in field_by_flow}
+    by_flow: dict[str, list[CategoryEntry]] = {flow: [] for flow in field_by_flow}
     for category in SankeyCategory.objects.filter(flow__in=field_by_flow):
         field = field_by_flow[category.flow]
-        amount = max(Decimal("0"), totals.get(category, {}).get(field, Decimal("0")))
-        by_flow[category.flow].append((category, amount))
+        entry = totals.get(category)
+        if entry is None:
+            amount = Decimal("0")
+            breakdown = ""
+        else:
+            raw_amount = entry["revenues"] if field == "revenues" else entry["charges"]
+            amount = max(Decimal("0"), raw_amount)
+            breakdown = _account_breakdown_html(entry["accounts"], field)
+        by_flow[category.flow].append((category, amount, breakdown))
 
     return by_flow
 
@@ -224,11 +269,11 @@ def build_sankeymatic_export(  # noqa: PLR0915
         by_flow[SankeyFlow.DOTATION],
     )
 
-    total_left = sum((v for _c, v in revenue), Decimal("0"))
-    total_canton = sum((v for _c, v in canton), Decimal("0"))
-    total_intercos = sum((v for _c, v in intercos), Decimal("0"))
-    total_commune = sum((v for _c, v in commune), Decimal("0"))
-    total_dotations = sum((v for _c, v in dotations), Decimal("0"))
+    total_left = sum((v for _c, v, _d in revenue), Decimal("0"))
+    total_canton = sum((v for _c, v, _d in canton), Decimal("0"))
+    total_intercos = sum((v for _c, v, _d in intercos), Decimal("0"))
+    total_commune = sum((v for _c, v, _d in commune), Decimal("0"))
+    total_dotations = sum((v for _c, v, _d in dotations), Decimal("0"))
     total_out = total_canton + total_intercos + total_commune + total_dotations
     remainder = total_left - total_out
 
@@ -255,7 +300,7 @@ def build_sankeymatic_export(  # noqa: PLR0915
         "",
     ]
 
-    lines.extend(filter(None, (flow_line(c.name, household, v) for c, v in revenue)))
+    lines.extend(filter(None, (flow_line(c.name, household, v) for c, v, _d in revenue)))
     if remainder < -MIN_VAL:
         lines.append(f"{SM_LABEL_LOSS} [{k(abs(remainder))}] {household}")
     lines.append("")
@@ -274,13 +319,13 @@ def build_sankeymatic_export(  # noqa: PLR0915
         lines.append(f"{household} [{k(remainder)}] {SM_LABEL_PROFIT}")
     lines.append("")
 
-    lines.extend(filter(None, (flow_line(canton_label, c.name, v) for c, v in canton)))
+    lines.extend(filter(None, (flow_line(canton_label, c.name, v) for c, v, _d in canton)))
     lines.append("")
-    lines.extend(filter(None, (flow_line(intercos_label, c.name, v) for c, v in intercos)))
+    lines.extend(filter(None, (flow_line(intercos_label, c.name, v) for c, v, _d in intercos)))
     lines.append("")
-    lines.extend(filter(None, (flow_line(commune_label, c.name, v) for c, v in commune)))
+    lines.extend(filter(None, (flow_line(commune_label, c.name, v) for c, v, _d in commune)))
     lines.append("")
-    lines.extend(filter(None, (flow_line(household, c.name, v) for c, v in dotations)))
+    lines.extend(filter(None, (flow_line(household, c.name, v) for c, v, _d in dotations)))
     lines.append("")
 
     lines.append("// === Colors ===")
@@ -294,7 +339,7 @@ def build_sankeymatic_export(  # noqa: PLR0915
     elif remainder > MIN_VAL:
         lines.append(f":{SM_LABEL_PROFIT} {COLOR_PROFIT}")
     seen: set[str] = set()
-    for category, value in [*revenue, *canton, *intercos, *commune, *dotations]:
+    for category, value, _detail in [*revenue, *canton, *intercos, *commune, *dotations]:
         if k(value) > 0 and category.name not in seen:
             lines.append(f":{category.name} {category.color}")
             seen.add(category.name)
@@ -323,48 +368,69 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account], scheme: s
         by_flow[SankeyFlow.DOTATION],
     )
 
-    total_left = sum((v for _c, v in revenue), Decimal("0"))
-    total_canton = sum((v for _c, v in canton), Decimal("0"))
-    total_intercos = sum((v for _c, v in intercos), Decimal("0"))
-    total_commune = sum((v for _c, v in commune), Decimal("0"))
-    total_dotations = sum((v for _c, v in dotations), Decimal("0"))
+    total_left = sum((v for _c, v, _d in revenue), Decimal("0"))
+    total_canton = sum((v for _c, v, _d in canton), Decimal("0"))
+    total_intercos = sum((v for _c, v, _d in intercos), Decimal("0"))
+    total_commune = sum((v for _c, v, _d in commune), Decimal("0"))
+    total_dotations = sum((v for _c, v, _d in dotations), Decimal("0"))
+
+    # Hub-level hover: which leaf categories feed this hub, largest first -
+    # leaf-level hover (per category/link) instead lists the accounts behind it.
+    household_hover = _category_breakdown_html(revenue)
+    canton_hover = _category_breakdown_html(canton)
+    intercos_hover = _category_breakdown_html(intercos)
+    commune_hover = _category_breakdown_html(commune)
 
     idx: dict[str, int] = {}
     labels: list[str] = []
     nodes: list[dict[str, str]] = []
     node_colors: list[str] = []
-    links: list[dict[str, float]] = []
+    links: list[dict[str, float | str]] = []
     link_colors: list[str] = []
 
     def node_key(category: SankeyCategory) -> str:
         return f"category-{category.pk}"
 
-    for category, value in revenue:
-        _push_node(idx, labels, nodes, node_colors, node_key(category), category.name, value, category.color)
+    for category, value, detail in revenue:
+        _push_node(idx, labels, nodes, node_colors, node_key(category), category.name, value, category.color, detail)
 
-    _push_node(idx, labels, nodes, node_colors, NODE_HOUSEHOLD, LABEL_HOUSEHOLD, total_left, COLOR_BUDGET)
-    _push_node(idx, labels, nodes, node_colors, NODE_CANTON, LABEL_CANTON, total_canton, COLOR_CANTON)
     _push_node(
-        idx, labels, nodes, node_colors, NODE_INTERCOS, LABEL_INTERCOMMUNALITIES, total_intercos, COLOR_INTERCOS
+        idx, labels, nodes, node_colors, NODE_HOUSEHOLD, LABEL_HOUSEHOLD, total_left, COLOR_BUDGET, household_hover
     )
-    _push_node(idx, labels, nodes, node_colors, NODE_COMMUNE, LABEL_COMMUNE, total_commune, COLOR_COMMUNE)
+    _push_node(idx, labels, nodes, node_colors, NODE_CANTON, LABEL_CANTON, total_canton, COLOR_CANTON, canton_hover)
+    _push_node(
+        idx,
+        labels,
+        nodes,
+        node_colors,
+        NODE_INTERCOS,
+        LABEL_INTERCOMMUNALITIES,
+        total_intercos,
+        COLOR_INTERCOS,
+        intercos_hover,
+    )
+    _push_node(
+        idx, labels, nodes, node_colors, NODE_COMMUNE, LABEL_COMMUNE, total_commune, COLOR_COMMUNE, commune_hover
+    )
 
-    for category, value in [*canton, *intercos, *commune]:
-        _push_node(idx, labels, nodes, node_colors, node_key(category), category.name, value, category.color)
+    for category, value, detail in [*canton, *intercos, *commune]:
+        _push_node(idx, labels, nodes, node_colors, node_key(category), category.name, value, category.color, detail)
 
-    for category, value in revenue:
-        _add_link(idx, links, link_colors, node_key(category), NODE_HOUSEHOLD, value, category.color)
+    for category, value, detail in revenue:
+        _add_link(idx, links, link_colors, node_key(category), NODE_HOUSEHOLD, value, category.color, detail)
 
-    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_CANTON, total_canton, COLOR_BUDGET_LINKS)
-    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_INTERCOS, total_intercos, COLOR_BUDGET_LINKS)
-    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_COMMUNE, total_commune, COLOR_BUDGET_LINKS)
+    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_CANTON, total_canton, COLOR_BUDGET_LINKS, canton_hover)
+    _add_link(
+        idx, links, link_colors, NODE_HOUSEHOLD, NODE_INTERCOS, total_intercos, COLOR_BUDGET_LINKS, intercos_hover
+    )
+    _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_COMMUNE, total_commune, COLOR_BUDGET_LINKS, commune_hover)
 
-    for category, value in canton:
-        _add_link(idx, links, link_colors, NODE_CANTON, node_key(category), value, COLOR_CANTON_LINKS)
-    for category, value in intercos:
-        _add_link(idx, links, link_colors, NODE_INTERCOS, node_key(category), value, COLOR_INTERCOS_LINKS)
-    for category, value in commune:
-        _add_link(idx, links, link_colors, NODE_COMMUNE, node_key(category), value, COLOR_COMMUNE_LINKS)
+    for category, value, detail in canton:
+        _add_link(idx, links, link_colors, NODE_CANTON, node_key(category), value, COLOR_CANTON_LINKS, detail)
+    for category, value, detail in intercos:
+        _add_link(idx, links, link_colors, NODE_INTERCOS, node_key(category), value, COLOR_INTERCOS_LINKS, detail)
+    for category, value, detail in commune:
+        _add_link(idx, links, link_colors, NODE_COMMUNE, node_key(category), value, COLOR_COMMUNE_LINKS, detail)
 
     # --- result (cash surplus/deficit after all classified flows, before dotations)
     total_out = total_canton + total_intercos + total_commune + total_dotations
@@ -376,9 +442,9 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account], scheme: s
         _add_link(idx, links, link_colors, NODE_RESULT, KEY_PROFIT, remainder, COLOR_PROFIT)
 
     # Dotations go directly from Household, below the result (not a third-party payment)
-    for category, value in dotations:
-        _push_node(idx, labels, nodes, node_colors, node_key(category), category.name, value, category.color)
-        _add_link(idx, links, link_colors, NODE_HOUSEHOLD, node_key(category), value, COLOR_BUDGET_LINKS)
+    for category, value, detail in dotations:
+        _push_node(idx, labels, nodes, node_colors, node_key(category), category.name, value, category.color, detail)
+        _add_link(idx, links, link_colors, NODE_HOUSEHOLD, node_key(category), value, COLOR_BUDGET_LINKS, detail)
 
     return {
         "nodes": nodes,

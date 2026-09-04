@@ -5,6 +5,7 @@ from budgetis.common.models import ChartScheme
 from budgetis.finance.models import SankeyAccountCodeRule
 from budgetis.finance.models import SankeyCategory
 from budgetis.finance.models import SankeyFlow
+from budgetis.finance.models import SankeyFunctionNatureRule
 from budgetis.finance.models import SankeyLabelRule
 from budgetis.finance.models import SankeyNatureRangeRule
 
@@ -47,6 +48,19 @@ class SankeyAccountCodeRuleFactory(DjangoModelFactory):
 
     class Meta:
         model = SankeyAccountCodeRule
+
+
+class SankeyFunctionNatureRuleFactory(DjangoModelFactory):
+    """Defaults to function prefix "90" / nature 9000-9009 - see SankeyNatureRangeRuleFactory."""
+
+    scheme = ChartScheme.MCH1
+    function_prefix = "90"
+    nature_start = 9000
+    nature_end = 9009
+    category = factory.SubFactory(SankeyCategoryFactory)
+
+    class Meta:
+        model = SankeyFunctionNatureRule
 
 
 class SankeyLabelRuleFactory(DjangoModelFactory):

@@ -116,6 +116,38 @@ class SankeyAccountCodeRule(TimeStampedModel):
         return f"{self.scheme} {code} → {self.category}"
 
 
+class SankeyFunctionNatureRule(TimeStampedModel):
+    """
+    Assigns accounts whose function starts with `function_prefix` AND whose
+    nature falls in [nature_start, nature_end] to a category, for a given
+    scheme. Sits between account-code and label rules in precedence - for a
+    nature shared by several unrelated payees, distinguishable only by which
+    function (administrative unit) is paying: e.g. MCH2 nature 3612 ("Parts
+    aux communes et associations intercommunales") covers AISGE, APEC, RAT,
+    SDIS... at once, and only the function tells them apart. More robust than
+    a label rule (labels are free text and inconsistent) and, unlike an
+    account-code rule, still matches a function this scheme hasn't used yet
+    as long as it shares the family's prefix.
+    """
+
+    scheme = models.CharField(max_length=10, choices=ChartScheme.choices)
+    function_prefix = models.CharField(max_length=10, verbose_name=_("Function prefix"))
+    nature_start = models.PositiveIntegerField(verbose_name=_("From nature"))
+    nature_end = models.PositiveIntegerField(verbose_name=_("To nature"))
+    category = models.ForeignKey(SankeyCategory, on_delete=models.CASCADE, related_name="function_nature_rules")
+
+    class Meta:
+        ordering = ("scheme", "function_prefix", "nature_start")
+        verbose_name = _("Sankey function/nature rule")
+        verbose_name_plural = _("Sankey function/nature rules")
+
+    def __str__(self) -> str:
+        return f"{self.scheme} {self.function_prefix}*.{self.nature_start}-{self.nature_end} → {self.category}"
+
+    def matches(self, function: str, nature: int) -> bool:
+        return function.startswith(self.function_prefix) and self.nature_start <= nature <= self.nature_end
+
+
 class SankeyLabelRule(TimeStampedModel):
     """
     Assigns every account whose label contains `pattern` (case-insensitive)

@@ -4,6 +4,7 @@ from budgetis.common.models import ChartScheme
 from budgetis.finance.models import SankeyFlow
 from budgetis.finance.tests.factories import SankeyAccountCodeRuleFactory
 from budgetis.finance.tests.factories import SankeyCategoryFactory
+from budgetis.finance.tests.factories import SankeyFunctionNatureRuleFactory
 from budgetis.finance.tests.factories import SankeyLabelRuleFactory
 from budgetis.finance.tests.factories import SankeyNatureRangeRuleFactory
 
@@ -47,6 +48,25 @@ class TestSankeyAccountCodeRule:
         category = SankeyCategoryFactory.build(name="RAT")
         rule = SankeyAccountCodeRuleFactory.build(function="710", nature="365", sub_account="1", category=category)
         assert str(rule) == "mch1 710.365.1 → RAT"
+
+
+class TestSankeyFunctionNatureRule:
+    def test_matches_function_prefix_and_nature_range(self):
+        rule = SankeyFunctionNatureRuleFactory.build(function_prefix="218", nature_start=3612, nature_end=3612)
+        assert rule.matches("21800", 3612) is True
+        assert rule.matches("21990", 3612) is False
+        assert rule.matches("218", 3612) is True
+
+    def test_does_not_match_outside_nature_range(self):
+        rule = SankeyFunctionNatureRuleFactory.build(function_prefix="218", nature_start=3612, nature_end=3612)
+        assert rule.matches("21800", 3611) is False
+
+    def test_str_includes_prefix_and_range(self):
+        category = SankeyCategoryFactory.build(name="AISGE")
+        rule = SankeyFunctionNatureRuleFactory.build(
+            scheme=ChartScheme.MCH2, function_prefix="218", nature_start=3612, nature_end=3612, category=category
+        )
+        assert str(rule) == "mch2 218*.3612-3612 → AISGE"
 
 
 class TestSankeyLabelRule:
