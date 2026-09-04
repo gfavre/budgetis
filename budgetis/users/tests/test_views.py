@@ -247,7 +247,17 @@ class TestUserManagementView:
 
         assert response.status_code == HTTPStatus.OK
         assert response.context["can_invite"] is False
+        assert response.context["can_deactivate"] is False
         assert response.context["can_nominate"] is True
+
+    def test_bourse_member_without_admin_permissions_cannot_deactivate(self, client, user: User):
+        """A Bourse member (`auth.change_group`) is not automatically an admin."""
+        _grant(user, "change_group", "auth")
+        client.force_login(user)
+
+        response = client.get(_management_url())
+
+        assert response.context["can_deactivate"] is False
 
     def test_invite_creates_a_user(self, client, user: User):
         _grant(user, "add_user", "users")
@@ -282,6 +292,38 @@ class TestUserManagementView:
 
         assert response.status_code == HTTPStatus.FORBIDDEN
         assert not User.objects.filter(email="future@example.com").exists()
+
+    def test_deactivate_deactivates_the_selected_user(self, client, user: User):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+        target = UserFactory()
+
+        response = client.post(_management_url(), {"deactivate_submit": "1", "user": target.pk})
+
+        assert response.status_code == HTTPStatus.FOUND
+        target.refresh_from_db()
+        assert not target.is_active
+
+    def test_deactivate_without_permission_is_forbidden_and_does_not_deactivate(self, client, user: User):
+        _grant(user, "change_group", "auth")
+        client.force_login(user)
+        target = UserFactory()
+
+        response = client.post(_management_url(), {"deactivate_submit": "1", "user": target.pk})
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        target.refresh_from_db()
+        assert target.is_active
+
+    def test_deactivate_cannot_target_the_requesting_user(self, client, user: User):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+
+        response = client.post(_management_url(), {"deactivate_submit": "1", "user": user.pk})
+
+        assert response.status_code == HTTPStatus.OK
+        user.refresh_from_db()
+        assert user.is_active
 
     def test_nominate_adds_an_existing_user_to_the_bourse_group(self, client, user: User):
         _grant(user, "change_group", "auth")

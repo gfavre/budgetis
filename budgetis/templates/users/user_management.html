@@ -8,21 +8,38 @@
 {% block content %}
   <h1>{% trans "User management" %}</h1>
   <div class="row">
-    {% if can_invite %}
+    {% if can_invite or can_deactivate %}
       <div class="col-md-6 mb-4">
-        <div class="card">
-          <div class="card-header">{% trans "Invite a user" %}</div>
-          <div class="card-body">
-            <p class="text-muted">
-              {% trans "Creates an account for a future municipal officer or finance staff member. They will sign in with their Microsoft account." %}
-            </p>
-            <form method="post" action="{% url 'users:management' %}">
-              {% csrf_token %}
-              {{ invite_form|crispy }}
-              <button type="submit" name="invite_submit" class="btn btn-primary">{% trans "Invite" %}</button>
-            </form>
+        {% if can_invite %}
+          <div class="card mb-4">
+            <div class="card-header">{% trans "Invite a user" %}</div>
+            <div class="card-body">
+              <p class="text-muted">
+                {% trans "Creates an account for a future municipal officer or finance staff member. They will sign in with their Microsoft account." %}
+              </p>
+              <form method="post" action="{% url 'users:management' %}">
+                {% csrf_token %}
+                {{ invite_form|crispy }}
+                <button type="submit" name="invite_submit" class="btn btn-primary">{% trans "Invite" %}</button>
+              </form>
+            </div>
           </div>
-        </div>
+        {% endif %}
+        {% if can_deactivate %}
+          <div class="card">
+            <div class="card-header">{% trans "Deactivate a user" %}</div>
+            <div class="card-body">
+              <p class="text-muted">
+                {% trans "Deactivated users can no longer sign in. This can be undone from the Django admin." %}
+              </p>
+              <form method="post" action="{% url 'users:management' %}">
+                {% csrf_token %}
+                {{ deactivate_form|crispy }}
+                <button type="submit" name="deactivate_submit" class="btn btn-outline-danger">{% trans "Deactivate" %}</button>
+              </form>
+            </div>
+          </div>
+        {% endif %}
       </div>
     {% endif %}
     {% if can_nominate %}

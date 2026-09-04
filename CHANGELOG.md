@@ -5,6 +5,17 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-09-04
+
+### Added
+
+- **Deactivate a user**: on the user management page, an admin can now
+  deactivate any existing account (`users.change_user`) - deactivated
+  users can no longer sign in, and this is reversible from the Django
+  admin. Deliberately not available to Bourse members, whose
+  co-optation permission (`auth.change_group`) only lets them add
+  people to the Bourse, not deactivate anyone.
+
 ## [1.3.0] - 2026-09-04
 
 ### Added

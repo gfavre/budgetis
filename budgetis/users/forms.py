@@ -121,6 +121,35 @@ class BourseNominationForm(forms.Form):
         self.cleaned_data["user"].groups.add(bourse)
 
 
+class DeactivateUserForm(forms.Form):
+    """
+    Deactivates an existing user account - admin-only (`users.change_user`,
+    unlike Bourse co-optation which only needs `auth.change_group`). The
+    requesting user is excluded from the choices so an admin can't lock
+    themselves out from this page.
+    """
+
+    user = forms.ModelChoiceField(
+        label=_("User"),
+        queryset=User.objects.none(),  # set in __init__, needs the DB
+    )
+
+    def __init__(self, *args, requesting_user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        queryset = User.objects.filter(is_active=True)
+        if requesting_user is not None:
+            queryset = queryset.exclude(pk=requesting_user.pk)
+        field = cast("forms.ModelChoiceField", self.fields["user"])
+        field.queryset = queryset.order_by("name", "email")
+        field.label_from_instance = lambda obj: str(obj)  # noqa: PLW0108
+
+    def save(self):
+        user = self.cleaned_data["user"]
+        user.is_active = False
+        user.save(update_fields=["is_active"])
+        return user
+
+
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 18:34+0200\n"
+"POT-Creation-Date: 2026-09-04 19:59+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1207,7 +1207,7 @@ msgid "No rule for this scheme yet."
 msgstr ""
 
 #: budgetis/finance/templates/finance/partials/sankey_rule_form.html:6
-#: budgetis/templates/users/user_management.html:37
+#: budgetis/templates/users/user_management.html:54
 msgid "Add"
 msgstr ""
 
@@ -1333,30 +1333,44 @@ msgstr ""
 msgid "User management"
 msgstr ""
 
-#: budgetis/templates/users/user_management.html:14
+#: budgetis/templates/users/user_management.html:15
 msgid "Invite a user"
 msgstr ""
 
-#: budgetis/templates/users/user_management.html:17
+#: budgetis/templates/users/user_management.html:18
 msgid ""
 "Creates an account for a future municipal officer or finance staff member. "
 "They will sign in with their Microsoft account."
 msgstr ""
 
-#: budgetis/templates/users/user_management.html:22
+#: budgetis/templates/users/user_management.html:23
 msgid "Invite"
 msgstr ""
 
-#: budgetis/templates/users/user_management.html:31
-msgid "Add to the Bourse"
+#: budgetis/templates/users/user_management.html:30
+msgid "Deactivate a user"
 msgstr ""
 
 #: budgetis/templates/users/user_management.html:33
 msgid ""
+"Deactivated users can no longer sign in. This can be undone from the Django "
+"admin."
+msgstr ""
+
+#: budgetis/templates/users/user_management.html:38
+msgid "Deactivate"
+msgstr ""
+
+#: budgetis/templates/users/user_management.html:48
+msgid "Add to the Bourse"
+msgstr ""
+
+#: budgetis/templates/users/user_management.html:50
+msgid ""
 "Grants an existing user access to budget editing and Sankey configuration."
 msgstr ""
 
-#: budgetis/templates/users/user_management.html:41
+#: budgetis/templates/users/user_management.html:58
 msgid "Current members"
 msgstr ""
 
@@ -1404,7 +1418,7 @@ msgstr ""
 msgid "Grants access to budget editing and Sankey configuration."
 msgstr ""
 
-#: budgetis/users/forms.py:103
+#: budgetis/users/forms.py:103 budgetis/users/forms.py:133
 msgid "User"
 msgstr ""
 
@@ -1416,7 +1430,7 @@ msgstr ""
 msgid "email address"
 msgstr ""
 
-#: budgetis/users/models.py:35 budgetis/users/tests/test_forms.py:41
+#: budgetis/users/models.py:35 budgetis/users/tests/test_forms.py:42
 msgid "This email has already been taken."
 msgstr ""
 
@@ -1424,16 +1438,21 @@ msgstr ""
 msgid "Trigram"
 msgstr ""
 
-#: budgetis/users/tests/test_views.py:88 budgetis/users/views.py:73
+#: budgetis/users/tests/test_views.py:88 budgetis/users/views.py:75
 msgid "Information successfully updated"
 msgstr ""
 
-#: budgetis/users/views.py:133
+#: budgetis/users/views.py:141
 #, python-format
 msgid "%(email)s has been invited."
 msgstr ""
 
-#: budgetis/users/views.py:143
+#: budgetis/users/views.py:151
+#, python-format
+msgid "%(user)s has been deactivated."
+msgstr ""
+
+#: budgetis/users/views.py:161
 #, python-format
 msgid "%(user)s is now part of the Bourse."
 msgstr ""

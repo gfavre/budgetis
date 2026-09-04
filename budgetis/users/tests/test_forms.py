@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
 from budgetis.users.forms import BourseNominationForm
+from budgetis.users.forms import DeactivateUserForm
 from budgetis.users.forms import UserAdminCreationForm
 from budgetis.users.forms import UserInviteForm
 from budgetis.users.models import BOURSE_GROUP_NAME
@@ -91,3 +92,43 @@ class TestBourseNominationForm:
         form.save()
 
         assert candidate.groups.filter(name=BOURSE_GROUP_NAME).exists()
+
+
+@pytest.mark.django_db
+class TestDeactivateUserForm:
+    def test_excludes_the_requesting_user_from_the_choices(self):
+        admin = UserFactory()
+        other = UserFactory()
+
+        form = DeactivateUserForm(requesting_user=admin)
+
+        choices = list(form.fields["user"].queryset)
+        assert other in choices
+        assert admin not in choices
+
+    def test_excludes_already_inactive_users_from_the_choices(self):
+        admin = UserFactory()
+        inactive = UserFactory(is_active=False)
+
+        form = DeactivateUserForm(requesting_user=admin)
+
+        assert inactive not in list(form.fields["user"].queryset)
+
+    def test_deactivates_the_selected_user(self):
+        admin = UserFactory()
+        target = UserFactory()
+
+        form = DeactivateUserForm({"user": target.pk}, requesting_user=admin)
+
+        assert form.is_valid(), form.errors
+        form.save()
+
+        target.refresh_from_db()
+        assert not target.is_active
+
+    def test_cannot_select_the_requesting_user_even_via_a_crafted_post(self):
+        admin = UserFactory()
+
+        form = DeactivateUserForm({"user": admin.pk}, requesting_user=admin)
+
+        assert not form.is_valid()
