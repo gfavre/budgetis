@@ -70,6 +70,15 @@ NODE_COMMUNE = "commune"
 NODE_RESULT = "result"
 KEY_PROFIT = "profit"
 
+# Diagram columns (left to right), used as the node "depth" hint so a node
+# reached by a shortcut path (Dotations, Result - both linked directly from
+# Household) stops at the hub column instead of Plotly's auto-layout pushing
+# it out to the rightmost column by hop-count heuristics.
+DEPTH_REVENUE_LEAF = 0
+DEPTH_HOUSEHOLD = 1
+DEPTH_HUB = 2
+DEPTH_HUB_LEAF = 3
+
 # ----- SankeyMATIC export settings --------------------------------------------
 
 SM_SETTINGS = """\
@@ -188,20 +197,28 @@ def _category_breakdown_html(entries: list[CategoryEntry]) -> str:
 def _push_node(  # noqa: PLR0913
     idx: dict[str, int],
     labels: list[str],
-    nodes: list[dict[str, str]],
+    nodes: list[dict[str, object]],
     node_colors: list[str],
     key: str,
     label: str,
     value: Decimal,
     color: str,
     hover: str = "",
+    depth: int = 0,
 ) -> None:
-    """Append a node with a stable key and a formatted label; update color & index map."""
+    """
+    Append a node with a stable key and a formatted label; update color &
+    index map. `depth` is the node's intended column (0 = leftmost) - without
+    it, Plotly's auto-layout places a node by how many hops it took to reach
+    it from any source, which pushes a node reached via a *shortcut* path
+    (e.g. Dotations, linked directly from Household) all the way to the
+    rightmost column instead of the hub-level column it logically belongs to.
+    """
     value = Decimal("0") if value is None else Decimal(str(value))
     name = _node_label(str(label), value)
     idx[key] = len(labels)
     labels.append(name)
-    nodes.append({"name": name, "hover": hover})
+    nodes.append({"name": name, "hover": hover, "depth": depth})
     node_colors.append(color)
 
 
@@ -383,7 +400,7 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account], scheme: s
 
     idx: dict[str, int] = {}
     labels: list[str] = []
-    nodes: list[dict[str, str]] = []
+    nodes: list[dict[str, object]] = []
     node_colors: list[str] = []
     links: list[dict[str, float | str]] = []
     link_colors: list[str] = []
@@ -392,12 +409,43 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account], scheme: s
         return f"category-{category.pk}"
 
     for category, value, detail in revenue:
-        _push_node(idx, labels, nodes, node_colors, node_key(category), category.name, value, category.color, detail)
+        _push_node(
+            idx,
+            labels,
+            nodes,
+            node_colors,
+            node_key(category),
+            category.name,
+            value,
+            category.color,
+            detail,
+            DEPTH_REVENUE_LEAF,
+        )
 
     _push_node(
-        idx, labels, nodes, node_colors, NODE_HOUSEHOLD, LABEL_HOUSEHOLD, total_left, COLOR_BUDGET, household_hover
+        idx,
+        labels,
+        nodes,
+        node_colors,
+        NODE_HOUSEHOLD,
+        LABEL_HOUSEHOLD,
+        total_left,
+        COLOR_BUDGET,
+        household_hover,
+        DEPTH_HOUSEHOLD,
     )
-    _push_node(idx, labels, nodes, node_colors, NODE_CANTON, LABEL_CANTON, total_canton, COLOR_CANTON, canton_hover)
+    _push_node(
+        idx,
+        labels,
+        nodes,
+        node_colors,
+        NODE_CANTON,
+        LABEL_CANTON,
+        total_canton,
+        COLOR_CANTON,
+        canton_hover,
+        DEPTH_HUB,
+    )
     _push_node(
         idx,
         labels,
@@ -408,13 +456,34 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account], scheme: s
         total_intercos,
         COLOR_INTERCOS,
         intercos_hover,
+        DEPTH_HUB,
     )
     _push_node(
-        idx, labels, nodes, node_colors, NODE_COMMUNE, LABEL_COMMUNE, total_commune, COLOR_COMMUNE, commune_hover
+        idx,
+        labels,
+        nodes,
+        node_colors,
+        NODE_COMMUNE,
+        LABEL_COMMUNE,
+        total_commune,
+        COLOR_COMMUNE,
+        commune_hover,
+        DEPTH_HUB,
     )
 
     for category, value, detail in [*canton, *intercos, *commune]:
-        _push_node(idx, labels, nodes, node_colors, node_key(category), category.name, value, category.color, detail)
+        _push_node(
+            idx,
+            labels,
+            nodes,
+            node_colors,
+            node_key(category),
+            category.name,
+            value,
+            category.color,
+            detail,
+            DEPTH_HUB_LEAF,
+        )
 
     for category, value, detail in revenue:
         _add_link(idx, links, link_colors, node_key(category), NODE_HOUSEHOLD, value, category.color, detail)
@@ -436,14 +505,30 @@ def build_income_budget_canton_intercos_commune(qs: QuerySet[Account], scheme: s
     total_out = total_canton + total_intercos + total_commune + total_dotations
     remainder = total_left - total_out
     if abs(remainder) > MIN_VAL:
-        _push_node(idx, labels, nodes, node_colors, NODE_RESULT, LABEL_RESULT_HUB, remainder, COLOR_PROFIT)
-        _push_node(idx, labels, nodes, node_colors, KEY_PROFIT, LABEL_PROFIT, remainder, COLOR_PROFIT)
+        _push_node(
+            idx, labels, nodes, node_colors, NODE_RESULT, LABEL_RESULT_HUB, remainder, COLOR_PROFIT, "", DEPTH_HUB
+        )
+        _push_node(
+            idx, labels, nodes, node_colors, KEY_PROFIT, LABEL_PROFIT, remainder, COLOR_PROFIT, "", DEPTH_HUB_LEAF
+        )
         _add_link(idx, links, link_colors, NODE_HOUSEHOLD, NODE_RESULT, remainder, COLOR_BUDGET_LINKS)
         _add_link(idx, links, link_colors, NODE_RESULT, KEY_PROFIT, remainder, COLOR_PROFIT)
 
-    # Dotations go directly from Household, below the result (not a third-party payment)
+    # Dotations go directly from Household (not a third-party payment), but
+    # stop at the hub column - like Canton/Intercos/Commune, not a leaf level.
     for category, value, detail in dotations:
-        _push_node(idx, labels, nodes, node_colors, node_key(category), category.name, value, category.color, detail)
+        _push_node(
+            idx,
+            labels,
+            nodes,
+            node_colors,
+            node_key(category),
+            category.name,
+            value,
+            category.color,
+            detail,
+            DEPTH_HUB,
+        )
         _add_link(idx, links, link_colors, NODE_HOUSEHOLD, node_key(category), value, COLOR_BUDGET_LINKS, detail)
 
     return {

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 06:42+0200\n"
+"POT-Creation-Date: 2026-09-04 14:22+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -53,7 +53,7 @@ msgstr "Comptabilité"
 #: budgetis/bdi_import/models.py:26
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:156
 #: budgetis/finance/models.py:13
-#: budgetis/finance/templates/finance/sankey.html:12
+#: budgetis/finance/templates/finance/sankey.html:13
 msgid "Year"
 msgstr "Année"
 
@@ -154,19 +154,23 @@ msgstr "Charges et produits"
 
 #: budgetis/accounting/models.py:205 budgetis/bdi_import/models.py:79
 #: budgetis/finance/models.py:96
+#: budgetis/finance/templates/finance/sankey_rules.html:66
 msgid "Function"
 msgstr "Fonction"
 
 #: budgetis/accounting/models.py:206 budgetis/bdi_import/forms.py:18
 #: budgetis/bdi_import/models.py:80 budgetis/finance/models.py:97
+#: budgetis/finance/templates/finance/sankey_rules.html:67
 msgid "Nature"
 msgstr "Nature"
 
 #: budgetis/accounting/models.py:207 budgetis/finance/models.py:101
+#: budgetis/finance/templates/finance/sankey_rules.html:68
 msgid "Subaccount"
 msgstr "Sous-compte"
 
 #: budgetis/accounting/models.py:209
+#: budgetis/finance/templates/finance/sankey_rules.html:112
 msgid "Label"
 msgstr "Désignation"
 
@@ -386,6 +390,7 @@ msgstr "Explorateur de comptes"
 #: budgetis/accounting/templates/accounting/budget_explorer.html:147
 #: budgetis/accounting/templates/accounting/partials/account_list.html:167
 #: budgetis/accounting/templates/accounting/partials/comments_modal.html:24
+#: budgetis/finance/templates/finance/sankey_rules.html:126
 msgid "Loading..."
 msgstr "Chargement..."
 
@@ -407,7 +412,7 @@ msgstr "Commentaires"
 #: budgetis/bdi_import/models.py:72
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:164
 #: budgetis/core/templates/core/home.html:169 budgetis/finance/models.py:10
-#: budgetis/finance/templates/finance/sankey.html:21
+#: budgetis/finance/templates/finance/sankey.html:24
 #: budgetis/templates/base.html:139
 msgid "Budget"
 msgstr "Budget"
@@ -527,6 +532,7 @@ msgid "Delete"
 msgstr "Supprimer"
 
 #: budgetis/accounting/templates/accounting/partials/account_comment_form.html:6
+#: budgetis/finance/templates/finance/partials/sankey_rule_form.html:8
 msgid "Edit"
 msgstr "Modifier"
 
@@ -535,6 +541,7 @@ msgid "comment"
 msgstr "commentaire"
 
 #: budgetis/accounting/templates/accounting/partials/account_comment_form.html:22
+#: budgetis/finance/templates/finance/partials/sankey_rule_form.html:34
 #: budgetis/templates/users/user_detail.html:30
 msgid "Save"
 msgstr "Enregistrer"
@@ -1091,7 +1098,7 @@ msgstr "Bénéfice"
 msgid "Loss"
 msgstr ""
 
-#: budgetis/finance/builders.py:178
+#: budgetis/finance/builders.py:187
 #, python-format
 msgid "+ %(count)d more"
 msgstr "+ %(count)d autres"
@@ -1130,6 +1137,18 @@ msgstr "Intercommunalités"
 msgid "Dotation"
 msgstr "Amortissements"
 
+#: budgetis/finance/models.py:47
+msgid "Name"
+msgstr "Nom"
+
+#: budgetis/finance/models.py:49
+msgid "Color"
+msgstr "Couleur"
+
+#: budgetis/finance/models.py:50
+msgid "Order"
+msgstr "Ordre"
+
 #: budgetis/finance/models.py:54
 msgid "Sankey category"
 msgstr ""
@@ -1138,17 +1157,18 @@ msgstr ""
 msgid "Sankey categories"
 msgstr ""
 
-#: budgetis/finance/models.py:70
-#, fuzzy
-#| msgid "By nature"
+#: budgetis/finance/models.py:70 budgetis/finance/models.py:135
 msgid "From nature"
-msgstr "Par nature"
+msgstr "Nature de début"
 
-#: budgetis/finance/models.py:71
-#, fuzzy
-#| msgid "By nature"
+#: budgetis/finance/models.py:71 budgetis/finance/models.py:136
 msgid "To nature"
-msgstr "Par nature"
+msgstr "Nature de fin"
+
+#: budgetis/finance/models.py:72
+#: budgetis/finance/templates/finance/sankey_rules.html:44
+msgid "Priority"
+msgstr "Priorité"
 
 #: budgetis/finance/models.py:77
 msgid "Sankey nature range rule"
@@ -1160,7 +1180,7 @@ msgstr ""
 
 #: budgetis/finance/models.py:102
 msgid "Leave blank to match any subaccount under this function/nature."
-msgstr ""
+msgstr "Laisser vide pour correspondre à tout sous-compte de cette fonction/nature."
 
 #: budgetis/finance/models.py:109
 #, fuzzy
@@ -1172,25 +1192,110 @@ msgstr "Code du compte"
 msgid "Sankey account code rules"
 msgstr ""
 
-#: budgetis/finance/models.py:129
+#: budgetis/finance/models.py:134
+#: budgetis/finance/templates/finance/sankey_rules.html:54
+msgid "Function prefix"
+msgstr "Préfixe de fonction"
+
+#: budgetis/finance/models.py:141
+msgid "Sankey function/nature rule"
+msgstr ""
+
+#: budgetis/finance/models.py:142
+msgid "Sankey function/nature rules"
+msgstr ""
+
+#: budgetis/finance/models.py:161
+#: budgetis/finance/templates/finance/sankey_rules.html:78
 msgid "Label contains"
-msgstr ""
+msgstr "Le libellé contient"
 
-#: budgetis/finance/models.py:129
+#: budgetis/finance/models.py:161
 msgid "Case-insensitive substring match."
-msgstr ""
+msgstr "Recherche insensible à la casse."
 
-#: budgetis/finance/models.py:135
+#: budgetis/finance/models.py:167
 msgid "Sankey label rule"
 msgstr ""
 
-#: budgetis/finance/models.py:136
+#: budgetis/finance/models.py:168
 msgid "Sankey label rules"
 msgstr ""
 
-#: budgetis/finance/templates/finance/sankey.html:28
+#: budgetis/finance/templates/finance/partials/rule_rows_account_code.html:21
+#: budgetis/finance/templates/finance/partials/rule_rows_function_nature.html:21
+#: budgetis/finance/templates/finance/partials/rule_rows_label.html:19
+#: budgetis/finance/templates/finance/partials/rule_rows_nature_range.html:21
+msgid "No rule for this scheme yet."
+msgstr "Aucune règle pour ce plan comptable."
+
+#: budgetis/finance/templates/finance/partials/sankey_rule_form.html:6
+msgid "Add"
+msgstr "Ajouter"
+
+#: budgetis/finance/templates/finance/partials/sankey_rule_form.html:11
+msgid "category"
+msgstr "catégorie"
+
+#: budgetis/finance/templates/finance/sankey.html:33
+msgid "Settings"
+msgstr "Réglages"
+
+#: budgetis/finance/templates/finance/sankey.html:39
 msgid "Données non disponibles."
 msgstr ""
+
+#: budgetis/finance/templates/finance/sankey_rules.html:8
+msgid "Sankey configuration"
+msgstr "Configuration du Sankey"
+
+#: budgetis/finance/templates/finance/sankey_rules.html:14
+#, python-format
+msgid "Switch to %(other)s"
+msgstr "Basculer vers %(other)s"
+
+#: budgetis/finance/templates/finance/sankey_rules.html:18
+msgid "Back to Sankey"
+msgstr "Retour au Sankey"
+
+#: budgetis/finance/templates/finance/sankey_rules.html:35
+msgid "Edit category"
+msgstr "Modifier la catégorie"
+
+#: budgetis/finance/templates/finance/sankey_rules.html:38
+msgid "Nature ranges"
+msgstr "Plages de nature"
+
+#: budgetis/finance/templates/finance/sankey_rules.html:42
+#: budgetis/finance/templates/finance/sankey_rules.html:55
+msgid "From"
+msgstr "De"
+
+#: budgetis/finance/templates/finance/sankey_rules.html:43
+#: budgetis/finance/templates/finance/sankey_rules.html:56
+msgid "To"
+msgstr "À"
+
+#: budgetis/finance/templates/finance/sankey_rules.html:50
+#: budgetis/finance/templates/finance/sankey_rules.html:98
+msgid "Function + nature"
+msgstr "Fonction + nature"
+
+#: budgetis/finance/templates/finance/sankey_rules.html:62
+msgid "Exact codes"
+msgstr "Codes exacts"
+
+#: budgetis/finance/templates/finance/sankey_rules.html:74
+msgid "Labels"
+msgstr "Désignations"
+
+#: budgetis/finance/templates/finance/sankey_rules.html:91
+msgid "Nature range"
+msgstr "Plage de nature"
+
+#: budgetis/finance/templates/finance/sankey_rules.html:105
+msgid "Exact code"
+msgstr "Code exact"
 
 #: budgetis/templates/admin/base_site.html:26
 #, python-format

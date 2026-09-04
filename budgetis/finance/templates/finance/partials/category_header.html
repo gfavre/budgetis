@@ -1,0 +1,10 @@
+<span id="category-header-{{ category.pk }}"
+      {% if oob %}hx-swap-oob="true"{% endif %}>
+  <span class="d-inline-block me-2"
+        style="width:1em;
+               height:1em;
+               background:{{ category.color }};
+               border-radius:2px;
+               vertical-align:middle"></span>
+  <strong>{{ category.name }}</strong>
+</span>

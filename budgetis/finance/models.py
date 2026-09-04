@@ -44,10 +44,10 @@ class SankeyCategory(TimeStampedModel):
     both MCH1 and MCH2, only the rules matching accounts into it differ.
     """
 
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, verbose_name=_("Name"))
     flow = models.CharField(max_length=20, choices=SankeyFlow)
-    color = models.CharField(max_length=7)
-    order = models.PositiveSmallIntegerField(default=0)
+    color = models.CharField(max_length=7, verbose_name=_("Color"))
+    order = models.PositiveSmallIntegerField(default=0, verbose_name=_("Order"))
 
     class Meta:
         ordering = ("flow", "order")
@@ -69,7 +69,7 @@ class SankeyNatureRangeRule(TimeStampedModel):
     scheme = models.CharField(max_length=10, choices=ChartScheme.choices)
     nature_start = models.PositiveIntegerField(verbose_name=_("From nature"))
     nature_end = models.PositiveIntegerField(verbose_name=_("To nature"))
-    priority = models.PositiveSmallIntegerField(default=100)
+    priority = models.PositiveSmallIntegerField(default=100, verbose_name=_("Priority"))
     category = models.ForeignKey(SankeyCategory, on_delete=models.CASCADE, related_name="nature_range_rules")
 
     class Meta:

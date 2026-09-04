@@ -1,0 +1,22 @@
+{% load i18n %}
+
+<tbody id="rules-label-{{ category.pk }}"
+       {% if oob %}hx-swap-oob="true"{% endif %}>
+  {% for rule in rules %}
+    <tr>
+      <td>{{ rule.pattern }}</td>
+      <td class="text-end">
+        <a href="#"
+           hx-get="{% url 'finance:sankey-rule-edit' 'label' rule.pk %}?scheme={{ scheme }}"
+           hx-target="#sankeyRuleModal .modal-content"
+           hx-swap="innerHTML"
+           data-bs-toggle="modal"
+           data-bs-target="#sankeyRuleModal"><i class="bi bi-pencil"></i></a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr>
+      <td colspan="2" class="text-muted fst-italic">{% trans "No rule for this scheme yet." %}</td>
+    </tr>
+  {% endfor %}
+</tbody>

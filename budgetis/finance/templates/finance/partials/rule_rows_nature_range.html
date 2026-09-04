@@ -1,0 +1,24 @@
+{% load i18n %}
+
+<tbody id="rules-nature-range-{{ category.pk }}"
+       {% if oob %}hx-swap-oob="true"{% endif %}>
+  {% for rule in rules %}
+    <tr>
+      <td>{{ rule.nature_start }}</td>
+      <td>{{ rule.nature_end }}</td>
+      <td>{{ rule.priority }}</td>
+      <td class="text-end">
+        <a href="#"
+           hx-get="{% url 'finance:sankey-rule-edit' 'nature-range' rule.pk %}?scheme={{ scheme }}"
+           hx-target="#sankeyRuleModal .modal-content"
+           hx-swap="innerHTML"
+           data-bs-toggle="modal"
+           data-bs-target="#sankeyRuleModal"><i class="bi bi-pencil"></i></a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr>
+      <td colspan="4" class="text-muted fst-italic">{% trans "No rule for this scheme yet." %}</td>
+    </tr>
+  {% endfor %}
+</tbody>

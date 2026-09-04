@@ -13,7 +13,9 @@
         <label class="form-label mb-1" for="year">{% trans "Year" %}</label>
         <select id="year" class="form-select form-select-sm w-100">
           {% for y in available_years %}
-            <option value="{{ y }}"{% if y == default_year %} selected{% endif %}>{{ y }}</option>
+            <option value="{{ y.year }}"
+                    data-scheme="{{ y.scheme }}"
+                    {% if y.year == default_year %}selected{% endif %}>{{ y.year }}</option>
           {% endfor %}
         </select>
       </div>
@@ -21,9 +23,16 @@
         <input id="is_budget" class="form-check-input" type="checkbox" />
         <label class="form-check-label" for="is_budget">{% trans "Budget" %}</label>
       </div>
-      <a id="sm-export" href="#" class="btn btn-sm btn-outline-secondary">
+      <a id="sm-export" href="#" class="btn btn-sm btn-outline-primary">
         <i class="bi bi-download me-1"></i>SankeyMATIC
       </a>
+      {% if perms.finance.view_sankeycategory %}
+        <a id="sankey-config-link"
+           href="{% url 'finance:sankey-rules' %}"
+           class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-sliders me-1"></i>{% trans "Settings" %}
+        </a>
+      {% endif %}
     </div>
     <div class="flex-grow-1">
       <div id="chart" class="d-none" style="width:100%;height:85vh"></div>
@@ -45,6 +54,19 @@
     return resp.json();
   }
 
+  // Column x per node "depth" (0 = leftmost) - a *hint*, not an exact
+  // position (see arrangement: "snap" below). Without it, Plotly's
+  // auto-layout places a node by hop-count from any source, which pushes a
+  // node reached via a shortcut (e.g. Dotations, linked straight from
+  // Household) all the way to the rightmost column - see builders.py.
+  // Column 3 stops at 0.82, not 1, leaving room inside the plot area itself
+  // for that column's labels instead of them sitting on top of the nodes.
+  const DEPTH_X = { 0: 0.02, 1: 0.28, 2: 0.55, 3: 0.82 };
+
+  function computeNodeX(nodes) {
+    return nodes.map(n => DEPTH_X[n.depth ?? 0] ?? 0.5);
+  }
+
   async function drawBuckets() {
     const data = await fetchBuckets();
     const hasData = data && data.links && data.links.length > 0;
@@ -53,13 +75,21 @@
     $("#no-data").classList.toggle("d-none", hasData);
     if (!hasData) return;
 
+    const x = computeNodeX(data.nodes);
     const trace = {
       type: "sankey",
-      arrangement: "freeform",
+      // "snap" (not "freeform"): freeform places nodes at the exact x/y
+      // given with no collision avoidance, so an evenly-spaced y would
+      // overlap badly whenever nodes sharing a column have very different
+      // values (e.g. Canton at several million next to a small Dotation
+      // category). "snap" keeps x as a column hint but lets Plotly compute
+      // y itself, spacing nodes to fit their value-proportional height.
+      arrangement: "snap",
       node: {
         label: data.nodes.map(n => n.name),
         customdata: data.nodes.map(n => n.hover || n.name),
         color: data.node_colors,
+        x,
         pad: 14,
         thickness: 22,
         line: { width: 0.5, color: "rgba(0,0,0,0.25)" },
@@ -79,7 +109,10 @@
     Plotly.newPlot(
       "chart",
       [trace],
-      { font: { size: 16, family: "var(--bs-body-font-family)" } },
+      {
+        font: { size: 16, family: "var(--bs-body-font-family)" },
+        margin: { l: 20, r: 140, t: 20, b: 20 },
+      },
       { responsive: true }
     );
   }
@@ -92,8 +125,20 @@
     $("#sm-export").href = "{% url 'finance:sankeymatic_export' %}?" + params.toString();
   }
 
-  $("#year").addEventListener("change", () => { drawBuckets(); updateExportLink(); });
-  $("#is_budget").addEventListener("change", () => { drawBuckets(); updateExportLink(); });
-  window.addEventListener("load", () => { drawBuckets(); updateExportLink(); });
+  function updateConfigLink() {
+    const configLink = $("#sankey-config-link");
+    if (!configLink) return;
+    const selectedOption = $("#year").selectedOptions[0];
+    const scheme = selectedOption ? selectedOption.dataset.scheme : "";
+    const url = new URL(configLink.href, window.location.origin);
+    if (scheme) url.searchParams.set("scheme", scheme);
+    configLink.href = url.pathname + url.search;
+  }
+
+  function updateLinks() { updateExportLink(); updateConfigLink(); }
+
+  $("#year").addEventListener("change", () => { drawBuckets(); updateLinks(); });
+  $("#is_budget").addEventListener("change", () => { drawBuckets(); updateLinks(); });
+  window.addEventListener("load", () => { drawBuckets(); updateLinks(); });
   </script>
 {% endblock content %}
