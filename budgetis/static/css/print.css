@@ -27,6 +27,18 @@
     color: #000 !important; background: transparent !important; border-color: #000 !important;
   }
 
+  /* Les variantes de couleur Bootstrap sur les tableaux (table-primary,
+     table-light, etc.) sont redéfinies ailleurs avec les couleurs de la
+     charte de la commune (voir project.css) - jamais neutre en soi, donc à
+     désactiver explicitement pour l'impression. */
+  .table-primary, .table-secondary, .table-success, .table-danger,
+  .table-warning, .table-info, .table-light, .table-dark {
+    --bs-table-bg: transparent !important;
+    --bs-table-accent-bg: transparent !important;
+    background: none !important;
+    color: #000 !important;
+  }
+
   /* 3) Mise en page (enlève le chrome de l’app) */
   header, nav, footer, .navbar, .sidebar, .offcanvas,
   .toast, .alert, .pagination, .btn, .btn-group,
@@ -40,10 +52,11 @@
   .row, [class*="grid"], [class*="col-"] { gap: 0 !important; }
 
   /* 5) Titres compacts */
-  h1, h2, h3 { margin: 4pt 0 2pt; font-weight: 600; color: #000 !important; }
+  h1, h2, h3, h4 { margin: 4pt 0 2pt; font-weight: 600; color: #000 !important; }
   h1 { font-size: 13pt; }
   h2 { font-size: 11pt; }
   h3 { font-size: 10pt; }
+  h4 { font-size: 9pt; }
 
   /* 6) Tableaux dense, nets, non zébrés */
   table {
@@ -57,11 +70,11 @@
   }
 
   table > tbody {
-    border-bottom: 0.1pt solid #000;
+    border-bottom: 0.5pt solid #000;
   }
 
   th, td {
-    border: 0.1pt solid #000;
+    border: 0.5pt solid #000;
     padding: 2pt 3pt !important;
     vertical-align: top;
     word-wrap: break-word;
@@ -140,13 +153,18 @@
     page-break-before: auto !important;
   }
 
-  h3 {
+  h3, h4 {
     break-after: avoid !important;
     page-break-after: avoid !important; /* compat anciens navigateurs */
   }
-  h3 + table,
-  h3 + .table,
-  h3 + .keep {
+  /* Le tableau d'un chapitre est souvent encapsulé dans un
+     <div id="group-XXXX"> (voir budget_group_node.html) plutôt que d'être
+     directement collé au titre - sans le sélecteur [id^="group-"], la règle
+     ci-dessus ne matchait que "h3 + table" et jamais "h3 + div > table",
+     ce qui laissait le titre s'isoler seul en bas de page. */
+  h2 + table, h2 + .table, h2 + .keep, h2 + [id^="group-"],
+  h3 + table, h3 + .table, h3 + .keep, h3 + [id^="group-"],
+  h4 + table, h4 + .table, h4 + .keep, h4 + [id^="group-"] {
     break-before: avoid !important;
     page-break-before: avoid !important;
   }
