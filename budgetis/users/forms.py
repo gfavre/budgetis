@@ -150,6 +150,37 @@ class DeactivateUserForm(forms.Form):
         return user
 
 
+class UserEditSelectionForm(forms.Form):
+    """
+    Picks an existing user to edit - see UserAdminUpdateView. Same
+    `users.change_user` permission as DeactivateUserForm, and likewise
+    excludes the requesting user (self-editing already happens on their own
+    profile page, see UserProfileForm).
+    """
+
+    user = forms.ModelChoiceField(
+        label=_("User"),
+        queryset=User.objects.none(),  # set in __init__, needs the DB
+    )
+
+    def __init__(self, *args, requesting_user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        queryset = User.objects.all()
+        if requesting_user is not None:
+            queryset = queryset.exclude(pk=requesting_user.pk)
+        field = cast("forms.ModelChoiceField", self.fields["user"])
+        field.queryset = queryset.order_by("name", "email")
+        field.label_from_instance = lambda obj: str(obj)  # noqa: PLW0108
+
+
+class UserEditForm(forms.ModelForm):
+    """Admin-only edit of another user's basic profile fields - see UserAdminUpdateView."""
+
+    class Meta:
+        model = User
+        fields = ("name", "trigram", "is_municipal")
+
+
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User

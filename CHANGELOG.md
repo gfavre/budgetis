@@ -5,6 +5,20 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-09-05
+
+### Added
+
+- **Edit a user**: on the user management page, an admin can now fix
+  an existing user's name, trigram, or municipal officer status
+  (`users.change_user`) - not just at invite time. Same admin-only
+  permission as deactivation, so Bourse members still can't touch it.
+
+### Fixed
+
+- The "Is Municipal" checkbox on the invite form was untranslated -
+  `User.is_municipal` now has a proper, translatable label.
+
 ## [1.4.0] - 2026-09-04
 
 ### Added

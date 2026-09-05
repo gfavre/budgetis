@@ -248,9 +248,10 @@ class TestUserManagementView:
         assert response.status_code == HTTPStatus.OK
         assert response.context["can_invite"] is False
         assert response.context["can_deactivate"] is False
+        assert response.context["can_edit"] is False
         assert response.context["can_nominate"] is True
 
-    def test_bourse_member_without_admin_permissions_cannot_deactivate(self, client, user: User):
+    def test_bourse_member_without_admin_permissions_cannot_deactivate_or_edit(self, client, user: User):
         """A Bourse member (`auth.change_group`) is not automatically an admin."""
         _grant(user, "change_group", "auth")
         client.force_login(user)
@@ -258,6 +259,7 @@ class TestUserManagementView:
         response = client.get(_management_url())
 
         assert response.context["can_deactivate"] is False
+        assert response.context["can_edit"] is False
 
     def test_invite_creates_a_user(self, client, user: User):
         _grant(user, "add_user", "users")
@@ -355,6 +357,99 @@ class TestUserManagementView:
         response = client.get(_management_url())
 
         assert member in response.context["bourse_members"]
+
+
+def _edit_redirect_url(target_pk):
+    return f"{reverse('users:edit-redirect')}?user={target_pk}"
+
+
+def _admin_edit_url(target_pk):
+    return reverse("users:admin-edit", kwargs={"pk": target_pk})
+
+
+class TestUserEditRedirectView:
+    def test_redirects_to_the_target_users_edit_page(self, client, user: User):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+        target = UserFactory()
+
+        response = client.get(_edit_redirect_url(target.pk))
+
+        assert response.status_code == HTTPStatus.FOUND
+        assert response.url == _admin_edit_url(target.pk)
+
+    def test_without_permission_is_forbidden(self, client, user: User):
+        _grant(user, "change_group", "auth")
+        client.force_login(user)
+        target = UserFactory()
+
+        response = client.get(_edit_redirect_url(target.pk))
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+
+    def test_non_numeric_user_param_is_not_found(self, client, user: User):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+
+        response = client.get(f"{reverse('users:edit-redirect')}?user=not-a-number")
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
+
+
+class TestUserAdminUpdateView:
+    def test_login_required(self, client):
+        target = UserFactory()
+
+        response = client.get(_admin_edit_url(target.pk))
+
+        login_url = reverse(settings.LOGIN_URL)
+        assert response.status_code == HTTPStatus.FOUND
+        assert response.url == f"{login_url}?next={_admin_edit_url(target.pk)}"
+
+    def test_without_permission_is_forbidden(self, client, user: User):
+        target = UserFactory()
+        client.force_login(user)
+
+        response = client.get(_admin_edit_url(target.pk))
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+
+    def test_get_prefills_the_form_with_the_targets_current_values(self, client, user: User):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+        target = UserFactory(name="Old Name", trigram="OLD", is_municipal=False)
+
+        response = client.get(_admin_edit_url(target.pk))
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["form"].initial["name"] == "Old Name"
+
+    def test_post_updates_the_target_including_municipal_status(self, client, user: User):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+        target = UserFactory(name="Old Name", trigram="OLD", is_municipal=False)
+
+        response = client.post(
+            _admin_edit_url(target.pk),
+            {"name": "New Name", "trigram": "NEW", "is_municipal": "on"},
+        )
+
+        assert response.status_code == HTTPStatus.FOUND
+        assert response.url == _management_url()
+        target.refresh_from_db()
+        assert target.name == "New Name"
+        assert target.trigram == "NEW"
+        assert target.is_municipal is True
+
+    def test_post_without_permission_is_forbidden_and_does_not_update(self, client, user: User):
+        target = UserFactory(name="Old Name")
+        client.force_login(user)
+
+        response = client.post(_admin_edit_url(target.pk), {"name": "New Name", "trigram": "NEW"})
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        target.refresh_from_db()
+        assert target.name == "Old Name"
 
 
 class TestUserManagementNavLink:

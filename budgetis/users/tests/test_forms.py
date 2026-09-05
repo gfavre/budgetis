@@ -7,6 +7,8 @@ from django.utils.translation import gettext_lazy as _
 from budgetis.users.forms import BourseNominationForm
 from budgetis.users.forms import DeactivateUserForm
 from budgetis.users.forms import UserAdminCreationForm
+from budgetis.users.forms import UserEditForm
+from budgetis.users.forms import UserEditSelectionForm
 from budgetis.users.forms import UserInviteForm
 from budgetis.users.models import BOURSE_GROUP_NAME
 from budgetis.users.models import User
@@ -132,3 +134,49 @@ class TestDeactivateUserForm:
         form = DeactivateUserForm({"user": admin.pk}, requesting_user=admin)
 
         assert not form.is_valid()
+
+
+@pytest.mark.django_db
+class TestUserEditSelectionForm:
+    def test_excludes_the_requesting_user_from_the_choices(self):
+        admin = UserFactory()
+        other = UserFactory()
+
+        form = UserEditSelectionForm(requesting_user=admin)
+
+        choices = list(form.fields["user"].queryset)
+        assert other in choices
+        assert admin not in choices
+
+    def test_includes_inactive_users_in_the_choices(self):
+        """Unlike deactivation/nomination, fixing a typo shouldn't require reactivating first."""
+        admin = UserFactory()
+        inactive = UserFactory(is_active=False)
+
+        form = UserEditSelectionForm(requesting_user=admin)
+
+        assert inactive in list(form.fields["user"].queryset)
+
+
+@pytest.mark.django_db
+class TestUserEditForm:
+    def test_updates_name_trigram_and_municipal_status(self):
+        target = UserFactory(name="Old Name", trigram="OLD", is_municipal=False)
+
+        form = UserEditForm(
+            {"name": "New Name", "trigram": "NEW", "is_municipal": True},
+            instance=target,
+        )
+
+        assert form.is_valid(), form.errors
+        form.save()
+
+        target.refresh_from_db()
+        assert target.name == "New Name"
+        assert target.trigram == "NEW"
+        assert target.is_municipal is True
+
+    def test_does_not_expose_email_or_staff_fields(self):
+        form = UserEditForm()
+
+        assert set(form.fields) == {"name", "trigram", "is_municipal"}

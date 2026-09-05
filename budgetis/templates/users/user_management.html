@@ -8,7 +8,7 @@
 {% block content %}
   <h1>{% trans "User management" %}</h1>
   <div class="row">
-    {% if can_invite or can_deactivate %}
+    {% if can_invite or can_edit or can_deactivate %}
       <div class="col-md-6 mb-4">
         {% if can_invite %}
           <div class="card mb-4">
@@ -21,6 +21,18 @@
                 {% csrf_token %}
                 {{ invite_form|crispy }}
                 <button type="submit" name="invite_submit" class="btn btn-primary">{% trans "Invite" %}</button>
+              </form>
+            </div>
+          </div>
+        {% endif %}
+        {% if can_edit %}
+          <div class="card mb-4">
+            <div class="card-header">{% trans "Edit a user" %}</div>
+            <div class="card-body">
+              <p class="text-muted">{% trans "Fixes an existing user's name, trigram, or municipal officer status." %}</p>
+              <form method="get" action="{% url 'users:edit-redirect' %}">
+                {{ edit_user_form|crispy }}
+                <button type="submit" class="btn btn-primary">{% trans "Edit" %}</button>
               </form>
             </div>
           </div>
