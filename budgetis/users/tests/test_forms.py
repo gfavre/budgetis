@@ -8,7 +8,6 @@ from budgetis.users.forms import BourseNominationForm
 from budgetis.users.forms import DeactivateUserForm
 from budgetis.users.forms import UserAdminCreationForm
 from budgetis.users.forms import UserEditForm
-from budgetis.users.forms import UserEditSelectionForm
 from budgetis.users.forms import UserInviteForm
 from budgetis.users.models import BOURSE_GROUP_NAME
 from budgetis.users.models import User
@@ -134,28 +133,6 @@ class TestDeactivateUserForm:
         form = DeactivateUserForm({"user": admin.pk}, requesting_user=admin)
 
         assert not form.is_valid()
-
-
-@pytest.mark.django_db
-class TestUserEditSelectionForm:
-    def test_excludes_the_requesting_user_from_the_choices(self):
-        admin = UserFactory()
-        other = UserFactory()
-
-        form = UserEditSelectionForm(requesting_user=admin)
-
-        choices = list(form.fields["user"].queryset)
-        assert other in choices
-        assert admin not in choices
-
-    def test_includes_inactive_users_in_the_choices(self):
-        """Unlike deactivation/nomination, fixing a typo shouldn't require reactivating first."""
-        admin = UserFactory()
-        inactive = UserFactory(is_active=False)
-
-        form = UserEditSelectionForm(requesting_user=admin)
-
-        assert inactive in list(form.fields["user"].queryset)
 
 
 @pytest.mark.django_db

@@ -5,6 +5,16 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-09-05
+
+### Changed
+
+- **User management page redesign**: the separate "Edit a user" and
+  "Deactivate a user" dropdown pickers are replaced by a single table
+  listing every other user, with an Edit and (where applicable) a
+  Deactivate button directly on each row - no more picking a name
+  from a dropdown to act on it.
+
 ## [1.5.0] - 2026-09-05
 
 ### Added

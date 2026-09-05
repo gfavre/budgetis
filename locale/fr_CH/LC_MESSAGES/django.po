@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 06:16+0200\n"
+"POT-Creation-Date: 2026-09-05 06:44+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -540,7 +540,7 @@ msgstr "Supprimer"
 
 #: budgetis/accounting/templates/accounting/partials/account_comment_form.html:6
 #: budgetis/finance/templates/finance/partials/sankey_rule_form.html:8
-#: budgetis/templates/users/user_management.html:35
+#: budgetis/templates/users/user_management.html:81
 msgid "Edit"
 msgstr "Modifier"
 
@@ -774,6 +774,7 @@ msgid "Dry run"
 msgstr "Essai à blanc"
 
 #: budgetis/bdi_import/models.py:49
+#: budgetis/templates/users/user_management.html:61
 msgid "Status"
 msgstr "Statut"
 
@@ -1151,6 +1152,7 @@ msgid "Dotation"
 msgstr "Amortissements"
 
 #: budgetis/finance/models.py:47
+#: budgetis/templates/users/user_management.html:58
 msgid "Name"
 msgstr "Nom"
 
@@ -1244,7 +1246,7 @@ msgid "No rule for this scheme yet."
 msgstr "Aucune règle pour ce plan comptable."
 
 #: budgetis/finance/templates/finance/partials/sankey_rule_form.html:6
-#: budgetis/templates/users/user_management.html:66
+#: budgetis/templates/users/user_management.html:37
 msgid "Add"
 msgstr "Ajouter"
 
@@ -1321,7 +1323,8 @@ msgstr "Budgetis v%(version)s"
 msgid "Admin"
 msgstr "Admin"
 
-#: budgetis/templates/base.html:230 budgetis/users/apps.py:9
+#: budgetis/templates/base.html:230
+#: budgetis/templates/users/user_management.html:53 budgetis/users/apps.py:9
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -1375,11 +1378,11 @@ msgstr "Aucune responsabilité assignée."
 msgid "User management"
 msgstr "Gestion des utilisateurs"
 
-#: budgetis/templates/users/user_management.html:15
+#: budgetis/templates/users/user_management.html:14
 msgid "Invite a user"
 msgstr "Inviter un utilisateur"
 
-#: budgetis/templates/users/user_management.html:18
+#: budgetis/templates/users/user_management.html:17
 msgid ""
 "Creates an account for a future municipal officer or finance staff member. "
 "They will sign in with their Microsoft account."
@@ -1387,50 +1390,40 @@ msgstr ""
 "Crée un compte pour un futur municipal ou un membre de la bourse communale. "
 "La connexion se fera avec un compte Microsoft."
 
-#: budgetis/templates/users/user_management.html:23
+#: budgetis/templates/users/user_management.html:22
 msgid "Invite"
 msgstr "Inviter"
 
-#: budgetis/templates/users/user_management.html:30
-msgid "Edit a user"
-msgstr "Modifier un utilisateur"
-
-#: budgetis/templates/users/user_management.html:32
-msgid "Fixes an existing user's name, trigram, or municipal officer status."
-msgstr ""
-"Corrige le nom, le trigramme ou le statut de municipal d'un utilisateur "
-"existant."
-
-#: budgetis/templates/users/user_management.html:42
-msgid "Deactivate a user"
-msgstr "Désactiver un utilisateur"
-
-#: budgetis/templates/users/user_management.html:45
-msgid ""
-"Deactivated users can no longer sign in. This can be undone from the Django "
-"admin."
-msgstr ""
-"Un utilisateur désactivé ne peut plus se connecter. Ceci peut être annulé "
-"depuis l'admin Django."
-
-#: budgetis/templates/users/user_management.html:50
-msgid "Deactivate"
-msgstr "Désactiver"
-
-#: budgetis/templates/users/user_management.html:60
+#: budgetis/templates/users/user_management.html:31
 msgid "Add to the Bourse"
 msgstr "Ajouter à la Bourse"
 
-#: budgetis/templates/users/user_management.html:62
+#: budgetis/templates/users/user_management.html:33
 msgid ""
 "Grants an existing user access to budget editing and Sankey configuration."
 msgstr ""
 "Donne à un utilisateur existant l'accès à l'édition du budget et à la "
 "configuration du Sankey."
 
-#: budgetis/templates/users/user_management.html:70
+#: budgetis/templates/users/user_management.html:41
 msgid "Current members"
 msgstr "Membres actuels"
+
+#: budgetis/templates/users/user_management.html:59 budgetis/users/models.py:40
+msgid "Trigram"
+msgstr "Trigramme"
+
+#: budgetis/templates/users/user_management.html:60 budgetis/users/models.py:39
+msgid "Municipal officer"
+msgstr "Municipal"
+
+#: budgetis/templates/users/user_management.html:75
+msgid "Inactive"
+msgstr "Inactif"
+
+#: budgetis/templates/users/user_management.html:89
+msgid "Deactivate"
+msgstr "Désactiver"
 
 #: budgetis/users/adapters.py:71
 msgid "This account has been disabled."
@@ -1477,7 +1470,6 @@ msgid "Grants access to budget editing and Sankey configuration."
 msgstr "Donne accès à l'édition du budget et à la configuration du Sankey."
 
 #: budgetis/users/forms.py:103 budgetis/users/forms.py:133
-#: budgetis/users/forms.py:162
 msgid "User"
 msgstr "Utilisateur"
 
@@ -1489,38 +1481,34 @@ msgstr "Nom de l'utilisateur"
 msgid "email address"
 msgstr "adresse e-mail"
 
-#: budgetis/users/models.py:35 budgetis/users/tests/test_forms.py:44
+#: budgetis/users/models.py:35 budgetis/users/tests/test_forms.py:43
 msgid "This email has already been taken."
 msgstr "Cette adresse e-mail est déjà utilisée."
 
-#: budgetis/users/models.py:39
-msgid "Municipal officer"
-msgstr "Municipal"
-
-#: budgetis/users/models.py:40
-msgid "Trigram"
-msgstr "Trigramme"
-
-#: budgetis/users/tests/test_views.py:88 budgetis/users/views.py:79
+#: budgetis/users/tests/test_views.py:88 budgetis/users/views.py:77
 msgid "Information successfully updated"
 msgstr "Informations mises à jour avec succès"
 
-#: budgetis/users/views.py:115
+#: budgetis/users/views.py:113
 #, python-format
 msgid "%(user)s has been updated."
 msgstr "%(user)s a été mis à jour."
 
-#: budgetis/users/views.py:181
+#: budgetis/users/views.py:166
 #, python-format
 msgid "%(email)s has been invited."
 msgstr "Invitation envoyée à %(email)s."
 
-#: budgetis/users/views.py:191
+#: budgetis/users/views.py:176
 #, python-format
 msgid "%(user)s has been deactivated."
 msgstr "%(user)s a été désactivé."
 
-#: budgetis/users/views.py:201
+#: budgetis/users/views.py:178
+msgid "Could not deactivate that user."
+msgstr "Impossible de désactiver cet utilisateur."
+
+#: budgetis/users/views.py:187
 #, python-format
 msgid "%(user)s is now part of the Bourse."
 msgstr "%(user)s fait maintenant partie de la Bourse."

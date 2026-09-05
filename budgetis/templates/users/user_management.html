@@ -8,50 +8,21 @@
 {% block content %}
   <h1>{% trans "User management" %}</h1>
   <div class="row">
-    {% if can_invite or can_edit or can_deactivate %}
+    {% if can_invite %}
       <div class="col-md-6 mb-4">
-        {% if can_invite %}
-          <div class="card mb-4">
-            <div class="card-header">{% trans "Invite a user" %}</div>
-            <div class="card-body">
-              <p class="text-muted">
-                {% trans "Creates an account for a future municipal officer or finance staff member. They will sign in with their Microsoft account." %}
-              </p>
-              <form method="post" action="{% url 'users:management' %}">
-                {% csrf_token %}
-                {{ invite_form|crispy }}
-                <button type="submit" name="invite_submit" class="btn btn-primary">{% trans "Invite" %}</button>
-              </form>
-            </div>
+        <div class="card">
+          <div class="card-header">{% trans "Invite a user" %}</div>
+          <div class="card-body">
+            <p class="text-muted">
+              {% trans "Creates an account for a future municipal officer or finance staff member. They will sign in with their Microsoft account." %}
+            </p>
+            <form method="post" action="{% url 'users:management' %}">
+              {% csrf_token %}
+              {{ invite_form|crispy }}
+              <button type="submit" name="invite_submit" class="btn btn-primary">{% trans "Invite" %}</button>
+            </form>
           </div>
-        {% endif %}
-        {% if can_edit %}
-          <div class="card mb-4">
-            <div class="card-header">{% trans "Edit a user" %}</div>
-            <div class="card-body">
-              <p class="text-muted">{% trans "Fixes an existing user's name, trigram, or municipal officer status." %}</p>
-              <form method="get" action="{% url 'users:edit-redirect' %}">
-                {{ edit_user_form|crispy }}
-                <button type="submit" class="btn btn-primary">{% trans "Edit" %}</button>
-              </form>
-            </div>
-          </div>
-        {% endif %}
-        {% if can_deactivate %}
-          <div class="card">
-            <div class="card-header">{% trans "Deactivate a user" %}</div>
-            <div class="card-body">
-              <p class="text-muted">
-                {% trans "Deactivated users can no longer sign in. This can be undone from the Django admin." %}
-              </p>
-              <form method="post" action="{% url 'users:management' %}">
-                {% csrf_token %}
-                {{ deactivate_form|crispy }}
-                <button type="submit" name="deactivate_submit" class="btn btn-outline-danger">{% trans "Deactivate" %}</button>
-              </form>
-            </div>
-          </div>
-        {% endif %}
+        </div>
       </div>
     {% endif %}
     {% if can_nominate %}
@@ -77,4 +48,53 @@
       </div>
     {% endif %}
   </div>
+  {% if manageable_users %}
+    <div class="card">
+      <div class="card-header">{% trans "Users" %}</div>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th>{% trans "Name" %}</th>
+              <th>{% trans "Trigram" %}</th>
+              <th>{% trans "Municipal officer" %}</th>
+              <th>{% trans "Status" %}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in manageable_users %}
+              <tr>
+                <td>{{ row }}</td>
+                <td>{{ row.trigram }}</td>
+                <td>
+                  {% if row.is_municipal %}<i class="bi bi-check-lg"></i>{% endif %}
+                </td>
+                <td>
+                  {% if not row.is_active %}
+                    <span class="badge bg-secondary">{% trans "Inactive" %}</span>
+                  {% endif %}
+                </td>
+                <td class="text-end">
+                  {% if can_edit %}
+                    <a href="{% url 'users:admin-edit' row.pk %}"
+                       class="btn btn-sm btn-outline-primary">{% trans "Edit" %}</a>
+                  {% endif %}
+                  {% if can_deactivate and row.is_active %}
+                    <form method="post" action="{% url 'users:management' %}" class="d-inline">
+                      {% csrf_token %}
+                      <input type="hidden" name="user" value="{{ row.pk }}" />
+                      <button type="submit"
+                              name="deactivate_submit"
+                              class="btn btn-sm btn-outline-danger">{% trans "Deactivate" %}</button>
+                    </form>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
 {% endblock content %}

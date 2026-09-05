@@ -7,7 +7,6 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Max
 from django.db.models import QuerySet
-from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -20,7 +19,6 @@ from budgetis.accounting.models import Account
 from budgetis.users.forms import BourseNominationForm
 from budgetis.users.forms import DeactivateUserForm
 from budgetis.users.forms import UserEditForm
-from budgetis.users.forms import UserEditSelectionForm
 from budgetis.users.forms import UserInviteForm
 from budgetis.users.forms import UserProfileForm
 from budgetis.users.models import BOURSE_GROUP_NAME
@@ -118,29 +116,14 @@ class UserAdminUpdateView(LoginRequiredMixin, PermissionRequiredMixin, SuccessMe
 user_admin_edit_view = UserAdminUpdateView.as_view()
 
 
-class UserEditRedirectView(LoginRequiredMixin, PermissionRequiredMixin, RedirectView):
-    """Turns the "Edit a user" picker's GET submission into a redirect to that user's edit page."""
-
-    permission_required = EDIT_PERMISSION
-    permanent = False
-
-    def get_redirect_url(self, *args, **kwargs):
-        user_pk = self.request.GET.get("user", "")
-        if not user_pk.isdigit():
-            raise Http404
-        return reverse("users:admin-edit", kwargs={"pk": user_pk})
-
-
-user_edit_redirect_view = UserEditRedirectView.as_view()
-
-
 class UserManagementView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
     """
     Combines independently permission-gated actions on one page: inviting new
-    accounts, deactivating any existing one, and editing another user's basic
-    profile fields (admin-only, `users.add_user` / `users.change_user`), and
-    nominating existing users into the Bourse group (any current Bourse
-    member, `auth.change_group` - deliberately not an admin-only permission).
+    accounts, and - listed with per-row buttons - editing another user's
+    basic profile fields or deactivating their account (admin-only,
+    `users.add_user` / `users.change_user`), and nominating existing users
+    into the Bourse group (any current Bourse member, `auth.change_group` -
+    deliberately not an admin-only permission).
     """
 
     template_name = "users/user_management.html"
@@ -152,15 +135,17 @@ class UserManagementView(LoginRequiredMixin, PermissionRequiredMixin, TemplateVi
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        can_deactivate = self.request.user.has_perm(DEACTIVATE_PERMISSION)
+        can_edit = self.request.user.has_perm(EDIT_PERMISSION)
         context["can_invite"] = self.request.user.has_perm(INVITE_PERMISSION)
-        context["can_deactivate"] = self.request.user.has_perm(DEACTIVATE_PERMISSION)
-        context["can_edit"] = self.request.user.has_perm(EDIT_PERMISSION)
+        context["can_deactivate"] = can_deactivate
+        context["can_edit"] = can_edit
         context["can_nominate"] = self.request.user.has_perm(NOMINATE_PERMISSION)
         context.setdefault("invite_form", UserInviteForm())
-        context.setdefault("deactivate_form", DeactivateUserForm(requesting_user=self.request.user))
-        context.setdefault("edit_user_form", UserEditSelectionForm(requesting_user=self.request.user))
         context.setdefault("nomination_form", BourseNominationForm())
         context["bourse_members"] = User.objects.filter(groups__name=BOURSE_GROUP_NAME).order_by("name", "email")
+        if can_edit or can_deactivate:
+            context["manageable_users"] = User.objects.exclude(pk=self.request.user.pk).order_by("name", "email")
         return context
 
     def post(self, request, *args, **kwargs):
@@ -187,10 +172,11 @@ class UserManagementView(LoginRequiredMixin, PermissionRequiredMixin, TemplateVi
             raise PermissionDenied
         form = DeactivateUserForm(request.POST, requesting_user=request.user)
         if form.is_valid():
-            user = form.save()
-            messages.success(request, _("%(user)s has been deactivated.") % {"user": user})
-            return redirect("users:management")
-        return self.render_to_response(self.get_context_data(deactivate_form=form))
+            deactivated_user = form.save()
+            messages.success(request, _("%(user)s has been deactivated.") % {"user": deactivated_user})
+        else:
+            messages.error(request, _("Could not deactivate that user."))
+        return redirect("users:management")
 
     def _handle_nomination(self, request):
         if not request.user.has_perm(NOMINATE_PERMISSION):

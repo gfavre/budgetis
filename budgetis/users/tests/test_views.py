@@ -323,7 +323,7 @@ class TestUserManagementView:
 
         response = client.post(_management_url(), {"deactivate_submit": "1", "user": user.pk})
 
-        assert response.status_code == HTTPStatus.OK
+        assert response.status_code == HTTPStatus.FOUND
         user.refresh_from_db()
         assert user.is_active
 
@@ -358,42 +358,51 @@ class TestUserManagementView:
 
         assert member in response.context["bourse_members"]
 
+    def test_manageable_users_excludes_the_requesting_user(self, client, user: User):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+        other = UserFactory()
 
-def _edit_redirect_url(target_pk):
-    return f"{reverse('users:edit-redirect')}?user={target_pk}"
+        response = client.get(_management_url())
+
+        assert other in response.context["manageable_users"]
+        assert user not in response.context["manageable_users"]
+
+    def test_manageable_users_absent_without_edit_or_deactivate_permission(self, client, user: User):
+        _grant(user, "add_user", "users")
+        client.force_login(user)
+
+        response = client.get(_management_url())
+
+        assert "manageable_users" not in response.context
+
+    def test_users_table_shows_edit_and_deactivate_buttons(self, client, user: User, site_configuration_with_logo):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+        target = UserFactory()
+
+        response = client.get(_management_url())
+
+        html = response.content.decode()
+        assert _admin_edit_url(target.pk) in html
+        assert f'value="{target.pk}"' in html
+
+    def test_users_table_omits_deactivate_button_for_an_already_inactive_user(
+        self, client, user: User, site_configuration_with_logo
+    ):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+        target = UserFactory(is_active=False)
+
+        response = client.get(_management_url())
+
+        html = response.content.decode()
+        assert _admin_edit_url(target.pk) in html
+        assert f'value="{target.pk}"' not in html
 
 
 def _admin_edit_url(target_pk):
     return reverse("users:admin-edit", kwargs={"pk": target_pk})
-
-
-class TestUserEditRedirectView:
-    def test_redirects_to_the_target_users_edit_page(self, client, user: User):
-        _grant(user, "change_user", "users")
-        client.force_login(user)
-        target = UserFactory()
-
-        response = client.get(_edit_redirect_url(target.pk))
-
-        assert response.status_code == HTTPStatus.FOUND
-        assert response.url == _admin_edit_url(target.pk)
-
-    def test_without_permission_is_forbidden(self, client, user: User):
-        _grant(user, "change_group", "auth")
-        client.force_login(user)
-        target = UserFactory()
-
-        response = client.get(_edit_redirect_url(target.pk))
-
-        assert response.status_code == HTTPStatus.FORBIDDEN
-
-    def test_non_numeric_user_param_is_not_found(self, client, user: User):
-        _grant(user, "change_user", "users")
-        client.force_login(user)
-
-        response = client.get(f"{reverse('users:edit-redirect')}?user=not-a-number")
-
-        assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 class TestUserAdminUpdateView:
