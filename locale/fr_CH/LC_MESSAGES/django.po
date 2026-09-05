@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-04 19:59+0200\n"
+"POT-Creation-Date: 2026-09-05 06:10+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1473,6 +1473,10 @@ msgstr "adresse e-mail"
 #: budgetis/users/models.py:35 budgetis/users/tests/test_forms.py:42
 msgid "This email has already been taken."
 msgstr "Cette adresse e-mail est déjà utilisée."
+
+#: budgetis/users/models.py:39
+msgid "Municipal officer"
+msgstr "Municipal"
 
 #: budgetis/users/models.py:40
 msgid "Trigram"

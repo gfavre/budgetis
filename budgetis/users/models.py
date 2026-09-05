@@ -36,7 +36,7 @@ class User(AbstractUser):
     )
     username = None  # type: ignore[assignment]
 
-    is_municipal = models.BooleanField(default=False)
+    is_municipal = models.BooleanField(_("Municipal officer"), default=False)
     trigram = models.CharField(_("Trigram"), max_length=3, blank=True)
 
     USERNAME_FIELD = "email"
