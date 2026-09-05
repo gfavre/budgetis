@@ -18,6 +18,7 @@ from django.views.generic import UpdateView
 from budgetis.accounting.models import Account
 from budgetis.users.forms import BourseNominationForm
 from budgetis.users.forms import DeactivateUserForm
+from budgetis.users.forms import ReactivateUserForm
 from budgetis.users.forms import UserEditForm
 from budgetis.users.forms import UserInviteForm
 from budgetis.users.forms import UserProfileForm
@@ -143,9 +144,12 @@ class UserManagementView(LoginRequiredMixin, PermissionRequiredMixin, TemplateVi
         context["can_nominate"] = self.request.user.has_perm(NOMINATE_PERMISSION)
         context.setdefault("invite_form", UserInviteForm())
         context.setdefault("nomination_form", BourseNominationForm())
-        context["bourse_members"] = User.objects.filter(groups__name=BOURSE_GROUP_NAME).order_by("name", "email")
+        context["bourse_members"] = User.objects.filter(groups__name=BOURSE_GROUP_NAME).order_by("trigram", "name")
         if can_edit or can_deactivate:
-            context["manageable_users"] = User.objects.exclude(pk=self.request.user.pk).order_by("name", "email")
+            assert self.request.user.is_authenticated  # type guard
+            context["manageable_users"] = User.objects.exclude(pk=self.request.user.pk).order_by(
+                "-is_active", "trigram", "name"
+            )
         return context
 
     def post(self, request, *args, **kwargs):
@@ -153,6 +157,8 @@ class UserManagementView(LoginRequiredMixin, PermissionRequiredMixin, TemplateVi
             return self._handle_invite(request)
         if "deactivate_submit" in request.POST:
             return self._handle_deactivate(request)
+        if "reactivate_submit" in request.POST:
+            return self._handle_reactivate(request)
         if "nominate_submit" in request.POST:
             return self._handle_nomination(request)
         raise PermissionDenied
@@ -176,6 +182,17 @@ class UserManagementView(LoginRequiredMixin, PermissionRequiredMixin, TemplateVi
             messages.success(request, _("%(user)s has been deactivated.") % {"user": deactivated_user})
         else:
             messages.error(request, _("Could not deactivate that user."))
+        return redirect("users:management")
+
+    def _handle_reactivate(self, request):
+        if not request.user.has_perm(DEACTIVATE_PERMISSION):
+            raise PermissionDenied
+        form = ReactivateUserForm(request.POST, requesting_user=request.user)
+        if form.is_valid():
+            reactivated_user = form.save()
+            messages.success(request, _("%(user)s has been reactivated.") % {"user": reactivated_user})
+        else:
+            messages.error(request, _("Could not reactivate that user."))
         return redirect("users:management")
 
     def _handle_nomination(self, request):

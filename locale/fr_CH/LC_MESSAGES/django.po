@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 06:44+0200\n"
+"POT-Creation-Date: 2026-09-05 06:56+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -465,7 +465,7 @@ msgstr "Confirm"
 
 #: budgetis/accounting/templates/accounting/admin/reassign_responsible.html:25
 #: budgetis/accounting/templates/accounting/partials/account_comment_confirm_delete.html:20
-#: budgetis/templates/users/user_admin_edit.html:14
+#: budgetis/templates/users/user_admin_edit.html:18
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -540,7 +540,7 @@ msgstr "Supprimer"
 
 #: budgetis/accounting/templates/accounting/partials/account_comment_form.html:6
 #: budgetis/finance/templates/finance/partials/sankey_rule_form.html:8
-#: budgetis/templates/users/user_management.html:81
+#: budgetis/templates/users/user_management.html:92
 msgid "Edit"
 msgstr "Modifier"
 
@@ -550,7 +550,7 @@ msgstr "commentaire"
 
 #: budgetis/accounting/templates/accounting/partials/account_comment_form.html:22
 #: budgetis/finance/templates/finance/partials/sankey_rule_form.html:34
-#: budgetis/templates/users/user_admin_edit.html:13
+#: budgetis/templates/users/user_admin_edit.html:16
 #: budgetis/templates/users/user_detail.html:30
 msgid "Save"
 msgstr "Enregistrer"
@@ -774,7 +774,7 @@ msgid "Dry run"
 msgstr "Essai à blanc"
 
 #: budgetis/bdi_import/models.py:49
-#: budgetis/templates/users/user_management.html:61
+#: budgetis/templates/users/user_management.html:71
 msgid "Status"
 msgstr "Statut"
 
@@ -1152,7 +1152,7 @@ msgid "Dotation"
 msgstr "Amortissements"
 
 #: budgetis/finance/models.py:47
-#: budgetis/templates/users/user_management.html:58
+#: budgetis/templates/users/user_management.html:68
 msgid "Name"
 msgstr "Nom"
 
@@ -1246,7 +1246,7 @@ msgid "No rule for this scheme yet."
 msgstr "Aucune règle pour ce plan comptable."
 
 #: budgetis/finance/templates/finance/partials/sankey_rule_form.html:6
-#: budgetis/templates/users/user_management.html:37
+#: budgetis/templates/users/user_management.html:44
 msgid "Add"
 msgstr "Ajouter"
 
@@ -1324,7 +1324,7 @@ msgid "Admin"
 msgstr "Admin"
 
 #: budgetis/templates/base.html:230
-#: budgetis/templates/users/user_management.html:53 budgetis/users/apps.py:9
+#: budgetis/templates/users/user_management.html:62 budgetis/users/apps.py:9
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -1336,7 +1336,7 @@ msgstr "Mon Profil"
 msgid "Sign Out"
 msgstr "Déconnexion"
 
-#: budgetis/templates/users/user_admin_edit.html:9
+#: budgetis/templates/users/user_admin_edit.html:10
 #, python-format
 msgid "Edit %(name)s"
 msgstr "Modifier %(name)s"
@@ -1378,11 +1378,11 @@ msgstr "Aucune responsabilité assignée."
 msgid "User management"
 msgstr "Gestion des utilisateurs"
 
-#: budgetis/templates/users/user_management.html:14
+#: budgetis/templates/users/user_management.html:15
 msgid "Invite a user"
 msgstr "Inviter un utilisateur"
 
-#: budgetis/templates/users/user_management.html:17
+#: budgetis/templates/users/user_management.html:19
 msgid ""
 "Creates an account for a future municipal officer or finance staff member. "
 "They will sign in with their Microsoft account."
@@ -1390,40 +1390,44 @@ msgstr ""
 "Crée un compte pour un futur municipal ou un membre de la bourse communale. "
 "La connexion se fera avec un compte Microsoft."
 
-#: budgetis/templates/users/user_management.html:22
+#: budgetis/templates/users/user_management.html:25
 msgid "Invite"
 msgstr "Inviter"
 
-#: budgetis/templates/users/user_management.html:31
+#: budgetis/templates/users/user_management.html:36
 msgid "Add to the Bourse"
 msgstr "Ajouter à la Bourse"
 
-#: budgetis/templates/users/user_management.html:33
+#: budgetis/templates/users/user_management.html:39
 msgid ""
 "Grants an existing user access to budget editing and Sankey configuration."
 msgstr ""
 "Donne à un utilisateur existant l'accès à l'édition du budget et à la "
 "configuration du Sankey."
 
-#: budgetis/templates/users/user_management.html:41
+#: budgetis/templates/users/user_management.html:49
 msgid "Current members"
 msgstr "Membres actuels"
 
-#: budgetis/templates/users/user_management.html:59 budgetis/users/models.py:40
+#: budgetis/templates/users/user_management.html:69 budgetis/users/models.py:40
 msgid "Trigram"
 msgstr "Trigramme"
 
-#: budgetis/templates/users/user_management.html:60 budgetis/users/models.py:39
+#: budgetis/templates/users/user_management.html:70 budgetis/users/models.py:39
 msgid "Municipal officer"
 msgstr "Municipal"
 
-#: budgetis/templates/users/user_management.html:75
+#: budgetis/templates/users/user_management.html:85
 msgid "Inactive"
 msgstr "Inactif"
 
-#: budgetis/templates/users/user_management.html:89
+#: budgetis/templates/users/user_management.html:102
 msgid "Deactivate"
 msgstr "Désactiver"
+
+#: budgetis/templates/users/user_management.html:112
+msgid "Reactivate"
+msgstr "Réactiver"
 
 #: budgetis/users/adapters.py:71
 msgid "This account has been disabled."
@@ -1470,6 +1474,7 @@ msgid "Grants access to budget editing and Sankey configuration."
 msgstr "Donne accès à l'édition du budget et à la configuration du Sankey."
 
 #: budgetis/users/forms.py:103 budgetis/users/forms.py:133
+#: budgetis/users/forms.py:157
 msgid "User"
 msgstr "Utilisateur"
 
@@ -1481,34 +1486,43 @@ msgstr "Nom de l'utilisateur"
 msgid "email address"
 msgstr "adresse e-mail"
 
-#: budgetis/users/models.py:35 budgetis/users/tests/test_forms.py:43
+#: budgetis/users/models.py:35 budgetis/users/tests/test_forms.py:44
 msgid "This email has already been taken."
 msgstr "Cette adresse e-mail est déjà utilisée."
 
-#: budgetis/users/tests/test_views.py:88 budgetis/users/views.py:77
+#: budgetis/users/tests/test_views.py:88 budgetis/users/views.py:78
 msgid "Information successfully updated"
 msgstr "Informations mises à jour avec succès"
 
-#: budgetis/users/views.py:113
+#: budgetis/users/views.py:114
 #, python-format
 msgid "%(user)s has been updated."
 msgstr "%(user)s a été mis à jour."
 
-#: budgetis/users/views.py:166
+#: budgetis/users/views.py:170
 #, python-format
 msgid "%(email)s has been invited."
 msgstr "Invitation envoyée à %(email)s."
 
-#: budgetis/users/views.py:176
+#: budgetis/users/views.py:180
 #, python-format
 msgid "%(user)s has been deactivated."
 msgstr "%(user)s a été désactivé."
 
-#: budgetis/users/views.py:178
+#: budgetis/users/views.py:182
 msgid "Could not deactivate that user."
 msgstr "Impossible de désactiver cet utilisateur."
 
-#: budgetis/users/views.py:187
+#: budgetis/users/views.py:191
+#, python-format
+msgid "%(user)s has been reactivated."
+msgstr "%(user)s a été réactivé."
+
+#: budgetis/users/views.py:193
+msgid "Could not reactivate that user."
+msgstr "Impossible de réactiver cet utilisateur."
+
+#: budgetis/users/views.py:202
 #, python-format
 msgid "%(user)s is now part of the Bourse."
 msgstr "%(user)s fait maintenant partie de la Bourse."

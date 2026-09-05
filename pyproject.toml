@@ -1,6 +1,6 @@
 [project]
 name = "budgetis"
-version = "1.6.0"
+version = "1.6.1"
 description = "Gestion des comptes et du budget communal"
 readme = "README.md"
 requires-python = ">=3.12"

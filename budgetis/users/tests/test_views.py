@@ -327,6 +327,28 @@ class TestUserManagementView:
         user.refresh_from_db()
         assert user.is_active
 
+    def test_reactivate_reactivates_the_selected_user(self, client, user: User):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+        target = UserFactory(is_active=False)
+
+        response = client.post(_management_url(), {"reactivate_submit": "1", "user": target.pk})
+
+        assert response.status_code == HTTPStatus.FOUND
+        target.refresh_from_db()
+        assert target.is_active
+
+    def test_reactivate_without_permission_is_forbidden_and_does_not_reactivate(self, client, user: User):
+        _grant(user, "change_group", "auth")
+        client.force_login(user)
+        target = UserFactory(is_active=False)
+
+        response = client.post(_management_url(), {"reactivate_submit": "1", "user": target.pk})
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        target.refresh_from_db()
+        assert not target.is_active
+
     def test_nominate_adds_an_existing_user_to_the_bourse_group(self, client, user: User):
         _grant(user, "change_group", "auth")
         client.force_login(user)
@@ -368,6 +390,20 @@ class TestUserManagementView:
         assert other in response.context["manageable_users"]
         assert user not in response.context["manageable_users"]
 
+    def test_manageable_users_are_ordered_by_trigram_with_inactive_users_last(
+        self, client, user: User, site_configuration_with_logo
+    ):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+        zed_active = UserFactory(trigram="ZZZ", is_active=True)
+        abc_inactive = UserFactory(trigram="AAA", is_active=False)
+        abc_active = UserFactory(trigram="ABC", is_active=True)
+
+        response = client.get(_management_url())
+
+        ordered = list(response.context["manageable_users"])
+        assert ordered == [abc_active, zed_active, abc_inactive]
+
     def test_manageable_users_absent_without_edit_or_deactivate_permission(self, client, user: User):
         _grant(user, "add_user", "users")
         client.force_login(user)
@@ -387,7 +423,7 @@ class TestUserManagementView:
         assert _admin_edit_url(target.pk) in html
         assert f'value="{target.pk}"' in html
 
-    def test_users_table_omits_deactivate_button_for_an_already_inactive_user(
+    def test_users_table_shows_reactivate_instead_of_deactivate_for_an_inactive_user(
         self, client, user: User, site_configuration_with_logo
     ):
         _grant(user, "change_user", "users")
@@ -398,7 +434,18 @@ class TestUserManagementView:
 
         html = response.content.decode()
         assert _admin_edit_url(target.pk) in html
-        assert f'value="{target.pk}"' not in html
+        assert "reactivate_submit" in html
+        assert "deactivate_submit" not in html
+
+    def test_users_table_dims_an_inactive_users_row(self, client, user: User, site_configuration_with_logo):
+        _grant(user, "change_user", "users")
+        client.force_login(user)
+        UserFactory(is_active=False)
+
+        response = client.get(_management_url())
+
+        html = response.content.decode()
+        assert '<tr class="text-muted">' in html
 
 
 def _admin_edit_url(target_pk):

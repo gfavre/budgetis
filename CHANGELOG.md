@@ -5,6 +5,23 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2026-09-05
+
+### Added
+
+- A "Reactivate" button now appears in place of "Deactivate" for an
+  already-inactive user in the management table - deactivation
+  wasn't reversible from the app before this.
+
+### Changed
+
+- Users in the management table and dropdowns are now ordered by
+  trigram rather than full name (which mixed first names in), and
+  deactivated users sort to the bottom of the table, with their row
+  dimmed to make their status obvious at a glance.
+- Added icons throughout the user management page (invite, edit,
+  deactivate, reactivate, Bourse).
+
 ## [1.6.0] - 2026-09-05
 
 ### Changed

@@ -107,7 +107,7 @@ class BourseNominationForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         queryset = (
-            User.objects.filter(is_active=True).exclude(groups__name=BOURSE_GROUP_NAME).order_by("name", "email")
+            User.objects.filter(is_active=True).exclude(groups__name=BOURSE_GROUP_NAME).order_by("trigram", "name")
         )
         field = cast("forms.ModelChoiceField", self.fields["user"])
         field.queryset = queryset
@@ -140,12 +140,36 @@ class DeactivateUserForm(forms.Form):
         if requesting_user is not None:
             queryset = queryset.exclude(pk=requesting_user.pk)
         field = cast("forms.ModelChoiceField", self.fields["user"])
-        field.queryset = queryset.order_by("name", "email")
+        field.queryset = queryset.order_by("trigram", "name")
         field.label_from_instance = lambda obj: str(obj)  # noqa: PLW0108
 
     def save(self):
         user = self.cleaned_data["user"]
         user.is_active = False
+        user.save(update_fields=["is_active"])
+        return user
+
+
+class ReactivateUserForm(forms.Form):
+    """Reactivates a previously deactivated user account - admin-only (`users.change_user`), see DeactivateUserForm."""
+
+    user = forms.ModelChoiceField(
+        label=_("User"),
+        queryset=User.objects.none(),  # set in __init__, needs the DB
+    )
+
+    def __init__(self, *args, requesting_user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        queryset = User.objects.filter(is_active=False)
+        if requesting_user is not None:
+            queryset = queryset.exclude(pk=requesting_user.pk)
+        field = cast("forms.ModelChoiceField", self.fields["user"])
+        field.queryset = queryset.order_by("trigram", "name")
+        field.label_from_instance = lambda obj: str(obj)  # noqa: PLW0108
+
+    def save(self):
+        user = self.cleaned_data["user"]
+        user.is_active = True
         user.save(update_fields=["is_active"])
         return user
 

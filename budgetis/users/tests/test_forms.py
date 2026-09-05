@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from budgetis.users.forms import BourseNominationForm
 from budgetis.users.forms import DeactivateUserForm
+from budgetis.users.forms import ReactivateUserForm
 from budgetis.users.forms import UserAdminCreationForm
 from budgetis.users.forms import UserEditForm
 from budgetis.users.forms import UserInviteForm
@@ -133,6 +134,32 @@ class TestDeactivateUserForm:
         form = DeactivateUserForm({"user": admin.pk}, requesting_user=admin)
 
         assert not form.is_valid()
+
+
+@pytest.mark.django_db
+class TestReactivateUserForm:
+    def test_only_offers_inactive_users_as_choices(self):
+        admin = UserFactory()
+        active = UserFactory(is_active=True)
+        inactive = UserFactory(is_active=False)
+
+        form = ReactivateUserForm(requesting_user=admin)
+
+        choices = list(form.fields["user"].queryset)
+        assert inactive in choices
+        assert active not in choices
+
+    def test_reactivates_the_selected_user(self):
+        admin = UserFactory()
+        target = UserFactory(is_active=False)
+
+        form = ReactivateUserForm({"user": target.pk}, requesting_user=admin)
+
+        assert form.is_valid(), form.errors
+        form.save()
+
+        target.refresh_from_db()
+        assert target.is_active
 
 
 @pytest.mark.django_db
