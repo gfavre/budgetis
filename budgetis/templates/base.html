@@ -104,7 +104,7 @@
               <ul class="navbar-nav me-auto">
                 {% if request.user.is_authenticated %}
                   <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% navactive 'accounting:account-explorer' %}{% navactive 'accounting:natures' %}"
+                    <a class="nav-link dropdown-toggle {% navactive 'accounting:account-explorer' %}{% navactive 'accounting:natures' %}{% navactive 'accounting:account-staged-result' %}"
                        href="#"
                        role="button"
                        data-bs-toggle="dropdown"
@@ -127,10 +127,17 @@
                           {% trans "By nature" %}
                         </a>
                       </li>
+                      <li>
+                        <a class="dropdown-item {% navactive 'accounting:account-staged-result' %}"
+                           href="{% url 'accounting:account-staged-result' %}">
+                          <i class="bi bi-bar-chart-steps me-1"></i>
+                          {% trans "Staged result" %}
+                        </a>
+                      </li>
                     </ul>
                   </li>
                   <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% navactive 'accounting:budget-explorer' %}{% navactive 'accounting:budget-nature-explorer' %}"
+                    <a class="nav-link dropdown-toggle {% navactive 'accounting:budget-explorer' %}{% navactive 'accounting:budget-nature-explorer' %}{% navactive 'accounting:budget-staged-result' %}"
                        href="#"
                        role="button"
                        data-bs-toggle="dropdown"
@@ -151,6 +158,13 @@
                            href="{% url 'accounting:budget-nature-explorer' %}">
                           <i class="bi bi-tags me-1"></i>
                           {% trans "By nature" %}
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item {% navactive 'accounting:budget-staged-result' %}"
+                           href="{% url 'accounting:budget-staged-result' %}">
+                          <i class="bi bi-bar-chart-steps me-1"></i>
+                          {% trans "Staged result" %}
                         </a>
                       </li>
                     </ul>

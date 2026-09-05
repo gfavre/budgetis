@@ -16,7 +16,9 @@ from budgetis.accounting.tests.factories import AccountGroupFactory
 from budgetis.accounting.tests.factories import AvailableYearFactory
 from budgetis.accounting.tests.factories import NatureGroupFactory
 from budgetis.accounting.views.explore import AccountExplorerView
+from budgetis.accounting.views.explore import AccountStagedResultView
 from budgetis.accounting.views.explore import BudgetExplorerView
+from budgetis.accounting.views.explore import BudgetStagedResultView
 from budgetis.common.models import ChartScheme
 from budgetis.core.models import SiteConfiguration
 from budgetis.finance.models import AvailableYear
@@ -69,8 +71,10 @@ class TestAccountExplorerView:
         html = response.content.decode()
         assert reverse("accounting:account-explorer") in html
         assert reverse("accounting:natures") in html
+        assert reverse("accounting:account-staged-result") in html
         assert reverse("accounting:budget-explorer") in html
         assert reverse("accounting:budget-nature-explorer") in html
+        assert reverse("accounting:budget-staged-result") in html
         assert reverse("bdi_import:account-import") in html
         assert reverse("bdi_import:excel-import") in html
 
@@ -112,6 +116,70 @@ class TestAccountByNatureView:
         response = client.get(reverse("accounting:natures"))
         assert response.status_code == HTTPStatus.FOUND
         assert LOGIN_URL in response.url
+
+
+class TestBudgetStagedResultView:
+    def test_login_required(self, client):
+        response = client.get(reverse("accounting:budget-staged-result"))
+        assert response.status_code == HTTPStatus.FOUND
+        assert LOGIN_URL in response.url
+
+    def test_authenticated_returns_200(self, rf):
+        request = rf.get("/")
+        request.user = UserFactory()
+        response = BudgetStagedResultView.as_view()(request)
+        assert response.status_code == HTTPStatus.OK
+
+    def test_shows_comparison_columns_across_the_scheme_switch(self, rf):
+        """
+        Unlike the detailed explorers, the staged result aggregates by
+        two-digit nature group only - a classification stable across the
+        MCH1/MCH2 transition - so it keeps comparing across the switch where
+        the detailed explorers deliberately stop (see comparison_flags).
+        """
+        AccountFactory(year=2027, is_budget=True, scheme=ChartScheme.MCH2, nature="3010")
+        AccountFactory(year=2026, is_budget=True, scheme=ChartScheme.MCH1, nature="30")
+        AccountFactory(year=2025, is_budget=False, scheme=ChartScheme.MCH1, nature="30")
+        request = rf.get("/", {"year": 2027})
+        request.user = UserFactory()
+
+        response = BudgetStagedResultView.as_view()(request)
+
+        assert response.context_data["show_col2"] is True
+        assert response.context_data["show_col3"] is True
+
+    def test_comparison_columns_carry_the_real_prior_year_totals(self, rf):
+        """
+        Regression guard: an earlier version reused BudgetLoader, which joins
+        years by (function, nature, sub_account) - a key that never matches
+        across an MCH1/MCH2 scheme change, silently turning every comparison
+        column into zeroes instead of the real historical totals.
+        """
+        AccountFactory(
+            year=2027, is_budget=True, scheme=ChartScheme.MCH2, function="30000", nature="3010", charges=Decimal(100)
+        )
+        AccountFactory(
+            year=2026, is_budget=True, scheme=ChartScheme.MCH1, function="300", nature="30", charges=Decimal(500)
+        )
+        request = rf.get("/", {"year": 2027})
+        request.user = UserFactory()
+
+        response = BudgetStagedResultView.as_view()(request)
+
+        assert response.context_data["tiers"][0].col2_charges == Decimal(500)
+
+
+class TestAccountStagedResultView:
+    def test_login_required(self, client):
+        response = client.get(reverse("accounting:account-staged-result"))
+        assert response.status_code == HTTPStatus.FOUND
+        assert LOGIN_URL in response.url
+
+    def test_authenticated_returns_200(self, rf):
+        request = rf.get("/")
+        request.user = UserFactory()
+        response = AccountStagedResultView.as_view()(request)
+        assert response.status_code == HTTPStatus.OK
 
 
 # ── HTMX partial views ──────────────────────────────────────────────────────
@@ -176,6 +244,36 @@ class TestBudgetByNaturePartialView:
         response = client.post(reverse("accounting:budget-nature-partial"), {"year": 2027, "detail": "on"})
 
         assert "Autorités et commissions" in response.content.decode()
+
+
+class TestBudgetStagedResultPartialView:
+    def test_login_required(self, client):
+        response = client.post(reverse("accounting:budget-staged-partial"), {"year": 2024})
+        assert response.status_code == HTTPStatus.FOUND
+        assert LOGIN_URL in response.url
+
+    def test_root_element_id_matches_explorer_hx_target(self, client):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH1)
+
+        response = client.post(reverse("accounting:budget-staged-partial"), {"year": 2024})
+
+        assert response.content.decode().strip().startswith('<div id="staged-result">')
+
+
+class TestAccountStagedResultPartialView:
+    def test_login_required(self, client):
+        response = client.post(reverse("accounting:account-staged-partial"), {"year": 2024})
+        assert response.status_code == HTTPStatus.FOUND
+        assert LOGIN_URL in response.url
+
+    def test_root_element_id_matches_explorer_hx_target(self, client):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH1)
+
+        response = client.post(reverse("accounting:account-staged-partial"), {"year": 2024})
+
+        assert response.content.decode().strip().startswith('<div id="staged-result">')
 
 
 # ── Comment views ────────────────────────────────────────────────────────────

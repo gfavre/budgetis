@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load i18n crispy_forms_tags %}
+
+{% block title %}
+  {% trans "Staged result" %} | {{ block.super }}
+{% endblock title %}
+{% block content %}
+  <div class="no-print">
+    <h1>{% trans "Actuals - staged result" %}</h1>
+    <form method="post"
+          hx-post="{% url 'accounting:account-staged-partial' %}"
+          hx-target="#staged-result"
+          hx-swap="outerHTML"
+          hx-trigger="change delay:300ms from:input, change from:select"
+          hx-indicator="#explorer-loading">
+      {% crispy form %}
+    </form>
+    <span id="explorer-loading"
+          class="htmx-indicator spinner-border spinner-border-sm"
+          role="status">
+      <span class="visually-hidden">{% trans "Loading..." %}</span>
+    </span>
+    <hr />
+  </div>
+  <div id="staged-result">
+    {% include "accounting/partials/staged_result_list.html" with tiers=tiers show_col2=show_col2 show_col3=show_col3 last_import_text=last_import_text is_budget_view=False col1_year=year col2_year=year col3_year=prev_year %}
+  </div>
+{% endblock content %}

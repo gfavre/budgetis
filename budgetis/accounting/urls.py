@@ -10,10 +10,14 @@ from .views.explore import AccountByNaturePartialView
 from .views.explore import AccountByNatureView
 from .views.explore import AccountExplorerView
 from .views.explore import AccountPartialView
+from .views.explore import AccountStagedResultPartialView
+from .views.explore import AccountStagedResultView
 from .views.explore import BudgetByNaturePartialView
 from .views.explore import BudgetByNatureView
 from .views.explore import BudgetExplorerView
 from .views.explore import BudgetPartialView
+from .views.explore import BudgetStagedResultPartialView
+from .views.explore import BudgetStagedResultView
 from .views.history import account_history_modal
 
 
@@ -27,9 +31,13 @@ urlpatterns = [
     path("budgets/partial/", BudgetPartialView.as_view(), name="budget-partial"),
     path("budgets-nature/", BudgetByNatureView.as_view(), name="budget-nature-explorer"),
     path("budgets-nature/partial/", BudgetByNaturePartialView.as_view(), name="budget-nature-partial"),
+    path("budgets-staged/", BudgetStagedResultView.as_view(), name="budget-staged-result"),
+    path("budgets-staged/partial/", BudgetStagedResultPartialView.as_view(), name="budget-staged-partial"),
     # Actuals by nature
     path("accounts-nature/", AccountByNatureView.as_view(), name="natures"),
     path("accounts-nature/partial/", AccountByNaturePartialView.as_view(), name="accounts-nature-partial"),
+    path("accounts-staged/", AccountStagedResultView.as_view(), name="account-staged-result"),
+    path("accounts-staged/partial/", AccountStagedResultPartialView.as_view(), name="account-staged-partial"),
     path("history/<int:account_id>/", account_history_modal, name="account-history"),
     path(
         "budgets/<int:account_id>/<str:kind>/edit/",

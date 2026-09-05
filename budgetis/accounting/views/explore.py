@@ -16,6 +16,8 @@ from budgetis.accounting.loaders import BudgetLoader
 from budgetis.accounting.loaders import get_last_import_info
 from budgetis.accounting.models import Account
 from budgetis.accounting.scheme_transition import comparison_flags
+from budgetis.accounting.staged_result import build_staged_result
+from budgetis.accounting.staged_result import staged_comparison_flags
 
 from ..forms import AccountFilterForm
 from ..forms import NatureFilterForm
@@ -227,5 +229,77 @@ class AccountByNaturePartialView(LoginRequiredMixin, FormView):
                 prev_year=year - 1,
                 last_import_text=get_last_import_info(year),
                 **comparison_flags(year, is_budget=False),
+            )
+        )
+
+
+class BudgetStagedResultView(BaseExplorerView):
+    template_name = "accounting/budget_staged_result.html"
+    title = _("Budget - staged result")
+    is_budget_view = True
+
+    def _extra_context(self, year: int) -> dict[str, Any]:
+        return {"previous_year": year - 1, "actuals_year": year - 2, **staged_comparison_flags(year, is_budget=True)}
+
+    def _build(self, year: int, user, *, only_responsible: bool, detail: bool = False) -> dict[str, Any]:
+        columns = [(year, True), (year - 1, True), (year - 2, False)]
+        return {
+            "tiers": build_staged_result(columns),
+            "last_import_text": get_last_import_info(year),
+        }
+
+
+class BudgetStagedResultPartialView(LoginRequiredMixin, FormView):
+    form_class = AccountFilterForm
+    template_name = "accounting/partials/staged_result_list.html"
+
+    def form_valid(self, form):
+        year = int(form.cleaned_data["year"])
+        columns = [(year, True), (year - 1, True), (year - 2, False)]
+        return self.render_to_response(
+            self.get_context_data(
+                tiers=build_staged_result(columns),
+                last_import_text=get_last_import_info(year),
+                is_budget_view=True,
+                col1_year=year,
+                col2_year=year - 1,
+                col3_year=year - 2,
+                **staged_comparison_flags(year, is_budget=True),
+            )
+        )
+
+
+class AccountStagedResultView(BaseExplorerView):
+    template_name = "accounting/account_staged_result.html"
+    title = _("Actuals - staged result")
+    is_budget_view = False
+
+    def _extra_context(self, year: int) -> dict[str, Any]:
+        return {"prev_year": year - 1, **staged_comparison_flags(year, is_budget=False)}
+
+    def _build(self, year: int, user, *, only_responsible: bool, detail: bool = False) -> dict[str, Any]:
+        columns = [(year, False), (year, True), (year - 1, False)]
+        return {
+            "tiers": build_staged_result(columns),
+            "last_import_text": get_last_import_info(year),
+        }
+
+
+class AccountStagedResultPartialView(LoginRequiredMixin, FormView):
+    form_class = AccountFilterForm
+    template_name = "accounting/partials/staged_result_list.html"
+
+    def form_valid(self, form):
+        year = int(form.cleaned_data["year"])
+        columns = [(year, False), (year, True), (year - 1, False)]
+        return self.render_to_response(
+            self.get_context_data(
+                tiers=build_staged_result(columns),
+                last_import_text=get_last_import_info(year),
+                is_budget_view=False,
+                col1_year=year,
+                col2_year=year,
+                col3_year=year - 1,
+                **staged_comparison_flags(year, is_budget=False),
             )
         )
