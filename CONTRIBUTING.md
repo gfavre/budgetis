@@ -25,6 +25,17 @@ cp .env.example .env
 make up
 ```
 
+Deploying to prod (run on the server, from the repo root):
+
+```bash
+./scripts/deploy.sh
+```
+
+Pulls the latest `master` (fast-forward only), rebuilds the Docker images, and
+restarts the changed services. Migrations, `collectstatic`, `compilemessages`
+and `compress` already happen automatically (build time / container
+entrypoint) - see `docker/web.Dockerfile` and `docker/entrypoint.sh`.
+
 Run tests:
 
 ```bash
