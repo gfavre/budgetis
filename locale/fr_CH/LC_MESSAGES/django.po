@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-07 14:48+0200\n"
+"POT-Creation-Date: 2026-09-07 15:42+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -328,7 +328,7 @@ msgstr "Intérêts passifs"
 msgid "Depreciation"
 msgstr "Amortissements"
 
-#: budgetis/accounting/nature.py:12
+#: budgetis/accounting/nature.py:12 budgetis/accounting/staged_result.py:51
 msgid "Financial charges"
 msgstr "Charges financières"
 
@@ -398,29 +398,89 @@ msgstr "Éclatement"
 msgid "New"
 msgstr "Nouveau"
 
-#: budgetis/accounting/staged_result.py:120
-msgid "Operating charges and revenues"
-msgstr "Charges et revenus d'exploitation"
+#: budgetis/accounting/staged_result.py:38
+msgid "Personnel charges"
+msgstr "Charges de personnel"
 
-#: budgetis/accounting/staged_result.py:120
+#: budgetis/accounting/staged_result.py:39
+msgid "Goods, services and other operating charges"
+msgstr "Charges de biens et services et autres charges d'exploitation"
+
+#: budgetis/accounting/staged_result.py:40
+msgid "Depreciation of administrative assets"
+msgstr "Amortissements du patrimoine administratif"
+
+#: budgetis/accounting/staged_result.py:41
+msgid "Allocations to funds and special financing"
+msgstr "Attributions aux fonds et financements spéciaux"
+
+#: budgetis/accounting/staged_result.py:42
+msgid "Transfer charges"
+msgstr "Charges de transferts"
+
+#: budgetis/accounting/staged_result.py:43
+msgid "Subsidies passed on"
+msgstr "Subventions redistribuées"
+
+#: budgetis/accounting/staged_result.py:44
+msgid "Tax revenues"
+msgstr "Revenus fiscaux"
+
+#: budgetis/accounting/staged_result.py:45
+msgid "Licenses and concessions"
+msgstr "Patentes et concessions"
+
+#: budgetis/accounting/staged_result.py:46
+msgid "Fees"
+msgstr "Taxes"
+
+#: budgetis/accounting/staged_result.py:47
+msgid "Miscellaneous revenues"
+msgstr "Revenus divers"
+
+#: budgetis/accounting/staged_result.py:48
+msgid "Withdrawals from funds and special financing"
+msgstr "Prélèvements sur les fonds et financements spéciaux"
+
+#: budgetis/accounting/staged_result.py:49
+msgid "Transfer revenues"
+msgstr "Revenus de transferts"
+
+#: budgetis/accounting/staged_result.py:50
+msgid "Subsidies to be passed on"
+msgstr "Subventions à redistribuer"
+
+#: budgetis/accounting/staged_result.py:52
+msgid "Financial revenues"
+msgstr "Revenus financiers"
+
+#: budgetis/accounting/staged_result.py:53
+msgid "Extraordinary charges"
+msgstr "Charges extraordinaires"
+
+#: budgetis/accounting/staged_result.py:54
+msgid "Extraordinary revenues"
+msgstr "Revenus extraordinaires"
+
+#: budgetis/accounting/staged_result.py:189
+msgid "Total operating charges"
+msgstr "Total des charges d'exploitation"
+
+#: budgetis/accounting/staged_result.py:194
+msgid "Total operating revenues"
+msgstr "Total des revenus d'exploitation"
+
+#: budgetis/accounting/staged_result.py:197
 msgid "Operating result"
 msgstr "Résultat d'exploitation"
 
-#: budgetis/accounting/staged_result.py:121
-msgid "Financial charges and revenues"
-msgstr "Charges et revenus financiers"
-
-#: budgetis/accounting/staged_result.py:121
+#: budgetis/accounting/staged_result.py:206
 msgid "Result before extraordinary items"
 msgstr "Résultat opérationnel"
 
-#: budgetis/accounting/staged_result.py:122
-msgid "Extraordinary charges and revenues"
-msgstr "Charges et revenus extraordinaires"
-
-#: budgetis/accounting/staged_result.py:122
+#: budgetis/accounting/staged_result.py:215
 msgid "Total result for the year"
-msgstr "Résultat total de l'exercice"
+msgstr "Résultat total du compte de résultats"
 
 #: budgetis/accounting/templates/accounting/account_by_nature.html:6
 #: budgetis/accounting/templates/accounting/account_comments_list.html:12

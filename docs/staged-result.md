@@ -39,11 +39,23 @@ is on page 3 of Recommandation 04.
 | **→ Résultat extraordinaire [REO]** | |
 | **→ Résultat total du compte de résultats [= ROP + REO]** | |
 
-This is exactly the 3-tier structure `staged_result.py::build_staged_result()`
-implements: exploitation → +financier = opérationnel → +extraordinaire =
-total. The nature-group split (`FINANCIAL_NATURE_GROUPS = (34, 44)`,
-`EXTRAORDINARY_NATURE_GROUPS = (38, 48)`) matches the table exactly; every
-other 2-digit nature group falls into "exploitation" by default.
+This is exactly the structure `staged_result.py::build_staged_result()`
+implements, line by line: a detail row per nature group (labelled straight
+off the table, via `GROUP_LABELS`), a subtotal row for each side of the
+operating section, then a result row after each of the three sections
+(exploitation → +financier = opérationnel → +extraordinaire = total), each
+result row's cumulative total carrying forward into the next. The group
+split (`EXPLOITATION_CHARGE_GROUPS`, `EXPLOITATION_REVENUE_GROUPS`,
+`FINANCIAL_CHARGE_GROUP`/`FINANCIAL_REVENUE_GROUP`,
+`EXTRAORDINARY_CHARGE_GROUP`/`EXTRAORDINARY_REVENUE_GROUP`) matches the
+table exactly, including 39/49 "imputations internes" being absent from
+both - they net out between charges and revenues and the table has no line
+for them.
+
+Each `StagedLine` carries a stable, untranslated `key` (e.g. `"detail-30"`,
+`"operating-result"`) separate from its user-facing, translated `label` -
+code seeking a specific row (tests included) should match on `key`, never on
+`label`, since the latter changes with the active language.
 
 ## Resolved question: "impôts aléatoires" (nature 402/404/405)
 

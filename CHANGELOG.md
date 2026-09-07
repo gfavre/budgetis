@@ -5,6 +5,18 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - 2026-09-07
+
+### Changed
+
+- **Staged result detail**: the "présentation échelonnée" (Budget and
+  Actuals nav menus) now shows every nature-group line making up each
+  section - charges de personnel, biens et services, amortissements,
+  etc. - with a subtotal per side, instead of one lumped total for
+  the whole operating section. Matches Tableau 04-1 of the MCH2
+  handbook line for line; the cascading Résultat d'exploitation /
+  opérationnel / total figures are unchanged.
+
 ## [1.7.0] - 2026-09-07
 
 ### Added

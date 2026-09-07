@@ -11,8 +11,46 @@ from budgetis.common.models import ChartScheme
 pytestmark = pytest.mark.django_db
 
 
+def _by_key(lines, key):
+    return next(line for line in lines if line.key == key)
+
+
 class TestBuildStagedResult:
-    def test_splits_accounts_into_the_three_tiers(self):
+    def test_detail_row_per_nature_group(self):
+        AccountFactory(year=2027, is_budget=True, nature="3010", charges=Decimal("100.00"), revenues=Decimal("0.00"))
+        AccountFactory(year=2027, is_budget=True, nature="4010", charges=Decimal("0.00"), revenues=Decimal("150.00"))
+
+        lines = build_staged_result([(2027, True)])
+
+        charge_30 = _by_key(lines, "detail-30")
+        revenue_40 = _by_key(lines, "detail-40")
+        assert charge_30.col1_charges == Decimal("100.00")
+        assert revenue_40.col1_revenues == Decimal("150.00")
+
+    def test_operating_charges_and_revenues_subtotals(self):
+        AccountFactory(year=2027, is_budget=True, nature="3010", charges=Decimal("100.00"), revenues=Decimal("0.00"))
+        AccountFactory(year=2027, is_budget=True, nature="3110", charges=Decimal("20.00"), revenues=Decimal("0.00"))
+        AccountFactory(year=2027, is_budget=True, nature="4010", charges=Decimal("0.00"), revenues=Decimal("150.00"))
+
+        lines = build_staged_result([(2027, True)])
+
+        charges_subtotal = _by_key(lines, "operating-charges-subtotal")
+        revenues_subtotal = _by_key(lines, "operating-revenues-subtotal")
+        assert charges_subtotal.is_subtotal is True
+        assert charges_subtotal.col1_charges == Decimal("120.00")
+        assert revenues_subtotal.col1_revenues == Decimal("150.00")
+
+    def test_internal_allocations_are_excluded(self):
+        # 39/49 "imputations internes" aren't part of Tableau 04-1 - they must
+        # not leak into the operating subtotals.
+        AccountFactory(year=2027, is_budget=True, nature="3010", charges=Decimal("100.00"), revenues=Decimal("0.00"))
+        AccountFactory(year=2027, is_budget=True, nature="3900", charges=Decimal("999.00"), revenues=Decimal("0.00"))
+
+        lines = build_staged_result([(2027, True)])
+
+        assert _by_key(lines, "operating-charges-subtotal").col1_charges == Decimal("100.00")
+
+    def test_splits_accounts_into_the_three_sections(self):
         AccountFactory(year=2027, is_budget=True, nature="3010", charges=Decimal("100.00"), revenues=Decimal("0.00"))
         AccountFactory(year=2027, is_budget=True, nature="4010", charges=Decimal("0.00"), revenues=Decimal("150.00"))
         AccountFactory(year=2027, is_budget=True, nature="3400", charges=Decimal("20.00"), revenues=Decimal("0.00"))
@@ -20,29 +58,29 @@ class TestBuildStagedResult:
         AccountFactory(year=2027, is_budget=True, nature="3800", charges=Decimal("5.00"), revenues=Decimal("0.00"))
         AccountFactory(year=2027, is_budget=True, nature="4800", charges=Decimal("0.00"), revenues=Decimal("2.00"))
 
-        tiers = build_staged_result([(2027, True)])
+        lines = build_staged_result([(2027, True)])
 
-        exploitation, financial, extraordinary = tiers
-        assert exploitation.col1_charges == Decimal("100.00")
-        assert exploitation.col1_revenues == Decimal("150.00")
-        assert exploitation.col1_result == Decimal("50.00")
+        assert _by_key(lines, "operating-result").col1_result == Decimal("50.00")
+        assert _by_key(lines, "result-before-extraordinary").col1_result == Decimal("40.00")  # 50 + (10-20)
+        assert _by_key(lines, "total-result").col1_result == Decimal("37.00")  # 40 + (2-5)
 
-        assert financial.col1_charges == Decimal("20.00")
-        assert financial.col1_revenues == Decimal("10.00")
-        assert financial.col1_result == Decimal("40.00")  # 50 + (10 - 20)
-
-        assert extraordinary.col1_charges == Decimal("5.00")
-        assert extraordinary.col1_revenues == Decimal("2.00")
-        assert extraordinary.col1_result == Decimal("37.00")  # 40 + (2 - 5)
-
-    def test_result_is_cumulative_across_tiers(self):
+    def test_result_is_cumulative_across_sections(self):
         AccountFactory(year=2027, is_budget=True, nature="3010", charges=Decimal("10.00"), revenues=Decimal("0.00"))
         AccountFactory(year=2027, is_budget=True, nature="4010", charges=Decimal("0.00"), revenues=Decimal("0.00"))
 
-        tiers = build_staged_result([(2027, True)])
+        lines = build_staged_result([(2027, True)])
 
         # No financial/extraordinary activity - the final result equals the operating one.
-        assert tiers[0].col1_result == tiers[-1].col1_result == Decimal("-10.00")
+        operating = _by_key(lines, "operating-result")
+        total = _by_key(lines, "total-result")
+        assert operating.col1_result == total.col1_result == Decimal("-10.00")
+
+    def test_result_rows_are_flagged_and_detail_rows_are_not(self):
+        lines = build_staged_result([(2027, True)])
+
+        assert _by_key(lines, "operating-result").is_result is True
+        assert _by_key(lines, "detail-30").is_result is False
+        assert _by_key(lines, "detail-30").is_subtotal is False
 
     def test_each_column_is_its_own_independent_year(self):
         AccountFactory(year=2027, is_budget=True, nature="3010", charges=Decimal("100.00"), revenues=Decimal("0.00"))
@@ -55,11 +93,12 @@ class TestBuildStagedResult:
             revenues=Decimal("0.00"),
         )
 
-        tiers = build_staged_result([(2027, True), (2026, True), (2025, False)])
+        lines = build_staged_result([(2027, True), (2026, True), (2025, False)])
 
-        assert tiers[0].col1_charges == Decimal("100.00")
-        assert tiers[0].col2_charges == Decimal("50.00")
-        assert tiers[0].col3_charges == Decimal("0.00")
+        charge_30 = _by_key(lines, "detail-30")
+        assert charge_30.col1_charges == Decimal("100.00")
+        assert charge_30.col2_charges == Decimal("50.00")
+        assert charge_30.col3_charges == Decimal("0.00")
 
     def test_works_across_an_mch1_mch2_scheme_change(self):
         """The two-digit nature split is scheme-agnostic - no join by (function, nature, sub_account) is involved."""
@@ -82,9 +121,9 @@ class TestBuildStagedResult:
             revenues=Decimal("0.00"),
         )
 
-        tiers = build_staged_result([(2027, True), (2027, True), (2026, False)])
+        lines = build_staged_result([(2027, True), (2027, True), (2026, False)])
 
-        assert tiers[0].col3_charges == Decimal("500.00")
+        assert _by_key(lines, "detail-30").col3_charges == Decimal("500.00")
 
 
 class TestStagedComparisonFlags:

@@ -212,6 +212,12 @@ input[type="checkbox"] {
   border-color: color-mix(in srgb, var(--brand-color) 30%, black 5%);
 }
 
+.table-primary-subtle {
+  /* Same color as .table-primary, lightened another 50% on top. */
+  --bs-table-bg: color-mix(in srgb, color-mix(in srgb, var(--brand-color) 20%, white 50%) 50%, white 50%);
+  border-color: color-mix(in srgb, var(--brand-color) 30%, black 5%);
+}
+
 .table-light {
   --bs-table-bg: color-mix(in srgb, var(--brand-color-alt) 15%, white);
   border-color: color-mix(in srgb, var(--brand-color-alt) 20%, black 5%);

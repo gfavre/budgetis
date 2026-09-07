@@ -58,26 +58,29 @@
         </tr>
       </thead>
       <tbody>
-        {% for tier in tiers %}
-          <tr>
-            <td colspan="2">{{ tier.label }}</td>
-            <td class="text-end">{{ tier.col1_charges|format_money }}</td>
-            <td class="text-end">{{ tier.col1_revenues|format_money }}</td>
-            {% if show_col2 %}
-              <td class="text-end">{{ tier.col2_charges|format_money }}</td>
-              <td class="text-end">{{ tier.col2_revenues|format_money }}</td>
-            {% endif %}
-            {% if show_col3 %}
-              <td class="text-end">{{ tier.col3_charges|format_money }}</td>
-              <td class="text-end">{{ tier.col3_revenues|format_money }}</td>
-            {% endif %}
-          </tr>
-          <tr class="table-primary fw-bold">
-            <td colspan="2">{{ tier.result_label }}</td>
-            <td colspan="2" class="text-end">{{ tier.col1_result|format_money }}</td>
-            {% if show_col2 %}<td colspan="2" class="text-end">{{ tier.col2_result|format_money }}</td>{% endif %}
-            {% if show_col3 %}<td colspan="2" class="text-end">{{ tier.col3_result|format_money }}</td>{% endif %}
-          </tr>
+        {% for line in tiers %}
+          {% if line.is_result %}
+            <tr class="table-primary fw-bold">
+              <td colspan="2">{{ line.label }}</td>
+              <td colspan="2" class="text-end">{{ line.col1_result|format_money }}</td>
+              {% if show_col2 %}<td colspan="2" class="text-end">{{ line.col2_result|format_money }}</td>{% endif %}
+              {% if show_col3 %}<td colspan="2" class="text-end">{{ line.col3_result|format_money }}</td>{% endif %}
+            </tr>
+          {% else %}
+            <tr class="{% if line.is_subtotal %}table-primary-subtle fw-bold{% endif %}">
+              <td colspan="2">{{ line.label }}</td>
+              <td class="text-end">{{ line.col1_charges|format_money }}</td>
+              <td class="text-end">{{ line.col1_revenues|format_money }}</td>
+              {% if show_col2 %}
+                <td class="text-end">{{ line.col2_charges|format_money }}</td>
+                <td class="text-end">{{ line.col2_revenues|format_money }}</td>
+              {% endif %}
+              {% if show_col3 %}
+                <td class="text-end">{{ line.col3_charges|format_money }}</td>
+                <td class="text-end">{{ line.col3_revenues|format_money }}</td>
+              {% endif %}
+            </tr>
+          {% endif %}
         {% endfor %}
       </tbody>
     </table>
