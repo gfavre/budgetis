@@ -1,3 +1,14 @@
+"""
+Compte de résultats - présentation échelonnée (MCH2).
+
+Structure and nature-code boundaries (34/44 financier, 38/48 extraordinaire,
+everything else exploitation) are taken verbatim from the official handbook:
+SRS-CSPCP, "Manuel MCH2" 2e édition (mars 2022), Recommandation 04
+"Compte de résultats", §12 and Tableau 04-1. Full citation, the reproduced
+table, and the "impôts aléatoires" question this settled: see
+docs/staged-result.md at the repo root.
+"""
+
 from dataclasses import dataclass
 from dataclasses import field
 from decimal import Decimal
@@ -9,10 +20,10 @@ from budgetis.accounting.models import Account
 
 
 # MCH1 and MCH2 both group natures under the same two-digit codes for the
-# financial and extraordinary result (34/44, 38/48) - only the digits after
-# that stayed for MCH2's extra precision, so this split works unchanged
-# across the scheme transition and lets budget/actuals years be compared
-# regardless of which scheme they were recorded under.
+# financial and extraordinary result (34/44, 38/48, per Tableau 04-1 above)
+# - only the digits after that stayed for MCH2's extra precision, so this
+# split works unchanged across the scheme transition and lets budget/actuals
+# years be compared regardless of which scheme they were recorded under.
 FINANCIAL_NATURE_GROUPS = (34, 44)
 EXTRAORDINARY_NATURE_GROUPS = (38, 48)
 
@@ -94,9 +105,10 @@ def staged_comparison_flags(year: int, *, is_budget: bool) -> dict[str, bool]:
 
 def build_staged_result(columns: list[tuple[int, bool]]) -> list[StagedTier]:
     """
-    Builds the three tiers of the MCH2 "présentation échelonnée"
-    (exploitation, financier, extraordinaire), each building on the
-    previous to reach the résultat total de l'exercice.
+    Builds the three tiers of the "présentation échelonnée" (exploitation,
+    financier, extraordinaire), each building on the previous to reach the
+    résultat total de l'exercice - see Tableau 04-1 in this module's
+    docstring for the official structure and source.
 
     `columns` holds up to 3 (year, is_budget) pairs, one per comparison
     column (col1/col2/col3) - a column simply totals to zero if its year
