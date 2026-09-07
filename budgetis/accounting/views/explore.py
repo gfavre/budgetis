@@ -1,8 +1,13 @@
 from collections import OrderedDict
+from typing import TYPE_CHECKING
 from typing import Any
+from typing import cast
+from urllib.parse import urlencode
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Max
+from django.http import HttpRequest
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView
 from django.views.generic import TemplateView
@@ -21,6 +26,32 @@ from budgetis.accounting.staged_result import staged_comparison_flags
 
 from ..forms import AccountFilterForm
 from ..forms import NatureFilterForm
+from ..forms import YearFilterForm
+
+
+if TYPE_CHECKING:
+    from budgetis.users.models import User
+
+
+# FormMixin only in a TYPE_CHECKING branch: needed so mypy knows the
+# `super().get_form_kwargs()` this mixin calls actually exists on whatever
+# FormView subclass it's combined with, without making it a real base class
+# that would fight for a slot in the runtime MRO.
+if TYPE_CHECKING:
+    from django.views.generic.edit import FormMixin as _UserFormKwargsBase
+else:
+    _UserFormKwargsBase = object
+
+
+class UserFormKwargsMixin(_UserFormKwargsBase):
+    """Passes the logged-in user to the form so AccountFilterForm can hide "only my accounts" for non-municipals."""
+
+    request: HttpRequest  # set by View.setup() at runtime; declared here only for mypy
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class BaseExplorerView(LoginRequiredMixin, TemplateView):
@@ -33,7 +64,7 @@ class BaseExplorerView(LoginRequiredMixin, TemplateView):
     title = ""
     is_budget_view: bool = False
     loader_class: type[ActualsLoader | BudgetLoader] = ActualsLoader
-    form_class: type[AccountFilterForm] = AccountFilterForm
+    form_class: type[AccountFilterForm | YearFilterForm] = AccountFilterForm
 
     def _get_default_year(self) -> int | None:
         return Account.objects.filter(is_budget=self.is_budget_view).aggregate(Max("year")).get("year__max")
@@ -53,7 +84,7 @@ class BaseExplorerView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        form = self.form_class(self.request.GET or None)
+        form = self.form_class(self.request.GET or None, user=self.request.user)
         context["form"] = form
         context["title"] = self.title
 
@@ -70,8 +101,13 @@ class BaseExplorerView(LoginRequiredMixin, TemplateView):
                 if "year" in form.fields:
                     form.fields["year"].initial = year
 
+        # A non-municipal user has no "own accounts" to speak of - see
+        # AccountFilterForm's docstring - so this holds regardless of what
+        # the (hidden, for them) checkbox or query string says.
+        only = bool(only) and cast("User", self.request.user).is_municipal
+
         if year:
-            context.update(self._build(year, self.request.user, only_responsible=bool(only), detail=bool(detail)))
+            context.update(self._build(year, self.request.user, only_responsible=only, detail=bool(detail)))
             context["year"] = year
             context.update(comparison_flags(year, is_budget=self.is_budget_view))
             context.update(self._extra_context(year))
@@ -98,16 +134,30 @@ class BudgetExplorerView(BaseExplorerView):
         return {"previous_year": year - 1, "actuals_year": year - 2}
 
 
-class AccountPartialView(LoginRequiredMixin, FormView):
+def _explorer_push_url(url_name: str, *, year: int, only_responsible: bool) -> str:
+    """
+    URL htmx should push into browser history after a filter change, so a
+    reload, bookmark, or shared link reproduces the same year and "only my
+    accounts" state - BaseExplorerView.get_context_data already reads both
+    from the query string on a plain GET; this just keeps the address bar in
+    sync with what the htmx-swapped list is actually showing.
+    """
+    params: dict[str, int | str] = {"year": year}
+    if only_responsible:
+        params["only_responsible"] = "on"
+    return f"{reverse(f'accounting:{url_name}')}?{urlencode(params)}"
+
+
+class AccountPartialView(UserFormKwargsMixin, LoginRequiredMixin, FormView):
     form_class = AccountFilterForm
     template_name = "accounting/partials/account_list.html"
 
     def form_valid(self, form):
         year = int(form.cleaned_data["year"])
-        only = bool(form.cleaned_data.get("only_responsible"))
+        only = bool(form.cleaned_data.get("only_responsible")) and cast("User", self.request.user).is_municipal
         rows = ActualsLoader().load(year, self.request.user, only_responsible=only)
         grouped = build_grouped(rows, year)
-        return self.render_to_response(
+        response = self.render_to_response(
             self.get_context_data(
                 form=form,
                 grouped=grouped,
@@ -117,18 +167,20 @@ class AccountPartialView(LoginRequiredMixin, FormView):
                 **comparison_flags(year, is_budget=False),
             )
         )
+        response["HX-Push-Url"] = _explorer_push_url("account-explorer", year=year, only_responsible=only)
+        return response
 
 
-class BudgetPartialView(LoginRequiredMixin, FormView):
+class BudgetPartialView(UserFormKwargsMixin, LoginRequiredMixin, FormView):
     form_class = AccountFilterForm
     template_name = "accounting/partials/budget_list.html"
 
     def form_valid(self, form):
         year = int(form.cleaned_data["year"])
-        only = bool(form.cleaned_data.get("only_responsible"))
+        only = bool(form.cleaned_data.get("only_responsible")) and cast("User", self.request.user).is_municipal
         rows = BudgetLoader().load(year, self.request.user, only_responsible=only)
         grouped = build_grouped(rows, year)
-        return self.render_to_response(
+        response = self.render_to_response(
             self.get_context_data(
                 form=form,
                 grouped=grouped,
@@ -140,6 +192,8 @@ class BudgetPartialView(LoginRequiredMixin, FormView):
                 **comparison_flags(year, is_budget=True),
             )
         )
+        response["HX-Push-Url"] = _explorer_push_url("budget-explorer", year=year, only_responsible=only)
+        return response
 
 
 class BudgetByNatureView(BaseExplorerView):
@@ -237,6 +291,7 @@ class BudgetStagedResultView(BaseExplorerView):
     template_name = "accounting/budget_staged_result.html"
     title = _("Budget - staged result")
     is_budget_view = True
+    form_class = YearFilterForm
 
     def _extra_context(self, year: int) -> dict[str, Any]:
         return {"previous_year": year - 1, "actuals_year": year - 2, **staged_comparison_flags(year, is_budget=True)}
@@ -250,7 +305,7 @@ class BudgetStagedResultView(BaseExplorerView):
 
 
 class BudgetStagedResultPartialView(LoginRequiredMixin, FormView):
-    form_class = AccountFilterForm
+    form_class = YearFilterForm
     template_name = "accounting/partials/staged_result_list.html"
 
     def form_valid(self, form):
@@ -273,6 +328,7 @@ class AccountStagedResultView(BaseExplorerView):
     template_name = "accounting/account_staged_result.html"
     title = _("Actuals - staged result")
     is_budget_view = False
+    form_class = YearFilterForm
 
     def _extra_context(self, year: int) -> dict[str, Any]:
         return {"prev_year": year - 1, **staged_comparison_flags(year, is_budget=False)}
@@ -286,7 +342,7 @@ class AccountStagedResultView(BaseExplorerView):
 
 
 class AccountStagedResultPartialView(LoginRequiredMixin, FormView):
-    form_class = AccountFilterForm
+    form_class = YearFilterForm
     template_name = "accounting/partials/staged_result_list.html"
 
     def form_valid(self, form):

@@ -14,6 +14,7 @@ from budgetis.accounting.tests.factories import AccountCommentFactory
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
 from budgetis.accounting.tests.factories import AvailableYearFactory
+from budgetis.accounting.tests.factories import GroupResponsibilityFactory
 from budgetis.accounting.tests.factories import NatureGroupFactory
 from budgetis.accounting.views.explore import AccountExplorerView
 from budgetis.accounting.views.explore import AccountStagedResultView
@@ -56,6 +57,61 @@ class TestAccountExplorerView:
 
         assert response.context_data["show_col2"] is True
         assert response.context_data["show_col3"] is False
+
+    def test_only_responsible_checkbox_shown_for_a_municipal_user(self, client, site_configuration_with_logo):
+        client.force_login(UserFactory(is_municipal=True))
+
+        response = client.get(reverse("accounting:account-explorer"))
+
+        assert 'name="only_responsible"' in response.content.decode()
+
+    def test_only_responsible_checkbox_hidden_for_a_non_municipal_user(self, client, site_configuration_with_logo):
+        # GroupResponsibility is a municipal officer's own accounts - a Bourse
+        # member has none, so the checkbox would be meaningless for them.
+        client.force_login(UserFactory(is_municipal=False))
+
+        response = client.get(reverse("accounting:account-explorer"))
+
+        assert 'name="only_responsible"' not in response.content.decode()
+
+    def test_only_responsible_is_ignored_for_a_non_municipal_user(self, client, site_configuration_with_logo):
+        # Even a GroupResponsibility row assigning them, plus a crafted query
+        # string, can't turn the filter back on for a non-municipal user.
+        user = UserFactory(is_municipal=False)
+        client.force_login(user)
+        their_group = AccountGroupFactory()
+        other_group = AccountGroupFactory()
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.ACTUAL)
+        GroupResponsibilityFactory(group=their_group, year=2024, responsible=user)
+        their_account = AccountFactory(year=2024, is_budget=False, group=their_group, function="10001", nature="301")
+        other_account = AccountFactory(year=2024, is_budget=False, group=other_group, function="20001", nature="301")
+
+        response = client.get(reverse("accounting:account-explorer"), {"year": 2024, "only_responsible": "on"})
+
+        html = response.content.decode()
+        assert their_account.full_code in html
+        assert other_account.full_code in html
+
+    def test_only_responsible_defaults_to_false_for_a_non_municipal_user_with_no_query_string(
+        self, client, site_configuration_with_logo
+    ):
+        # A fresh page load (no query string at all) falls through to the
+        # form's own initial-value default, which is True for a municipal
+        # user - it must still resolve to False here, unconditionally.
+        user = UserFactory(is_municipal=False)
+        client.force_login(user)
+        their_group = AccountGroupFactory()
+        other_group = AccountGroupFactory()
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.ACTUAL)
+        GroupResponsibilityFactory(group=their_group, year=2024, responsible=user)
+        their_account = AccountFactory(year=2024, is_budget=False, group=their_group, function="10001", nature="301")
+        other_account = AccountFactory(year=2024, is_budget=False, group=other_group, function="20001", nature="301")
+
+        response = client.get(reverse("accounting:account-explorer"))
+
+        html = response.content.decode()
+        assert their_account.full_code in html
+        assert other_account.full_code in html
 
     def test_nav_dropdowns_link_to_function_nature_and_import_views(self, client):
         client.force_login(UserFactory())
@@ -103,6 +159,13 @@ class TestBudgetExplorerView:
         assert response.context_data["show_col2"] is False
         assert response.context_data["show_col3"] is False
 
+    def test_only_responsible_checkbox_hidden_for_a_non_municipal_user(self, client, site_configuration_with_logo):
+        client.force_login(UserFactory(is_municipal=False))
+
+        response = client.get(reverse("accounting:budget-explorer"))
+
+        assert 'name="only_responsible"' not in response.content.decode()
+
 
 class TestBudgetByNatureView:
     def test_login_required(self, client):
@@ -110,12 +173,28 @@ class TestBudgetByNatureView:
         assert response.status_code == HTTPStatus.FOUND
         assert LOGIN_URL in response.url
 
+    def test_only_responsible_checkbox_not_shown(self, client, site_configuration_with_logo):
+        # Every account is grouped by nature code here regardless of who's
+        # responsible for it - "only my accounts" has no meaning to filter by.
+        client.force_login(UserFactory(is_municipal=True))
+
+        response = client.get(reverse("accounting:budget-nature-explorer"))
+
+        assert 'name="only_responsible"' not in response.content.decode()
+
 
 class TestAccountByNatureView:
     def test_login_required(self, client):
         response = client.get(reverse("accounting:natures"))
         assert response.status_code == HTTPStatus.FOUND
         assert LOGIN_URL in response.url
+
+    def test_only_responsible_checkbox_not_shown(self, client, site_configuration_with_logo):
+        client.force_login(UserFactory(is_municipal=True))
+
+        response = client.get(reverse("accounting:natures"))
+
+        assert 'name="only_responsible"' not in response.content.decode()
 
 
 class TestBudgetStagedResultView:
@@ -168,6 +247,15 @@ class TestBudgetStagedResultView:
 
         assert response.context_data["tiers"][0].col2_charges == Decimal(500)
 
+    def test_only_responsible_checkbox_not_shown(self, client, site_configuration_with_logo):
+        # The staged result aggregates the whole commune - "only my
+        # accounts" has no meaning there, even for a municipal officer.
+        client.force_login(UserFactory(is_municipal=True))
+
+        response = client.get(reverse("accounting:budget-staged-result"))
+
+        assert 'name="only_responsible"' not in response.content.decode()
+
 
 class TestAccountStagedResultView:
     def test_login_required(self, client):
@@ -180,6 +268,13 @@ class TestAccountStagedResultView:
         request.user = UserFactory()
         response = AccountStagedResultView.as_view()(request)
         assert response.status_code == HTTPStatus.OK
+
+    def test_only_responsible_checkbox_not_shown(self, client, site_configuration_with_logo):
+        client.force_login(UserFactory(is_municipal=True))
+
+        response = client.get(reverse("accounting:account-staged-result"))
+
+        assert 'name="only_responsible"' not in response.content.decode()
 
 
 # ── HTMX partial views ──────────────────────────────────────────────────────
@@ -203,6 +298,86 @@ class TestBudgetPartialView:
         response = client.post(reverse("accounting:budget-partial"), {"year": 2024})
 
         assert response.content.decode().strip().startswith('<div id="budget-list">')
+
+    def test_only_responsible_is_ignored_for_a_non_municipal_user(self, client):
+        user = UserFactory(is_municipal=False)
+        client.force_login(user)
+        their_group = AccountGroupFactory()
+        other_group = AccountGroupFactory()
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.BUDGET)
+        GroupResponsibilityFactory(group=their_group, year=2024, responsible=user)
+        their_account = AccountFactory(year=2024, is_budget=True, group=their_group, function="10001", nature="301")
+        other_account = AccountFactory(year=2024, is_budget=True, group=other_group, function="20001", nature="301")
+
+        response = client.post(reverse("accounting:budget-partial"), {"year": 2024, "only_responsible": "on"})
+
+        html = response.content.decode()
+        assert their_account.full_code in html
+        assert other_account.full_code in html
+
+    def test_hx_push_url_reflects_year_and_checked_checkbox(self, client):
+        # A page reload, bookmark, or shared link should land back on this
+        # same filtered view - see BaseExplorerView.get_context_data, which
+        # already restores both from the query string on a plain GET.
+        client.force_login(UserFactory(is_municipal=True))
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH1)
+
+        response = client.post(reverse("accounting:budget-partial"), {"year": 2024, "only_responsible": "on"})
+
+        push_url = response["HX-Push-Url"]
+        assert push_url.startswith(reverse("accounting:budget-explorer"))
+        assert "year=2024" in push_url
+        assert "only_responsible=on" in push_url
+
+    def test_hx_push_url_omits_only_responsible_when_unchecked(self, client):
+        client.force_login(UserFactory(is_municipal=True))
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH1)
+
+        response = client.post(reverse("accounting:budget-partial"), {"year": 2024})
+
+        assert "only_responsible" not in response["HX-Push-Url"]
+
+    def test_hx_push_url_never_includes_only_responsible_for_a_non_municipal_user(self, client):
+        client.force_login(UserFactory(is_municipal=False))
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.BUDGET, scheme=ChartScheme.MCH1)
+
+        response = client.post(reverse("accounting:budget-partial"), {"year": 2024, "only_responsible": "on"})
+
+        assert "only_responsible" not in response["HX-Push-Url"]
+
+
+class TestAccountPartialView:
+    def test_login_required(self, client):
+        response = client.post(reverse("accounting:account-partial"), {"year": 2024})
+        assert response.status_code == HTTPStatus.FOUND
+        assert LOGIN_URL in response.url
+
+    def test_root_element_id_matches_explorer_hx_target(self, client):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH1)
+
+        response = client.post(reverse("accounting:account-partial"), {"year": 2024})
+
+        assert response.content.decode().strip().startswith('<div id="account-list">')
+
+    def test_hx_push_url_reflects_year_and_checked_checkbox(self, client):
+        client.force_login(UserFactory(is_municipal=True))
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH1)
+
+        response = client.post(reverse("accounting:account-partial"), {"year": 2024, "only_responsible": "on"})
+
+        push_url = response["HX-Push-Url"]
+        assert push_url.startswith(reverse("accounting:account-explorer"))
+        assert "year=2024" in push_url
+        assert "only_responsible=on" in push_url
+
+    def test_hx_push_url_omits_only_responsible_when_unchecked(self, client):
+        client.force_login(UserFactory(is_municipal=True))
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.ACTUAL, scheme=ChartScheme.MCH1)
+
+        response = client.post(reverse("accounting:account-partial"), {"year": 2024})
+
+        assert "only_responsible" not in response["HX-Push-Url"]
 
 
 class TestBudgetByNaturePartialView:

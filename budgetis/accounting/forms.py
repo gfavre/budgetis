@@ -1,3 +1,5 @@
+from typing import Any
+
 from django import forms
 from django.contrib.admin import widgets as admin_widgets
 from django.contrib.auth import get_user_model
@@ -31,7 +33,34 @@ class AccountGroupForm(forms.ModelForm):
             )
 
 
+def _year_choices() -> list[tuple[str, Any]]:
+    return [("", _("- Select year -"))] + [
+        (str(y), str(y)) for y in AvailableYear.objects.values_list("year", flat=True).distinct().order_by("-year")
+    ]
+
+
+class YearFilterForm(forms.Form):
+    """
+    Just the year picker - for pages that report on the whole commune at
+    once (e.g. the staged result) rather than listing individual accounts,
+    where "only my accounts" has no meaning to filter by.
+    """
+
+    year = forms.ChoiceField(label=_("Year"))
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["year"].choices = _year_choices()
+
+
 class AccountFilterForm(forms.Form):
+    """
+    `user`, when passed, drops the "only my accounts" checkbox entirely for a
+    non-municipal user - GroupResponsibility assignments are a municipal
+    officer's own accounts, a concept that doesn't apply to Bourse staff, who
+    handle every account.
+    """
+
     year = forms.ChoiceField(label=_("Year"))
     only_responsible = forms.BooleanField(
         label=_("Show only my accounts"),
@@ -39,14 +68,21 @@ class AccountFilterForm(forms.Form):
         initial=True,
     )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["year"].choices = [("", _("- Select year -"))] + [
-            (str(y), str(y)) for y in AvailableYear.objects.values_list("year", flat=True).distinct().order_by("-year")
-        ]
+        self.fields["year"].choices = _year_choices()
+        if user is not None and not user.is_municipal:
+            del self.fields["only_responsible"]
 
 
-class NatureFilterForm(AccountFilterForm):
+class NatureFilterForm(YearFilterForm):
+    """
+    The by-nature reports group every account by its nature code, regardless
+    of who's responsible for it - like the staged result, "only my accounts"
+    has no meaning here, so this builds on YearFilterForm, not
+    AccountFilterForm.
+    """
+
     detail = forms.BooleanField(
         required=False,
         initial=False,

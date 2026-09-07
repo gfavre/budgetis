@@ -5,6 +5,48 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.5] - 2026-09-07
+
+### Changed
+
+- **"Show only my accounts" removed from the by-nature pages too**:
+  same story as the staged result - grouping by nature code doesn't
+  filter by responsibility, so the checkbox never did anything there
+  either. Gone from both Budget and Actuals "by nature"; unchanged on
+  the main explorer pages, where it does something.
+
+## [1.7.4] - 2026-09-07
+
+### Changed
+
+- **"Show only my accounts" removed from the staged result**: that page
+  aggregates the whole commune at once - it's not a per-account
+  listing - so the checkbox never actually filtered anything there.
+  It's gone from both the Budget and Actuals staged-result pages now;
+  unchanged everywhere else.
+
+## [1.7.3] - 2026-09-07
+
+### Added
+
+- **Bookmarkable filter state on Budget/Actuals**: toggling "Show only my
+  accounts" or picking a year now updates the address bar (`?year=...` and
+  `only_responsible=on`) - reloading, bookmarking, or sharing that link
+  reproduces the exact same filtered view instead of resetting to the
+  server's own defaults.
+
+## [1.7.2] - 2026-09-07
+
+### Changed
+
+- **"Show only my accounts" hidden for Bourse members**: the checkbox on
+  the Budget, Actuals, by-nature, and staged-result pages only appears
+  for municipal officers now - GroupResponsibility is a municipal
+  officer's own accounts, a concept that doesn't apply to Bourse
+  staff, who handle every account. It stays checked by default for
+  municipal officers, unchanged. Enforced server-side too, not just
+  hidden in the UI.
+
 ## [1.7.1] - 2026-09-07
 
 ### Changed
