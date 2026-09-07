@@ -170,6 +170,70 @@ class TestDisplayResponsibleAggregation:
         assert leaf_data["responsible"] == user
 
 
+class TestFunctionLevelResponsibilityOverride:
+    """
+    A single AccountGroup (4-digit MCH2 N4 group) can cover several
+    buildings/sites, distinguished only by the 5th, commune-specific digit
+    of `function` - GroupResponsibility.function lets each such function
+    override the group-level default independently.
+    """
+
+    def test_function_override_wins_over_group_default_for_that_account(self):
+        _level1, _level2, leaf = _mch1_tree()
+        default_user = UserFactory()
+        override_user = UserFactory()
+        GroupResponsibilityFactory(group=leaf, year=2024, function="", responsible=default_user)
+        GroupResponsibilityFactory(group=leaf, year=2024, function=leaf.code + "1", responsible=override_user)
+        default_acc = AccountFactory(group=leaf, function=leaf.code + "0")
+        overridden_acc = AccountFactory(group=leaf, function=leaf.code + "1")
+        rows = [_row(default_acc, col1_charges=Decimal("1")), _row(overridden_acc, col1_charges=Decimal("2"))]
+
+        build_grouped(rows, 2024)
+
+        assert rows[0].responsible == default_user
+        assert rows[1].responsible == override_user
+
+    def test_leaf_is_mixed_when_its_accounts_disagree(self):
+        level1, level2, leaf = _mch1_tree()
+        GroupResponsibilityFactory(group=leaf, year=2024, function="", responsible=UserFactory())
+        GroupResponsibilityFactory(group=leaf, year=2024, function=leaf.code + "1", responsible=UserFactory())
+        acc_a = AccountFactory(group=leaf, function=leaf.code + "0")
+        acc_b = AccountFactory(group=leaf, function=leaf.code + "1")
+        rows = [_row(acc_a, col1_charges=Decimal("1")), _row(acc_b, col1_charges=Decimal("2"))]
+
+        result = build_grouped(rows, 2024)
+
+        leaf_data = result[level1.code]["children"][level2.code]["children"][leaf.code]
+        assert leaf_data["responsible"] is None
+        assert leaf_data["responsible_is_mixed"] is True
+
+    def test_leaf_not_mixed_when_override_matches_the_group_default(self):
+        level1, level2, leaf = _mch1_tree()
+        user = UserFactory()
+        GroupResponsibilityFactory(group=leaf, year=2024, function="", responsible=user)
+        GroupResponsibilityFactory(group=leaf, year=2024, function=leaf.code + "1", responsible=user)
+        acc_a = AccountFactory(group=leaf, function=leaf.code + "0")
+        acc_b = AccountFactory(group=leaf, function=leaf.code + "1")
+        rows = [_row(acc_a, col1_charges=Decimal("1")), _row(acc_b, col1_charges=Decimal("2"))]
+
+        result = build_grouped(rows, 2024)
+
+        leaf_data = result[level1.code]["children"][level2.code]["children"][leaf.code]
+        assert leaf_data["responsible"] == user
+        assert leaf_data["responsible_is_mixed"] is False
+
+    def test_function_override_applies_even_without_a_group_default(self):
+        _level1, _level2, leaf = _mch1_tree()
+        override_user = UserFactory()
+        GroupResponsibilityFactory(group=leaf, year=2024, function=leaf.code + "1", responsible=override_user)
+        acc = AccountFactory(group=leaf, function=leaf.code + "1")
+        row = _row(acc, col1_charges=Decimal("1"))
+
+        build_grouped([row], 2024)
+
+        assert row.responsible == override_user
+
+
 class TestGroupNodeTemplateRendersBothDepths:
     """
     Proves account_list.html renders a 3-level MCH1 tree and a 4-level MCH2 tree

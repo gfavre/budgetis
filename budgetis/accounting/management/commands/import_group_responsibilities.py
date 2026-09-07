@@ -72,7 +72,8 @@ class Command(BaseCommand):
         groups = {g.code: g for g in AccountGroup.objects.filter(code__in=function_trigrams, scheme=ChartScheme.MCH1)}
         users = {u.trigram: u for u in get_user_model().objects.filter(trigram__in=set(function_trigrams.values()))}
         existing = {
-            r.group_id: r for r in GroupResponsibility.objects.filter(year=year, group__code__in=function_trigrams)
+            r.group_id: r
+            for r in GroupResponsibility.objects.filter(year=year, function="", group__code__in=function_trigrams)
         }
 
         updated = unchanged = skipped = 0
@@ -99,7 +100,9 @@ class Command(BaseCommand):
                 previous = current.responsible.trigram if current and current.responsible else "unset"
                 self.stdout.write(f"{function} ({group.label}): {previous} -> {trigram}")
                 updated += 1
-                GroupResponsibility.objects.update_or_create(group=group, year=year, defaults={"responsible": user})
+                GroupResponsibility.objects.update_or_create(
+                    group=group, function="", year=year, defaults={"responsible": user}
+                )
 
             if dry_run:
                 transaction.set_rollback(True)

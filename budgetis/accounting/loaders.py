@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.db.models import Count
+from django.db.models import Q
 from django.utils import formats
 from django.utils.translation import gettext_lazy as _
 
@@ -37,13 +38,40 @@ def get_last_import_info(year: int) -> str:
 class BaseLoader:
     """Shared ORM helpers for ActualsLoader and BudgetLoader."""
 
-    def _get_group_ids(self, user, year: int, *, only_responsible: bool) -> list[int]:
-        if not only_responsible:
-            return []
-        return list(GroupResponsibility.objects.filter(year=year, responsible=user).values_list("group_id", flat=True))
+    def _get_responsible_filter(self, user, year: int) -> Q:
+        """
+        Q matching Account rows where `user` is the effective, override-aware
+        responsible for `year` - see GroupResponsibility's docstring for the
+        function-level override this has to account for. A group's own
+        default only covers functions that aren't separately overridden to
+        someone else; a function overridden to `user` counts regardless of
+        who (if anyone) is the group's own default.
+        """
+        entries = list(
+            GroupResponsibility.objects.filter(year=year).values_list("group_id", "function", "responsible_id")
+        )
+        user_group_ids = [
+            group_id for group_id, function, responsible_id in entries if not function and responsible_id == user.id
+        ]
+        user_functions = [
+            function for _group_id, function, responsible_id in entries if function and responsible_id == user.id
+        ]
+        other_overridden_functions = [
+            function for _group_id, function, responsible_id in entries if function and responsible_id != user.id
+        ]
+
+        # Start from an always-false Q rather than None, so a user
+        # responsible for nothing this year correctly matches zero accounts
+        # instead of falling through to "no filter at all".
+        q = Q(pk__in=[])
+        if user_group_ids:
+            q |= Q(group_id__in=user_group_ids) & ~Q(function__in=other_overridden_functions)
+        if user_functions:
+            q |= Q(function__in=user_functions)
+        return q
 
     def _get_accounts_queryset(
-        self, year: int, *, is_budget: bool, only_responsible: bool = False, group_ids: list[int] | None = None
+        self, year: int, *, is_budget: bool, only_responsible: bool = False, responsible_filter: Q | None = None
     ):
         qs = (
             Account.objects.filter(year=year, is_budget=is_budget, group__isnull=False, visible_in_report=True)
@@ -52,9 +80,7 @@ class BaseLoader:
             .annotate(comment_count=Count("comments"))
         )
         if only_responsible:
-            # An empty group_ids here means "responsible for nothing this year" and
-            # must yield zero accounts - not silently fall through to "no filter".
-            qs = qs.filter(group__in=group_ids or [])
+            qs = qs.filter(responsible_filter or Q(pk__in=[]))
         return qs
 
 
@@ -66,13 +92,17 @@ class ActualsLoader(BaseLoader):
     """
 
     def load(self, year: int, user, *, only_responsible: bool) -> list[AccountRow]:
-        group_ids = self._get_group_ids(user, year, only_responsible=only_responsible)
+        responsible_filter = self._get_responsible_filter(user, year) if only_responsible else None
         accounts = list(
-            self._get_accounts_queryset(year, is_budget=False, only_responsible=only_responsible, group_ids=group_ids)
+            self._get_accounts_queryset(
+                year, is_budget=False, only_responsible=only_responsible, responsible_filter=responsible_filter
+            )
         )
 
         if not accounts:
-            return self._budget_fallback(year, only_responsible=only_responsible, group_ids=group_ids)
+            return self._budget_fallback(
+                year, only_responsible=only_responsible, responsible_filter=responsible_filter
+            )
 
         self._attach_budget(year, accounts)
         self._ensure_budget_defaults(accounts)
@@ -91,7 +121,7 @@ class ActualsLoader(BaseLoader):
             for acc in accounts
         ]
 
-    def _budget_fallback(self, year: int, *, only_responsible: bool, group_ids: list[int]) -> list[AccountRow]:
+    def _budget_fallback(self, year: int, *, only_responsible: bool, responsible_filter: Q | None) -> list[AccountRow]:
         qs = (
             Account.objects.filter(year=year, is_budget=True, group__isnull=False)
             .select_related("group__parent__parent__parent")
@@ -99,7 +129,7 @@ class ActualsLoader(BaseLoader):
             .annotate(comment_count=Count("comments"))
         )
         if only_responsible:
-            qs = qs.filter(group__in=group_ids)
+            qs = qs.filter(responsible_filter or Q(pk__in=[]))
 
         rows = []
         for acc in qs:
@@ -166,9 +196,11 @@ class BudgetLoader(BaseLoader):
     """
 
     def load(self, year: int, user, *, only_responsible: bool) -> list[AccountRow]:
-        group_ids = self._get_group_ids(user, year, only_responsible=only_responsible)
+        responsible_filter = self._get_responsible_filter(user, year) if only_responsible else None
         current = list(
-            self._get_accounts_queryset(year, is_budget=True, only_responsible=only_responsible, group_ids=group_ids)
+            self._get_accounts_queryset(
+                year, is_budget=True, only_responsible=only_responsible, responsible_filter=responsible_filter
+            )
         )
         prev = list(self._get_accounts_queryset(year - 1, is_budget=True))
         actuals = list(self._get_accounts_queryset(year - 2, is_budget=False))

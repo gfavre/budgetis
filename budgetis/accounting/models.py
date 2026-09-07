@@ -1,6 +1,7 @@
 from contextlib import suppress
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -118,6 +119,13 @@ class NatureGroup(TimeStampedModel):
 class GroupResponsibility(models.Model):
     """
     Binds an AccountGroup to a municipal name (string) for a specific year.
+
+    `function`, left blank, means "the whole group" (the only case that used
+    to exist). Set to one of the group's own 5-digit MCH2 function codes, it
+    overrides the group-level responsible for just that function - some
+    communes share a single AccountGroup (4-digit N4) across several
+    buildings/sites distinguished only by that 5th, commune-specific digit,
+    each with its own responsible.
     """
 
     group = models.ForeignKey(
@@ -125,6 +133,7 @@ class GroupResponsibility(models.Model):
         on_delete=models.CASCADE,
         related_name="responsibilities",
     )
+    function = models.CharField(_("Function"), max_length=10, blank=True, default="")
     year = models.PositiveIntegerField()
     responsible = models.ForeignKey(
         get_user_model(),
@@ -134,13 +143,20 @@ class GroupResponsibility(models.Model):
     )
 
     class Meta:
-        unique_together = ("group", "year")
-        ordering = ("group__code", "year")
+        unique_together = ("group", "function", "year")
+        ordering = ("group__code", "function", "year")
         verbose_name = _("Responsible")
         verbose_name_plural = _("Responsibles")
 
     def __str__(self) -> str:
-        return f"{self.year} - {self.group.code} - {self.responsible.trigram if self.responsible else 'Unknown'}"
+        scope = self.function or self.group.code
+        return f"{self.year} - {scope} - {self.responsible.trigram if self.responsible else 'Unknown'}"
+
+    def clean(self):
+        super().clean()
+        if self.function and self.group_id and not self.function.startswith(self.group.code):
+            message = _("Function %(function)s does not belong to group %(group)s.")
+            raise ValidationError(message % {"function": self.function, "group": self.group.code})
 
 
 class AccountCodeMapping(TimeStampedModel):

@@ -5,6 +5,21 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-09-07
+
+### Added
+
+- **Per-function responsibility**: an account group shared by several
+  buildings/sites (same 4-digit MCH2 group, distinguished only by the
+  5th, commune-specific digit) can now have a different responsible
+  officer per site, instead of a single responsible for the whole
+  group. In the Django admin, reassigning a responsible from the
+  accounts list now offers a choice of scope: the whole group, or
+  only the selected accounts' own function(s). In the functional
+  explorer, a group whose sites disagree on who's responsible now
+  shows the responsible on each account row instead of one (wrong)
+  summary line.
+
 ## [1.6.1] - 2026-09-05
 
 ### Added

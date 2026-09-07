@@ -121,6 +121,32 @@ class TestActualsLoader:
         rows = ActualsLoader().load(2024, _user(), only_responsible=True)
         assert rows == []
 
+    def test_only_responsible_function_override_grants_just_that_function(self):
+        # A single AccountGroup can cover several functions (sites/buildings) -
+        # a user overridden to just one of them, with no group-level default
+        # at all, must see only that function's accounts.
+        user = _user()
+        group = AccountGroupFactory()
+        GroupResponsibilityFactory(group=group, year=2024, function="72001", responsible=user)
+        AccountFactory(year=2024, function="72001", nature="351", is_budget=False, group=group)
+        AccountFactory(year=2024, function="72002", nature="351", is_budget=False, group=group)
+
+        rows = ActualsLoader().load(2024, user, only_responsible=True)
+
+        assert [r.account.function for r in rows] == ["72001"]
+
+    def test_only_responsible_group_default_excludes_a_function_overridden_to_someone_else(self):
+        user = _user()
+        group = AccountGroupFactory()
+        GroupResponsibilityFactory(group=group, year=2024, function="", responsible=user)
+        GroupResponsibilityFactory(group=group, year=2024, function="72002", responsible=UserFactory())
+        AccountFactory(year=2024, function="72001", nature="351", is_budget=False, group=group)
+        AccountFactory(year=2024, function="72002", nature="351", is_budget=False, group=group)
+
+        rows = ActualsLoader().load(2024, user, only_responsible=True)
+
+        assert [r.account.function for r in rows] == ["72001"]
+
 
 class TestBudgetLoader:
     def test_load_returns_one_row_per_budget_account(self):

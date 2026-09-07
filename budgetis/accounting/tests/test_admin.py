@@ -41,10 +41,11 @@ class TestAccountAdminReassignResponsible:
                 helpers.ACTION_CHECKBOX_NAME: [account.pk],
                 "apply": "Confirm",
                 "responsible": user.pk,
+                "scope": "group",
             },
         )
 
-        responsibility = GroupResponsibility.objects.get(group=group, year=2026)
+        responsibility = GroupResponsibility.objects.get(group=group, function="", year=2026)
         assert responsibility.responsible == user
 
     def test_ignores_accounts_without_a_group(self, admin_client):
@@ -78,10 +79,31 @@ class TestAccountAdminReassignResponsible:
                 helpers.ACTION_CHECKBOX_NAME: [budget.pk, actual.pk],
                 "apply": "Confirm",
                 "responsible": user.pk,
+                "scope": "group",
             },
         )
 
-        assert GroupResponsibility.objects.filter(group=group, year=2026).count() == 1
+        assert GroupResponsibility.objects.filter(group=group, function="", year=2026).count() == 1
+
+    def test_scope_function_creates_a_function_scoped_responsibility(self, admin_client):
+        user = UserFactory(trigram="ADA")
+        group = AccountGroupFactory(code="720")
+        account = AccountFactory(year=2026, group=group, function="72001", nature="351", is_budget=True)
+        url = reverse("admin:accounting_account_changelist")
+
+        admin_client.post(
+            url,
+            data={
+                "action": "reassign_responsible",
+                helpers.ACTION_CHECKBOX_NAME: [account.pk],
+                "apply": "Confirm",
+                "responsible": user.pk,
+                "scope": "function",
+            },
+        )
+
+        responsibility = GroupResponsibility.objects.get(group=group, function="72001", year=2026)
+        assert responsibility.responsible == user
 
 
 class TestAccountGroupAdminReassignResponsible:

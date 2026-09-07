@@ -30,31 +30,31 @@ def _load_group_ancestry(leaf_ids: set[int]) -> dict[int, AccountGroup]:
     return groups_by_id
 
 
-def _node_for(group: AccountGroup, responsibilities: dict) -> dict:
+def _node_for(group: AccountGroup) -> dict:
     return {
         "code": group.code,
         "label": group.label,
         "level": group.level,
         "children": {},
         "accounts": [],
-        "responsible": responsibilities.get(group.id),
+        "responsible": None,  # resolved by _resolve_display_responsible() once every row is in
+        "responsible_is_mixed": False,  # ditto - True once resolved if descendants disagree
         **_empty_totals(),
     }
 
 
-def _ensure_node(group: AccountGroup, *, nodes: dict, groups_by_id: dict, responsibilities: dict, roots: dict) -> dict:
+def _ensure_node(group: AccountGroup, *, nodes: dict, groups_by_id: dict, roots: dict) -> dict:
     """Get-or-create the tree node for `group`, wiring it into its parent's children (or `roots`)."""
     if group.id in nodes:
         return nodes[group.id]
 
-    node = _node_for(group, responsibilities)
+    node = _node_for(group)
     nodes[group.id] = node
     if group.parent_id:
         parent_node = _ensure_node(
             groups_by_id[group.parent_id],
             nodes=nodes,
             groups_by_id=groups_by_id,
-            responsibilities=responsibilities,
             roots=roots,
         )
         parent_node["children"][group.code] = node
@@ -75,17 +75,48 @@ def _accumulate(row: AccountRow, group: AccountGroup, *, nodes: dict, groups_by_
         current = groups_by_id[current.parent_id]
 
 
+def _load_responsibilities(year: int) -> tuple[dict[int, object], dict[str, object]]:
+    """
+    Splits this year's GroupResponsibility rows into the group-level default
+    (function="") and per-function overrides (see GroupResponsibility's own
+    docstring). A function code alone is enough to key the override dict -
+    it belongs to exactly one group by construction (an MCH2 function's
+    first 4 digits *are* its group's code), so no need to pair it with a
+    group id.
+    """
+    group_defaults: dict[int, object] = {}
+    function_overrides: dict[str, object] = {}
+    for r in GroupResponsibility.objects.filter(year=year).select_related("responsible"):
+        if r.function:
+            function_overrides[r.function] = r.responsible
+        else:
+            group_defaults[r.group_id] = r.responsible
+    return group_defaults, function_overrides
+
+
+def _resolve_row_responsible(row: AccountRow, group_defaults: dict, function_overrides: dict):
+    return function_overrides.get(row.account.function, group_defaults.get(row.account.group_id))
+
+
 def _resolve_display_responsible(node: dict):
     """
-    Leaves keep their own GroupResponsibility (set in _node_for). An ancestor
-    (SuperGroup/MetaGroup) never has one of its own — it's purely a graphical
-    grouping for the report — so it shows the single responsible shared by
-    every descendant leaf function, or None when they disagree.
+    A leaf shows the responsible shared by every one of its accounts - which
+    may differ per account (see GroupResponsibility's function-level
+    override) - or None when they disagree, so the template falls back to a
+    per-row display instead of one summary line (see the leaf template
+    partials). An ancestor (SuperGroup/MetaGroup) never has a
+    GroupResponsibility of its own - it's purely a graphical grouping for
+    the report - so it uses the same "agree or None" rule one level up,
+    against its children's already-resolved values.
     """
     if not node["children"]:
+        values = {row.responsible for row in node["accounts"]}
+        node["responsible"] = values.pop() if len(values) == 1 else None
+        node["responsible_is_mixed"] = len(values) > 1
         return node["responsible"]
     values = {_resolve_display_responsible(child) for child in node["children"].values()}
     node["responsible"] = values.pop() if len(values) == 1 else None
+    node["responsible_is_mixed"] = len(values) > 1
     return node["responsible"]
 
 
@@ -104,9 +135,7 @@ def build_grouped(rows: list[AccountRow], year: int) -> OrderedDict:
         return OrderedDict()
 
     groups_by_id = _load_group_ancestry(leaf_ids)
-    responsibilities = {
-        r.group_id: r.responsible for r in GroupResponsibility.objects.filter(year=year).select_related("responsible")
-    }
+    group_defaults, function_overrides = _load_responsibilities(year)
 
     nodes: dict[int, dict] = {}
     roots: dict[str, dict] = {}
@@ -116,9 +145,8 @@ def build_grouped(rows: list[AccountRow], year: int) -> OrderedDict:
         if not group:
             continue
 
-        leaf_node = _ensure_node(
-            group, nodes=nodes, groups_by_id=groups_by_id, responsibilities=responsibilities, roots=roots
-        )
+        row.responsible = _resolve_row_responsible(row, group_defaults, function_overrides)
+        leaf_node = _ensure_node(group, nodes=nodes, groups_by_id=groups_by_id, roots=roots)
         leaf_node["accounts"].append(row)
         _accumulate(row, group, nodes=nodes, groups_by_id=groups_by_id)
 

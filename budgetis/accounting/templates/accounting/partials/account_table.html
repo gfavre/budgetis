@@ -39,6 +39,10 @@
              hx-swap="innerHTML"
              data-bs-toggle="modal"
              data-bs-target="#accountHistoryModal">{{ row.account.label }}</a>
+          {% if data.responsible_is_mixed %}
+            <br />
+            <small class="text-muted">{% trans "Responsible" %}: {{ row.responsible.trigram|default:"N/A" }}</small>
+          {% endif %}
         </td>
         <td class="text-end">
           {% if show_col2 %}

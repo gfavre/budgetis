@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 17:46+0200\n"
+"POT-Creation-Date: 2026-09-07 14:48+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -30,17 +30,17 @@ msgstr "Masquer les comptes dans le rapport"
 msgid "Display accounts in report"
 msgstr "Afficher les comptes dans le rapport"
 
-#: budgetis/accounting/admin.py:68 budgetis/accounting/admin.py:84
-#: budgetis/accounting/admin.py:217 budgetis/accounting/admin.py:233
+#: budgetis/accounting/admin.py:68 budgetis/accounting/admin.py:93
+#: budgetis/accounting/admin.py:226 budgetis/accounting/admin.py:242
 msgid "Reassign responsible"
 msgstr "Réassigner le responsable"
 
-#: budgetis/accounting/admin.py:79 budgetis/accounting/admin.py:228
+#: budgetis/accounting/admin.py:88 budgetis/accounting/admin.py:237
 #, python-format
 msgid "Updated %(count)d group(s)."
 msgstr ""
 
-#: budgetis/accounting/admin.py:196 budgetis/accounting/admin.py:242
+#: budgetis/accounting/admin.py:205 budgetis/accounting/admin.py:251
 msgid "Code or label"
 msgstr "Code ou libellé"
 
@@ -48,8 +48,8 @@ msgstr "Code ou libellé"
 msgid "Accounting"
 msgstr "Comptabilité"
 
-#: budgetis/accounting/forms.py:35 budgetis/accounting/forms.py:80
-#: budgetis/accounting/models.py:204 budgetis/bdi_import/forms.py:16
+#: budgetis/accounting/forms.py:35 budgetis/accounting/forms.py:99
+#: budgetis/accounting/models.py:220 budgetis/bdi_import/forms.py:16
 #: budgetis/bdi_import/models.py:26
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:156
 #: budgetis/finance/models.py:13
@@ -69,127 +69,146 @@ msgstr "- Sélectionnez l'année -"
 msgid "Show sub-accounts (detail down to 3-digit nature codes)"
 msgstr "Afficher le détail (natures à 3 chiffres)"
 
-#: budgetis/accounting/forms.py:64 budgetis/accounting/models.py:139
-#: budgetis/accounting/templates/accounting/partials/account_group_block.html:9
-#: budgetis/accounting/templates/accounting/partials/budget_group_block.html:9
+#: budgetis/accounting/forms.py:64 budgetis/accounting/models.py:148
+#: budgetis/accounting/templates/accounting/partials/account_group_block.html:12
+#: budgetis/accounting/templates/accounting/partials/account_table.html:44
+#: budgetis/accounting/templates/accounting/partials/budget_group_block.html:12
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:90
 #: budgetis/bdi_import/views.py:138
 msgid "Responsible"
 msgstr "Responsable"
 
-#: budgetis/accounting/forms.py:93
+#: budgetis/accounting/forms.py:86
+msgid "Scope"
+msgstr "Portée"
+
+#: budgetis/accounting/forms.py:88
+msgid "The whole group (every function under it)"
+msgstr "Tout le groupe (toutes les fonctions qu'il contient)"
+
+#: budgetis/accounting/forms.py:89
+msgid "Only the selected accounts' own function(s)"
+msgstr "Uniquement la ou les fonctions des comptes sélectionnés"
+
+#: budgetis/accounting/forms.py:112
 #, fuzzy
 #| msgid "Amounts"
 msgid "Amount"
 msgstr "Montants"
 
-#: budgetis/accounting/loaders.py:31
+#: budgetis/accounting/loaders.py:32
 msgid "budget"
 msgstr "budget"
 
-#: budgetis/accounting/loaders.py:33
+#: budgetis/accounting/loaders.py:34
 msgid "actuals"
 msgstr "comptes"
 
-#: budgetis/accounting/loaders.py:34
+#: budgetis/accounting/loaders.py:35
 msgid "Last import:"
 msgstr "Dernière Importation :"
 
-#: budgetis/accounting/models.py:60
+#: budgetis/accounting/models.py:61
 msgid "Account Group"
 msgstr "Groupe de compte"
 
-#: budgetis/accounting/models.py:61
+#: budgetis/accounting/models.py:62
 msgid "Account Groups"
 msgstr "Groupes de compte"
 
-#: budgetis/accounting/models.py:108
+#: budgetis/accounting/models.py:109
 msgid "Nature Group"
 msgstr "Groupe de nature"
 
-#: budgetis/accounting/models.py:109
+#: budgetis/accounting/models.py:110
 msgid "Nature Groups"
 msgstr "Groupes de nature"
 
-#: budgetis/accounting/models.py:140
-msgid "Responsibles"
-msgstr "Responsables"
-
-#: budgetis/accounting/models.py:156
-msgid "MCH1 function"
-msgstr "Fonction MCH1"
-
-#: budgetis/accounting/models.py:157
-msgid "MCH1 nature"
-msgstr "Nature MCH1"
-
-#: budgetis/accounting/models.py:158
-msgid "MCH1 subaccount"
-msgstr "Sous-compte MCH1"
-
-#: budgetis/accounting/models.py:159
-msgid "MCH2 function"
-msgstr "Fonction MCH2"
-
-#: budgetis/accounting/models.py:160
-msgid "MCH2 nature"
-msgstr "Nature MCH2"
-
-#: budgetis/accounting/models.py:161
-msgid "MCH2 subaccount"
-msgstr "Sous-compte MCH2"
-
-#: budgetis/accounting/models.py:173
-msgid "Account code mapping"
-msgstr "Correspondance de compte"
-
-#: budgetis/accounting/models.py:174
-msgid "Account code mappings"
-msgstr "Correspondances de compte"
-
-#: budgetis/accounting/models.py:198
-msgid "Charges only"
-msgstr "Seulement les charges"
-
-#: budgetis/accounting/models.py:199
-msgid "Revenues only"
-msgstr "Seulement les produits"
-
-#: budgetis/accounting/models.py:200
-msgid "Both charges and revenues"
-msgstr "Charges et produits"
-
-#: budgetis/accounting/models.py:205 budgetis/bdi_import/models.py:79
-#: budgetis/finance/models.py:96
+#: budgetis/accounting/models.py:136 budgetis/accounting/models.py:221
+#: budgetis/bdi_import/models.py:79 budgetis/finance/models.py:96
 #: budgetis/finance/templates/finance/sankey_rules.html:66
 msgid "Function"
 msgstr "Fonction"
 
-#: budgetis/accounting/models.py:206 budgetis/bdi_import/forms.py:18
+#: budgetis/accounting/models.py:149
+msgid "Responsibles"
+msgstr "Responsables"
+
+#: budgetis/accounting/models.py:158
+#, python-format
+msgid "Function %(function)s does not belong to group %(group)s."
+msgstr "La fonction %(function)s n'appartient pas au groupe %(group)s."
+
+#: budgetis/accounting/models.py:172
+msgid "MCH1 function"
+msgstr "Fonction MCH1"
+
+#: budgetis/accounting/models.py:173
+msgid "MCH1 nature"
+msgstr "Nature MCH1"
+
+#: budgetis/accounting/models.py:174
+msgid "MCH1 subaccount"
+msgstr "Sous-compte MCH1"
+
+#: budgetis/accounting/models.py:175
+msgid "MCH2 function"
+msgstr "Fonction MCH2"
+
+#: budgetis/accounting/models.py:176
+msgid "MCH2 nature"
+msgstr "Nature MCH2"
+
+#: budgetis/accounting/models.py:177
+msgid "MCH2 subaccount"
+msgstr "Sous-compte MCH2"
+
+#: budgetis/accounting/models.py:189
+msgid "Account code mapping"
+msgstr "Correspondance de compte"
+
+#: budgetis/accounting/models.py:190
+msgid "Account code mappings"
+msgstr "Correspondances de compte"
+
+#: budgetis/accounting/models.py:214
+msgid "Charges only"
+msgstr "Seulement les charges"
+
+#: budgetis/accounting/models.py:215
+msgid "Revenues only"
+msgstr "Seulement les produits"
+
+#: budgetis/accounting/models.py:216
+msgid "Both charges and revenues"
+msgstr "Charges et produits"
+
+#: budgetis/accounting/models.py:222 budgetis/bdi_import/forms.py:18
 #: budgetis/bdi_import/models.py:80 budgetis/finance/models.py:97
 #: budgetis/finance/templates/finance/sankey_rules.html:67
 msgid "Nature"
 msgstr "Nature"
 
-#: budgetis/accounting/models.py:207 budgetis/finance/models.py:101
+#: budgetis/accounting/models.py:223 budgetis/finance/models.py:101
 #: budgetis/finance/templates/finance/sankey_rules.html:68
 msgid "Subaccount"
 msgstr "Sous-compte"
 
-#: budgetis/accounting/models.py:209
+#: budgetis/accounting/models.py:225
 #: budgetis/finance/templates/finance/sankey_rules.html:112
 msgid "Label"
 msgstr "Désignation"
 
-#: budgetis/accounting/models.py:211
+#: budgetis/accounting/models.py:227
 msgid "Group"
 msgstr "Groupe"
 
-#: budgetis/accounting/models.py:214 budgetis/bdi_import/models.py:32
+#: budgetis/accounting/models.py:230 budgetis/bdi_import/models.py:32
 #: budgetis/finance/models.py:16
 msgid "Scheme"
 msgstr ""
 
-#: budgetis/accounting/models.py:220
+#: budgetis/accounting/models.py:236
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:26
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:29
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:33
@@ -227,7 +246,7 @@ msgstr ""
 msgid "Charges"
 msgstr "Charges"
 
-#: budgetis/accounting/models.py:221
+#: budgetis/accounting/models.py:237
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:27
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:30
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:34
@@ -265,31 +284,31 @@ msgstr "Charges"
 msgid "Revenues"
 msgstr "Produits"
 
-#: budgetis/accounting/models.py:223
+#: budgetis/accounting/models.py:239
 msgid "Expected type"
 msgstr "Type attendu"
 
-#: budgetis/accounting/models.py:228
+#: budgetis/accounting/models.py:244
 msgid "Visible in report"
 msgstr "Visible dans le rapport"
 
-#: budgetis/accounting/models.py:238
+#: budgetis/accounting/models.py:254
 msgid "Account"
 msgstr "Compte"
 
-#: budgetis/accounting/models.py:239
+#: budgetis/accounting/models.py:255
 msgid "Accounts"
 msgstr "Comptes"
 
-#: budgetis/accounting/models.py:312
+#: budgetis/accounting/models.py:328
 msgid "Content"
 msgstr "Contenu"
 
-#: budgetis/accounting/models.py:316
+#: budgetis/accounting/models.py:332
 msgid "Account Comment"
 msgstr "Commentaire sur le compte"
 
-#: budgetis/accounting/models.py:317
+#: budgetis/accounting/models.py:333
 msgid "Account Comments"
 msgstr "Commentaires sur le compte"
 
@@ -379,27 +398,27 @@ msgstr "Éclatement"
 msgid "New"
 msgstr "Nouveau"
 
-#: budgetis/accounting/staged_result.py:108
+#: budgetis/accounting/staged_result.py:120
 msgid "Operating charges and revenues"
 msgstr "Charges et revenus d'exploitation"
 
-#: budgetis/accounting/staged_result.py:108
+#: budgetis/accounting/staged_result.py:120
 msgid "Operating result"
 msgstr "Résultat d'exploitation"
 
-#: budgetis/accounting/staged_result.py:109
+#: budgetis/accounting/staged_result.py:121
 msgid "Financial charges and revenues"
 msgstr "Charges et revenus financiers"
 
-#: budgetis/accounting/staged_result.py:109
+#: budgetis/accounting/staged_result.py:121
 msgid "Result before extraordinary items"
 msgstr "Résultat opérationnel"
 
-#: budgetis/accounting/staged_result.py:110
+#: budgetis/accounting/staged_result.py:122
 msgid "Extraordinary charges and revenues"
 msgstr "Charges et revenus extraordinaires"
 
-#: budgetis/accounting/staged_result.py:110
+#: budgetis/accounting/staged_result.py:122
 msgid "Total result for the year"
 msgstr "Résultat total de l'exercice"
 
@@ -433,13 +452,13 @@ msgid "Loading..."
 msgstr "Chargement..."
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:6
-#: budgetis/accounting/templates/accounting/partials/account_table.html:49
-#: budgetis/accounting/templates/accounting/partials/account_table.html:72
-#: budgetis/accounting/templates/accounting/partials/account_table.html:92
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:95
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:117
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:142
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:159
+#: budgetis/accounting/templates/accounting/partials/account_table.html:53
+#: budgetis/accounting/templates/accounting/partials/account_table.html:76
+#: budgetis/accounting/templates/accounting/partials/account_table.html:96
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:99
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:121
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:146
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:163
 msgid "Comments"
 msgstr "Commentaires"
 
@@ -603,6 +622,11 @@ msgstr "commentaire"
 #: budgetis/templates/users/user_detail.html:30
 msgid "Save"
 msgstr "Enregistrer"
+
+#: budgetis/accounting/templates/accounting/partials/account_group_block.html:10
+#: budgetis/accounting/templates/accounting/partials/budget_group_block.html:10
+msgid "Responsible: see each row"
+msgstr "Responsable : voir chaque ligne"
 
 #: budgetis/accounting/templates/accounting/partials/account_history_modal.html:5
 #, python-format
@@ -1595,54 +1619,3 @@ msgstr "Impossible de réactiver cet utilisateur."
 #, python-format
 msgid "%(user)s is now part of the Bourse."
 msgstr "%(user)s fait maintenant partie de la Bourse."
-
-#~ msgid "Social security"
-#~ msgstr "Sécurité sociale"
-
-#~ msgid "Equalization"
-#~ msgstr "Péréquation"
-
-#~ msgid "Police"
-#~ msgstr "Police"
-
-#~ msgid "Regional transports"
-#~ msgstr "Transports régionaux"
-
-#~ msgid "Associations"
-#~ msgstr "Associations"
-
-#~ msgid "Other intercommunalities"
-#~ msgstr "Autres intercommunalités"
-
-#~ msgid "Wages"
-#~ msgstr "Salaires"
-
-#~ msgid "Goods and services"
-#~ msgstr "Biens et services"
-
-#~ msgid "Interests"
-#~ msgstr "Intérêts"
-
-#~ msgid "Aids and subsidies"
-#~ msgstr "Aides et subventions"
-
-#~ msgid "Depreciation & allocations"
-#~ msgstr "Amortissements et attributions"
-
-#~ msgid "Taxes (general)"
-#~ msgstr "Impôts"
-
-#~ msgid "Random taxes"
-#~ msgstr "Impôts aléatoires"
-
-#~ msgid "Levies (usage-based)"
-#~ msgstr "Taxes"
-
-#~ msgid "Rentals"
-#~ msgstr "Locations"
-
-#~ msgid "Other revenues"
-#~ msgstr "Autres recettes"
-
-#~ msgid "Fund allocations"
-#~ msgstr "Affectation des fonds"

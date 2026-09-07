@@ -6,6 +6,10 @@
     {% include "accounting/partials/budget_comments.html" with accounts=data.accounts code=code label=label data=data %}
   </div>
   <div class="col-md-4 text-end">
-    {% trans "Responsible" %} : <strong>{{ data.responsible.trigram|default:"N/A" }}</strong>
+    {% if data.responsible_is_mixed %}
+      <small class="text-muted">{% trans "Responsible: see each row" %}</small>
+    {% else %}
+      {% trans "Responsible" %} : <strong>{{ data.responsible.trigram|default:"N/A" }}</strong>
+    {% endif %}
   </div>
 </div>

@@ -71,7 +71,26 @@ class ReassignResponsibleFormBase(forms.Form):
 
 
 class ReassignAccountResponsibleForm(ReassignResponsibleFormBase):
-    """Reassigns the AccountGroup responsible for the year of each selected account."""
+    """
+    Reassigns the responsible for the year of each selected account - either
+    for the whole AccountGroup those accounts belong to, or just for their
+    own 5-digit function(s) (see GroupResponsibility's function-level
+    override, used when a single group covers several sites/buildings each
+    needing a different responsible).
+    """
+
+    SCOPE_GROUP = "group"
+    SCOPE_FUNCTION = "function"
+
+    scope = forms.ChoiceField(
+        label=_("Scope"),
+        choices=[
+            (SCOPE_GROUP, _("The whole group (every function under it)")),
+            (SCOPE_FUNCTION, _("Only the selected accounts' own function(s)")),
+        ],
+        initial=SCOPE_GROUP,
+        widget=forms.RadioSelect,
+    )
 
 
 class ReassignGroupResponsibleForm(ReassignResponsibleFormBase):

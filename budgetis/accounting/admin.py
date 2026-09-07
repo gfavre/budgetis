@@ -71,12 +71,21 @@ class AccountAdmin(admin.ModelAdmin):
             form = ReassignAccountResponsibleForm(request.POST)
             if form.is_valid():
                 responsible = form.cleaned_data["responsible"]
-                pairs = {(a.group_id, a.year) for a in queryset if a.group_id}
-                for group_id, year in pairs:
-                    GroupResponsibility.objects.update_or_create(
-                        group_id=group_id, year=year, defaults={"responsible": responsible}
-                    )
-                self.message_user(request, _("Updated %(count)d group(s).") % {"count": len(pairs)})
+                if form.cleaned_data["scope"] == ReassignAccountResponsibleForm.SCOPE_FUNCTION:
+                    triples = {(a.group_id, a.function, a.year) for a in queryset if a.group_id}
+                    for group_id, function, year in triples:
+                        GroupResponsibility.objects.update_or_create(
+                            group_id=group_id, function=function, year=year, defaults={"responsible": responsible}
+                        )
+                    count = len(triples)
+                else:
+                    pairs = {(a.group_id, a.year) for a in queryset if a.group_id}
+                    for group_id, year in pairs:
+                        GroupResponsibility.objects.update_or_create(
+                            group_id=group_id, function="", year=year, defaults={"responsible": responsible}
+                        )
+                    count = len(pairs)
+                self.message_user(request, _("Updated %(count)d group(s).") % {"count": count})
                 return None
         else:
             form = ReassignAccountResponsibleForm()
@@ -223,7 +232,7 @@ class AccountGroupAdmin(admin.ModelAdmin):
                 year = int(form.cleaned_data["year"])
                 for group in queryset:
                     GroupResponsibility.objects.update_or_create(
-                        group=group, year=year, defaults={"responsible": responsible}
+                        group=group, function="", year=year, defaults={"responsible": responsible}
                     )
                 self.message_user(request, _("Updated %(count)d group(s).") % {"count": queryset.count()})
                 return None
@@ -244,9 +253,9 @@ class NatureGroupAdmin(admin.ModelAdmin):
 
 @admin.register(GroupResponsibility)
 class GroupResponsibilityAdmin(admin.ModelAdmin):
-    list_display = ("group", "year", "responsible")
+    list_display = ("group", "function", "year", "responsible")
     list_filter = ("year", "group__scheme", "responsible")
-    search_fields = ("group__label", "responsible__name", "responsible__email", "responsible__trigram")
+    search_fields = ("group__label", "function", "responsible__name", "responsible__email", "responsible__trigram")
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         formfield = super().formfield_for_foreignkey(db_field, request, **kwargs)
