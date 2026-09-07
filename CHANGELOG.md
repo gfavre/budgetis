@@ -5,6 +5,16 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.6] - 2026-09-07
+
+### Fixed
+
+- **Per-row responsible not showing when printed**: on a shared account
+  group split between several responsibles, each row's own name is now
+  printed in parentheses right after its label, on the same line -
+  the previous "second line below the label" layout wasn't coming
+  through in print.
+
 ## [1.7.5] - 2026-09-07
 
 ### Changed

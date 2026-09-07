@@ -86,8 +86,7 @@
              data-bs-toggle="modal"
              data-bs-target="#accountHistoryModal">{{ row.account.label }}</a>
           {% if data.responsible_is_mixed %}
-            <br />
-            <small class="text-muted">{% trans "Responsible" %}: {{ row.responsible.trigram|default:"N/A" }}</small>
+            <span class="text-muted">({{ row.responsible.trigram|default:"N/A" }})</span>
           {% endif %}
         </td>
         <td class="no-wrap text-end">

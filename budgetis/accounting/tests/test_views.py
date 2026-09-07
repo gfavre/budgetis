@@ -92,6 +92,29 @@ class TestAccountExplorerView:
         assert their_account.full_code in html
         assert other_account.full_code in html
 
+    def test_shows_responsible_trigram_in_parentheses_when_a_group_is_mixed(
+        self, client, site_configuration_with_logo
+    ):
+        # A single AccountGroup can cover several functions (sites/buildings),
+        # each with its own responsible - no single name applies to the whole
+        # group, so each row must show its own responsible instead (see
+        # GroupResponsibility's function-level override).
+        client.force_login(UserFactory(is_municipal=True))
+        group = AccountGroupFactory()
+        AvailableYearFactory(year=2024, type=AvailableYear.YearType.ACTUAL)
+        ada = UserFactory(trigram="ADA")
+        bob = UserFactory(trigram="BOB")
+        GroupResponsibilityFactory(group=group, year=2024, function="72001", responsible=ada)
+        GroupResponsibilityFactory(group=group, year=2024, function="72002", responsible=bob)
+        AccountFactory(year=2024, is_budget=False, group=group, function="72001", nature="301")
+        AccountFactory(year=2024, is_budget=False, group=group, function="72002", nature="301")
+
+        response = client.get(reverse("accounting:account-explorer"), {"year": 2024, "only_responsible": ""})
+
+        html = response.content.decode()
+        assert "(ADA)" in html
+        assert "(BOB)" in html
+
     def test_only_responsible_defaults_to_false_for_a_non_municipal_user_with_no_query_string(
         self, client, site_configuration_with_logo
     ):
