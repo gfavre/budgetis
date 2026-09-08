@@ -257,9 +257,14 @@ class Account(TimeStampedModel):
     @property
     def full_code(self) -> str:
         """
-        Returns the full code as 'function.nature', zero-padded to 3 digits.
+        Returns the full code as 'function.nature[.sub_account]'. sub_account
+        is left-padded to 2 digits - the import pipeline sometimes drops its
+        leading zero (e.g. Excel reading "01" or "00" back as the number 1
+        or 0), and extensions are conventionally 2 digits in the official
+        chart of accounts.
         """
-        return f"{self.function}.{self.nature}{('.' + str(self.sub_account)) if self.sub_account else ''}"
+        sub_account = self.sub_account.zfill(2) if self.sub_account else self.sub_account
+        return f"{self.function}.{self.nature}{('.' + sub_account) if sub_account else ''}"
 
     @property
     def is_funding_request(self) -> bool:

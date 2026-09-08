@@ -24,9 +24,20 @@ class TestAccountFullCode:
         acc = AccountFactory.build(function="720", nature="351", sub_account="")
         assert acc.full_code == "720.351"
 
-    def test_with_sub_account(self):
+    def test_sub_account_already_two_digits_is_unchanged(self):
+        acc = AccountFactory.build(function="720", nature="351", sub_account="12")
+        assert acc.full_code == "720.351.12"
+
+    def test_single_digit_sub_account_is_left_padded(self):
+        # The import pipeline sometimes drops the leading zero of a
+        # sub_account (e.g. Excel reading "01" back as the number 1) -
+        # extensions are conventionally 2 digits in the chart of accounts.
         acc = AccountFactory.build(function="720", nature="351", sub_account="1")
-        assert acc.full_code == "720.351.1"
+        assert acc.full_code == "720.351.01"
+
+    def test_all_zero_sub_account_is_left_padded(self):
+        acc = AccountFactory.build(function="720", nature="351", sub_account="0")
+        assert acc.full_code == "720.351.00"
 
 
 class TestAccountProperties:

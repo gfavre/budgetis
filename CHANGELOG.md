@@ -5,7 +5,7 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.7.6] - 2026-09-07
+## [1.7.6] - 2026-09-08
 
 ### Fixed
 
@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   printed in parentheses right after its label, on the same line -
   the previous "second line below the label" layout wasn't coming
   through in print.
+- **Account extension missing its leading zero**: an account code like
+  `720.351.1` now displays as `720.351.01` - the import pipeline
+  sometimes drops the leading zero of an extension (Excel reads "01"
+  or "00" back as the number 1 or 0), and extensions are
+  conventionally 2 digits in the official chart of accounts. A
+  2-digit extension is left exactly as stored.
 
 ## [1.7.5] - 2026-09-07
 
