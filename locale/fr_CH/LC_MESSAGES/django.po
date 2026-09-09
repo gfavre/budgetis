@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-07 15:42+0200\n"
+"POT-Creation-Date: 2026-09-09 16:04+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -48,49 +48,47 @@ msgstr "Code ou libellé"
 msgid "Accounting"
 msgstr "Comptabilité"
 
-#: budgetis/accounting/forms.py:35 budgetis/accounting/forms.py:99
-#: budgetis/accounting/models.py:220 budgetis/bdi_import/forms.py:16
-#: budgetis/bdi_import/models.py:26
+#: budgetis/accounting/forms.py:37
+msgid "- Select year -"
+msgstr "- Sélectionnez l'année -"
+
+#: budgetis/accounting/forms.py:49 budgetis/accounting/forms.py:64
+#: budgetis/accounting/forms.py:135 budgetis/accounting/models.py:220
+#: budgetis/bdi_import/forms.py:16 budgetis/bdi_import/models.py:26
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:156
 #: budgetis/finance/models.py:13
 #: budgetis/finance/templates/finance/sankey.html:13
 msgid "Year"
 msgstr "Année"
 
-#: budgetis/accounting/forms.py:37
+#: budgetis/accounting/forms.py:66
 msgid "Show only my accounts"
 msgstr "Afficher uniquement mes comptes"
 
-#: budgetis/accounting/forms.py:44
-msgid "- Select year -"
-msgstr "- Sélectionnez l'année -"
-
-#: budgetis/accounting/forms.py:58
+#: budgetis/accounting/forms.py:94
 msgid "Show sub-accounts (detail down to 3-digit nature codes)"
 msgstr "Afficher le détail (natures à 3 chiffres)"
 
-#: budgetis/accounting/forms.py:64 budgetis/accounting/models.py:148
+#: budgetis/accounting/forms.py:100 budgetis/accounting/models.py:148
 #: budgetis/accounting/templates/accounting/partials/account_group_block.html:12
-#: budgetis/accounting/templates/accounting/partials/account_table.html:44
 #: budgetis/accounting/templates/accounting/partials/budget_group_block.html:12
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:90
 #: budgetis/bdi_import/views.py:138
 msgid "Responsible"
 msgstr "Responsable"
 
-#: budgetis/accounting/forms.py:86
+#: budgetis/accounting/forms.py:122
 msgid "Scope"
 msgstr "Portée"
 
-#: budgetis/accounting/forms.py:88
+#: budgetis/accounting/forms.py:124
 msgid "The whole group (every function under it)"
 msgstr "Tout le groupe (toutes les fonctions qu'il contient)"
 
-#: budgetis/accounting/forms.py:89
+#: budgetis/accounting/forms.py:125
 msgid "Only the selected accounts' own function(s)"
 msgstr "Uniquement la ou les fonctions des comptes sélectionnés"
 
-#: budgetis/accounting/forms.py:112
+#: budgetis/accounting/forms.py:148
 #, fuzzy
 #| msgid "Amounts"
 msgid "Amount"
@@ -300,15 +298,15 @@ msgstr "Compte"
 msgid "Accounts"
 msgstr "Comptes"
 
-#: budgetis/accounting/models.py:328
+#: budgetis/accounting/models.py:333
 msgid "Content"
 msgstr "Contenu"
 
-#: budgetis/accounting/models.py:332
+#: budgetis/accounting/models.py:337
 msgid "Account Comment"
 msgstr "Commentaire sur le compte"
 
-#: budgetis/accounting/models.py:333
+#: budgetis/accounting/models.py:338
 msgid "Account Comments"
 msgstr "Commentaires sur le compte"
 
@@ -490,7 +488,7 @@ msgstr "Résultat total du compte de résultats"
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:117
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:122
 #: budgetis/accounting/templates/accounting/partials/account_history_modal.html:148
-#: budgetis/accounting/views/explore.py:86
+#: budgetis/accounting/views/explore.py:122
 #: budgetis/core/templates/core/home.html:143 budgetis/templates/base.html:113
 msgid "Actuals"
 msgstr "Comptes"
@@ -512,13 +510,13 @@ msgid "Loading..."
 msgstr "Chargement..."
 
 #: budgetis/accounting/templates/accounting/account_comments_list.html:6
-#: budgetis/accounting/templates/accounting/partials/account_table.html:53
-#: budgetis/accounting/templates/accounting/partials/account_table.html:76
-#: budgetis/accounting/templates/accounting/partials/account_table.html:96
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:99
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:121
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:146
-#: budgetis/accounting/templates/accounting/partials/budget_table.html:163
+#: budgetis/accounting/templates/accounting/partials/account_table.html:52
+#: budgetis/accounting/templates/accounting/partials/account_table.html:75
+#: budgetis/accounting/templates/accounting/partials/account_table.html:95
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:98
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:120
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:145
+#: budgetis/accounting/templates/accounting/partials/budget_table.html:162
 msgid "Comments"
 msgstr "Commentaires"
 
@@ -564,7 +562,7 @@ msgid "Staged result"
 msgstr "Présentation échelonnée"
 
 #: budgetis/accounting/templates/accounting/account_staged_result.html:10
-#: budgetis/accounting/views/explore.py:274
+#: budgetis/accounting/views/explore.py:329
 msgid "Actuals - staged result"
 msgstr "Comptes - présentation échelonnée"
 
@@ -593,7 +591,7 @@ msgstr "Annuler"
 
 #: budgetis/accounting/templates/accounting/budget_by_nature.html:6
 #: budgetis/accounting/templates/accounting/budget_explorer.html:6
-#: budgetis/accounting/views/explore.py:93
+#: budgetis/accounting/views/explore.py:129
 msgid "Budgets"
 msgstr "Budgets"
 
@@ -616,7 +614,7 @@ msgid "Budget %(year)s"
 msgstr "Budget %(year)s"
 
 #: budgetis/accounting/templates/accounting/budget_staged_result.html:10
-#: budgetis/accounting/views/explore.py:238
+#: budgetis/accounting/views/explore.py:292
 msgid "Budget - staged result"
 msgstr "Budget - présentation échelonnée"
 
@@ -791,22 +789,26 @@ msgstr "Budget %(col2_year)s"
 msgid "Actuals %(col3_year)s"
 msgstr "Comptes %(col3_year)s"
 
-#: budgetis/accounting/views/explore.py:147
+#: budgetis/accounting/views/explore.py:201
 msgid "Budget by nature"
 msgstr "Budgets par nature"
 
-#: budgetis/accounting/views/explore.py:193
+#: budgetis/accounting/views/explore.py:247
 msgid "Actuals by nature"
 msgstr "Comptes par nature"
 
-#: budgetis/bdi_import/admin.py:17
-msgid "Relaunch import"
-msgstr "Relancer l'importation"
+#: budgetis/bdi_import/admin.py:20
+msgid "Relaunch failed imports"
+msgstr "Relancer les imports échoués"
 
-#: budgetis/bdi_import/admin.py:35
+#: budgetis/bdi_import/admin.py:41
 #, python-format
-msgid "%(count)s import(s) relaunched successfully."
-msgstr "%(count)s importation(s) relancée(s) avec succès."
+msgid ""
+"%(count)s failed import(s) queued for retry. Other selected imports were "
+"skipped."
+msgstr ""
+"%(count)s import(s) échoué(s) mis en attente de relance. Les autres imports "
+"sélectionnés ont été ignorés."
 
 #: budgetis/bdi_import/apps.py:8
 msgid "BDI Import"
@@ -1679,3 +1681,7 @@ msgstr "Impossible de réactiver cet utilisateur."
 #, python-format
 msgid "%(user)s is now part of the Bourse."
 msgstr "%(user)s fait maintenant partie de la Bourse."
+
+#, python-format
+#~ msgid "%(count)s import(s) relaunched successfully."
+#~ msgstr "%(count)s importation(s) relancée(s) avec succès."

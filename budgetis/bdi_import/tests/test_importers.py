@@ -7,10 +7,13 @@ from budgetis.accounting.models import Account
 from budgetis.accounting.models import GroupResponsibility
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
+from budgetis.accounting.tests.factories import GroupResponsibilityFactory
 from budgetis.bdi_import.importers import _extract_account_code
 from budgetis.bdi_import.importers import _normalize_sub_account
 from budgetis.bdi_import.importers import assign_row_responsible
+from budgetis.bdi_import.importers import copy_group_responsibles
 from budgetis.bdi_import.importers import import_accounts_from_dataframe
+from budgetis.common.models import ChartScheme
 from budgetis.users.tests.factories import UserFactory
 
 
@@ -68,6 +71,21 @@ class TestExtractAccountCode:
 
 
 class TestAssignRowResponsible:
+    def test_mch2_assignment_preserves_other_functions_and_group_default(self):
+        group = AccountGroupFactory(code="0290", level=4, scheme=ChartScheme.MCH2)
+        account = AccountFactory(group=group, function="02901", year=2027, scheme=ChartScheme.MCH2)
+        fallback = GroupResponsibilityFactory(group=group, year=2027)
+        sibling = GroupResponsibilityFactory(group=group, function="02902", year=2027)
+        user = UserFactory(trigram="ADA")
+
+        for _ in range(2):
+            assign_row_responsible(account, pd.Series({"Resp": "ADA"}), {"responsible": "Resp"}, 2027)
+
+        assert GroupResponsibility.objects.get(group=group, function=account.function, year=2027).responsible == user
+        for original in (fallback, sibling):
+            original.refresh_from_db()
+            assert original.responsible != user
+
     def test_creates_group_responsibility_for_known_trigram(self):
         user = UserFactory(trigram="ADA")
         group = AccountGroupFactory()
@@ -104,6 +122,32 @@ class TestAssignRowResponsible:
         assign_row_responsible(account, row, {"responsible": "Resp"}, 2027)
 
         assert GroupResponsibility.objects.count() == 0
+
+
+class TestCopyGroupResponsibles:
+    def test_copies_source_year_and_scope_without_touching_siblings(self):
+        group = AccountGroupFactory(code="0290", level=4, scheme=ChartScheme.MCH2)
+        source = AccountFactory(group=group, function="02901", year=2026, scheme=ChartScheme.MCH2)
+        target = AccountFactory(group=group, function=source.function, year=2027, scheme=ChartScheme.MCH2)
+        fallback = GroupResponsibilityFactory(group=group, year=source.year)
+        specific = GroupResponsibilityFactory(group=group, function=source.function, year=source.year)
+        GroupResponsibilityFactory(group=group, function=source.function, year=2025)
+        scopes = ("", "02901", "02902", "02903", "02904")
+        existing = {
+            scope: GroupResponsibilityFactory(group=group, function=scope, year=target.year) for scope in scopes
+        }
+        sibling_owner = existing["02902"].responsible
+
+        for _ in range(2):
+            copy_group_responsibles(target, source, target.year)
+
+        result = dict(
+            GroupResponsibility.objects.filter(group=group, year=target.year).values_list("function", "responsible_id")
+        )
+        assert set(result) == set(scopes)
+        assert result[""] == fallback.responsible_id
+        assert result[source.function] == specific.responsible_id
+        assert result["02902"] == sibling_owner.pk
 
 
 class TestImportAccountsFromDataframeSplitColumns:

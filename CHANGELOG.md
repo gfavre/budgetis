@@ -5,6 +5,25 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.7] - 2026-09-09
+
+### Changed
+
+- **Retry failed imports from Django admin**: the relaunch action now only
+  queues failed imports, reusing their original file, column mapping and
+  options. Queued, running and successful imports are skipped. If queueing
+  fails, the log remains failed and can be retried.
+
+### Fixed
+
+- **Import failure with per-function responsibles**: responsibility copying
+  now uses the full group/function/year key and only the selected source
+  year, avoiding `MultipleObjectsReturned` when a group has several
+  function-specific responsibles.
+- **Responsible column in MCH2 imports**: row assignments now target the
+  account's function without overwriting the group default or neighbouring
+  functions' responsibles.
+
 ## [1.7.6] - 2026-09-08
 
 ### Fixed

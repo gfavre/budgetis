@@ -165,11 +165,14 @@ def persist_account(year, function, nature, sub_account, is_budget, defaults):  
 
 
 def copy_group_responsibles(account, source_acc, year):
-    if not source_acc or not source_acc.group_id:
+    if not source_acc or not source_acc.group_id or not account.group_id:
         return
-    for responsibility in source_acc.group.responsibilities.all():
+    for responsibility in source_acc.group.responsibilities.filter(
+        year=source_acc.year, function__in=("", source_acc.function)
+    ):
         GroupResponsibility.objects.update_or_create(
-            group_id=source_acc.group_id,
+            group_id=account.group_id,
+            function=account.function if responsibility.function else "",
             year=year,
             defaults={"responsible": responsibility.responsible},
         )
@@ -177,7 +180,7 @@ def copy_group_responsibles(account, source_acc, year):
 
 def assign_row_responsible(account, row, column_map, year):
     """Map a per-row responsible trigram (e.g. a manually-prepared budget
-    sheet's own "Resp BUD" column) onto the account's group for this year."""
+    sheet's own "Resp BUD" column) onto its function for this year."""
     if "responsible" not in column_map or not account.group_id:
         return
 
@@ -192,6 +195,7 @@ def assign_row_responsible(account, row, column_map, year):
 
     GroupResponsibility.objects.update_or_create(
         group=account.group,
+        function=account.function if account.scheme == ChartScheme.MCH2 else "",
         year=year,
         defaults={"responsible": user},
     )

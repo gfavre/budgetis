@@ -1,5 +1,8 @@
+from functools import partial
+
 from django.contrib import admin
 from django.contrib import messages
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from .models import AccountImportLog
@@ -14,7 +17,7 @@ class ColumnMappingInline(admin.TabularInline):
     can_delete = False
 
 
-@admin.action(description=_("Relaunch import"))
+@admin.action(description=_("Relaunch failed imports"), permissions=["change"])
 def relaunch_import(modeladmin, request, queryset):
     """
     Relaunches the import task for selected logs.
@@ -26,14 +29,28 @@ def relaunch_import(modeladmin, request, queryset):
     """
     count = 0
 
-    for log in queryset:
-        import_accounts_task.delay(log.id)
-        count += 1
+    with transaction.atomic():
+        for log in queryset.select_for_update().filter(status=AccountImportLog.Status.FAILED):
+            log.status = AccountImportLog.Status.PENDING
+            log.save(update_fields=["status", "updated_at"])
+            transaction.on_commit(partial(_enqueue_retry, log.pk))
+            count += 1
 
-    messages.success(
+    modeladmin.message_user(
         request,
-        _("%(count)s import(s) relaunched successfully.") % {"count": count},
+        _("%(count)s failed import(s) queued for retry. Other selected imports were skipped.") % {"count": count},
+        level=messages.SUCCESS if count else messages.WARNING,
     )
+
+
+def _enqueue_retry(log_id):
+    try:
+        import_accounts_task.delay(log_id)
+    except Exception:
+        AccountImportLog.objects.filter(pk=log_id, status=AccountImportLog.Status.PENDING).update(
+            status=AccountImportLog.Status.FAILED
+        )
+        raise
 
 
 @admin.register(AccountImportLog)
