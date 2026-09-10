@@ -82,6 +82,9 @@ def import_accounts_task(self, log_id: int):  # noqa: PLR0915
             copy_comments=log.copy_comments,
             column_map=column_map,
             derived_from_total=derived_from_total,
+            # Manual Excel debit/credit columns already carry their accounting
+            # sign. BDI exports use the opposite sign for revenues.
+            positive_revenues=log.kind == AccountImportLog.ImportKind.EXCEL,
         )
         logger.info("[Import] Importer finished | log_id=%s", log_id)
     except ValueError as ve:

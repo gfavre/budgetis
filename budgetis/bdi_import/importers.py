@@ -107,7 +107,7 @@ def _expected_type(charges: Decimal, revenues: Decimal) -> str:
     return Account.ExpectedType.REVENUE
 
 
-def process_account_row(row, column_map, derived_from_total, scheme=ChartScheme.MCH1):
+def process_account_row(row, column_map, derived_from_total, scheme=ChartScheme.MCH1, *, positive_revenues=False):
     label = row.get(column_map.get("label", ""), "").strip()
     if not label:
         return None
@@ -127,7 +127,9 @@ def process_account_row(row, column_map, derived_from_total, scheme=ChartScheme.
         revenues = -total if total < 0 else Decimal(0)
     else:
         charges = safe_decimal(row.get(column_map.get("charges", ""), 0))
-        revenues = -safe_decimal(row.get(column_map.get("revenues", ""), 0))
+        revenues = safe_decimal(row.get(column_map.get("revenues", ""), 0))
+        if not positive_revenues:
+            revenues = -revenues
 
     expected_type = _expected_type(charges, revenues)
 
@@ -213,7 +215,7 @@ def copy_account_comments(account, source_acc):
         )
 
 
-def _accumulate_rows(account_rows, column_map, derived_from_total, scheme):
+def _accumulate_rows(account_rows, column_map, derived_from_total, scheme, *, positive_revenues=False):
     """
     Group parsed rows by (function, nature, sub_account) and sum their charges/
     revenues. A manually-prepared sheet can have several MCH1-origin rows
@@ -223,7 +225,7 @@ def _accumulate_rows(account_rows, column_map, derived_from_total, scheme):
     """
     accumulated: dict[tuple[str, str, str], dict] = {}
     for _, row in account_rows.iterrows():
-        result = process_account_row(row, column_map, derived_from_total, scheme)
+        result = process_account_row(row, column_map, derived_from_total, scheme, positive_revenues=positive_revenues)
         if result is None:
             continue
 
@@ -255,13 +257,16 @@ def import_accounts_from_dataframe(  # noqa: PLR0913
     copy_comments: bool = True,
     column_map: dict[str, str] | None = None,
     derived_from_total: bool = False,
+    positive_revenues: bool = False,
 ) -> None:
     logger.info(f"Starting import for year {year}. Dry-run: {dry_run}")
     column_map = column_map or {}
 
     account_rows = clean_dataframe(account_rows)
     source_accounts = build_source_account_map(source_year)
-    accumulated = _accumulate_rows(account_rows, column_map, derived_from_total, scheme)
+    accumulated = _accumulate_rows(
+        account_rows, column_map, derived_from_total, scheme, positive_revenues=positive_revenues
+    )
 
     for (function, nature, sub_account), entry in accumulated.items():
         account_defaults = entry["defaults"]
