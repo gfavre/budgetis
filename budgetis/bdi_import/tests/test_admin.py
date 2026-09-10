@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from unittest.mock import call
 from unittest.mock import patch
 
 import pytest
@@ -27,9 +28,10 @@ class TestAccountImportLogAdmin:
             client.get(reverse("admin:bdi_import_accountimportlog_change", args=[log.pk])).status_code == HTTPStatus.OK
         )
 
-    def test_retry_only_failed_imports(self, client, django_capture_on_commit_callbacks):
+    def test_retry_finished_imports(self, client, django_capture_on_commit_callbacks):
         logs = [AccountImportLogFactory(status=status) for status in AccountImportLog.Status]
         failed = next(log for log in logs if log.status == AccountImportLog.Status.FAILED)
+        successful = next(log for log in logs if log.status == AccountImportLog.Status.SUCCESS)
         mapping = ColumnMappingFactory(log=failed)
         with patch(TASK_PATH) as delay, django_capture_on_commit_callbacks(execute=True):
             response = client.post(
@@ -37,15 +39,18 @@ class TestAccountImportLogAdmin:
             )
             delay.assert_not_called()
         assert response.status_code == HTTPStatus.FOUND
-        delay.assert_called_once_with(failed.pk)
+        delay.assert_has_calls([call(failed.pk), call(successful.pk)], any_order=True)
+        assert delay.call_count == len((failed, successful))
         failed.refresh_from_db()
         assert failed.status == AccountImportLog.Status.PENDING
         assert failed.column_mappings.get().pk == mapping.pk
         for log in logs:
-            if log.pk != failed.pk:
+            if log.pk in (failed.pk, successful.pk):
+                assert AccountImportLog.objects.get(pk=log.pk).status == AccountImportLog.Status.PENDING
+            else:
                 assert AccountImportLog.objects.get(pk=log.pk).status == log.status
         with patch(TASK_PATH) as delay, django_capture_on_commit_callbacks(execute=True):
-            client.post(self.url, {"action": "relaunch_import", "_selected_action": [failed.pk]})
+            client.post(self.url, {"action": "relaunch_import", "_selected_action": [failed.pk, successful.pk]})
         delay.assert_not_called()
 
     def test_queue_failure_allows_retry(self, client, django_capture_on_commit_callbacks):

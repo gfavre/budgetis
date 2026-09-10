@@ -17,7 +17,7 @@ class ColumnMappingInline(admin.TabularInline):
     can_delete = False
 
 
-@admin.action(description=_("Relaunch failed imports"), permissions=["change"])
+@admin.action(description=_("Relaunch imports"), permissions=["change"])
 def relaunch_import(modeladmin, request, queryset):
     """
     Relaunches the import task for selected logs.
@@ -30,7 +30,9 @@ def relaunch_import(modeladmin, request, queryset):
     count = 0
 
     with transaction.atomic():
-        for log in queryset.select_for_update().filter(status=AccountImportLog.Status.FAILED):
+        for log in queryset.select_for_update().filter(
+            status__in=(AccountImportLog.Status.FAILED, AccountImportLog.Status.SUCCESS)
+        ):
             log.status = AccountImportLog.Status.PENDING
             log.save(update_fields=["status", "updated_at"])
             transaction.on_commit(partial(_enqueue_retry, log.pk))
@@ -38,7 +40,7 @@ def relaunch_import(modeladmin, request, queryset):
 
     modeladmin.message_user(
         request,
-        _("%(count)s failed import(s) queued for retry. Other selected imports were skipped.") % {"count": count},
+        _("%(count)s import(s) queued for retry. Pending or running imports were skipped.") % {"count": count},
         level=messages.SUCCESS if count else messages.WARNING,
     )
 

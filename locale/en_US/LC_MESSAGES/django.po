@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 16:04+0200\n"
+"POT-Creation-Date: 2026-09-10 17:25+0200\n"
 "Language: en-US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -788,13 +788,13 @@ msgid "Actuals by nature"
 msgstr ""
 
 #: budgetis/bdi_import/admin.py:20
-msgid "Relaunch failed imports"
+msgid "Relaunch imports"
 msgstr ""
 
-#: budgetis/bdi_import/admin.py:41
+#: budgetis/bdi_import/admin.py:43
 #, python-format
 msgid ""
-"%(count)s failed import(s) queued for retry. Other selected imports were "
+"%(count)s import(s) queued for retry. Pending or running imports were "
 "skipped."
 msgstr ""
 
@@ -1001,11 +1001,11 @@ msgstr ""
 msgid "The import file could not be found."
 msgstr ""
 
-#: budgetis/bdi_import/tasks.py:94
+#: budgetis/bdi_import/tasks.py:97
 msgid "Import failed: "
 msgstr ""
 
-#: budgetis/bdi_import/tasks.py:100
+#: budgetis/bdi_import/tasks.py:103
 msgid "Unexpected error: "
 msgstr ""
 

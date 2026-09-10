@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 16:04+0200\n"
+"POT-Creation-Date: 2026-09-10 17:25+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -798,17 +798,17 @@ msgid "Actuals by nature"
 msgstr "Comptes par nature"
 
 #: budgetis/bdi_import/admin.py:20
-msgid "Relaunch failed imports"
-msgstr "Relancer les imports échoués"
+msgid "Relaunch imports"
+msgstr "Relancer les imports"
 
-#: budgetis/bdi_import/admin.py:41
+#: budgetis/bdi_import/admin.py:43
 #, python-format
 msgid ""
-"%(count)s failed import(s) queued for retry. Other selected imports were "
+"%(count)s import(s) queued for retry. Pending or running imports were "
 "skipped."
 msgstr ""
-"%(count)s import(s) échoué(s) mis en attente de relance. Les autres imports "
-"sélectionnés ont été ignorés."
+"%(count)s import(s) mis en attente de relance. Les imports déjà en attente "
+"ou en cours ont été ignorés."
 
 #: budgetis/bdi_import/apps.py:8
 msgid "BDI Import"
@@ -1017,11 +1017,11 @@ msgstr "Correspondances des colonnes"
 msgid "The import file could not be found."
 msgstr "Le fichier d'importation n'a pas été trouvé."
 
-#: budgetis/bdi_import/tasks.py:94
+#: budgetis/bdi_import/tasks.py:97
 msgid "Import failed: "
 msgstr "L'importation a échoué : "
 
-#: budgetis/bdi_import/tasks.py:100
+#: budgetis/bdi_import/tasks.py:103
 msgid "Unexpected error: "
 msgstr "Erreur inattendue : "
 
