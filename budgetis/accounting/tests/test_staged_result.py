@@ -40,6 +40,37 @@ class TestBuildStagedResult:
         assert charges_subtotal.col1_charges == Decimal("120.00")
         assert revenues_subtotal.col1_revenues == Decimal("150.00")
 
+    def test_credit_on_a_charge_account_reduces_that_charge_group(self):
+        # MCH2 Recommandation 04, note 7: insurance reimbursements booked on
+        # a charge account (e.g. 3010.99) reduce personnel charges - they used
+        # to be dropped, overstating charges and understating the result.
+        AccountFactory(year=2027, is_budget=False, nature="3010", charges=Decimal("337139.45"))
+        AccountFactory(
+            year=2027,
+            is_budget=False,
+            nature="3010",
+            sub_account="99",
+            charges=Decimal("0.00"),
+            revenues=Decimal("57193.60"),
+        )
+
+        lines = build_staged_result([(2027, False)])
+
+        assert _by_key(lines, "detail-30").col1_charges == Decimal("279945.85")
+        assert _by_key(lines, "detail-30").col1_revenues == Decimal("0.00")
+        assert _by_key(lines, "operating-result").col1_result == Decimal("-279945.85")
+
+    def test_debit_on_a_revenue_account_reduces_that_revenue_group(self):
+        AccountFactory(year=2027, is_budget=False, nature="4000", charges=Decimal("0.00"), revenues=Decimal("1000.00"))
+        AccountFactory(
+            year=2027, is_budget=False, nature="4000", sub_account="01", charges=Decimal("200.00"), revenues=0
+        )
+
+        lines = build_staged_result([(2027, False)])
+
+        assert _by_key(lines, "detail-40").col1_revenues == Decimal("800.00")
+        assert _by_key(lines, "operating-result").col1_result == Decimal("800.00")
+
     def test_internal_allocations_are_excluded(self):
         # 39/49 "imputations internes" aren't part of Tableau 04-1 - they must
         # not leak into the operating subtotals.

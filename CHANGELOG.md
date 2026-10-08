@@ -5,6 +5,27 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.9] - 2026-10-08
+
+### Changed
+
+- **MCH2 terminology**: headings follow the chart of accounts of the year
+  shown. MCH2 years read "Compte de résultats" and "Comptes par
+  classification fonctionnelle"; MCH1 years keep "Compte de fonctionnement"
+  and "Comptes par fonction administrative".
+- **Negative amounts at import**: a negative debit (e.g. an insurance
+  reimbursement on 3010.99) is stored as a credit, and a negative credit as
+  a debit, so it shows in the opposite column as MCH2 statements require.
+  Already imported data is not changed; reimport it if needed.
+
+### Fixed
+
+- **Credits on charge accounts dropped from totals by nature**: the staged
+  income statement and the Sankey only read charges on 3x accounts and
+  revenues on 4x accounts, so an insurance reimbursement booked on a charge
+  account was ignored, overstating charges and understating the result.
+  Amounts are now netted per nature group (MCH2 Recommandation 04, note 7).
+
 ## [1.7.8] - 2026-10-08
 
 ### Changed

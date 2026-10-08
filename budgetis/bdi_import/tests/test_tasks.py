@@ -17,15 +17,16 @@ pytestmark = pytest.mark.django_db
 
 
 @pytest.mark.parametrize(
-    ("kind", "credit", "expected"),
+    ("kind", "credit", "expected_charges", "expected_revenues"),
     [
-        (AccountImportLog.ImportKind.EXCEL, "15880593.90", "15880593.90"),
-        (AccountImportLog.ImportKind.BDI, "-15880593.90", "15880593.90"),
-        (AccountImportLog.ImportKind.EXCEL, "-100", "-100"),
-        (AccountImportLog.ImportKind.BDI, "100", "-100"),
+        (AccountImportLog.ImportKind.EXCEL, "15880593.90", "0", "15880593.90"),
+        (AccountImportLog.ImportKind.BDI, "-15880593.90", "0", "15880593.90"),
+        # A revenue with a debit balance is shown in the charges column.
+        (AccountImportLog.ImportKind.EXCEL, "-100", "100", "0"),
+        (AccountImportLog.ImportKind.BDI, "100", "100", "0"),
     ],
 )
-def test_import_task_preserves_revenue_convention(kind, credit, expected):
+def test_import_task_preserves_revenue_convention(kind, credit, expected_charges, expected_revenues):
     log = AccountImportLogFactory(kind=kind, file="imports/budget.xlsx")
     for field in (ColumnMapping.Field.CODE, ColumnMapping.Field.LABEL, ColumnMapping.Field.REVENUES):
         ColumnMappingFactory(log=log, field=field, column_name=field)
@@ -36,7 +37,8 @@ def test_import_task_preserves_revenue_convention(kind, credit, expected):
 
     log.refresh_from_db()
     assert log.status == AccountImportLog.Status.SUCCESS
-    assert Account.objects.get(year=log.year).revenues == Decimal(expected)
+    account = Account.objects.get(year=log.year)
+    assert (account.charges, account.revenues) == (Decimal(expected_charges), Decimal(expected_revenues))
 
 
 @pytest.mark.parametrize("kind", AccountImportLog.ImportKind)

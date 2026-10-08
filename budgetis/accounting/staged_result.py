@@ -31,6 +31,10 @@ FINANCIAL_REVENUE_GROUP = 44
 EXTRAORDINARY_CHARGE_GROUP = 38
 EXTRAORDINARY_REVENUE_GROUP = 48
 
+# First digit of a two-digit nature group: 3x = charges, 4x = revenues.
+CHARGE_CLASS = 3
+REVENUE_CLASS = 4
+
 # Labels straight off Tableau 04-1 - kept local to this module rather than
 # reusing accounting.nature.NATURE_GROUPS, which is a looser MCH1-era
 # approximation (it's missing 37/47 entirely and labels 44 differently).
@@ -103,17 +107,31 @@ def _nature_group_totals(year: int, *, is_budget: bool) -> dict[int, dict]:
     since the codes themselves are structured differently. This report only
     needs a year's own totals per nature group, not a per-account join, so
     it sidesteps that mismatch entirely.
+
+    Amounts are netted onto the group's own side: a credit on a charge
+    account (e.g. 3010.99 "remboursements d'assurances") reduces that charge
+    group, and a debit on a revenue account reduces that revenue group -
+    Recommandation 04, note 7. Kept on the opposite side, they would be
+    silently dropped, since each group is only ever read on its own side.
     """
     totals: dict[int, dict] = {}
-    for nature, charges, revenues in Account.objects.filter(year=year, is_budget=is_budget).values_list(
+    for nature, raw_charges, raw_revenues in Account.objects.filter(year=year, is_budget=is_budget).values_list(
         "nature", "charges", "revenues"
     ):
         group = _nature_group(nature)
         if group is None:
             continue
+        charges = raw_charges or Decimal(0)
+        revenues = raw_revenues or Decimal(0)
         bucket = totals.setdefault(group, _empty_bucket())
-        bucket["charges"] += charges or Decimal(0)
-        bucket["revenues"] += revenues or Decimal(0)
+        nature_class = group // 10
+        if nature_class == CHARGE_CLASS:
+            bucket["charges"] += charges - revenues
+        elif nature_class == REVENUE_CLASS:
+            bucket["revenues"] += revenues - charges
+        else:
+            bucket["charges"] += charges
+            bucket["revenues"] += revenues
     return totals
 
 

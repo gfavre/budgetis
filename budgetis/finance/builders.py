@@ -172,9 +172,24 @@ def _account_code(account: Account) -> str:
     return code
 
 
+# A flow's own side, and the opposite side whose amounts reduce it.
+OPPOSITE_FIELD: dict[str, str] = {"charges": "revenues", "revenues": "charges"}
+
+
+def _net_amount(charges: Decimal | None, revenues: Decimal | None, field: str) -> Decimal:
+    """
+    An amount on a flow's own side, net of the opposite side: a credit on a
+    charge account (e.g. 3010.99 "remboursements d'assurances") reduces that
+    charge, a debit on a revenue account reduces that revenue - MCH2
+    Recommandation 04, note 7.
+    """
+    amounts = {"charges": charges or Decimal("0"), "revenues": revenues or Decimal("0")}
+    return amounts[field] - amounts[OPPOSITE_FIELD[field]]
+
+
 def _account_breakdown_html(accounts: list[Account], field: str) -> str:
     """Hover text listing which accounts feed a leaf category, largest first."""
-    rows = [(account, getattr(account, field) or Decimal("0")) for account in accounts]
+    rows = [(account, _net_amount(account.charges, account.revenues, field)) for account in accounts]
     rows = [(account, amount) for account, amount in rows if amount]
     rows.sort(key=lambda row: row[1], reverse=True)
 
@@ -267,7 +282,7 @@ def _category_totals(qs: QuerySet[Account], scheme: str) -> dict[str, list[Categ
             amount = Decimal("0")
             breakdown = ""
         else:
-            raw_amount = entry["revenues"] if field == "revenues" else entry["charges"]
+            raw_amount = _net_amount(entry["charges"], entry["revenues"], field)
             amount = max(Decimal("0"), raw_amount)
             breakdown = _account_breakdown_html(entry["accounts"], field)
         by_flow[category.flow].append((category, amount, breakdown))

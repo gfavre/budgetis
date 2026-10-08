@@ -156,6 +156,31 @@ class TestImportResult:
         assert account.charges == Decimal("10")
 
 
+class TestNegativeAmounts:
+    @pytest.mark.parametrize(
+        ("debit", "credit", "expected_charges", "expected_revenues"),
+        [
+            ("-57193.60", "0", Decimal("0"), Decimal("57193.60")),
+            ("0", "-200", Decimal("200"), Decimal("0")),
+            ("100", "-20", Decimal("120"), Decimal("0")),
+            ("-30", "50", Decimal("0"), Decimal("80")),
+        ],
+    )
+    def test_negative_amount_moves_to_the_opposite_column(self, debit, credit, expected_charges, expected_revenues):
+        rows = pd.DataFrame([{"Compte": "54502.3010.99", "Label": "Remboursements", "DR": debit, "CR": credit}])
+
+        import_accounts_from_dataframe(
+            rows,
+            year=2027,
+            is_budget=False,
+            column_map={"code": "Compte", "label": "Label", "charges": "DR", "revenues": "CR"},
+            positive_revenues=True,
+        )
+
+        account = Account.objects.get(year=2027, function="54502", nature="3010", sub_account="99")
+        assert (account.charges, account.revenues) == (expected_charges, expected_revenues)
+
+
 class TestAssignRowResponsible:
     def test_mch2_assignment_preserves_other_functions_and_group_default(self):
         group = AccountGroupFactory(code="0290", level=4, scheme=ChartScheme.MCH2)

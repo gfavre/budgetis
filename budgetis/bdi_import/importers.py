@@ -162,6 +162,19 @@ def _expected_type(charges: Decimal, revenues: Decimal) -> str:
     return Account.ExpectedType.REVENUE
 
 
+def _move_negative_to_opposite_side(charges: Decimal, revenues: Decimal) -> tuple[Decimal, Decimal]:
+    """
+    A negative charge is a credit (e.g. 3010.99 "remboursements d'assurances")
+    and a negative revenue is a debit: MCH2 statements show each in the
+    opposite column, so store them there as positive amounts.
+    """
+    if charges < 0:
+        revenues, charges = revenues - charges, Decimal(0)
+    if revenues < 0:
+        charges, revenues = charges - revenues, Decimal(0)
+    return charges, revenues
+
+
 def process_account_row(row, column_map, derived_from_total, scheme=ChartScheme.MCH1, *, positive_revenues=False):
     label = row.get(column_map.get("label", ""), "").strip()
     if not label:
@@ -185,6 +198,7 @@ def process_account_row(row, column_map, derived_from_total, scheme=ChartScheme.
         revenues = safe_decimal(row.get(column_map.get("revenues", ""), 0))
         if not positive_revenues:
             revenues = -revenues
+        charges, revenues = _move_negative_to_opposite_side(charges, revenues)
 
     expected_type = _expected_type(charges, revenues)
 

@@ -1,4 +1,4 @@
-{% load money i18n %}
+{% load money i18n terminology %}
 
 <div id="account-list">
   {% if last_import_text %}
@@ -7,7 +7,7 @@
       {{ last_import_text }}
     </p>
   {% endif %}
-  <h1 class="metagroup">{% trans "Operating account" %}</h1>
+  <h1 class="metagroup">{% chart_term "operating_account" year %}</h1>
   <table class="table table-bordered recap global-summary">
     <colgroup span="2" class="info">
       <col span="1" class="col-num" />

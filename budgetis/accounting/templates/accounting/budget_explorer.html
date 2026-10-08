@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load i18n crispy_forms_tags %}
+{% load i18n crispy_forms_tags terminology %}
 
 {% block title %}
   {% trans "Budgets" %} | {{ block.super }}
@@ -139,7 +139,7 @@ h3 {
       {% blocktrans with city=config.commune_name %}Municipality of {{ city }}{% endblocktrans %}
     </p>
     <h1 class="cover-title">{% blocktrans with year=year %}Budget {{ year }}{% endblocktrans %}</h1>
-    <h2 class="cover-subtitle">{% trans "Accounts by administrative function" %}</h2>
+    <h2 class="cover-subtitle">{% chart_term "accounts_by_function" year %}</h2>
   </div>
   <div id="budget-list">
     {% include "accounting/partials/budget_list.html" with grouped=grouped year=year previous_year=previous_year actuals_year=actuals_year %}

@@ -65,6 +65,46 @@ class TestBuildIncomeBudgetCantonIntercosCommune:
 
         assert "CHF1.00K" in _node_for(data, revenue)["name"]
 
+    def test_credit_on_a_charge_account_reduces_that_charge_category(self, small_diagram_rules):
+        # MCH2 Recommandation 04, note 7: an insurance reimbursement booked on
+        # a charge account reduces the charge instead of being dropped.
+        _revenue, commune = small_diagram_rules
+        AccountFactory.create(
+            function=COMMUNE_FUNCTION,
+            nature=COMMUNE_NATURE,
+            charges=Decimal("3000.00"),
+            revenues=Decimal("0.00"),
+            scheme=ChartScheme.MCH1,
+        )
+        AccountFactory.create(
+            function=COMMUNE_FUNCTION,
+            nature=COMMUNE_NATURE,
+            sub_account="99",
+            charges=Decimal("0.00"),
+            revenues=Decimal("1000.00"),
+            scheme=ChartScheme.MCH1,
+        )
+        qs = Account.objects.filter(function=COMMUNE_FUNCTION)
+
+        data = build_income_budget_canton_intercos_commune(qs, ChartScheme.MCH1)
+
+        assert "CHF2.00K" in _node_for(data, commune)["name"]
+
+    def test_debit_on_a_revenue_account_reduces_that_revenue_category(self, small_diagram_rules):
+        revenue, _commune = small_diagram_rules
+        AccountFactory.create(
+            function=REVENUE_FUNCTION,
+            nature=REVENUE_NATURE,
+            revenues=Decimal("1000.00"),
+            charges=Decimal("400.00"),
+            scheme=ChartScheme.MCH1,
+        )
+        qs = Account.objects.filter(function=REVENUE_FUNCTION)
+
+        data = build_income_budget_canton_intercos_commune(qs, ChartScheme.MCH1)
+
+        assert "CHF0.60K" in _node_for(data, revenue)["name"]
+
     def test_balanced_flow_has_no_result_node(self, small_diagram_rules):
         AccountFactory.create(
             function=REVENUE_FUNCTION,

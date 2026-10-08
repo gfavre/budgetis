@@ -63,7 +63,7 @@ def first_mch2_year(year_type: str) -> int | None:
     return available_year.year if available_year else None
 
 
-def _year_scheme(year: int) -> str | None:
+def year_scheme(year: int) -> str | None:
     """
     The scheme used for a calendar year, regardless of whether that's known via
     its budget or its actuals registration - a year's budget and actuals are
@@ -75,8 +75,8 @@ def _year_scheme(year: int) -> str | None:
 def _comparable(year: int, other_year: int) -> bool:
     """Whether other_year can be shown next to year without silently comparing
     across two different chart schemes."""
-    current_scheme = _year_scheme(year)
-    other_scheme = _year_scheme(other_year)
+    current_scheme = year_scheme(year)
+    other_scheme = year_scheme(other_year)
     return current_scheme is not None and current_scheme == other_scheme
 
 
