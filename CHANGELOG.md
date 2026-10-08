@@ -5,6 +5,29 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.8] - 2026-10-08
+
+### Changed
+
+- **Relaunch any finished import**: the admin relaunch action now also
+  re-queues successful imports, not only failed ones. Pending or running
+  imports are still skipped.
+- **Import result in the log**: a finished import now reports how many
+  accounts were imported from how many rows, and how many rows were skipped
+  because of an invalid account code (with a few examples).
+
+### Fixed
+
+- **Silent "successful" import that changed nothing**: mapping a column to
+  "Account code" (meant for a single `function.nature[.sub]` column) next to
+  separate Function/Nature columns made every row an invalid code, so the
+  import finished as successful without updating any account. Such a mapping
+  is now rejected on the mapping screen, and an import that ends with no
+  account imported is marked as failed.
+- **All-zero extension in a combined code**: a code such as `01100.3000.00`
+  now updates the existing account `01100.3000` instead of creating a
+  duplicate with sub-account `00`.
+
 ## [1.7.7] - 2026-09-09
 
 ### Changed

@@ -8,11 +8,13 @@ from budgetis.accounting.models import GroupResponsibility
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
 from budgetis.accounting.tests.factories import GroupResponsibilityFactory
+from budgetis.bdi_import.importers import InvalidAccountCodeError
 from budgetis.bdi_import.importers import _extract_account_code
 from budgetis.bdi_import.importers import _normalize_sub_account
 from budgetis.bdi_import.importers import assign_row_responsible
 from budgetis.bdi_import.importers import copy_group_responsibles
 from budgetis.bdi_import.importers import import_accounts_from_dataframe
+from budgetis.bdi_import.importers import validate_column_map
 from budgetis.common.models import ChartScheme
 from budgetis.users.tests.factories import UserFactory
 
@@ -33,13 +35,36 @@ class TestNormalizeSubAccount:
 
 
 class TestExtractAccountCode:
+    @pytest.mark.parametrize("extension", ["", ".0", ".00", ".000"])
+    def test_combined_code_default_extension_updates_existing_account(self, extension):
+        account = AccountFactory(
+            function="01100", nature="3000", sub_account="", year=2027, is_budget=True, charges=Decimal("10")
+        )
+        rows = pd.DataFrame([{"Compte": f"01100.3000{extension}", "Label": "Commissions", "DR": "20"}])
+
+        import_accounts_from_dataframe(
+            rows,
+            year=2027,
+            is_budget=True,
+            column_map={"code": "Compte", "label": "Label", "charges": "DR"},
+        )
+
+        account.refresh_from_db()
+        assert account.charges == Decimal("20")
+        assert Account.objects.filter(year=2027, function="01100", nature="3000", is_budget=True).count() == 1
+
+    def test_combined_code_preserves_real_extension(self):
+        row = pd.Series({"Compte": "01100.3000.01"})
+        assert _extract_account_code(row, {"code": "Compte"}) == ("01100", "3000", "01")
+
     def test_combined_code_column(self):
         row = pd.Series({"Compte": "170.301.2"})
         assert _extract_account_code(row, {"code": "Compte"}) == ("170", "301", "2")
 
-    def test_invalid_combined_code_returns_none(self):
+    def test_invalid_combined_code_raises(self):
         row = pd.Series({"Compte": "not-a-code"})
-        assert _extract_account_code(row, {"code": "Compte"}) is None
+        with pytest.raises(InvalidAccountCodeError):
+            _extract_account_code(row, {"code": "Compte"})
 
     def test_empty_combined_code_returns_none(self):
         row = pd.Series({"Compte": ""})
@@ -68,6 +93,67 @@ class TestExtractAccountCode:
     def test_no_recognized_mapping_returns_none(self):
         row = pd.Series({"Something": "irrelevant"})
         assert _extract_account_code(row, {}) is None
+
+
+class TestValidateColumnMap:
+    @pytest.mark.parametrize(
+        "column_map",
+        [
+            {"code": "Compte"},
+            {"function": "Fctio", "nature": "Nat"},
+            {"function": "Fctio", "nature": "Nat", "sub_account": "Ext"},
+        ],
+    )
+    def test_accepts_a_combined_code_or_split_columns(self, column_map):
+        validate_column_map(column_map)
+
+    @pytest.mark.parametrize(
+        "column_map",
+        [
+            {"function": "Fctio MCH2", "code": "Nat MCH2", "sub_account": "Ext MCH2"},
+            {"function": "Fctio"},
+            {"nature": "Nat"},
+            {"label": "Libellé", "charges": "DR"},
+        ],
+    )
+    def test_rejects_a_mapping_that_cannot_identify_accounts(self, column_map):
+        with pytest.raises(ValueError):  # noqa: PT011
+            validate_column_map(column_map)
+
+
+class TestImportResult:
+    def test_counts_accounts_and_invalid_codes(self):
+        rows = pd.DataFrame(
+            [
+                {"Compte": "170.301", "Label": "Salaires", "DR": "10"},
+                {"Compte": "3000", "Label": "Nature seule", "DR": "20"},
+                {"Compte": "", "Label": "Sous-total", "DR": "30"},
+            ]
+        )
+
+        result = import_accounts_from_dataframe(
+            rows,
+            year=2027,
+            is_budget=True,
+            column_map={"code": "Compte", "label": "Label", "charges": "DR"},
+        )
+
+        assert (result.rows, result.accounts, result.invalid_codes) == (3, 1, ["3000"])
+
+    def test_invalid_mapping_raises_before_touching_accounts(self):
+        account = AccountFactory(function="01100", nature="3000", year=2027, is_budget=True, charges=Decimal("10"))
+        rows = pd.DataFrame([{"Fctio": "01100", "Nat": "3000", "Label": "Commissions", "DR": "20"}])
+
+        with pytest.raises(ValueError):  # noqa: PT011
+            import_accounts_from_dataframe(
+                rows,
+                year=2027,
+                is_budget=True,
+                column_map={"function": "Fctio", "code": "Nat", "label": "Label", "charges": "DR"},
+            )
+
+        account.refresh_from_db()
+        assert account.charges == Decimal("10")
 
 
 class TestAssignRowResponsible:

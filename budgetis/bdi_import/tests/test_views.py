@@ -8,6 +8,7 @@ from django.urls import reverse
 from budgetis.bdi_import.models import AccountImportLog
 from budgetis.bdi_import.models import ColumnMapping
 from budgetis.bdi_import.tests.factories import AccountImportLogFactory
+from budgetis.bdi_import.tests.factories import ColumnMappingFactory
 from budgetis.common.models import ChartScheme
 from budgetis.users.tests.factories import UserFactory
 
@@ -15,6 +16,7 @@ from budgetis.users.tests.factories import UserFactory
 pytestmark = pytest.mark.django_db
 
 LOGIN_URL = "/accounts/login/"
+VALID_MAPPING = {"column_map[Compte]": ColumnMapping.Field.CODE}
 
 
 def _uploaded_file():
@@ -100,7 +102,7 @@ class TestAccountMappingViewRedirect:
         client.force_login(UserFactory())
         log = AccountImportLogFactory(kind=AccountImportLog.ImportKind.EXCEL)
 
-        response = client.post(reverse("bdi_import:account-mapping", kwargs={"log_id": log.id}))
+        response = client.post(reverse("bdi_import:account-mapping", kwargs={"log_id": log.id}), VALID_MAPPING)
 
         assert response.status_code == HTTPStatus.FOUND
         assert response.url == reverse("bdi_import:excel-import")
@@ -110,7 +112,7 @@ class TestAccountMappingViewRedirect:
         client.force_login(UserFactory())
         log = AccountImportLogFactory(kind=AccountImportLog.ImportKind.BDI)
 
-        response = client.post(reverse("bdi_import:account-mapping", kwargs={"log_id": log.id}))
+        response = client.post(reverse("bdi_import:account-mapping", kwargs={"log_id": log.id}), VALID_MAPPING)
 
         assert response.status_code == HTTPStatus.FOUND
         assert response.url == reverse("bdi_import:account-import")
@@ -127,8 +129,31 @@ class TestAccountMappingViewColumnMapping:
 
         client.post(
             reverse("bdi_import:account-mapping", kwargs={"log_id": log.id}),
-            {"column_map[Budget 2027]": ColumnMapping.Field.TOTAL},
+            {**VALID_MAPPING, "column_map[Budget 2027]": ColumnMapping.Field.TOTAL},
         )
 
         mapping = ColumnMapping.objects.get(log=log, field=ColumnMapping.Field.TOTAL)
         assert mapping.derived_from_total is True
+
+    def test_code_mixed_with_split_columns_is_rejected_without_launching(self, client, monkeypatch):
+        # Regression: "Code du compte" picked for the nature column next to a
+        # function column made every row an invalid code - the import "succeeded"
+        # while updating nothing.
+        launched = []
+        monkeypatch.setattr("budgetis.bdi_import.views.import_accounts_task.delay", launched.append)
+        client.force_login(UserFactory())
+        log = AccountImportLogFactory(kind=AccountImportLog.ImportKind.EXCEL)
+        ColumnMappingFactory(log=log, field=ColumnMapping.Field.LABEL, column_name="Libellé")
+
+        response = client.post(
+            reverse("bdi_import:account-mapping", kwargs={"log_id": log.id}),
+            {
+                "column_map[Fctio MCH2]": ColumnMapping.Field.FUNCTION,
+                "column_map[Nat MCH2]": ColumnMapping.Field.CODE,
+            },
+        )
+
+        assert response.status_code == HTTPStatus.FOUND
+        assert response.url == reverse("bdi_import:account-mapping", kwargs={"log_id": log.id})
+        assert launched == []
+        assert list(log.column_mappings.values_list("field", flat=True)) == [ColumnMapping.Field.LABEL]

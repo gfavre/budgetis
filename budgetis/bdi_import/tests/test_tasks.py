@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 import pandas as pd
 import pytest
+from django.utils import translation
 
 from budgetis.accounting.models import Account
 from budgetis.bdi_import.models import AccountImportLog
@@ -49,3 +50,56 @@ def test_signed_total_uses_same_convention_for_both_import_kinds(kind):
         import_accounts_task.run(log.pk)
 
     assert Account.objects.get(year=log.year).revenues == Decimal("100")
+
+
+def test_import_with_no_readable_account_fails_with_counts():
+    log = AccountImportLogFactory(kind=AccountImportLog.ImportKind.EXCEL, file="imports/budget.xlsx")
+    for field in (ColumnMapping.Field.CODE, ColumnMapping.Field.LABEL, ColumnMapping.Field.CHARGES):
+        ColumnMappingFactory(log=log, field=field, column_name=field)
+    rows = pd.DataFrame([{"code": "3000", "label": "Commissions", "charges": "20"}])
+
+    with patch("budgetis.bdi_import.tasks.load_account_dataframe", return_value=rows), translation.override("en"):
+        import_accounts_task.run(log.pk)
+
+    log.refresh_from_db()
+    assert log.status == AccountImportLog.Status.FAILED
+    assert "1 row(s)" in log.message
+    assert "3000" in log.message
+    assert not Account.objects.exists()
+
+
+def test_invalid_mapping_fails_the_import():
+    log = AccountImportLogFactory(kind=AccountImportLog.ImportKind.EXCEL, file="imports/budget.xlsx")
+    for field, column in (
+        (ColumnMapping.Field.FUNCTION, "Fctio"),
+        (ColumnMapping.Field.CODE, "Nat"),
+        (ColumnMapping.Field.LABEL, "Label"),
+    ):
+        ColumnMappingFactory(log=log, field=field, column_name=column)
+    rows = pd.DataFrame([{"Fctio": "01100", "Nat": "3000", "Label": "Commissions"}])
+
+    with patch("budgetis.bdi_import.tasks.load_account_dataframe", return_value=rows):
+        import_accounts_task.run(log.pk)
+
+    log.refresh_from_db()
+    assert log.status == AccountImportLog.Status.FAILED
+
+
+def test_successful_import_reports_counts():
+    log = AccountImportLogFactory(file="imports/budget.xlsx")
+    for field in (ColumnMapping.Field.CODE, ColumnMapping.Field.LABEL, ColumnMapping.Field.CHARGES):
+        ColumnMappingFactory(log=log, field=field, column_name=field)
+    rows = pd.DataFrame(
+        [
+            {"code": "170.301", "label": "Salaires", "charges": "10"},
+            {"code": "3000", "label": "Nature seule", "charges": "20"},
+        ]
+    )
+
+    with patch("budgetis.bdi_import.tasks.load_account_dataframe", return_value=rows), translation.override("en"):
+        import_accounts_task.run(log.pk)
+
+    log.refresh_from_db()
+    assert log.status == AccountImportLog.Status.SUCCESS
+    assert log.message.startswith("1 account(s) imported from 2 row(s).")
+    assert "3000" in log.message

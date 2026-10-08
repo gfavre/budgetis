@@ -15,6 +15,7 @@ from django.views.generic import View
 from budgetis.common.models import ChartScheme
 
 from .forms import AccountImportForm
+from .importers import validate_column_map
 from .models import AccountImportLog
 from .models import ColumnMapping
 from .tasks import import_accounts_task
@@ -181,7 +182,6 @@ class AccountMappingView(LoginRequiredMixin, View):
 
     def post(self, request, log_id):
         log = get_object_or_404(AccountImportLog, pk=log_id)
-        log.column_mappings.all().delete()
 
         column_map = {}
         for key in request.POST:
@@ -191,6 +191,13 @@ class AccountMappingView(LoginRequiredMixin, View):
                 if field_value:
                     column_map[column_name] = field_value
 
+        try:
+            validate_column_map({field: column_name for column_name, field in column_map.items()})
+        except ValueError as exc:
+            messages.error(request, str(exc))
+            return redirect("bdi_import:account-mapping", log_id=log.id)
+
+        log.column_mappings.all().delete()
         for column_name, field in column_map.items():
             if field:
                 ColumnMapping.objects.create(

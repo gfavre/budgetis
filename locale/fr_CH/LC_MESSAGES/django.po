@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-10 17:25+0200\n"
+"POT-Creation-Date: 2026-10-08 15:34+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -72,7 +72,7 @@ msgstr "Afficher le détail (natures à 3 chiffres)"
 #: budgetis/accounting/forms.py:100 budgetis/accounting/models.py:148
 #: budgetis/accounting/templates/accounting/partials/account_group_block.html:12
 #: budgetis/accounting/templates/accounting/partials/budget_group_block.html:12
-#: budgetis/bdi_import/views.py:138
+#: budgetis/bdi_import/views.py:139
 msgid "Responsible"
 msgstr "Responsable"
 
@@ -884,6 +884,27 @@ msgstr "Fichier téléchargé"
 msgid "Please upload a CSV or XLSX file."
 msgstr "Veuillez télécharger un fichier CSV ou XLSX."
 
+#: budgetis/bdi_import/importers.py:60
+#, python-format
+msgid ""
+"\"%(code)s\" is for a single column holding the full code (e.g. 170.301.2). "
+"It cannot be combined with \"%(function)s\" / \"%(nature)s\" columns."
+msgstr ""
+"« %(code)s » sert pour une seule colonne contenant le code complet (p. ex. "
+"170.301.2). Il ne peut pas être combiné avec des colonnes « %(function)s » / "
+"« %(nature)s »."
+
+#: budgetis/bdi_import/importers.py:69
+#, python-format
+msgid "\"%(function)s\" and \"%(nature)s\" must both be mapped."
+msgstr "« %(function)s » et « %(nature)s » doivent être associées toutes les deux."
+
+#: budgetis/bdi_import/importers.py:75
+#, python-format
+msgid "Map either \"%(code)s\" or both \"%(function)s\" and \"%(nature)s\"."
+msgstr ""
+"Associez soit « %(code)s », soit à la fois « %(function)s » et « %(nature)s »."
+
 #: budgetis/bdi_import/models.py:11
 msgid "Pending"
 msgstr "En attente"
@@ -969,7 +990,7 @@ msgstr "Sous-compte"
 
 #: budgetis/bdi_import/models.py:82
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:245
-#: budgetis/bdi_import/views.py:137
+#: budgetis/bdi_import/views.py:138
 msgid "Account label"
 msgstr "Libellé"
 
@@ -1013,17 +1034,39 @@ msgstr "Correspondances des colonnes"
 msgid "Column mappings"
 msgstr "Correspondances des colonnes"
 
-#: budgetis/bdi_import/tasks.py:47
+#: budgetis/bdi_import/tasks.py:22
+#, python-format
+msgid ""
+"%(count)s row(s) skipped because of an invalid account code (e.g. "
+"%(examples)s)."
+msgstr ""
+"%(count)s ligne(s) ignorée(s) à cause d'un code de compte invalide (p. ex. "
+"%(examples)s)."
+
+#: budgetis/bdi_import/tasks.py:59
 msgid "The import file could not be found."
 msgstr "Le fichier d'importation n'a pas été trouvé."
 
-#: budgetis/bdi_import/tasks.py:97
+#: budgetis/bdi_import/tasks.py:109
 msgid "Import failed: "
 msgstr "L'importation a échoué : "
 
-#: budgetis/bdi_import/tasks.py:103
+#: budgetis/bdi_import/tasks.py:115
 msgid "Unexpected error: "
 msgstr "Erreur inattendue : "
+
+#: budgetis/bdi_import/tasks.py:122
+#, python-format
+msgid ""
+"No account could be imported from %(rows)s row(s). Check the column mapping."
+msgstr ""
+"Aucun compte n'a pu être importé depuis %(rows)s ligne(s). Vérifiez la "
+"correspondance des colonnes."
+
+#: budgetis/bdi_import/tasks.py:137
+#, python-format
+msgid "%(accounts)s account(s) imported from %(rows)s row(s)."
+msgstr "%(accounts)s compte(s) importé(s) depuis %(rows)s ligne(s)."
 
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:151
 #, python-format
@@ -1107,28 +1150,28 @@ msgstr ""
 msgid "No sufficiently filled data row found."
 msgstr "Aucune ligne de données suffisamment remplie n'a été trouvée."
 
-#: budgetis/bdi_import/views.py:31 budgetis/templates/base.html:193
+#: budgetis/bdi_import/views.py:32 budgetis/templates/base.html:193
 msgid "Import from BDI"
 msgstr "Importation de BDI"
 
-#: budgetis/bdi_import/views.py:124 budgetis/templates/base.html:200
+#: budgetis/bdi_import/views.py:125 budgetis/templates/base.html:200
 msgid "Import Excel"
 msgstr "Import Excel"
 
-#: budgetis/bdi_import/views.py:136
+#: budgetis/bdi_import/views.py:137
 msgid "Account identity"
 msgstr "Identité du compte"
 
-#: budgetis/bdi_import/views.py:139
+#: budgetis/bdi_import/views.py:140
 msgid "Amounts"
 msgstr "Montants"
 
-#: budgetis/bdi_import/views.py:179
+#: budgetis/bdi_import/views.py:180
 #, python-format
 msgid "Could not process the uploaded file: %(error)s"
 msgstr "Impossible de traiter le fichier téléchargé : %(error)s"
 
-#: budgetis/bdi_import/views.py:206
+#: budgetis/bdi_import/views.py:213
 msgid "Column mapping saved. Import will now be launched."
 msgstr ""
 "Le mappage des colonnes est sauvegardé. L'importation va maintenant être "

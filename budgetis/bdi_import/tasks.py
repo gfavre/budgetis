@@ -5,12 +5,24 @@ from django.utils.translation import gettext as _
 
 from budgetis.finance.models import AvailableYear
 
+from .importers import INVALID_CODE_EXAMPLES
+from .importers import ImportResult
 from .importers import import_accounts_from_dataframe
 from .models import AccountImportLog
 from .utils import load_account_dataframe
 
 
 logger = logging.getLogger(__name__)
+
+
+def _invalid_codes_message(result: ImportResult) -> str:
+    if not result.invalid_codes:
+        return ""
+    examples = ", ".join(result.invalid_codes[:INVALID_CODE_EXAMPLES])
+    return " " + _("%(count)s row(s) skipped because of an invalid account code (e.g. %(examples)s).") % {
+        "count": len(result.invalid_codes),
+        "examples": examples,
+    }
 
 
 @shared_task(bind=True)
@@ -69,7 +81,7 @@ def import_accounts_task(self, log_id: int):  # noqa: PLR0915
 
     try:
         logger.info("[Import] Calling importer | log_id=%s", log_id)
-        import_accounts_from_dataframe(
+        result = import_accounts_from_dataframe(
             account_rows=account_rows,
             is_budget=log.is_budget,
             year=log.year,
@@ -105,6 +117,15 @@ def import_accounts_task(self, log_id: int):  # noqa: PLR0915
         logger.exception(f"[Import] Unexpected failure for {log}")
         raise
 
+    if not result.accounts:
+        log.status = AccountImportLog.Status.FAILED
+        log.message = _("No account could be imported from %(rows)s row(s). Check the column mapping.") % {
+            "rows": result.rows
+        } + _invalid_codes_message(result)
+        log.save(update_fields=["status", "message"])
+        logger.warning("[Import] No account imported | log_id=%s", log_id)
+        return
+
     logger.info("[Import] Creating AvailableYear | log_id=%s", log_id)
     AvailableYear.objects.get_or_create(
         year=log.year,
@@ -113,6 +134,9 @@ def import_accounts_task(self, log_id: int):  # noqa: PLR0915
     )
 
     log.status = AccountImportLog.Status.SUCCESS
-    log.message = "Import completed successfully."
+    log.message = _("%(accounts)s account(s) imported from %(rows)s row(s).") % {
+        "accounts": result.accounts,
+        "rows": result.rows,
+    } + _invalid_codes_message(result)
     log.save(update_fields=["status", "message"])
     logger.info("[Import] SUCCESS | log_id=%s", log_id)

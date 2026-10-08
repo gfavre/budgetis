@@ -1,14 +1,18 @@
 import logging
+from dataclasses import dataclass
+from dataclasses import field
 from decimal import Decimal
 
 import pandas as pd
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext as _
 
 from budgetis.accounting.models import Account
 from budgetis.accounting.models import AccountComment
 from budgetis.accounting.models import GroupResponsibility
 from budgetis.common.models import ChartScheme
 
+from .models import ColumnMapping
 from .utils import safe_decimal
 
 
@@ -19,9 +23,61 @@ FUNCTION_PART = 0
 NATURE_PART = 1
 SUBACCOUNT_PART = 2
 
+# How many offending codes are quoted in an import log's message.
+INVALID_CODE_EXAMPLES = 5
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+
+class InvalidAccountCodeError(ValueError):
+    """A row has an account code, but it cannot be read as one."""
+
+    def __init__(self, raw_code: str):
+        self.raw_code = raw_code
+        super().__init__(f"Invalid account code: {raw_code}")
+
+
+@dataclass
+class ImportResult:
+    rows: int = 0
+    accounts: int = 0
+    invalid_codes: list[str] = field(default_factory=list)
+
+
+def validate_column_map(column_map: dict[str, str]) -> None:
+    """
+    Rejects a mapping that cannot identify accounts. Mapping a column to the
+    combined "Account code" next to separate function/nature columns makes
+    every row fall into the combined-code path, where a bare nature such as
+    "3000" is not a valid code - each row is skipped and nothing is imported.
+    """
+    has_code = ColumnMapping.Field.CODE in column_map
+    has_split = ColumnMapping.Field.FUNCTION in column_map or ColumnMapping.Field.NATURE in column_map
+    if has_code and has_split:
+        message = _(
+            '"%(code)s" is for a single column holding the full code (e.g. 170.301.2). '
+            'It cannot be combined with "%(function)s" / "%(nature)s" columns.'
+        ) % {
+            "code": ColumnMapping.Field.CODE.label,
+            "function": ColumnMapping.Field.FUNCTION.label,
+            "nature": ColumnMapping.Field.NATURE.label,
+        }
+        raise ValueError(message)
+    if has_split and not (ColumnMapping.Field.FUNCTION in column_map and ColumnMapping.Field.NATURE in column_map):
+        message = _('"%(function)s" and "%(nature)s" must both be mapped.') % {
+            "function": ColumnMapping.Field.FUNCTION.label,
+            "nature": ColumnMapping.Field.NATURE.label,
+        }
+        raise ValueError(message)
+    if not has_code and not has_split:
+        message = _('Map either "%(code)s" or both "%(function)s" and "%(nature)s".') % {
+            "code": ColumnMapping.Field.CODE.label,
+            "function": ColumnMapping.Field.FUNCTION.label,
+            "nature": ColumnMapping.Field.NATURE.label,
+        }
+        raise ValueError(message)
 
 
 def parse_account_code(code: str) -> tuple[str, str, str]:
@@ -45,7 +101,7 @@ def parse_account_code(code: str) -> tuple[str, str, str]:
     function = parts[FUNCTION_PART]
     nature = parts[NATURE_PART]
     sub_account = parts[SUBACCOUNT_PART] if len(parts) == MAX_PARTS else ""
-    return function, nature, sub_account
+    return function, nature, _normalize_sub_account(sub_account)
 
 
 def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
@@ -84,9 +140,8 @@ def _extract_account_code(row, column_map) -> tuple[str, str, str] | None:
             return None
         try:
             return parse_account_code(raw_number)
-        except ValueError:
-            logger.warning("Invalid account code: %s", raw_number)
-            return None
+        except ValueError as exc:
+            raise InvalidAccountCodeError(raw_number) from exc
 
     if "function" in column_map and "nature" in column_map:
         function = row.get(column_map["function"], "").strip()
@@ -118,8 +173,8 @@ def process_account_row(row, column_map, derived_from_total, scheme=ChartScheme.
     function, nature, sub_account = code
 
     if not function or not function.isdigit():
-        logger.warning("Non-numeric function: %s", function)
-        return None
+        raw_code = f"{function}.{nature}"
+        raise InvalidAccountCodeError(raw_code)
 
     if derived_from_total:
         total = safe_decimal(row.get(column_map.get("total", ""), 0))
@@ -215,7 +270,9 @@ def copy_account_comments(account, source_acc):
         )
 
 
-def _accumulate_rows(account_rows, column_map, derived_from_total, scheme, *, positive_revenues=False):
+def _accumulate_rows(  # noqa: PLR0913
+    account_rows, column_map, derived_from_total, scheme, invalid_codes, *, positive_revenues=False
+):
     """
     Group parsed rows by (function, nature, sub_account) and sum their charges/
     revenues. A manually-prepared sheet can have several MCH1-origin rows
@@ -224,8 +281,15 @@ def _accumulate_rows(account_rows, column_map, derived_from_total, scheme, *, po
     a key is kept as the representative row (label, responsible column).
     """
     accumulated: dict[tuple[str, str, str], dict] = {}
-    for _, row in account_rows.iterrows():
-        result = process_account_row(row, column_map, derived_from_total, scheme, positive_revenues=positive_revenues)
+    for _index, row in account_rows.iterrows():
+        try:
+            result = process_account_row(
+                row, column_map, derived_from_total, scheme, positive_revenues=positive_revenues
+            )
+        except InvalidAccountCodeError as exc:
+            logger.warning("Invalid account code: %s", exc.raw_code)
+            invalid_codes.append(exc.raw_code)
+            continue
         if result is None:
             continue
 
@@ -258,15 +322,18 @@ def import_accounts_from_dataframe(  # noqa: PLR0913
     column_map: dict[str, str] | None = None,
     derived_from_total: bool = False,
     positive_revenues: bool = False,
-) -> None:
+) -> ImportResult:
     logger.info(f"Starting import for year {year}. Dry-run: {dry_run}")
     column_map = column_map or {}
+    validate_column_map(column_map)
+    result = ImportResult(rows=len(account_rows))
 
     account_rows = clean_dataframe(account_rows)
     source_accounts = build_source_account_map(source_year)
     accumulated = _accumulate_rows(
-        account_rows, column_map, derived_from_total, scheme, positive_revenues=positive_revenues
+        account_rows, column_map, derived_from_total, scheme, result.invalid_codes, positive_revenues=positive_revenues
     )
+    result.accounts = len(accumulated)
 
     for (function, nature, sub_account), entry in accumulated.items():
         account_defaults = entry["defaults"]
@@ -287,3 +354,4 @@ def import_accounts_from_dataframe(  # noqa: PLR0913
                 copy_account_comments(account, source_acc)
 
     logger.info(f"Import complete. Total rows processed: {len(account_rows)}.")
+    return result
