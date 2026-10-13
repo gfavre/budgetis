@@ -107,7 +107,7 @@ class FunctionSplitUpdateView(PlatformSettingsMixin, View):
 
     def _configuration(self, group_id):
         group = get_object_or_404(AccountGroup, pk=group_id, scheme=ChartScheme.MCH2, level=MCH2_GROUP_CODE_LENGTH)
-        split = FunctionSplit.objects.filter(group=group).first() or FunctionSplit(group=group, enabled=False)
+        split = FunctionSplit.objects.filter(group=group).first() or FunctionSplit(group=group)
         configured = set(split.categories.values_list("function", flat=True)) if split.pk else set()
         functions = (
             Account.objects.filter(group=group).values_list("function", flat=True).distinct().order_by("function")
@@ -133,6 +133,15 @@ class FunctionSplitUpdateView(PlatformSettingsMixin, View):
         if form_valid and formset_valid:
             formset.instance = form.save()
             formset.save()
-            messages.success(request, _("Group presentation saved."))
+            if formset.instance.enabled:
+                messages.success(request, _("Group presentation saved."))
+            else:
+                messages.info(
+                    request,
+                    _(
+                        "Labels saved. The split is disabled: "
+                        "enable 'Split by function' to show separate budget tables."
+                    ),
+                )
             return redirect(SPLIT_URL)
         return render(request, self.template_name, context)

@@ -1,6 +1,8 @@
 from http import HTTPStatus
 
 import pytest
+from django.contrib.messages import INFO
+from django.contrib.messages import get_messages
 from django.urls import reverse
 
 from budgetis.accounting.models import FunctionCategory
@@ -8,6 +10,7 @@ from budgetis.accounting.models import FunctionSplit
 from budgetis.accounting.models import GroupResponsibility
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AccountGroupFactory
+from budgetis.accounting.tests.factories import AvailableYearFactory
 from budgetis.accounting.tests.factories import FunctionCategoryFactory
 from budgetis.accounting.tests.factories import FunctionSplitFactory
 from budgetis.accounting.tests.factories import GroupResponsibilityFactory
@@ -182,6 +185,7 @@ class TestFunctionSplitUpdateView(SettingsAccessTests):
         client.force_login(manager)
         response = client.get(reverse("accounting:function-split-edit", args=[group.pk]))
         assert [form.initial.get("function") for form in response.context["formset"]] == ["96301", "96302", None]
+        assert response.context["form"].initial["enabled"] is True
         assert not FunctionSplit.objects.exists()
 
     def test_unchanged_suggestions_do_not_require_labels(self, client, manager, group):
@@ -213,6 +217,23 @@ class TestFunctionSplitUpdateView(SettingsAccessTests):
         category.refresh_from_db()
         assert category.label == "New name"
         assert not category.split.enabled
+        assert next(iter(get_messages(response.wsgi_request))).level == INFO
+
+    def test_new_split_form_defaults_produce_named_budget_tables(
+        self, client, manager, group, site_configuration_with_logo
+    ):
+        AvailableYearFactory(year=ASSIGNMENT_YEAR, scheme=ChartScheme.MCH2)
+        AccountFactory(group=group, function="96301", scheme=ChartScheme.MCH2, year=ASSIGNMENT_YEAR, is_budget=True)
+        client.force_login(manager)
+        url = reverse("accounting:function-split-edit", args=[group.pk])
+        form = client.get(url).context["form"]
+        data = category_data(enabled=form.initial["enabled"])
+        assert client.post(url, data).status_code == HTTPStatus.FOUND
+        response = client.get(reverse("accounting:budget-explorer"), {"year": ASSIGNMENT_YEAR})
+        assert response.status_code == HTTPStatus.OK
+        html = response.content.decode()
+        assert "Maison gothique" in html
+        assert 'id="group-96301"' in html
 
     def test_delete_label_preserves_split(self, client, manager, group):
         category = FunctionCategoryFactory(split=FunctionSplitFactory(group=group))

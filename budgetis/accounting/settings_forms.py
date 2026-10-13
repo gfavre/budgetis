@@ -86,6 +86,11 @@ class FunctionSplitSettingsForm(forms.ModelForm):
     class Meta:
         model = FunctionSplit
         fields = ("enabled",)
+        help_texts = {
+            "enabled": _(
+                "Enable separate Budget and Actuals tables for each function. Labels alone do not enable the split."
+            )
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

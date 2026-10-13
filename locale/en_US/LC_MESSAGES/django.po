@@ -1871,3 +1871,9 @@ msgstr ""
 
 msgid "Categories are shared by MCH1 and MCH2. After saving, add rules for the selected scheme to assign accounts to this category."
 msgstr ""
+
+msgid "Labels saved. The split is disabled: enable 'Split by function' to show separate budget tables."
+msgstr ""
+
+msgid "Enable separate Budget and Actuals tables for each function. Labels alone do not enable the split."
+msgstr ""

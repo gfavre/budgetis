@@ -7,12 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.1] - 2026-10-13
+
 ### Added
 
 - **Create Sankey categories in the app**: finance staff can add an
   intercommunality or another category from the configuration page, choosing
   its flow group, name, color and display order. Creation returns to the new
   category to add its account-matching rules, preserving the selected scheme.
+
+### Fixed
+
+- **New function splits disabled by default in settings**: new split
+  configurations now start enabled, so entering labels produces separate
+  Budget and Actuals tables. Saving a disabled configuration explicitly
+  explains that its labels are retained but separate tables are not shown.
 
 ## [1.9.0] - 2026-10-13
 

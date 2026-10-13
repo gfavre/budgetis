@@ -1919,3 +1919,9 @@ msgstr "Choisissez Intercommunalité pour une interco, ou un autre groupe pour l
 
 msgid "Categories are shared by MCH1 and MCH2. After saving, add rules for the selected scheme to assign accounts to this category."
 msgstr "Les catégories sont communes à MCH1 et MCH2. Après l’enregistrement, ajoutez des règles pour le plan comptable sélectionné afin d’attribuer des comptes à cette catégorie."
+
+msgid "Labels saved. The split is disabled: enable 'Split by function' to show separate budget tables."
+msgstr "Libellés enregistrés. Le découpage est désactivé : cochez « Découper par fonction » pour afficher des tableaux distincts dans les budgets."
+
+msgid "Enable separate Budget and Actuals tables for each function. Labels alone do not enable the split."
+msgstr "Active les tableaux Budget et Comptes distincts pour chaque fonction. Les libellés seuls n’activent pas le découpage."
