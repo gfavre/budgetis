@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import Any
+from urllib.parse import urlencode
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -10,7 +11,9 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import CreateView
@@ -103,6 +106,7 @@ _FLOW_DISPLAY_ORDER = (
     SankeyFlow.COMMUNE,
     SankeyFlow.DOTATION,
 )
+DEFAULT_CATEGORY_COLOR = "#008000"
 
 
 def _categories_grouped_by_flow(scheme: str) -> list[dict[str, Any]]:
@@ -335,6 +339,54 @@ class SankeyRuleUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
         rule = form.save()
         scheme = self.request.GET.get("scheme", "")
         return _render_rule_rows_oob(self.request, self.kwargs["rule_type"], rule.category, scheme)
+
+
+class SankeyCategoryCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    """Create a shared category from the configuration page, then return to its rule editor."""
+
+    model = SankeyCategory
+    fields = ["name", "flow", "color", "order"]
+    template_name = "finance/partials/sankey_rule_form.html"
+    permission_required = "finance.change_sankeycategory"
+
+    def _scheme(self):
+        scheme = self.request.GET.get("scheme")
+        return scheme if scheme in ChartScheme.values else _default_scheme()
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["color"] = DEFAULT_CATEGORY_COLOR
+        flow = self.request.GET.get("flow")
+        if flow in SankeyFlow.values:
+            initial["flow"] = flow
+        return initial
+
+    def get_form(self, form_class=None):
+        form = _bootstrap_styled(super().get_form(form_class))
+        form.fields["flow"].label = _("Flow group")
+        form.fields["flow"].widget.attrs["class"] = "form-select"
+        form.fields["flow"].help_text = _(
+            "Choose Intercommunality for an interco, or another group for other categories."
+        )
+        form.fields["color"].widget.input_type = "color"
+        form.fields["order"].help_text = _(
+            "Display order within this flow group (smallest first). Does not affect which accounts match the category."
+        )
+        return form
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(scheme=self._scheme(), is_create=True, is_category=True)
+        return context
+
+    def form_valid(self, form):
+        category = form.save()
+        url = (
+            f"{reverse('finance:sankey-rules')}?{urlencode({'scheme': self._scheme()})}#sankey-category-{category.pk}"
+        )
+        if self.request.headers.get("HX-Request") == "true":
+            return HttpResponse(headers={"HX-Redirect": url})
+        return redirect(url)
 
 
 class SankeyCategoryEditView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):

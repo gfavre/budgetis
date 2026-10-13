@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Create Sankey categories in the app**: finance staff can add an
+  intercommunality or another category from the configuration page, choosing
+  its flow group, name, color and display order. Creation returns to the new
+  category to add its account-matching rules, preserving the selected scheme.
+
 ## [1.9.0] - 2026-10-13
 
 ### Added

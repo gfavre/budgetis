@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.urls import path
 
+from .views import SankeyCategoryCreateView
 from .views import SankeyCategoryEditView
 from .views import SankeyDataView
 from .views import SankeyMaticExportView
@@ -16,6 +17,7 @@ app_name = "finance"
 urlpatterns = [
     path("sankey/", SankeyView.as_view(), name="index"),
     path("sankey/rules/", SankeyRulesView.as_view(), name="sankey-rules"),
+    path("sankey/rules/category/add/", SankeyCategoryCreateView.as_view(), name="sankey-category-add"),
     path(
         "sankey/rules/category/<int:pk>/edit/",
         SankeyCategoryEditView.as_view(),

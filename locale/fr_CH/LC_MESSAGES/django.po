@@ -1907,3 +1907,15 @@ msgstr "La priorité départage uniquement les plages de natures qui se chevauch
 
 msgid "Category order controls display, not rule matching. Within a category, separate rules are alternatives: an account does not need to match every rule."
 msgstr "L’ordre d’une catégorie règle son affichage, pas l’attribution des comptes. Dans une catégorie, les règles sont des alternatives : un compte n’a pas besoin de correspondre à toutes les règles."
+
+msgid "Add a category"
+msgstr "Ajouter une catégorie"
+
+msgid "Flow group"
+msgstr "Groupe du Sankey"
+
+msgid "Choose Intercommunality for an interco, or another group for other categories."
+msgstr "Choisissez Intercommunalité pour une interco, ou un autre groupe pour les autres catégories."
+
+msgid "Categories are shared by MCH1 and MCH2. After saving, add rules for the selected scheme to assign accounts to this category."
+msgstr "Les catégories sont communes à MCH1 et MCH2. Après l’enregistrement, ajoutez des règles pour le plan comptable sélectionné afin d’attribuer des comptes à cette catégorie."

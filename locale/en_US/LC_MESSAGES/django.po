@@ -1859,3 +1859,15 @@ msgstr ""
 
 msgid "Category order controls display, not rule matching. Within a category, separate rules are alternatives: an account does not need to match every rule."
 msgstr ""
+
+msgid "Add a category"
+msgstr ""
+
+msgid "Flow group"
+msgstr ""
+
+msgid "Choose Intercommunality for an interco, or another group for other categories."
+msgstr ""
+
+msgid "Categories are shared by MCH1 and MCH2. After saving, add rules for the selected scheme to assign accounts to this category."
+msgstr ""

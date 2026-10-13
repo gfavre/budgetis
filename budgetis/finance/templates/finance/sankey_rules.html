@@ -9,6 +9,17 @@
       <span class="text-muted">{{ scheme_display }}</span>
     </div>
     <div class="d-flex gap-2">
+      {% if perms.finance.change_sankeycategory %}
+        <a href="{% url 'finance:sankey-category-add' %}?scheme={{ scheme }}"
+           hx-get="{% url 'finance:sankey-category-add' %}?scheme={{ scheme }}"
+           hx-target="#sankeyRuleModal .modal-content"
+           hx-swap="innerHTML"
+           data-bs-toggle="modal"
+           data-bs-target="#sankeyRuleModal"
+           class="btn btn-sm btn-primary">
+          <i class="bi bi-plus-lg me-1"></i>{% trans "Add a category" %}
+        </a>
+      {% endif %}
       <a href="?scheme={{ other_scheme }}"
          class="btn btn-sm btn-outline-primary">
         {% blocktrans with other=other_scheme|upper %}Switch to {{ other }}{% endblocktrans %}
@@ -28,7 +39,20 @@
         <p class="small text-muted mb-0">{% trans "Category order controls display, not rule matching. Within a category, separate rules are alternatives: an account does not need to match every rule." %}</p>
       </div>
       {% for group in flow_groups %}
-        <h2 class="h5 mt-4" id="sankey-flow-{{ group.flow }}">{{ group.flow_label }}</h2>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-4 mb-2">
+          <h2 class="h5 mb-0" id="sankey-flow-{{ group.flow }}">{{ group.flow_label }}</h2>
+          {% if perms.finance.change_sankeycategory %}
+            <a href="{% url 'finance:sankey-category-add' %}?scheme={{ scheme }}&amp;flow={{ group.flow }}"
+               hx-get="{% url 'finance:sankey-category-add' %}?scheme={{ scheme }}&amp;flow={{ group.flow }}"
+               hx-target="#sankeyRuleModal .modal-content"
+               hx-swap="innerHTML"
+               data-bs-toggle="modal"
+               data-bs-target="#sankeyRuleModal"
+               class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-plus-lg me-1"></i>{% trans "Add a category" %}
+            </a>
+          {% endif %}
+        </div>
         {% for category in group.categories %}
           <div class="card mb-3" id="sankey-category-{{ category.pk }}">
             <div class="card-header d-flex justify-content-between align-items-center">

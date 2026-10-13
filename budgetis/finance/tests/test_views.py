@@ -306,3 +306,87 @@ class TestSankeyMaticExportView:
         assert response.status_code == HTTPStatus.OK
         assert response["Content-Type"] == "text/plain; charset=utf-8"
         assert "attachment" in response["Content-Disposition"]
+
+
+class TestSankeyCategoryCreateView:
+    def test_login_required(self, client):
+        response = client.get(reverse("finance:sankey-category-add"))
+        assert response.status_code == HTTPStatus.FOUND
+        assert LOGIN_URL in response.url
+
+    @pytest.mark.parametrize("method", ["get", "post"])
+    def test_view_permission_does_not_allow_creation(self, client, method):
+        user = UserFactory()
+        _grant_view_sankey_category(user)
+        client.force_login(user)
+        response = getattr(client, method)(reverse("finance:sankey-category-add"))
+        assert response.status_code == HTTPStatus.FORBIDDEN
+
+    def test_get_prefills_group_and_shows_shared_category_help(self, client):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        response = client.get(reverse("finance:sankey-category-add"), {"flow": SankeyFlow.INTERCOMMUNALITY})
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["form"].initial["flow"] == SankeyFlow.INTERCOMMUNALITY
+        assert response.context["is_create"]
+        assert response.context["is_category"]
+
+    @pytest.mark.parametrize("flow", SankeyFlow.values)
+    def test_creates_category_in_each_group_and_returns_to_its_rules(self, client, flow, site_configuration_with_logo):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        _grant_view_sankey_category(user)
+        client.force_login(user)
+        url = reverse("finance:sankey-category-add") + f"?scheme={ChartScheme.MCH2}"
+        response = client.post(
+            url, {"name": "New interco", "flow": flow, "color": "#224466", "order": 1}, HTTP_HX_REQUEST="true"
+        )
+        assert response.status_code == HTTPStatus.OK
+        category = SankeyCategory.objects.get(name="New interco")
+        assert category.flow == flow
+        assert category.color == "#224466"
+        assert response["HX-Redirect"] == (
+            f"{reverse('finance:sankey-rules')}?scheme={ChartScheme.MCH2}#sankey-category-{category.pk}"
+        )
+        response = client.get(response["HX-Redirect"])
+        assert f'id="sankey-category-{category.pk}"' in response.content.decode()
+        assert f'id="category-nav-{category.pk}"' in response.content.decode()
+        assert not category.nature_range_rules.exists()
+
+    def test_normal_post_redirects_preserving_scheme(self, client):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        url = reverse("finance:sankey-category-add") + f"?scheme={ChartScheme.MCH1}"
+        response = client.post(
+            url, {"name": "New grouping", "flow": SankeyFlow.COMMUNE, "color": "#224466", "order": 0}
+        )
+        assert response.status_code == HTTPStatus.FOUND
+        assert f"scheme={ChartScheme.MCH1}" in response.url
+
+    @pytest.mark.parametrize(("flow", "name"), [("invalid", "New grouping"), (SankeyFlow.COMMUNE, "Existing")])
+    def test_invalid_or_duplicate_category_is_not_saved(self, client, flow, name):
+        existing = _make_category(name="Existing")
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        response = client.post(
+            reverse("finance:sankey-category-add"), {"name": name, "flow": flow, "color": "#224466", "order": 0}
+        )
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["form"].errors
+        assert "HX-Redirect" not in response
+        existing.refresh_from_db()
+        assert existing.color != "#224466"
+        assert not SankeyCategory.objects.filter(name="New grouping").exists()
+
+    def test_create_button_requires_edit_permission(self, client, site_configuration_with_logo):
+        user = UserFactory()
+        _grant_view_sankey_category(user)
+        client.force_login(user)
+        url = reverse("finance:sankey-rules")
+        create_url = reverse("finance:sankey-category-add")
+        assert create_url not in client.get(url).content.decode()
+        _grant_change_sankey_category(user)
+        assert create_url in client.get(url).content.decode()

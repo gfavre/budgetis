@@ -16,6 +16,9 @@
   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 <div class="modal-body">
+  {% if is_create and is_category %}
+    <p class="small text-muted">{% trans "Categories are shared by MCH1 and MCH2. After saving, add rules for the selected scheme to assign accounts to this category." %}</p>
+  {% endif %}
   <form method="post"
         hx-post="{{ request.get_full_path }}"
         hx-target="#sankeyRuleModal .modal-content"
