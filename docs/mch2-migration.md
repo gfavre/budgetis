@@ -30,6 +30,38 @@ design survives even if an implementation session gets interrupted.
 
 ## Account code shapes
 
+### Nettoyage des extensions vides en production
+
+La commande `normalize_mch2_extensions` traite uniquement les comptes MCH2
+dont `sub_account` est vide, toutes années confondues (ou `--year 2027`).
+Elle remplace l'extension par `00`. Les extensions renseignées, notamment
+`01`, sont conservées.
+
+Un doublon correspond à la même année, fonction, nature et au même type
+budget/comptes. Si un seul compte a des charges ou revenus non nuls (y compris
+négatifs), il est conservé. Si les deux en ont, ou si aucun n'en a, la commande
+affiche les montants et demande lequel conserver. Elle n'additionne pas les
+montants ; les commentaires du compte supprimé sont transférés au compte gardé.
+`q`, Ctrl-C ou une saisie interrompue annulent toute l'opération.
+
+Le code doit être présent dans l'image `web` déployée : le compose de production
+ne monte pas le code local. Après déploiement de cette version, lancer d'abord
+la simulation depuis un terminal interactif :
+
+```bash
+docker compose -f docker-compose.prod.yml exec web python manage.py normalize_mch2_extensions --dry-run
+```
+
+Puis appliquer (les choix interactifs seront demandés à nouveau) :
+
+```bash
+docker compose -f docker-compose.prod.yml exec web python manage.py normalize_mch2_extensions
+```
+
+`docker compose exec` conserve par défaut l'entrée interactive et le TTY :
+ne pas ajouter `-T`. La commande utilise une transaction unique et verrouille
+les comptes concernés jusqu'à la fin, y compris pendant les questions.
+
 | | MCH1 | MCH2 |
 |---|---|---|
 | Account code | `function.nature[.sub_account]`, e.g. `720.351` | `function.nature.extension`, e.g. `01100.3000.00` |

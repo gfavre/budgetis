@@ -5,6 +5,17 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Interactive MCH2 extension cleanup**: `normalize_mch2_extensions` changes
+  empty extensions to `00`, retaining the duplicate with nonzero charges or
+  revenues. Ambiguous duplicates prompt for a choice; comments are transferred
+  to the retained account. Supports `--dry-run` and `--year`, preserves other
+  extensions, and rolls back the entire cleanup if cancelled or interrupted.
+  Docker usage is documented in `docs/mch2-migration.md`.
+
 ## [1.8.0] - 2026-10-13
 
 ### Added
