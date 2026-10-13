@@ -20,6 +20,7 @@ from budgetis.accounting.tests.factories import GroupResponsibilityFactory
 from budgetis.users.forms import UserAdminChangeForm
 from budgetis.users.models import BOURSE_GROUP_NAME
 from budgetis.users.models import User
+from budgetis.users.tests.factories import BourseGroupFactory
 from budgetis.users.tests.factories import UserFactory
 from budgetis.users.views import UserRedirectView
 from budgetis.users.views import UserUpdateView
@@ -520,6 +521,8 @@ class TestUserManagementNavLink:
 
     def test_admin_sees_the_nav_link(self, client, user: User, site_configuration_with_logo):
         _grant(user, "add_user", "users")
+        user.is_staff = True
+        user.save(update_fields=["is_staff"])
         client.force_login(user)
 
         response = client.get(reverse("users:detail", kwargs={"pk": user.pk}))
@@ -528,6 +531,7 @@ class TestUserManagementNavLink:
 
     def test_bourse_member_sees_the_nav_link(self, client, user: User, site_configuration_with_logo):
         _grant(user, "change_group", "auth")
+        user.groups.add(BourseGroupFactory())
         client.force_login(user)
 
         response = client.get(reverse("users:detail", kwargs={"pk": user.pk}))

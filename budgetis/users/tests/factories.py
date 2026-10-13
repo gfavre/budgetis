@@ -1,11 +1,21 @@
 from collections.abc import Sequence
 from typing import Any
 
+from django.contrib.auth.models import Group
 from factory import Faker
 from factory import post_generation
 from factory.django import DjangoModelFactory
 
+from budgetis.users.models import BOURSE_GROUP_NAME
 from budgetis.users.models import User
+
+
+class BourseGroupFactory(DjangoModelFactory):
+    name = BOURSE_GROUP_NAME
+
+    class Meta:
+        model = Group
+        django_get_or_create = ("name",)
 
 
 class UserFactory(DjangoModelFactory[User]):

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags i18n static %}
+
+{% block title %}
+  {{ group }}
+{% endblock title %}
+{% block javascript %}
+  {{ block.super }}
+  <script defer src="{% static 'accounting/js/function_split_settings.js' %}"></script>
+{% endblock javascript %}
+{% block content %}
+  <h1><i class="bi bi-diagram-3 me-2"></i>{{ group }}</h1>
+  <p class="text-muted">{% trans "Disabling the split keeps the labels for later. Functions without a configured label remain visible under their code." %}</p>
+  <form method="post">
+    {% csrf_token %}
+    {% crispy form %}
+    <h2 class="h4 mt-4">{% trans "Function labels" %}</h2>
+    <p class="text-muted">{% trans "Existing functions are suggested below. Fill in the labels you need; leave unused rows unchanged. Use the empty row to add another function." %}</p>
+    {{ formset.management_form }}
+    {{ formset.non_form_errors }}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>{% trans "Function" %}</th>
+            <th>{% trans "Label" %}</th>
+            <th>{% trans "Delete" %}</th>
+          </tr>
+        </thead>
+        <tbody id="function-category-rows">
+          {% for category_form in formset %}
+            <tr>
+              <td>
+                {% for hidden in category_form.hidden_fields %}{{ hidden }}{% endfor %}
+                {{ category_form.non_field_errors }}
+                {{ category_form.function|as_crispy_field }}
+              </td>
+              <td>{{ category_form.label|as_crispy_field }}</td>
+              <td>{{ category_form.DELETE|as_crispy_field }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <template id="function-category-empty-row">
+      <tr>
+        <td>
+          {% for hidden in formset.empty_form.hidden_fields %}{{ hidden }}{% endfor %}
+          {{ formset.empty_form.function|as_crispy_field }}
+        </td>
+        <td>{{ formset.empty_form.label|as_crispy_field }}</td>
+        <td>{{ formset.empty_form.DELETE|as_crispy_field }}</td>
+      </tr>
+    </template>
+    <div class="mb-4">
+      <button type="button"
+              class="btn btn-outline-primary"
+              id="add-function-category">
+        <i class="bi bi-plus-lg me-1"></i>{% trans "Add a function" %}
+      </button>
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>{% trans "Save" %}</button>
+    <a class="btn btn-link"
+       href="{% url 'accounting:function-split-settings' %}">{% trans "Cancel" %}</a>
+  </form>
+{% endblock content %}

@@ -1709,3 +1709,111 @@ msgstr ""
 
 msgid "Function must be a five-digit code belonging to the split group."
 msgstr ""
+
+msgid "Leave blank for the whole group, or enter an existing five-digit MCH2 function."
+msgstr ""
+
+msgid "Function assignments take precedence over the group responsible."
+msgstr ""
+
+msgid "Responsibility assignment"
+msgstr ""
+
+msgid "Choose an existing MCH2 function in this group and year."
+msgstr ""
+
+msgid "Group presentation"
+msgstr ""
+
+msgid "Disabling the split keeps the labels for later. Functions without a configured label remain visible under their code."
+msgstr ""
+
+msgid "Function labels"
+msgstr ""
+
+msgid "Existing functions are suggested below. Fill in the labels you need; leave unused rows unchanged. Use the empty row to add another function."
+msgstr ""
+
+msgid "Add a function"
+msgstr ""
+
+msgid "Functional group splits"
+msgstr ""
+
+msgid "Choose which level 4 MCH2 groups have a separate table for each five-digit function, and name those functions. Settings apply to all years."
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Presentation"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "Single table"
+msgstr ""
+
+msgid "Configure"
+msgstr ""
+
+msgid "No groups found."
+msgstr ""
+
+msgid "Pagination"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Account responsibles"
+msgstr ""
+
+msgid "Add an assignment"
+msgstr ""
+
+msgid "Assignments apply to one year. Function assignments take precedence over the group responsible, whether or not the group is split into separate tables."
+msgstr ""
+
+msgid "All years"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Whole group"
+msgstr ""
+
+msgid "Unassigned"
+msgstr ""
+
+msgid "No assignments found."
+msgstr ""
+
+msgid "Delete assignment"
+msgstr ""
+
+msgid "Deleting this function exception restores the group responsible for that function."
+msgstr ""
+
+msgid "Deleting the group assignment leaves its functions unassigned, except those with their own responsible."
+msgstr ""
+
+msgid "Changing a group responsible preserves its function exceptions. Edit or delete those exceptions separately."
+msgstr ""
+
+msgid "Responsibility saved."
+msgstr ""
+
+msgid "Group presentation saved."
+msgstr ""
+
+msgid "Platform settings"
+msgstr ""
+
+msgid "Sankey settings"
+msgstr ""

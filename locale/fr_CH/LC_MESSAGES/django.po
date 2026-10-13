@@ -1346,22 +1346,16 @@ msgid "Available years"
 msgstr "Années disponibles"
 
 #: budgetis/finance/models.py:33
-#, fuzzy
-#| msgid "Revenues"
 msgid "Revenue"
 msgstr "Produits"
 
 #: budgetis/finance/models.py:35
-#, fuzzy
-#| msgid "Intercommunalities"
 msgid "Intercommunality"
-msgstr "Intercommunalités"
+msgstr "Intercommunalité"
 
 #: budgetis/finance/models.py:37
-#, fuzzy
-#| msgid "Amortizations"
 msgid "Dotation"
-msgstr "Amortissements"
+msgstr "Dotation"
 
 #: budgetis/finance/models.py:47
 #: budgetis/templates/users/user_management.html:68
@@ -1763,3 +1757,111 @@ msgstr "Catégories de fonction"
 
 msgid "Function must be a five-digit code belonging to the split group."
 msgstr "La fonction doit être un code à cinq chiffres appartenant au groupe découpé."
+
+msgid "Leave blank for the whole group, or enter an existing five-digit MCH2 function."
+msgstr "Laissez vide pour le groupe entier, ou saisissez une fonction MCH2 existante à cinq chiffres."
+
+msgid "Function assignments take precedence over the group responsible."
+msgstr "Les affectations par fonction prennent priorité sur le responsable du groupe."
+
+msgid "Responsibility assignment"
+msgstr "Affectation d’un responsable"
+
+msgid "Choose an existing MCH2 function in this group and year."
+msgstr "Choisissez une fonction MCH2 existante pour ce groupe et cette année."
+
+msgid "Group presentation"
+msgstr "Présentation du groupe"
+
+msgid "Disabling the split keeps the labels for later. Functions without a configured label remain visible under their code."
+msgstr "Désactiver le découpage conserve les libellés pour plus tard. Les fonctions sans libellé restent visibles sous leur code."
+
+msgid "Function labels"
+msgstr "Libellés des fonctions"
+
+msgid "Existing functions are suggested below. Fill in the labels you need; leave unused rows unchanged. Use the empty row to add another function."
+msgstr "Les fonctions existantes sont proposées ci-dessous. Renseignez les libellés souhaités et laissez les lignes inutilisées telles quelles. Utilisez la ligne vide pour ajouter une fonction."
+
+msgid "Add a function"
+msgstr "Ajouter une fonction"
+
+msgid "Functional group splits"
+msgstr "Découpage des groupes fonctionnels"
+
+msgid "Choose which level 4 MCH2 groups have a separate table for each five-digit function, and name those functions. Settings apply to all years."
+msgstr "Choisissez les groupes MCH2 de niveau 4 à présenter dans un tableau distinct par fonction à cinq chiffres et nommez ces fonctions. Les réglages s’appliquent à toutes les années."
+
+msgid "Search"
+msgstr "Rechercher"
+
+msgid "Presentation"
+msgstr "Présentation"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Single table"
+msgstr "Tableau unique"
+
+msgid "Configure"
+msgstr "Configurer"
+
+msgid "No groups found."
+msgstr "Aucun groupe trouvé."
+
+msgid "Pagination"
+msgstr "Pagination"
+
+msgid "Previous"
+msgstr "Précédent"
+
+msgid "Next"
+msgstr "Suivant"
+
+msgid "Account responsibles"
+msgstr "Responsables des comptes"
+
+msgid "Add an assignment"
+msgstr "Ajouter une affectation"
+
+msgid "Assignments apply to one year. Function assignments take precedence over the group responsible, whether or not the group is split into separate tables."
+msgstr "Les affectations s’appliquent à une année. Les affectations par fonction prennent priorité sur le responsable du groupe, même si le groupe n’est pas découpé en tableaux distincts."
+
+msgid "All years"
+msgstr "Toutes les années"
+
+msgid "Filter"
+msgstr "Filtrer"
+
+msgid "Whole group"
+msgstr "Groupe entier"
+
+msgid "Unassigned"
+msgstr "Non attribué"
+
+msgid "No assignments found."
+msgstr "Aucune affectation trouvée."
+
+msgid "Delete assignment"
+msgstr "Supprimer l’affectation"
+
+msgid "Deleting this function exception restores the group responsible for that function."
+msgstr "Supprimer cette exception rétablit le responsable du groupe pour cette fonction."
+
+msgid "Deleting the group assignment leaves its functions unassigned, except those with their own responsible."
+msgstr "Supprimer l’affectation du groupe laisse ses fonctions sans responsable, sauf celles qui ont leur propre responsable."
+
+msgid "Changing a group responsible preserves its function exceptions. Edit or delete those exceptions separately."
+msgstr "Changer le responsable d’un groupe conserve les exceptions par fonction. Modifiez ou supprimez ces exceptions séparément."
+
+msgid "Responsibility saved."
+msgstr "Affectation enregistrée."
+
+msgid "Group presentation saved."
+msgstr "Présentation du groupe enregistrée."
+
+msgid "Platform settings"
+msgstr "Réglages de la plateforme"
+
+msgid "Sankey settings"
+msgstr "Réglages du Sankey"

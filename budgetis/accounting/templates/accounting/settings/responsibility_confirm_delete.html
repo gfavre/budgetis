@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}
+  {% trans "Delete assignment" %}
+{% endblock title %}
+{% block content %}
+  <h1>{% trans "Delete assignment" %}</h1>
+  <p>{{ object.year }} — {{ object.group }} — {{ object.function|default:_("Whole group") }} — {{ object.responsible|default:_("Unassigned") }}</p>
+  {% if object.function %}
+    <p>{% trans "Deleting this function exception restores the group responsible for that function." %}</p>
+  {% else %}
+    <p>{% trans "Deleting the group assignment leaves its functions unassigned, except those with their own responsible." %}</p>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+    <a class="btn btn-link"
+       href="{% url 'accounting:responsibility-settings' %}">{% trans "Cancel" %}</a>
+  </form>
+{% endblock content %}

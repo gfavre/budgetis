@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block title %}
+  {% trans "Functional group splits" %}
+{% endblock title %}
+{% block content %}
+  <h1><i class="bi bi-diagram-3 me-2"></i>{% trans "Functional group splits" %}</h1>
+  <p class="text-muted">{% trans "Choose which level 4 MCH2 groups have a separate table for each five-digit function, and name those functions. Settings apply to all years." %}</p>
+  <form method="get" class="d-flex gap-2 mb-4">
+    <label for="split-search" class="visually-hidden">{% trans "Search" %}</label>
+    <input id="split-search"
+           name="q"
+           value="{{ request.GET.q }}"
+           class="form-control"
+           placeholder="{% trans 'Code or label' %}" />
+    <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
+  </form>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>{% trans "Code" %}</th>
+          <th>{% trans "Label" %}</th>
+          <th>{% trans "Presentation" %}</th>
+          <th><span class="visually-hidden">{% trans "Actions" %}</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for group in groups %}
+          <tr>
+            <td>{{ group.code }}</td>
+            <td>{{ group.label }}</td>
+            <td>
+              {% if group.function_split.enabled %}
+                <span class="badge bg-primary">{% trans "Split by function" %}</span>
+              {% else %}
+                {% trans "Single table" %}
+              {% endif %}
+            </td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-primary"
+                 href="{% url 'accounting:function-split-edit' group.pk %}">
+                <i class="bi bi-sliders me-1"></i>{% trans "Configure" %}
+              </a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4" class="text-muted">{% trans "No groups found." %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "accounting/settings/pagination.html" %}
+{% endblock content %}

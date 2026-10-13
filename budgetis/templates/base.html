@@ -229,20 +229,56 @@
                   </form>
                 </li>
                 {% if request.user.is_authenticated %}
-                  {% if user.is_staff %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'admin:index' %}">
+                  {% if can_manage_platform %}
+                    <li class="nav-item dropdown no-print">
+                      <a class="nav-link dropdown-toggle"
+                         id="platform-settings-menu"
+                         href="#"
+                         role="button"
+                         data-bs-toggle="dropdown"
+                         aria-expanded="false">
                         <i class="bi bi-gear me-1"></i>
-                      {% translate "Admin" %}</a>
-                    </li>
-                  {% endif %}
-                  {% if perms.users.add_user or perms.auth.change_group %}
-                    <li class="nav-item">
-                      <a class="nav-link {% navactive 'users:management' %}"
-                         href="{% url 'users:management' %}">
-                        <i class="bi bi-people me-1"></i>
-                        {% translate "Users" %}
+                        {% trans "Platform settings" %}
                       </a>
+                      <ul class="dropdown-menu dropdown-menu-end"
+                          aria-labelledby="platform-settings-menu">
+                        <li>
+                          <a class="dropdown-item"
+                             href="{% url 'accounting:responsibility-settings' %}">
+                            <i class="bi bi-person-check me-1"></i>{% trans "Account responsibles" %}
+                          </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item"
+                             href="{% url 'accounting:function-split-settings' %}">
+                            <i class="bi bi-diagram-3 me-1"></i>{% trans "Functional group splits" %}
+                          </a>
+                        </li>
+                        {% if perms.users.add_user or perms.users.change_user or perms.auth.change_group %}
+                          <li>
+                            <a class="dropdown-item" href="{% url 'users:management' %}">
+                              <i class="bi bi-people me-1"></i>{% trans "Users" %}
+                            </a>
+                          </li>
+                        {% endif %}
+                        {% if perms.finance.view_sankeycategory %}
+                          <li>
+                            <a class="dropdown-item" href="{% url 'finance:sankey-rules' %}">
+                              <i class="bi bi-sliders me-1"></i>{% trans "Sankey settings" %}
+                            </a>
+                          </li>
+                        {% endif %}
+                        {% if user.is_staff %}
+                          <li>
+                            <hr class="dropdown-divider" />
+                          </li>
+                          <li>
+                            <a class="dropdown-item" href="{% url 'admin:index' %}">
+                              <i class="bi bi-tools me-1"></i>{% trans "Admin" %}
+                            </a>
+                          </li>
+                        {% endif %}
+                      </ul>
                     </li>
                   {% endif %}
                   <li class="nav-item">

@@ -19,11 +19,27 @@ from .views.explore import BudgetPartialView
 from .views.explore import BudgetStagedResultPartialView
 from .views.explore import BudgetStagedResultView
 from .views.history import account_history_modal
+from .views.settings import FunctionSplitSettingsView
+from .views.settings import FunctionSplitUpdateView
+from .views.settings import ResponsibilityCreateView
+from .views.settings import ResponsibilityDeleteView
+from .views.settings import ResponsibilitySettingsView
+from .views.settings import ResponsibilityUpdateView
 
 
 app_name = "accounting"
 
 urlpatterns = [
+    path("settings/responsibilities/", ResponsibilitySettingsView.as_view(), name="responsibility-settings"),
+    path("settings/responsibilities/add/", ResponsibilityCreateView.as_view(), name="responsibility-add"),
+    path("settings/responsibilities/<int:pk>/edit/", ResponsibilityUpdateView.as_view(), name="responsibility-edit"),
+    path(
+        "settings/responsibilities/<int:pk>/delete/",
+        ResponsibilityDeleteView.as_view(),
+        name="responsibility-delete",
+    ),
+    path("settings/function-splits/", FunctionSplitSettingsView.as_view(), name="function-split-settings"),
+    path("settings/function-splits/<int:group_id>/", FunctionSplitUpdateView.as_view(), name="function-split-edit"),
     path("accounts/", AccountExplorerView.as_view(), name="account-explorer"),
     path("accounts/partial/", AccountPartialView.as_view(), name="account-partial"),
     # Budgets

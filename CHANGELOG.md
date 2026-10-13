@@ -9,13 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Platform settings menu**: a right-aligned menu, restricted to admins
+  and Bourse members, brings together account responsibles, functional
+  group splits, user management and Sankey settings. Responsible assignments
+  can be added, changed or removed by year, for a whole group or a single
+  function, without Django-admin access. Function overrides remain intact
+  when the group responsible changes. Group splits and local labels can now
+  be configured in the app, with existing functions suggested automatically.
+
 - **Optional functional group splits (models and reports)**: MCH2 level-4
   groups can be split into separate Budget and Actuals tables by their
   five-digit function, with configurable local labels, comments and
   per-function responsibles. A parent summary retains all comparison totals.
   Unlabelled functions remain visible; disabled splits keep the existing
   presentation. Configuration is independent of years and official reference
-  imports. The settings interface will follow separately.
+  imports.
 
 - **Interactive MCH2 extension cleanup**: `normalize_mch2_extensions` changes
   empty extensions to `00`, retaining the duplicate with nonzero charges or
@@ -23,6 +31,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to the retained account. Supports `--dry-run` and `--year`, preserves other
   extensions, and rolls back the entire cleanup if cancelled or interrupted.
   Docker usage is documented in `docs/mch2-migration.md`.
+
+### Fixed
+
+- **French Sankey configuration headings**: validated translations for
+  Revenue, Intercommunality and Dotation so these headings no longer fall
+  back to English; Dotation is no longer mistranslated as amortizations.
+
+- **Navigation menus behind page content**: the navbar now stacks above
+  page cards, so the platform settings dropdown remains fully visible.
 
 ## [1.8.0] - 2026-10-13
 
