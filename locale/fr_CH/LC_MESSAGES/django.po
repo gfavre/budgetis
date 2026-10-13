@@ -1742,3 +1742,24 @@ msgstr "%(user)s fait maintenant partie de la Bourse."
 #, python-format
 #~ msgid "%(count)s import(s) relaunched successfully."
 #~ msgstr "%(count)s importation(s) relancée(s) avec succès."
+
+msgid "Split by function"
+msgstr "Découper par fonction"
+
+msgid "Function split"
+msgstr "Découpage par fonction"
+
+msgid "Function splits"
+msgstr "Découpages par fonction"
+
+msgid "Only level 4 MCH2 groups can be split by function."
+msgstr "Seuls les groupes MCH2 de niveau 4 peuvent être découpés par fonction."
+
+msgid "Function category"
+msgstr "Catégorie de fonction"
+
+msgid "Function categories"
+msgstr "Catégories de fonction"
+
+msgid "Function must be a five-digit code belonging to the split group."
+msgstr "La fonction doit être un code à cinq chiffres appartenant au groupe découpé."

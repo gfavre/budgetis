@@ -1688,3 +1688,24 @@ msgstr ""
 #, python-format
 msgid "%(user)s is now part of the Bourse."
 msgstr ""
+
+msgid "Split by function"
+msgstr ""
+
+msgid "Function split"
+msgstr ""
+
+msgid "Function splits"
+msgstr ""
+
+msgid "Only level 4 MCH2 groups can be split by function."
+msgstr ""
+
+msgid "Function category"
+msgstr ""
+
+msgid "Function categories"
+msgstr ""
+
+msgid "Function must be a five-digit code belonging to the split group."
+msgstr ""

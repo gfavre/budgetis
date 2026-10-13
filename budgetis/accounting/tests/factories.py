@@ -7,6 +7,8 @@ from budgetis.accounting.models import Account
 from budgetis.accounting.models import AccountCodeMapping
 from budgetis.accounting.models import AccountComment
 from budgetis.accounting.models import AccountGroup
+from budgetis.accounting.models import FunctionCategory
+from budgetis.accounting.models import FunctionSplit
 from budgetis.accounting.models import GroupResponsibility
 from budgetis.accounting.models import NatureGroup
 from budgetis.common.models import ChartScheme
@@ -32,6 +34,23 @@ class AccountGroupFactory(DjangoModelFactory):
 
     class Meta:
         model = AccountGroup
+
+
+class FunctionSplitFactory(DjangoModelFactory):
+    group = factory.SubFactory(AccountGroupFactory, scheme=ChartScheme.MCH2, level=4, code="9630")
+    enabled = True
+
+    class Meta:
+        model = FunctionSplit
+
+
+class FunctionCategoryFactory(DjangoModelFactory):
+    split = factory.SubFactory(FunctionSplitFactory)
+    function = "96301"
+    label = "Maison gothique"
+
+    class Meta:
+        model = FunctionCategory
 
 
 class NatureGroupFactory(DjangoModelFactory):

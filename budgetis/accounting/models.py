@@ -17,6 +17,7 @@ DEPRECIATION_LT = 700
 # commune-specific digit; the group a MCH2 account belongs to is looked up by
 # that 4-digit prefix rather than by an exact code match (see Account.save()).
 MCH2_GROUP_CODE_LENGTH = 4
+MCH2_FUNCTION_CODE_LENGTH = MCH2_GROUP_CODE_LENGTH + 1
 
 
 class AccountGroupManager(models.Manager["AccountGroup"]):
@@ -66,6 +67,59 @@ class AccountGroup(TimeStampedModel):
 
     def natural_key(self) -> tuple[str, int, str]:
         return (self.scheme, self.level, self.code)
+
+
+class FunctionSplit(TimeStampedModel):
+    """Commune-specific reporting configuration, independent of official groups and years."""
+
+    group = models.OneToOneField(AccountGroup, on_delete=models.CASCADE, related_name="function_split")
+    enabled = models.BooleanField(_("Split by function"), default=True)
+
+    class Meta:
+        ordering = ("group__code",)
+        verbose_name = _("Function split")
+        verbose_name_plural = _("Function splits")
+
+    def __str__(self) -> str:
+        return str(self.group)
+
+    def clean(self):
+        super().clean()
+        if self.group_id and (
+            self.group.scheme != ChartScheme.MCH2
+            or self.group.level != MCH2_GROUP_CODE_LENGTH
+            or len(self.group.code) != MCH2_GROUP_CODE_LENGTH
+        ):
+            message = _("Only level 4 MCH2 groups can be split by function.")
+            raise ValidationError({"group": message})
+
+
+class FunctionCategory(TimeStampedModel):
+    """Named local function within an optional N4 reporting split."""
+
+    split = models.ForeignKey(FunctionSplit, on_delete=models.CASCADE, related_name="categories")
+    function = models.CharField(_("Function"), max_length=MCH2_FUNCTION_CODE_LENGTH)
+    label = models.CharField(_("Label"), max_length=255)
+
+    class Meta:
+        ordering = ("function",)
+        verbose_name = _("Function category")
+        verbose_name_plural = _("Function categories")
+        constraints = [models.UniqueConstraint(fields=("split", "function"), name="unique_split_function")]
+
+    def __str__(self) -> str:
+        return f"{self.function} - {self.label}"
+
+    def clean(self):
+        super().clean()
+        if self.split_id and (
+            len(self.function) != MCH2_FUNCTION_CODE_LENGTH
+            or not self.function.isascii()
+            or not self.function.isdigit()
+            or not self.function.startswith(self.split.group.code)
+        ):
+            message = _("Function must be a five-digit code belonging to the split group.")
+            raise ValidationError({"function": message})
 
 
 class NatureGroupManager(models.Manager["NatureGroup"]):

@@ -1,8 +1,12 @@
 {% load money i18n %}
 
 {% if node.children %}
-  {% if node.level == 1 %}
-    <h2 id="group-{{ node.code }}">{{ node.code }} {{ node.label }}</h2>
+  {% if node.level == 1 or node.is_function_split %}
+    {% if node.is_function_split %}
+      <h4 id="group-{{ node.code }}">{{ node.code }} {{ node.label }}</h4>
+    {% else %}
+      <h2 id="group-{{ node.code }}">{{ node.code }} {{ node.label }}</h2>
+    {% endif %}
     <table class="table table-bordered align-middle mb-5 mt-5">
       <colgroup span="2" class="info">
         <col span="1" class="col-num" />

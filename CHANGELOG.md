@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Optional functional group splits (models and reports)**: MCH2 level-4
+  groups can be split into separate Budget and Actuals tables by their
+  five-digit function, with configurable local labels, comments and
+  per-function responsibles. A parent summary retains all comparison totals.
+  Unlabelled functions remain visible; disabled splits keep the existing
+  presentation. Configuration is independent of years and official reference
+  imports. The settings interface will follow separately.
+
 - **Interactive MCH2 extension cleanup**: `normalize_mch2_extensions` changes
   empty extensions to `00`, retaining the duplicate with nonzero charges or
   revenues. Ambiguous duplicates prompt for a choice; comments are transferred

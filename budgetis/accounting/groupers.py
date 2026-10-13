@@ -1,7 +1,9 @@
 from collections import OrderedDict
 from decimal import Decimal
 
+from budgetis.accounting.models import MCH2_GROUP_CODE_LENGTH
 from budgetis.accounting.models import AccountGroup
+from budgetis.accounting.models import FunctionSplit
 from budgetis.accounting.models import GroupResponsibility
 from budgetis.accounting.models import NatureGroup
 from budgetis.accounting.nature import NATURE_GROUPS
@@ -150,10 +152,42 @@ def build_grouped(rows: list[AccountRow], year: int) -> OrderedDict:
         leaf_node["accounts"].append(row)
         _accumulate(row, group, nodes=nodes, groups_by_id=groups_by_id)
 
+    _split_function_nodes(nodes, groups_by_id)
+
     for root in roots.values():
         _resolve_display_responsible(root)
 
     return _sort_tree(roots)
+
+
+def _split_function_nodes(nodes: dict, groups_by_id: dict) -> None:
+    splits = FunctionSplit.objects.filter(
+        group_id__in=nodes,
+        enabled=True,
+        group__scheme=ChartScheme.MCH2,
+        group__level=MCH2_GROUP_CODE_LENGTH,
+    ).prefetch_related("categories")
+    for split in splits:
+        node = nodes[split.group_id]
+        labels = {category.function: category.label for category in split.categories.all()}
+        for row in node["accounts"]:
+            function = row.account.function
+            child = node["children"].setdefault(
+                function,
+                {
+                    "code": function,
+                    "label": labels.get(function, ""),
+                    "level": groups_by_id[split.group_id].level + 1,
+                    "children": {},
+                    "accounts": [],
+                    **_empty_totals(),
+                },
+            )
+            child["accounts"].append(row)
+            for col in _COLS:
+                child[col] += getattr(row, col)
+        node["accounts"] = []
+        node["is_function_split"] = bool(node["children"])
 
 
 def _sort_tree(roots: dict) -> OrderedDict:
