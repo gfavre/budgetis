@@ -48,9 +48,12 @@ result row's cumulative total carrying forward into the next. The group
 split (`EXPLOITATION_CHARGE_GROUPS`, `EXPLOITATION_REVENUE_GROUPS`,
 `FINANCIAL_CHARGE_GROUP`/`FINANCIAL_REVENUE_GROUP`,
 `EXTRAORDINARY_CHARGE_GROUP`/`EXTRAORDINARY_REVENUE_GROUP`) matches the
-table exactly, including 39/49 "imputations internes" being absent from
-both - they net out between charges and revenues and the table has no line
-for them.
+table exactly when "Include internal allocations" is unchecked. By default,
+the Budget and Actuals views include 39 charges and 49 revenues in the operating
+section and its subtotals. Their balance carries into the cumulative results;
+balanced internal allocations therefore leave the result unchanged. The checkbox
+updates the report through HTMX and its form is hidden when printing.
+Unchecking it restores Tableau 04-1, which has no line for internal allocations.
 
 Each `StagedLine` carries a stable, untranslated `key` (e.g. `"detail-30"`,
 `"operating-result"`) separate from its user-facing, translated `label` -
@@ -81,25 +84,15 @@ d'exploitation" that year, by design.
 correct before this was investigated; this section exists so the next person
 asking the same question doesn't have to re-derive it.
 
-## Cross-scheme (MCH1/MCH2) comparison
+## Comparison columns
 
-Unlike the detailed by-function/by-nature explorers
-(`accounting/scheme_transition.py::comparison_flags()`), which hide a
-comparison year entirely across the MCH1→MCH2 switch because those explorers
-join years by `(function, nature, sub_account)` - a key that never lines up
-across schemes since the codes themselves are shaped differently - the staged
-result only aggregates by **two-digit nature group** (30, 34, 38, 40, 44,
-48...), which is identical in both MCH1 and MCH2 (see `mch2-migration.md`'s
-"Account code shapes" table: only the digit *count* changed, e.g. MCH1 `351`
-vs MCH2 `3010`, not the leading two digits' meaning).
+Comparison columns are shown only when their year and report type have MCH2
+account data. MCH1 years and years without data are hidden in both the Budget
+and Actuals views, including HTMX refreshes and printed reports.
 
-Because of this, `staged_comparison_flags()` uses its own, more permissive
-comparability rule than `comparison_flags()`: a comparison column is shown
-whenever that year simply has data, regardless of scheme. `build_staged_result()`
-queries `Account` directly per column instead of going through
-`BudgetLoader`/`ActualsLoader` (which do the function/nature/sub_account
-join) - this was a real bug in an earlier version: reusing those loaders
-silently produced zero for every cross-scheme comparison column instead of
-the real historical totals, since the join key never matched. Regression test:
-`test_comparison_columns_carry_the_real_prior_year_totals` in
-`accounting/tests/test_views.py`.
+Budget: previous-year budget and actuals from two years earlier.
+Actuals: same-year budget and previous-year actuals.
+
+The report queries each year's accounts directly rather than joining individual
+account codes across years. Each visible comparison therefore carries its own
+nature-group totals.

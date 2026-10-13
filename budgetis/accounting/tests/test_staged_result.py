@@ -72,14 +72,28 @@ class TestBuildStagedResult:
         assert _by_key(lines, "operating-result").col1_result == Decimal("800.00")
 
     def test_internal_allocations_are_excluded(self):
-        # 39/49 "imputations internes" aren't part of Tableau 04-1 - they must
-        # not leak into the operating subtotals.
+        # The checkbox can restore the standard presentation without 39/49.
         AccountFactory(year=2027, is_budget=True, nature="3010", charges=Decimal("100.00"), revenues=Decimal("0.00"))
         AccountFactory(year=2027, is_budget=True, nature="3900", charges=Decimal("999.00"), revenues=Decimal("0.00"))
 
-        lines = build_staged_result([(2027, True)])
+        lines = build_staged_result([(2027, True)], include_internal_allocations=False)
 
         assert _by_key(lines, "operating-charges-subtotal").col1_charges == Decimal("100.00")
+        assert not any(line.key in {"detail-39", "detail-49"} for line in lines)
+
+    def test_internal_allocations_are_included_by_default_in_each_column(self):
+        columns = [(2027, True), (2026, True), (2025, False)]
+        for year, is_budget in columns:
+            AccountFactory(year=year, is_budget=is_budget, nature="3900", charges=Decimal("120"))
+            AccountFactory(year=year, is_budget=is_budget, nature="4900", charges=Decimal(0), revenues=Decimal("100"))
+
+        lines = build_staged_result(columns)
+
+        for column in range(1, 4):
+            assert getattr(_by_key(lines, "detail-39"), f"col{column}_charges") == Decimal("120")
+            assert getattr(_by_key(lines, "detail-49"), f"col{column}_revenues") == Decimal("100")
+            assert getattr(_by_key(lines, "operating-result"), f"col{column}_result") == Decimal("-20")
+            assert getattr(_by_key(lines, "total-result"), f"col{column}_result") == Decimal("-20")
 
     def test_splits_accounts_into_the_three_sections(self):
         AccountFactory(year=2027, is_budget=True, nature="3010", charges=Decimal("100.00"), revenues=Decimal("0.00"))
@@ -158,12 +172,15 @@ class TestBuildStagedResult:
 
 
 class TestStagedComparisonFlags:
-    def test_budget_view_shows_a_comparison_year_that_simply_has_data(self):
-        AccountFactory(year=2026, is_budget=True, scheme=ChartScheme.MCH1)
+    @pytest.mark.parametrize("scheme", [ChartScheme.MCH1, ChartScheme.MCH2])
+    def test_budget_comparisons_require_mch2(self, scheme):
+        AccountFactory(year=2026, is_budget=True, scheme=scheme)
+        AccountFactory(year=2025, is_budget=False, scheme=scheme)
 
         flags = staged_comparison_flags(2027, is_budget=True)
 
-        assert flags["show_col2"] is True
+        assert flags["show_col2"] == (scheme == ChartScheme.MCH2)
+        assert flags["show_col3"] == (scheme == ChartScheme.MCH2)
 
     def test_budget_view_hides_a_comparison_year_with_no_data_at_all(self):
         flags = staged_comparison_flags(2027, is_budget=True)
@@ -171,9 +188,12 @@ class TestStagedComparisonFlags:
         assert flags["show_col2"] is False
         assert flags["show_col3"] is False
 
-    def test_actuals_view_col2_is_the_budget_of_the_same_year(self):
-        AccountFactory(year=2025, is_budget=True, scheme=ChartScheme.MCH1)
+    @pytest.mark.parametrize("scheme", [ChartScheme.MCH1, ChartScheme.MCH2])
+    def test_actuals_comparisons_require_mch2(self, scheme):
+        AccountFactory(year=2025, is_budget=True, scheme=scheme)
+        AccountFactory(year=2024, is_budget=False, scheme=scheme)
 
         flags = staged_comparison_flags(2025, is_budget=False)
 
-        assert flags["show_col2"] is True
+        assert flags["show_col2"] == (scheme == ChartScheme.MCH2)
+        assert flags["show_col3"] == (scheme == ChartScheme.MCH2)

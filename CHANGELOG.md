@@ -5,6 +5,25 @@ All notable changes to Budgetis are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-10-13
+
+### Added
+
+- **Internal allocations in the staged result**: Budget and Actuals now
+  offer an "Include internal allocations" checkbox, enabled by default.
+  Groups 39 and 49 are included in operating subtotals and cumulative
+  results when checked. Unchecking restores the standard presentation.
+  The filter form is hidden when printing.
+- **Direct access to the staged result**: links are available on the home
+  page and in Budget and Actuals explorers, both by function and by nature.
+  Explorer links retain the displayed year and are hidden when printing.
+
+### Changed
+
+- **MCH2-only comparisons in the staged result**: comparison columns are
+  shown only when their data uses MCH2. Previous MCH1 years and years
+  without data are hidden, including after filter changes and when printed.
+
 ## [1.7.9] - 2026-10-08
 
 ### Changed

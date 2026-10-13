@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 16:07+0200\n"
+"POT-Creation-Date: 2026-10-13 17:00+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -48,12 +48,12 @@ msgstr "Code ou libellé"
 msgid "Accounting"
 msgstr "Comptabilité"
 
-#: budgetis/accounting/forms.py:37
+#: budgetis/accounting/forms.py:38
 msgid "- Select year -"
 msgstr "- Sélectionnez l'année -"
 
-#: budgetis/accounting/forms.py:49 budgetis/accounting/forms.py:64
-#: budgetis/accounting/forms.py:135 budgetis/accounting/models.py:220
+#: budgetis/accounting/forms.py:50 budgetis/accounting/forms.py:78
+#: budgetis/accounting/forms.py:149 budgetis/accounting/models.py:220
 #: budgetis/bdi_import/forms.py:16 budgetis/bdi_import/models.py:26
 #: budgetis/bdi_import/templates/bdi_import/account_mapping.html:156
 #: budgetis/finance/models.py:13
@@ -61,34 +61,38 @@ msgstr "- Sélectionnez l'année -"
 msgid "Year"
 msgstr "Année"
 
-#: budgetis/accounting/forms.py:66
+#: budgetis/accounting/forms.py:59
+msgid "Include internal allocations"
+msgstr "Inclure les imputations internes"
+
+#: budgetis/accounting/forms.py:80
 msgid "Show only my accounts"
 msgstr "Afficher uniquement mes comptes"
 
-#: budgetis/accounting/forms.py:94
+#: budgetis/accounting/forms.py:108
 msgid "Show sub-accounts (detail down to 3-digit nature codes)"
 msgstr "Afficher le détail (natures à 3 chiffres)"
 
-#: budgetis/accounting/forms.py:100 budgetis/accounting/models.py:148
+#: budgetis/accounting/forms.py:114 budgetis/accounting/models.py:148
 #: budgetis/accounting/templates/accounting/partials/account_group_block.html:12
 #: budgetis/accounting/templates/accounting/partials/budget_group_block.html:12
 #: budgetis/bdi_import/views.py:139
 msgid "Responsible"
 msgstr "Responsable"
 
-#: budgetis/accounting/forms.py:122
+#: budgetis/accounting/forms.py:136
 msgid "Scope"
 msgstr "Portée"
 
-#: budgetis/accounting/forms.py:124
+#: budgetis/accounting/forms.py:138
 msgid "The whole group (every function under it)"
 msgstr "Tout le groupe (toutes les fonctions qu'il contient)"
 
-#: budgetis/accounting/forms.py:125
+#: budgetis/accounting/forms.py:139
 msgid "Only the selected accounts' own function(s)"
 msgstr "Uniquement la ou les fonctions des comptes sélectionnés"
 
-#: budgetis/accounting/forms.py:148
+#: budgetis/accounting/forms.py:162
 #, fuzzy
 #| msgid "Amounts"
 msgid "Amount"
@@ -344,6 +348,8 @@ msgid "Allocations to special funds and financing"
 msgstr "Attributions aux fonds et aux financements spéciaux"
 
 #: budgetis/accounting/nature.py:16 budgetis/accounting/nature.py:25
+#: budgetis/accounting/staged_result.py:40
+#: budgetis/accounting/staged_result.py:41
 msgid "Internal allocations"
 msgstr "Imputations internes"
 
@@ -460,23 +466,23 @@ msgstr "Charges extraordinaires"
 msgid "Extraordinary revenues"
 msgstr "Revenus extraordinaires"
 
-#: budgetis/accounting/staged_result.py:207
+#: budgetis/accounting/staged_result.py:215
 msgid "Total operating charges"
 msgstr "Total des charges d'exploitation"
 
-#: budgetis/accounting/staged_result.py:212
+#: budgetis/accounting/staged_result.py:220
 msgid "Total operating revenues"
 msgstr "Total des revenus d'exploitation"
 
-#: budgetis/accounting/staged_result.py:215
+#: budgetis/accounting/staged_result.py:223
 msgid "Operating result"
 msgstr "Résultat d'exploitation"
 
-#: budgetis/accounting/staged_result.py:224
+#: budgetis/accounting/staged_result.py:232
 msgid "Result before extraordinary items"
 msgstr "Résultat opérationnel"
 
-#: budgetis/accounting/staged_result.py:233
+#: budgetis/accounting/staged_result.py:241
 msgid "Total result for the year"
 msgstr "Résultat total du compte de résultats"
 
@@ -488,7 +494,7 @@ msgstr "Résultat total du compte de résultats"
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:117
 #: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html:122
 #: budgetis/accounting/templates/accounting/partials/account_history_modal.html:148
-#: budgetis/accounting/views/explore.py:122
+#: budgetis/accounting/views/explore.py:126
 #: budgetis/core/templates/core/home.html:143 budgetis/templates/base.html:113
 msgid "Actuals"
 msgstr "Comptes"
@@ -557,7 +563,7 @@ msgid "Staged result"
 msgstr "Présentation échelonnée"
 
 #: budgetis/accounting/templates/accounting/account_staged_result.html:10
-#: budgetis/accounting/views/explore.py:329
+#: budgetis/accounting/views/explore.py:349
 msgid "Actuals - staged result"
 msgstr "Comptes - présentation échelonnée"
 
@@ -586,7 +592,7 @@ msgstr "Annuler"
 
 #: budgetis/accounting/templates/accounting/budget_by_nature.html:6
 #: budgetis/accounting/templates/accounting/budget_explorer.html:6
-#: budgetis/accounting/views/explore.py:129
+#: budgetis/accounting/views/explore.py:133
 msgid "Budgets"
 msgstr "Budgets"
 
@@ -609,7 +615,7 @@ msgid "Budget %(year)s"
 msgstr "Budget %(year)s"
 
 #: budgetis/accounting/templates/accounting/budget_staged_result.html:10
-#: budgetis/accounting/views/explore.py:292
+#: budgetis/accounting/views/explore.py:310
 msgid "Budget - staged result"
 msgstr "Budget - présentation échelonnée"
 
@@ -795,11 +801,11 @@ msgstr "Comptes par fonction administrative"
 msgid "Accounts by functional classification"
 msgstr "Comptes par classification fonctionnelle"
 
-#: budgetis/accounting/views/explore.py:201
+#: budgetis/accounting/views/explore.py:205
 msgid "Budget by nature"
 msgstr "Budgets par nature"
 
-#: budgetis/accounting/views/explore.py:247
+#: budgetis/accounting/views/explore.py:251
 msgid "Actuals by nature"
 msgstr "Comptes par nature"
 

@@ -16,20 +16,18 @@ from typing import Any
 from django.utils.translation import gettext_lazy as _
 
 from budgetis.accounting.models import Account
+from budgetis.common.models import ChartScheme
 
 
-# Tableau 04-1's own grouping, reproduced exactly - two-digit nature groups,
-# stable across the MCH1/MCH2 scheme change (only the digit *count* changed,
-# see docs/staged-result.md), so this split works unchanged whichever scheme
-# a given column's year was recorded under. 39/49 "imputations internes" are
-# deliberately absent from the table (and so from here): they net out between
-# charges and revenues and aren't part of the staged presentation.
+# Tableau 04-1 groups, optionally extended with internal allocations.
 EXPLOITATION_CHARGE_GROUPS = (30, 31, 33, 35, 36, 37)
 EXPLOITATION_REVENUE_GROUPS = (40, 41, 42, 43, 45, 46, 47)
 FINANCIAL_CHARGE_GROUP = 34
 FINANCIAL_REVENUE_GROUP = 44
 EXTRAORDINARY_CHARGE_GROUP = 38
 EXTRAORDINARY_REVENUE_GROUP = 48
+INTERNAL_CHARGE_GROUP = 39
+INTERNAL_REVENUE_GROUP = 49
 
 # First digit of a two-digit nature group: 3x = charges, 4x = revenues.
 CHARGE_CLASS = 3
@@ -39,6 +37,8 @@ REVENUE_CLASS = 4
 # reusing accounting.nature.NATURE_GROUPS, which is a looser MCH1-era
 # approximation (it's missing 37/47 entirely and labels 44 differently).
 GROUP_LABELS: dict[int, Any] = {
+    INTERNAL_CHARGE_GROUP: _("Internal allocations"),
+    INTERNAL_REVENUE_GROUP: _("Internal allocations"),
     30: _("Personnel charges"),
     31: _("Goods, services and other operating charges"),
     33: _("Depreciation of administrative assets"),
@@ -140,27 +140,21 @@ def _group_amount(totals: dict, code: int, side: str) -> Decimal:
 
 
 def staged_comparison_flags(year: int, *, is_budget: bool) -> dict[str, bool]:
-    """
-    Unlike the detailed explorers (see accounting.scheme_transition.comparison_flags),
-    which hide a comparison year entirely across an MCH1/MCH2 scheme change
-    because per-account codes don't line up, the staged result only
-    aggregates by two-digit nature group - a classification that stayed
-    stable across that transition - so a comparison column is shown
-    whenever that year simply has data, regardless of which scheme it was
-    recorded under.
-    """
+    """Show comparison columns only when their data uses MCH2."""
     if is_budget:
         col2_year, col2_is_budget = year - 1, True
         col3_year, col3_is_budget = year - 2, False
     else:
         col2_year, col2_is_budget = year, True
         col3_year, col3_is_budget = year - 1, False
-    show_col2 = Account.objects.filter(year=col2_year, is_budget=col2_is_budget).exists()
-    show_col3 = Account.objects.filter(year=col3_year, is_budget=col3_is_budget).exists()
+    show_col2 = Account.objects.filter(year=col2_year, is_budget=col2_is_budget, scheme=ChartScheme.MCH2).exists()
+    show_col3 = Account.objects.filter(year=col3_year, is_budget=col3_is_budget, scheme=ChartScheme.MCH2).exists()
     return {"show_col2": show_col2, "show_col3": show_col3}
 
 
-def build_staged_result(columns: list[tuple[int, bool]]) -> list[StagedLine]:
+def build_staged_result(
+    columns: list[tuple[int, bool]], *, include_internal_allocations: bool = True
+) -> list[StagedLine]:
     """
     Builds the full "présentation échelonnée" line by line, straight off
     Tableau 04-1 (see this module's docstring): a detail row per nature
@@ -168,10 +162,19 @@ def build_staged_result(columns: list[tuple[int, bool]]) -> list[StagedLine]:
     result row after each of the three sections (exploitation, financier,
     extraordinaire), each result row's total carrying forward into the next.
 
+    By default, internal allocation groups 39/49 extend the operating
+    section. Disable them to restore the standard Tableau 04-1 grouping.
+
     `columns` holds up to 3 (year, is_budget) pairs, one per comparison
     column (col1/col2/col3) - a column simply totals to zero if its year
     has no data, matching the behaviour of the rest of the explorer.
     """
+    charge_groups = EXPLOITATION_CHARGE_GROUPS
+    revenue_groups = EXPLOITATION_REVENUE_GROUPS
+    if include_internal_allocations:
+        charge_groups += (INTERNAL_CHARGE_GROUP,)
+        revenue_groups += (INTERNAL_REVENUE_GROUP,)
+
     per_col_totals = [_nature_group_totals(year, is_budget=is_budget) for year, is_budget in columns]
     n = len(columns)
 
@@ -201,15 +204,15 @@ def build_staged_result(columns: list[tuple[int, bool]]) -> list[StagedLine]:
             kwargs[f"col{i}_result"] = running_result[i - 1]
         lines.append(StagedLine(**kwargs))
 
-    for code in EXPLOITATION_CHARGE_GROUPS:
+    for code in charge_groups:
         detail_row(code, "charges")
     charges_subtotal = subtotal_row(
-        "operating-charges-subtotal", _("Total operating charges"), EXPLOITATION_CHARGE_GROUPS, "charges"
+        "operating-charges-subtotal", _("Total operating charges"), charge_groups, "charges"
     )
-    for code in EXPLOITATION_REVENUE_GROUPS:
+    for code in revenue_groups:
         detail_row(code, "revenues")
     revenues_subtotal = subtotal_row(
-        "operating-revenues-subtotal", _("Total operating revenues"), EXPLOITATION_REVENUE_GROUPS, "revenues"
+        "operating-revenues-subtotal", _("Total operating revenues"), revenue_groups, "revenues"
     )
     exploitation_deltas = [rev - chg for rev, chg in zip(revenues_subtotal, charges_subtotal, strict=True)]
     result_row("operating-result", _("Operating result"), exploitation_deltas)

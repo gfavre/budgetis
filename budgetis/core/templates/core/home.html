@@ -159,6 +159,14 @@
             <div class="link-desc">{% trans "Aggregated charges & revenues" %}</div>
           </div>
         </a>
+        <a href="{% url 'accounting:account-staged-result' %}"
+           class="panel-link">
+          <i class="bi bi-bar-chart-steps link-icon" aria-hidden="true"></i>
+          <div class="link-text">
+            <div class="link-title">{% trans "Staged result" %}</div>
+            <div class="link-desc">{% trans "Actuals N · Budget N · Actuals N-1" %}</div>
+          </div>
+        </a>
       </div>
     </div>
     <!-- Budget -->
@@ -184,6 +192,13 @@
           <div class="link-text">
             <div class="link-title">{% trans "By nature" %}</div>
             <div class="link-desc">{% trans "Aggregated charges & revenues" %}</div>
+          </div>
+        </a>
+        <a href="{% url 'accounting:budget-staged-result' %}" class="panel-link">
+          <i class="bi bi-bar-chart-steps link-icon" aria-hidden="true"></i>
+          <div class="link-text">
+            <div class="link-title">{% trans "Staged result" %}</div>
+            <div class="link-desc">{% trans "Budget N · Budget N-1 · Actuals N-2" %}</div>
           </div>
         </a>
       </div>

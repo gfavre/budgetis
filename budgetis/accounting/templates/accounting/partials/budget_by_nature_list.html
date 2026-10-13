@@ -1,6 +1,7 @@
 {% load money i18n %}
 
 <div id="budget-list">
+  {% include "accounting/partials/staged_result_link.html" with staged_result_view="accounting:budget-staged-result" year=year only %}
   {% if last_import_text %}
     <p class="text-muted small mb-3 no-print">
       <i class="bi bi-clock-history"></i>

@@ -1,5 +1,6 @@
 from typing import Any
 
+from crispy_forms.helper import FormHelper
 from django import forms
 from django.contrib.admin import widgets as admin_widgets
 from django.contrib.auth import get_user_model
@@ -51,6 +52,19 @@ class YearFilterForm(forms.Form):
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["year"].choices = _year_choices()
+
+
+class StagedResultFilterForm(YearFilterForm):
+    include_internal_allocations = forms.BooleanField(
+        label=_("Include internal allocations"),
+        required=False,
+        initial=True,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = False
 
 
 class AccountFilterForm(forms.Form):

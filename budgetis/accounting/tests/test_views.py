@@ -221,6 +221,40 @@ class TestAccountByNatureView:
 
 
 class TestBudgetStagedResultView:
+    @pytest.mark.parametrize("scheme", [ChartScheme.MCH1, ChartScheme.MCH2])
+    def test_previous_year_header_requires_mch2(self, client, site_configuration_with_logo, scheme):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2027, scheme=ChartScheme.MCH2)
+        AccountFactory(year=2027, is_budget=True, scheme=ChartScheme.MCH2)
+        AccountFactory(year=2025, is_budget=False, scheme=scheme)
+
+        response = client.get(reverse("accounting:budget-staged-result"), {"year": 2027})
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["show_col3"] == (scheme == ChartScheme.MCH2)
+        html = response.content.decode()
+        assert ("Comptes 2025" in html) == (scheme == ChartScheme.MCH2)
+
+    @pytest.mark.parametrize(
+        ("query", "included"),
+        [({}, True), ({"year": 2027}, True), ({"year": 2027, "include_internal_allocations": "false"}, False)],
+    )
+    def test_internal_allocations_filter(self, client, site_configuration_with_logo, query, included):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2027)
+        AccountFactory(year=2027, is_budget=True, nature="3900", charges=Decimal("120"))
+
+        response = client.get(reverse("accounting:budget-staged-result"), query)
+
+        assert response.status_code == HTTPStatus.OK
+        form = response.context["form"]
+        assert form["include_internal_allocations"].value() == included
+        keys = {line.key for line in response.context["tiers"]}
+        assert ("detail-39" in keys) == included
+        html = response.content.decode()
+        assert 'class="no-print"' in html
+        assert html.index('class="no-print"') < html.index('name="include_internal_allocations"')
+
     def test_login_required(self, client):
         response = client.get(reverse("accounting:budget-staged-result"))
         assert response.status_code == HTTPStatus.FOUND
@@ -232,13 +266,7 @@ class TestBudgetStagedResultView:
         response = BudgetStagedResultView.as_view()(request)
         assert response.status_code == HTTPStatus.OK
 
-    def test_shows_comparison_columns_across_the_scheme_switch(self, rf):
-        """
-        Unlike the detailed explorers, the staged result aggregates by
-        two-digit nature group only - a classification stable across the
-        MCH1/MCH2 transition - so it keeps comparing across the switch where
-        the detailed explorers deliberately stop (see comparison_flags).
-        """
+    def test_hides_mch1_comparison_columns(self, rf):
         AccountFactory(year=2027, is_budget=True, scheme=ChartScheme.MCH2, nature="3010")
         AccountFactory(year=2026, is_budget=True, scheme=ChartScheme.MCH1, nature="30")
         AccountFactory(year=2025, is_budget=False, scheme=ChartScheme.MCH1, nature="30")
@@ -247,27 +275,22 @@ class TestBudgetStagedResultView:
 
         response = BudgetStagedResultView.as_view()(request)
 
-        assert response.context_data["show_col2"] is True
-        assert response.context_data["show_col3"] is True
+        assert response.context_data["show_col2"] is False
+        assert response.context_data["show_col3"] is False
 
     def test_comparison_columns_carry_the_real_prior_year_totals(self, rf):
-        """
-        Regression guard: an earlier version reused BudgetLoader, which joins
-        years by (function, nature, sub_account) - a key that never matches
-        across an MCH1/MCH2 scheme change, silently turning every comparison
-        column into zeroes instead of the real historical totals.
-        """
         AccountFactory(
             year=2027, is_budget=True, scheme=ChartScheme.MCH2, function="30000", nature="3010", charges=Decimal(100)
         )
         AccountFactory(
-            year=2026, is_budget=True, scheme=ChartScheme.MCH1, function="300", nature="30", charges=Decimal(500)
+            year=2026, is_budget=True, scheme=ChartScheme.MCH2, function="30000", nature="3010", charges=Decimal(500)
         )
         request = rf.get("/", {"year": 2027})
         request.user = UserFactory()
 
         response = BudgetStagedResultView.as_view()(request)
 
+        assert response.context_data["show_col2"] is True
         assert response.context_data["tiers"][0].col2_charges == Decimal(500)
 
     def test_only_responsible_checkbox_not_shown(self, client, site_configuration_with_logo):
@@ -281,6 +304,40 @@ class TestBudgetStagedResultView:
 
 
 class TestAccountStagedResultView:
+    @pytest.mark.parametrize("scheme", [ChartScheme.MCH1, ChartScheme.MCH2])
+    def test_previous_year_header_requires_mch2(self, client, site_configuration_with_logo, scheme):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2027, scheme=ChartScheme.MCH2)
+        AccountFactory(year=2027, is_budget=False, scheme=ChartScheme.MCH2)
+        AccountFactory(year=2026, is_budget=False, scheme=scheme)
+
+        response = client.get(reverse("accounting:account-staged-result"), {"year": 2027})
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["show_col3"] == (scheme == ChartScheme.MCH2)
+        html = response.content.decode()
+        assert ("Comptes 2026" in html) == (scheme == ChartScheme.MCH2)
+
+    @pytest.mark.parametrize(
+        ("query", "included"),
+        [({}, True), ({"year": 2027}, True), ({"year": 2027, "include_internal_allocations": "false"}, False)],
+    )
+    def test_internal_allocations_filter(self, client, site_configuration_with_logo, query, included):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2027)
+        AccountFactory(year=2027, is_budget=False, nature="3900", charges=Decimal("120"))
+
+        response = client.get(reverse("accounting:account-staged-result"), query)
+
+        assert response.status_code == HTTPStatus.OK
+        form = response.context["form"]
+        assert form["include_internal_allocations"].value() == included
+        keys = {line.key for line in response.context["tiers"]}
+        assert ("detail-39" in keys) == included
+        html = response.content.decode()
+        assert 'class="no-print"' in html
+        assert html.index('class="no-print"') < html.index('name="include_internal_allocations"')
+
     def test_login_required(self, client):
         response = client.get(reverse("accounting:account-staged-result"))
         assert response.status_code == HTTPStatus.FOUND
@@ -445,6 +502,39 @@ class TestBudgetByNaturePartialView:
 
 
 class TestBudgetStagedResultPartialView:
+    @pytest.mark.parametrize("scheme", [ChartScheme.MCH1, ChartScheme.MCH2])
+    def test_previous_year_header_requires_mch2(self, client, site_configuration_with_logo, scheme):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2027, scheme=ChartScheme.MCH2)
+        AccountFactory(year=2027, is_budget=True, scheme=ChartScheme.MCH2)
+        AccountFactory(year=2025, is_budget=False, scheme=scheme)
+
+        response = client.post(reverse("accounting:budget-staged-partial"), {"year": 2027})
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["show_col3"] == (scheme == ChartScheme.MCH2)
+        html = response.content.decode()
+        assert ("Comptes 2025" in html) == (scheme == ChartScheme.MCH2)
+
+    @pytest.mark.parametrize("included", [True, False])
+    def test_internal_allocations_toggle(self, client, included):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2027)
+        AccountFactory(year=2027, is_budget=True, nature="3900", charges=Decimal("120"))
+        AccountFactory(year=2027, is_budget=True, nature="4900", charges=Decimal(0), revenues=Decimal("100"))
+        data = {"year": 2027}
+        if included:
+            data["include_internal_allocations"] = "on"
+
+        response = client.post(reverse("accounting:budget-staged-partial"), data)
+
+        assert response.status_code == HTTPStatus.OK
+        lines = response.context["tiers"]
+        assert any(line.key == "detail-39" for line in lines) == included
+        assert any(line.key == "detail-49" for line in lines) == included
+        result = next(line for line in lines if line.key == "total-result")
+        assert result.col1_result == (Decimal("-20") if included else Decimal(0))
+
     def test_login_required(self, client):
         response = client.post(reverse("accounting:budget-staged-partial"), {"year": 2024})
         assert response.status_code == HTTPStatus.FOUND
@@ -460,6 +550,39 @@ class TestBudgetStagedResultPartialView:
 
 
 class TestAccountStagedResultPartialView:
+    @pytest.mark.parametrize("scheme", [ChartScheme.MCH1, ChartScheme.MCH2])
+    def test_previous_year_header_requires_mch2(self, client, site_configuration_with_logo, scheme):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2027, scheme=ChartScheme.MCH2)
+        AccountFactory(year=2027, is_budget=False, scheme=ChartScheme.MCH2)
+        AccountFactory(year=2026, is_budget=False, scheme=scheme)
+
+        response = client.post(reverse("accounting:account-staged-partial"), {"year": 2027})
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["show_col3"] == (scheme == ChartScheme.MCH2)
+        html = response.content.decode()
+        assert ("Comptes 2026" in html) == (scheme == ChartScheme.MCH2)
+
+    @pytest.mark.parametrize("included", [True, False])
+    def test_internal_allocations_toggle(self, client, included):
+        client.force_login(UserFactory())
+        AvailableYearFactory(year=2027)
+        AccountFactory(year=2027, is_budget=False, nature="3900", charges=Decimal("120"))
+        AccountFactory(year=2027, is_budget=False, nature="4900", charges=Decimal(0), revenues=Decimal("100"))
+        data = {"year": 2027}
+        if included:
+            data["include_internal_allocations"] = "on"
+
+        response = client.post(reverse("accounting:account-staged-partial"), data)
+
+        assert response.status_code == HTTPStatus.OK
+        lines = response.context["tiers"]
+        assert any(line.key == "detail-39" for line in lines) == included
+        assert any(line.key == "detail-49" for line in lines) == included
+        result = next(line for line in lines if line.key == "total-result")
+        assert result.col1_result == (Decimal("-20") if included else Decimal(0))
+
     def test_login_required(self, client):
         response = client.post(reverse("accounting:account-staged-partial"), {"year": 2024})
         assert response.status_code == HTTPStatus.FOUND
