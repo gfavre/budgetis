@@ -143,6 +143,24 @@ input[type="checkbox"] {
   align-items: center;
 }
 
+.sankey-rules-navigation {
+  max-height: 35vh;
+  overflow-y: auto;
+}
+
+[id^="sankey-flow-"],
+[id^="sankey-category-"] {
+  scroll-margin-top: 1rem;
+}
+
+@media (min-width: 992px) {
+  .sankey-rules-navigation {
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+  }
+}
+
 .navbar-brand,
 .navbar .nav-link {
   align-items: center;

@@ -1865,3 +1865,45 @@ msgstr "Réglages de la plateforme"
 
 msgid "Sankey settings"
 msgstr "Réglages du Sankey"
+
+msgid "Groups"
+msgstr "Groupes"
+
+msgid "Priority (smallest first)"
+msgstr "Priorité (petit chiffre d’abord)"
+
+msgid "First nature included in the range."
+msgstr "Première nature incluse dans la plage."
+
+msgid "Last nature included. Use the same value as the start to match a single nature."
+msgstr "Dernière nature incluse. Saisissez la même valeur que le début pour cibler une seule nature."
+
+msgid "Used only when nature ranges overlap, even across categories. A smaller number wins (10 before 100). Exact-code, function/nature and label rules always come before nature ranges. Avoid equal priorities for overlapping ranges."
+msgstr "Sert uniquement lorsque des plages de natures se chevauchent, même entre catégories. Le plus petit chiffre gagne (10 avant 100). Les règles de code exact, fonction/nature et libellé passent toujours avant les plages de natures. Évitez les priorités identiques pour des plages qui se chevauchent."
+
+msgid "Matches functions starting with this code: 9630 also matches 96301 and 96302."
+msgstr "Cible les fonctions commençant par ce code : 9630 inclut aussi 96301 et 96302."
+
+msgid "Both ends of the range are included. The function prefix and nature must both match."
+msgstr "Les deux bornes de la plage sont incluses. Le préfixe de fonction et la nature doivent correspondre tous les deux."
+
+msgid "Full function code, not a prefix. This rule is checked before other rule types."
+msgstr "Code complet de la fonction, pas un préfixe. Cette règle est examinée avant les autres types de règles."
+
+msgid "Matches part of the account label, ignoring case. Checked before nature ranges."
+msgstr "Recherche une partie du libellé du compte, sans distinguer majuscules et minuscules. Passe avant les plages de natures."
+
+msgid "Display order within this flow group (smallest first). Does not affect which accounts match the category."
+msgstr "Ordre d’affichage dans ce groupe (petit chiffre d’abord). Ne change pas les comptes attribués à la catégorie."
+
+msgid "How accounts are assigned"
+msgstr "Comment les comptes sont attribués"
+
+msgid "Each account goes to the category of the first matching rule: exact code, then function + nature, then label, then nature range. Matching is checked across all categories in the selected scheme."
+msgstr "Chaque compte va dans la catégorie de la première règle qui correspond : code exact, puis fonction + nature, puis libellé, puis plage de natures. Les règles sont examinées dans toutes les catégories du plan comptable sélectionné."
+
+msgid "Priority only decides between overlapping nature ranges: the smallest number wins. For example, nature 3612 with priority 10 wins over a general 3000-3999 range with priority 100. Without overlap, priority has no effect."
+msgstr "La priorité départage uniquement les plages de natures qui se chevauchent : le plus petit chiffre gagne. Par exemple, la nature 3612 avec priorité 10 passe avant une plage générale 3000–3999 avec priorité 100. Sans chevauchement, la priorité ne change rien."
+
+msgid "Category order controls display, not rule matching. Within a category, separate rules are alternatives: an account does not need to match every rule."
+msgstr "L’ordre d’une catégorie règle son affichage, pas l’attribution des comptes. Dans une catégorie, les règles sont des alternatives : un compte n’a pas besoin de correspondre à toutes les règles."

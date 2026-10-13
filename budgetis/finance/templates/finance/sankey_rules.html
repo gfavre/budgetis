@@ -19,102 +19,130 @@
       </a>
     </div>
   </div>
-  {% for group in flow_groups %}
-    <h2 class="h5 mt-4">{{ group.flow_label }}</h2>
-    {% for category in group.categories %}
-      <div class="card mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          {% include "finance/partials/category_header.html" with category=category oob=False %}
-          <a href="#"
-             hx-get="{% url 'finance:sankey-category-edit' category.pk %}?scheme={{ scheme }}"
-             hx-target="#sankeyRuleModal .modal-content"
-             hx-swap="innerHTML"
-             data-bs-toggle="modal"
-             data-bs-target="#sankeyRuleModal"
-             class="btn btn-sm btn-outline-primary"
-             title="{% trans 'Edit category' %}"><i class="bi bi-pencil"></i></a>
-        </div>
-        <div class="card-body">
-          <h6>{% trans "Nature ranges" %}</h6>
-          <table class="table table-sm align-middle">
-            <thead>
-              <tr>
-                <th>{% trans "From" %}</th>
-                <th>{% trans "To" %}</th>
-                <th>{% trans "Priority" %}</th>
-                <th></th>
-              </tr>
-            </thead>
-            {% include "finance/partials/rule_rows_nature_range.html" with rules=category.nature_range_rules_for_scheme category=category scheme=scheme oob=False %}
-          </table>
-          <h6>{% trans "Function + nature" %}</h6>
-          <table class="table table-sm align-middle">
-            <thead>
-              <tr>
-                <th>{% trans "Function prefix" %}</th>
-                <th>{% trans "From" %}</th>
-                <th>{% trans "To" %}</th>
-                <th></th>
-              </tr>
-            </thead>
-            {% include "finance/partials/rule_rows_function_nature.html" with rules=category.function_nature_rules_for_scheme category=category scheme=scheme oob=False %}
-          </table>
-          <h6>{% trans "Exact codes" %}</h6>
-          <table class="table table-sm align-middle">
-            <thead>
-              <tr>
-                <th>{% trans "Function" %}</th>
-                <th>{% trans "Nature" %}</th>
-                <th>{% trans "Subaccount" %}</th>
-                <th></th>
-              </tr>
-            </thead>
-            {% include "finance/partials/rule_rows_account_code.html" with rules=category.account_code_rules_for_scheme category=category scheme=scheme oob=False %}
-          </table>
-          <h6>{% trans "Labels" %}</h6>
-          <table class="table table-sm align-middle">
-            <thead>
-              <tr>
-                <th>{% trans "Label contains" %}</th>
-                <th></th>
-              </tr>
-            </thead>
-            {% include "finance/partials/rule_rows_label.html" with rules=category.label_rules_for_scheme category=category scheme=scheme oob=False %}
-          </table>
-          <div class="mt-2 d-flex gap-3">
-            <a href="#"
-               hx-get="{% url 'finance:sankey-rule-add' 'nature-range' category.pk %}?scheme={{ scheme }}"
-               hx-target="#sankeyRuleModal .modal-content"
-               hx-swap="innerHTML"
-               data-bs-toggle="modal"
-               data-bs-target="#sankeyRuleModal"
-               class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Nature range" %}</a>
-            <a href="#"
-               hx-get="{% url 'finance:sankey-rule-add' 'function-nature' category.pk %}?scheme={{ scheme }}"
-               hx-target="#sankeyRuleModal .modal-content"
-               hx-swap="innerHTML"
-               data-bs-toggle="modal"
-               data-bs-target="#sankeyRuleModal"
-               class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Function + nature" %}</a>
-            <a href="#"
-               hx-get="{% url 'finance:sankey-rule-add' 'account-code' category.pk %}?scheme={{ scheme }}"
-               hx-target="#sankeyRuleModal .modal-content"
-               hx-swap="innerHTML"
-               data-bs-toggle="modal"
-               data-bs-target="#sankeyRuleModal"
-               class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Exact code" %}</a>
-            <a href="#"
-               hx-get="{% url 'finance:sankey-rule-add' 'label' category.pk %}?scheme={{ scheme }}"
-               hx-target="#sankeyRuleModal .modal-content"
-               hx-swap="innerHTML"
-               data-bs-toggle="modal"
-               data-bs-target="#sankeyRuleModal"
-               class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Label" %}</a>
-          </div>
-        </div>
+  <div class="row g-4">
+    <div class="col-lg-9 order-2 order-lg-1">
+      <div class="border rounded p-3 mb-4">
+        <h2 class="h6">{% trans "How accounts are assigned" %}</h2>
+        <p class="small mb-2">{% trans "Each account goes to the category of the first matching rule: exact code, then function + nature, then label, then nature range. Matching is checked across all categories in the selected scheme." %}</p>
+        <p class="small mb-2">{% trans "Priority only decides between overlapping nature ranges: the smallest number wins. For example, nature 3612 with priority 10 wins over a general 3000-3999 range with priority 100. Without overlap, priority has no effect." %}</p>
+        <p class="small text-muted mb-0">{% trans "Category order controls display, not rule matching. Within a category, separate rules are alternatives: an account does not need to match every rule." %}</p>
       </div>
-    {% endfor %}
-  {% endfor %}
+      {% for group in flow_groups %}
+        <h2 class="h5 mt-4" id="sankey-flow-{{ group.flow }}">{{ group.flow_label }}</h2>
+        {% for category in group.categories %}
+          <div class="card mb-3" id="sankey-category-{{ category.pk }}">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              {% include "finance/partials/category_header.html" with category=category oob=False %}
+              <a href="#"
+                 hx-get="{% url 'finance:sankey-category-edit' category.pk %}?scheme={{ scheme }}"
+                 hx-target="#sankeyRuleModal .modal-content"
+                 hx-swap="innerHTML"
+                 data-bs-toggle="modal"
+                 data-bs-target="#sankeyRuleModal"
+                 class="btn btn-sm btn-outline-primary"
+                 title="{% trans 'Edit category' %}"><i class="bi bi-pencil"></i></a>
+            </div>
+            <div class="card-body">
+              <h6>{% trans "Nature ranges" %}</h6>
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>{% trans "From" %}</th>
+                    <th>{% trans "To" %}</th>
+                    <th>{% trans "Priority (smallest first)" %}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                {% include "finance/partials/rule_rows_nature_range.html" with rules=category.nature_range_rules_for_scheme category=category scheme=scheme oob=False %}
+              </table>
+              <h6>{% trans "Function + nature" %}</h6>
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>{% trans "Function prefix" %}</th>
+                    <th>{% trans "From" %}</th>
+                    <th>{% trans "To" %}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                {% include "finance/partials/rule_rows_function_nature.html" with rules=category.function_nature_rules_for_scheme category=category scheme=scheme oob=False %}
+              </table>
+              <h6>{% trans "Exact codes" %}</h6>
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>{% trans "Function" %}</th>
+                    <th>{% trans "Nature" %}</th>
+                    <th>{% trans "Subaccount" %}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                {% include "finance/partials/rule_rows_account_code.html" with rules=category.account_code_rules_for_scheme category=category scheme=scheme oob=False %}
+              </table>
+              <h6>{% trans "Labels" %}</h6>
+              <table class="table table-sm align-middle">
+                <thead>
+                  <tr>
+                    <th>{% trans "Label contains" %}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                {% include "finance/partials/rule_rows_label.html" with rules=category.label_rules_for_scheme category=category scheme=scheme oob=False %}
+              </table>
+              <div class="mt-2 d-flex gap-3">
+                <a href="#"
+                   hx-get="{% url 'finance:sankey-rule-add' 'nature-range' category.pk %}?scheme={{ scheme }}"
+                   hx-target="#sankeyRuleModal .modal-content"
+                   hx-swap="innerHTML"
+                   data-bs-toggle="modal"
+                   data-bs-target="#sankeyRuleModal"
+                   class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Nature range" %}</a>
+                <a href="#"
+                   hx-get="{% url 'finance:sankey-rule-add' 'function-nature' category.pk %}?scheme={{ scheme }}"
+                   hx-target="#sankeyRuleModal .modal-content"
+                   hx-swap="innerHTML"
+                   data-bs-toggle="modal"
+                   data-bs-target="#sankeyRuleModal"
+                   class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Function + nature" %}</a>
+                <a href="#"
+                   hx-get="{% url 'finance:sankey-rule-add' 'account-code' category.pk %}?scheme={{ scheme }}"
+                   hx-target="#sankeyRuleModal .modal-content"
+                   hx-swap="innerHTML"
+                   data-bs-toggle="modal"
+                   data-bs-target="#sankeyRuleModal"
+                   class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Exact code" %}</a>
+                <a href="#"
+                   hx-get="{% url 'finance:sankey-rule-add' 'label' category.pk %}?scheme={{ scheme }}"
+                   hx-target="#sankeyRuleModal .modal-content"
+                   hx-swap="innerHTML"
+                   data-bs-toggle="modal"
+                   data-bs-target="#sankeyRuleModal"
+                   class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Label" %}</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+    <aside class="col-lg-3 order-1 order-lg-2 no-print">
+      <nav class="sankey-rules-navigation card"
+           aria-label="{% trans 'Groups' %}">
+        <div class="card-header">
+          <i class="bi bi-list-ul me-1"></i>{% trans "Groups" %}
+        </div>
+        <div class="card-body p-3">
+          {% for group in flow_groups %}
+            <a class="d-block fw-bold mb-1" href="#sankey-flow-{{ group.flow }}">{{ group.flow_label }}</a>
+            <ul class="list-unstyled ps-2 mb-3">
+              {% for category in group.categories %}
+                <li class="mb-1">{% include "finance/partials/category_nav_link.html" with category=category oob=False %}</li>
+              {% endfor %}
+            </ul>
+          {% endfor %}
+        </div>
+      </nav>
+    </aside>
+  </div>
   <div class="modal fade"
        id="sankeyRuleModal"
        tabindex="-1"

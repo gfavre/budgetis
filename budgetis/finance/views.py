@@ -11,6 +11,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
+from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import CreateView
 from django.views.generic import TemplateView
@@ -39,24 +40,44 @@ RULE_TYPES: dict[str, dict[str, Any]] = {
         "fields": ["nature_start", "nature_end", "priority"],
         "ordering": ("priority", "nature_start"),
         "rows_template": "finance/partials/rule_rows_nature_range.html",
+        "labels": {"priority": _("Priority (smallest first)")},
+        "help_texts": {
+            "nature_start": _("First nature included in the range."),
+            "nature_end": _("Last nature included. Use the same value as the start to match a single nature."),
+            "priority": _(
+                "Used only when nature ranges overlap, even across categories. "
+                "A smaller number wins (10 before 100). Exact-code, function/nature "
+                "and label rules always come before nature ranges. Avoid equal priorities for overlapping ranges."
+            ),
+        },
     },
     "function-nature": {
         "model": SankeyFunctionNatureRule,
         "fields": ["function_prefix", "nature_start", "nature_end"],
         "ordering": ("function_prefix", "nature_start"),
         "rows_template": "finance/partials/rule_rows_function_nature.html",
+        "help_texts": {
+            "function_prefix": _("Matches functions starting with this code: 9630 also matches 96301 and 96302."),
+            "nature_end": _("Both ends of the range are included. The function prefix and nature must both match."),
+        },
     },
     "account-code": {
         "model": SankeyAccountCodeRule,
         "fields": ["function", "nature", "sub_account"],
         "ordering": ("function", "nature"),
         "rows_template": "finance/partials/rule_rows_account_code.html",
+        "help_texts": {
+            "function": _("Full function code, not a prefix. This rule is checked before other rule types.")
+        },
     },
     "label": {
         "model": SankeyLabelRule,
         "fields": ["pattern"],
         "ordering": ("pattern",),
         "rows_template": "finance/partials/rule_rows_label.html",
+        "help_texts": {
+            "pattern": _("Matches part of the account label, ignoring case. Checked before nature ranges.")
+        },
     },
 }
 
@@ -260,7 +281,9 @@ class SankeyRuleCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
 
     def get_form_class(self):
         config = _rule_type_config(self.kwargs["rule_type"])
-        return modelform_factory(config["model"], fields=config["fields"])
+        return modelform_factory(
+            config["model"], fields=config["fields"], labels=config.get("labels"), help_texts=config.get("help_texts")
+        )
 
     def get_form(self, form_class=None):
         return _bootstrap_styled(super().get_form(form_class))
@@ -290,7 +313,9 @@ class SankeyRuleUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
 
     def get_form_class(self):
         config = _rule_type_config(self.kwargs["rule_type"])
-        return modelform_factory(config["model"], fields=config["fields"])
+        return modelform_factory(
+            config["model"], fields=config["fields"], labels=config.get("labels"), help_texts=config.get("help_texts")
+        )
 
     def get_form(self, form_class=None):
         return _bootstrap_styled(super().get_form(form_class))
@@ -328,6 +353,9 @@ class SankeyCategoryEditView(LoginRequiredMixin, PermissionRequiredMixin, Update
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields["color"].widget.input_type = "color"
+        form.fields["order"].help_text = _(
+            "Display order within this flow group (smallest first). Does not affect which accounts match the category."
+        )
         return _bootstrap_styled(form)
 
     def get_context_data(self, **kwargs):

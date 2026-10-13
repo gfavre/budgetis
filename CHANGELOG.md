@@ -7,7 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2026-10-13
+
 ### Added
+
+- **Sankey rule explanations**: the configuration page explains rule
+  precedence and overlapping nature-range priorities, with an example.
+  Add/edit forms clarify range boundaries, function prefixes, label matching,
+  and the distinction between category display order and matching priority.
+
+- **Sankey settings navigation**: a sticky right-hand navigation links to
+  each flow group and category. On smaller screens it sits above the rules;
+  category names update when edited in place.
 
 - **Platform settings menu**: a right-aligned menu, restricted to admins
   and Bourse members, brings together account responsibles, functional

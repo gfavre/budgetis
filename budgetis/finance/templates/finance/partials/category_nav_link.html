@@ -1,0 +1,4 @@
+<a id="category-nav-{{ category.pk }}"
+   class="d-block small py-1"
+   href="#sankey-category-{{ category.pk }}"
+   {% if oob %}hx-swap-oob="true"{% endif %}>{{ category.name }}</a>

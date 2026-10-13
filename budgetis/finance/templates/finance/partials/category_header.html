@@ -8,3 +8,6 @@
                vertical-align:middle"></span>
   <strong>{{ category.name }}</strong>
 </span>
+{% if oob %}
+  {% include "finance/partials/category_nav_link.html" with category=category oob=True %}
+{% endif %}
