@@ -70,6 +70,34 @@
     </section>
     <section class="migration-reading-guide migration-prose">
       <h2>Comment lire un numéro de compte MCH2?</h2>
+      <div class="migration-account-anatomy">
+        <h3>Un exemple pour commencer: 61500.3010.00</h3>
+        <p>Les points séparent trois informations. Lisez le numéro de gauche à droite: l’activité, le type d’opération, puis le détail local.</p>
+        <div class="migration-account-parts">
+          <div class="migration-account-part">
+            <div class="migration-account-segment function"><strong>61500</strong><span>Fonction</span></div>
+            <p class="migration-account-question">Pour quoi?</p>
+            <p>Routes communales</p>
+          </div>
+          <div class="migration-account-part">
+            <div class="migration-account-segment nature"><strong>3010</strong><span>Nature</span></div>
+            <p class="migration-account-question">Quoi?</p>
+            <p>Salaires du personnel</p>
+          </div>
+          <div class="migration-account-part">
+            <div class="migration-account-segment subdivision"><strong>00</strong><span>Subdivision</span></div>
+            <p class="migration-account-question">Quel détail?</p>
+            <p>Subdivision propre à la commune</p>
+          </div>
+        </div>
+        <p><strong>En clair:</strong> ce numéro désigne des salaires liés aux routes communales. Le libellé du compte précise le détail local associé à la subdivision 00.</p>
+        {% if report.reading_example_label %}
+          <p><strong>Libellé du compte dans le plan communal:</strong> {{ report.reading_example_label }}</p>
+          <p class="migration-method">Libellé issu de la dernière année importée disponible pour ce compte MCH2. Cet exemple explique la structure du numéro; il ne représente pas une correspondance avec un ancien compte MCH1.</p>
+        {% else %}
+          <p class="migration-method">Exemple illustratif: ce numéro n’est pas présent dans les comptes MCH2 importés. Il ne représente pas une correspondance avec un ancien compte MCH1.</p>
+        {% endif %}
+      </div>
       <p>Pour le compte de résultats et le compte des investissements, deux informations se complètent:</p>
       <ul>
         <li><strong>La fonction</strong> indique le domaine d’activité concerné: à quoi sert la charge ou à quelle activité se rapporte le revenu?</li>

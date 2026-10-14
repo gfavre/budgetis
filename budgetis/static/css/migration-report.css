@@ -8,6 +8,17 @@
 .migration-prose h2 { margin-top: 1.7rem; font-size: 1.5rem; }
 .migration-prose h3 { margin-top: 1.2rem; font-size: 1.2rem; }
 .migration-prose li { margin-bottom: .25rem; }
+.migration-account-anatomy { border: 1px solid #b3bfcb; border-radius: .7rem; padding: 1rem; margin: 1rem 0 1.5rem; }
+.migration-account-anatomy h3 { margin-top: 0; }
+.migration-account-parts { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 1rem 0; }
+.migration-account-segment { text-align: center; border-radius: .4rem; padding: .6rem; }
+.migration-account-segment strong { display: block; font-size: 1.6rem; }
+.migration-account-segment span { display: block; }
+.migration-account-segment.function { background: #eaf1f3; }
+.migration-account-segment.nature { background: #f1ecf6; }
+.migration-account-segment.subdivision { background: #f4f1ed; }
+.migration-account-question { font-size: .85rem; font-weight: 600; margin: .6rem 0 .2rem; }
+.migration-account-part p:last-child { margin-bottom: 0; }
 .migration-summary, .migration-reading-guide { margin-top: 3rem; }
 .migration-total { border: 2px solid #173b64; border-radius: .7rem; text-align: center; padding: .8rem; margin: 1.5rem 0 .8rem; }
 .migration-total strong, .migration-scope strong { font-size: 2.2rem; }
@@ -52,6 +63,13 @@
   .migration-prose li { margin-bottom: 2pt; }
   .migration-prose ul { padding-left: 16pt; }
   .migration-prose a[href^="http"]::after { content: none; }
+  .migration-account-anatomy { break-inside: avoid; padding: 8pt; margin: 10pt 0; }
+  .migration-account-parts { gap: 6pt; margin: 8pt 0; }
+  .migration-account-segment { border: .5pt solid #888; padding: 5pt; }
+  .migration-account-segment strong { font-size: 18pt; }
+  .migration-account-question { font-size: 9pt; }
+  .migration-reading-guide h3 { break-before: auto; }
+  .migration-reading-guide > h3:first-of-type { break-before: page; }
   .migration-report h2 { break-before: auto; page-break-before: auto; }
   .migration-conclusion { background: none; color: black; border: 1pt solid black; }
   .migration-directory { break-before: page; margin-top: 0; }

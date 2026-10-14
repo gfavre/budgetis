@@ -53,7 +53,30 @@ def test_empty_report():
     report = build_migration_report()
     assert report["mapped"] == report["simple_percent"] == report["recomposed_percent"] == 0
     assert report["example"] is None
+    assert report["reading_example_label"] == ""
     assert report["forward_rows"] == report["reverse_rows"] == []
+
+
+@pytest.mark.parametrize("sub_account", ["00", ""])
+def test_reading_example_uses_latest_exact_mch2_account_label(sub_account):
+    for year, label in [(2024, "Ancien libellé"), (2025, "Salaire du personnel administratif")]:
+        AccountFactory(
+            scheme=ChartScheme.MCH2,
+            function="61500",
+            nature="3010",
+            sub_account=sub_account,
+            year=year,
+            label=label,
+        )
+    AccountFactory(
+        scheme=ChartScheme.MCH2,
+        function="61500",
+        nature="3010",
+        sub_account="01",
+        year=2026,
+        label="Autre subdivision",
+    )
+    assert build_migration_report()["reading_example_label"] == "Salaire du personnel administratif"
 
 
 def test_unmapped_target_and_latest_label():

@@ -47,6 +47,9 @@ def build_migration_report():
         ]
 
     return {
+        # The importer stores the all-zero MCH2 extension as an empty string.
+        "reading_example_label": known[ChartScheme.MCH2].get("61500.3010.00")
+        or known[ChartScheme.MCH2].get("61500.3010", ""),
         "total": len(sources),
         "unmapped": len(sources - mapped),
         "mapped": len(mapped),
