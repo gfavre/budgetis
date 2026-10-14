@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-10-14
+
 ### Added
 
 - **MCH1 / MCH2 migration report**: the Reports menu includes a printable
@@ -15,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   with available account labels and explicit missing correspondences.
   A reading guide explains MCH2 functions and natures, the four conversion
   situations and how to use the directories, with cantonal references.
+- **Practical conversion examples**: live crosswalk examples illustrate
+  ventilation and merging; a real road snow-clearing account explains the
+  function, nature and local subdivision without implying amount comparability.
+- **Print-ready migration guide**: a communal cover and three teaching pages
+  precede the directories. Site colors, Swiss typography, page numbers,
+  direction-specific running headings and direct directory links keep the
+  long report readable on screen and on A4.
 
 ## [1.9.1] - 2026-10-13
 
