@@ -40,7 +40,7 @@
     </section>
     <section class="migration-summary" aria-labelledby="titre-correspondances">
       <h2 id="titre-correspondances">La structure des correspondances de la commune</h2>
-      <p>Le graphique applique les quatre situations décrites ci-dessus aux correspondances actuellement renseignées dans Budgetis.</p>
+      <p>Le graphique applique les quatre situations décrites ci-dessus aux correspondances de la table de conversion communale.</p>
       <div class="migration-total"><strong>{{ report.total }}</strong> comptes MCH1 distincts connus</div>
       <div class="migration-scope">
         <div>
@@ -59,14 +59,14 @@
       {% if report.mapped %}
         {% include "accounting/reports/mapping_diagram.html" %}
         <div class="migration-verdict">
-          <p><strong>{{ report.simple }} / {{ report.mapped }} ({{ report.simple_percent }} %)</strong> présentent une correspondance directe 1:1.</p>
-          <p><strong>{{ report.recomposed }} / {{ report.mapped }} ({{ report.recomposed_percent }} %)</strong> nécessitent une recomposition ou une agrégation.</p>
+          <p><strong>{{ report.simple }} / {{ report.mapped }} ({{ report.simple_percent }}&nbsp;%)</strong> présentent une correspondance directe 1:1.</p>
+          <p><strong>{{ report.recomposed }} / {{ report.mapped }} ({{ report.recomposed_percent }}&nbsp;%)</strong> nécessitent une recomposition ou une agrégation.</p>
         </div>
         <div class="migration-conclusion">{% if report.recomposed %}Un double rapport fidèle compte à compte demande des règles de répartition supplémentaires. Les correspondances seules ne permettent pas de convertir automatiquement les montants.{% else %}Les correspondances renseignées sont toutes de type 1:1. Les comptes sans correspondance restent à examiner.{% endif %}</div>
       {% else %}
         <p class="migration-conclusion">Aucune correspondance complète n’est disponible. La synthèse sera calculée dès que la table de conversion sera renseignée.</p>
       {% endif %}
-      <p class="migration-method">Périmètre : codes distincts de la table de conversion et des comptes importés, toutes années et budgets/comptes confondus. Les relations et statistiques sont recalculées depuis AccountCodeMapping. « Avec correspondance » ne signifie pas « avec un montant non nul ». Les libellés proviennent de la dernière année importée disponible. Aucune pondération des montants n’est enregistrée.</p>
+      <p class="migration-method">Périmètre: codes distincts de la table de conversion et des comptes importés, toutes années et budgets/comptes confondus. Les relations et statistiques sont établies à partir de la table de conversion communale. «&nbsp;Avec correspondance&nbsp;» ne signifie pas «&nbsp;avec un montant non nul&nbsp;». Les libellés proviennent de la dernière année importée disponible. Aucune pondération des montants n’est enregistrée.</p>
     </section>
     <section class="migration-reading-guide migration-prose">
       <h2>Comment lire un numéro de compte MCH2?</h2>
