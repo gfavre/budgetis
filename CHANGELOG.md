@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.12.0] - 2026-10-14
+## [1.10.2] - 2026-10-14
 
 ### Changed
 
@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   a single non-wrapping line beneath the account label, keeping migration
   directories compact when printed.
 
-## [1.11.0] - 2026-10-14
+## [1.10.1] - 2026-10-14
 
 ### Added
 

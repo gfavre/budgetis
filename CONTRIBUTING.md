@@ -1,5 +1,11 @@
 # Contributing to Budgetis
 
+## Release terminology
+
+When the project owner requests a "version mineure", increment the **last**
+version component only (for example, `1.12.0` → `1.12.1`). Do not interpret
+this wording as an instruction to increment the middle component.
+
 ## Stack
 
 - Python 3.12, Django 5.2, uv
