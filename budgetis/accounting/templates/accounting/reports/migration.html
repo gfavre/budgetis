@@ -8,6 +8,17 @@
 {% endblock extra_style %}
 {% block content %}
   <article class="migration-report" lang="fr-CH">
+    <div class="migration-cover">
+      <img src="{{ config.logo.url }}"
+           alt="{{ config.commune_name }} logo"
+           class="cover-logo" />
+      <p class="cover-commune">
+        {% blocktrans with city=config.commune_name %}Municipality of {{ city }}{% endblocktrans %}
+      </p>
+      <h1 class="cover-title">Rapport de migration MCH1 ↔ MCH2</h1>
+      <p class="cover-subtitle">Repères de lecture et tableaux de correspondance</p>
+      <p class="cover-date">{% now "d.m.Y" %}</p>
+    </div>
     <div class="no-print migration-actions">
       <button type="button" class="btn btn-primary" onclick="window.print()"><i class="bi bi-printer me-1"></i> Imprimer le rapport</button>
     </div>

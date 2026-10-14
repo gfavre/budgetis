@@ -1,5 +1,6 @@
 .migration-report { max-width: 1100px; margin: auto; padding: 2rem; background: white; color: #102847; }
 .migration-actions { text-align: right; margin-bottom: 1rem; }
+.migration-cover { display: none; }
 .migration-eyebrow { font-size: .85rem; letter-spacing: .05em; }
 .migration-report h1 { font-size: 2.2rem; font-weight: 750; }
 .migration-lead { font-size: 1.25rem; }
@@ -23,6 +24,23 @@
 .migration-table td > div + div { margin-top: .3rem; }
 .migration-separator { margin: 3rem 0; }
 @media print {
+  .migration-cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    height: 270mm;
+    padding: 20mm;
+    break-inside: avoid;
+    break-after: page;
+  }
+  .migration-cover .cover-logo { max-width: 60mm; max-height: 60mm; object-fit: contain; margin-bottom: 10mm; }
+  .migration-cover .cover-commune { font-size: 18pt; font-weight: 600; margin: 0 0 5mm; }
+  .migration-cover .cover-title { font-size: 24pt; margin: 0 0 3mm; }
+  .migration-cover .cover-subtitle { font-size: 12pt; font-weight: 600; margin: 0; }
+  .migration-cover .cover-date { font-size: 10pt; margin-top: 10mm; }
   .migration-report { padding: 0; max-width: none; font-size: 9pt; }
   .migration-report h1 { font-size: 21pt; }
   .migration-summary { break-inside: avoid; }
