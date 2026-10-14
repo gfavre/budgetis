@@ -460,7 +460,7 @@ class TestImportAccountCodeMapping:
         assert "1 created, 0 unchanged" in out
         mapping = AccountCodeMapping.objects.get()
         assert (mapping.mch1_function, mapping.mch1_nature, mapping.mch1_sub_account) == ("100", "301", "")
-        assert (mapping.mch2_function, mapping.mch2_nature, mapping.mch2_sub_account) == ("01100", "3010", "")
+        assert (mapping.mch2_function, mapping.mch2_nature, mapping.mch2_sub_account) == ("01100", "3010", "00")
 
     def test_zero_pads_mch2_codes_dropped_by_pandas_int_coercion(self, tmp_path):
         # Pandas reads a numeric-looking column as int, silently dropping the

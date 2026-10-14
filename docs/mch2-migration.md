@@ -62,6 +62,24 @@ docker compose -f docker-compose.prod.yml exec web python manage.py normalize_mc
 ne pas ajouter `-T`. La commande utilise une transaction unique et verrouille
 les comptes concernés jusqu'à la fin, y compris pendant les questions.
 
+### Aligner les extensions du mapping après le nettoyage des comptes
+
+Après le nettoyage des comptes MCH2 ci-dessus, normaliser également les
+destinations de `AccountCodeMapping` dans la même version déployée:
+
+```bash
+docker compose -f docker-compose.prod.yml exec web python manage.py normalize_mapping_mch2_extensions --dry-run
+docker compose -f docker-compose.prod.yml exec web python manage.py normalize_mapping_mch2_extensions
+```
+
+La commande remplace uniquement les extensions MCH2 vides ou `0` par `00`.
+Elle conserve les extensions MCH1 et les extensions MCH2 non nulles. Si la
+même relation complète existe déjà avec `00`, elle supprime uniquement la
+relation identique. Les ventilations et fusions restent distinctes. Toute
+l'opération est transactionnelle; `--dry-run` annule les changements et un
+second passage ne modifie plus rien. L'import du mapping conserve désormais
+`00`, y compris lorsqu'une extension est vide dans le fichier de conversion.
+
 | | MCH1 | MCH2 |
 |---|---|---|
 | Account code | `function.nature[.sub_account]`, e.g. `720.351` | `function.nature.extension`, e.g. `01100.3000.00` |

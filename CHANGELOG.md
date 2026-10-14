@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.3] - 2026-10-14
+
+### Fixed
+
+- **MCH2 mapping extensions**: a transactional normalization command aligns
+  empty and `0` mapping extensions with cleaned `.00` accounts, removing only
+  duplicate identical relations. Supports `--dry-run` and preserves MCH1
+  extensions, splits and merges. New conversion imports retain `.00`.
+
 ## [1.10.2] - 2026-10-14
 
 ### Changed

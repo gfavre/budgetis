@@ -91,10 +91,12 @@ class Command(BaseCommand):
     @staticmethod
     def _normalize_mch2_part(value, width: int) -> str:
         if pd.isna(value):
-            return ""
+            return "00" if width == MCH2_SUB_ACCOUNT_WIDTH else ""
         if isinstance(value, float) and value.is_integer():
             value = int(value)
         text = str(value).strip().zfill(width)
+        if width == MCH2_SUB_ACCOUNT_WIDTH:
+            return text
         return "" if text == "0" * width else text
 
     def _apply(self, rows: list[MappingRow], *, dry_run: bool) -> None:
