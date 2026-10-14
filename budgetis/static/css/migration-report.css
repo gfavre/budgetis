@@ -3,6 +3,11 @@
 .migration-eyebrow { font-size: .85rem; letter-spacing: .05em; }
 .migration-report h1 { font-size: 2.2rem; font-weight: 750; }
 .migration-lead { font-size: 1.25rem; }
+.migration-prose { line-height: 1.55; }
+.migration-prose h2 { margin-top: 1.7rem; font-size: 1.5rem; }
+.migration-prose h3 { margin-top: 1.2rem; font-size: 1.2rem; }
+.migration-prose li { margin-bottom: .25rem; }
+.migration-summary, .migration-reading-guide { margin-top: 3rem; }
 .migration-total { border: 2px solid #173b64; border-radius: .7rem; text-align: center; padding: .8rem; margin: 1.5rem 0 .8rem; }
 .migration-total strong, .migration-scope strong { font-size: 2.2rem; }
 .migration-scope { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; text-align: center; }
@@ -21,6 +26,14 @@
   .migration-report { padding: 0; max-width: none; font-size: 9pt; }
   .migration-report h1 { font-size: 21pt; }
   .migration-summary { break-inside: avoid; }
+  .migration-summary, .migration-reading-guide { break-before: page; margin-top: 0; }
+  .migration-prose { line-height: 1.35; font-size: 10pt; }
+  .migration-prose h2 { margin: 12pt 0 5pt; font-size: 14pt; }
+  .migration-prose h3 { margin: 9pt 0 4pt; font-size: 12pt; }
+  .migration-prose p { margin-bottom: 7pt; }
+  .migration-prose li { margin-bottom: 2pt; }
+  .migration-prose ul { padding-left: 16pt; }
+  .migration-prose a[href^="http"]::after { content: none; }
   .migration-report h2 { break-before: auto; page-break-before: auto; }
   .migration-conclusion { background: none; color: black; border: 1pt solid black; }
   .migration-directory { break-before: page; margin-top: 0; }

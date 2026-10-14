@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   explanation of splits, merges and one-to-one conversions, computed from
   the account crosswalk. Two code directories list destinations and origins,
   with available account labels and explicit missing correspondences.
+  A reading guide explains MCH2 functions and natures, the four conversion
+  situations and how to use the directories, with cantonal references.
 
 ## [1.9.1] - 2026-10-13
 
