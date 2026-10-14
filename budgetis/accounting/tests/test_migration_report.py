@@ -55,28 +55,41 @@ def test_empty_report():
     assert report["example"] is None
     assert report["reading_example_label"] == ""
     assert report["forward_rows"] == report["reverse_rows"] == []
+    assert report["split_example"] == report["merge_example"] == []
 
 
-@pytest.mark.parametrize("sub_account", ["00", ""])
-def test_reading_example_uses_latest_exact_mch2_account_label(sub_account):
-    for year, label in [(2024, "Ancien libellé"), (2025, "Salaire du personnel administratif")]:
+def test_examples_are_selected_from_current_mapping():
+    for source, target in [("100", "01100"), ("100", "01200"), ("200", "01200")]:
+        mapping(source, target)
+    report = build_migration_report()
+    assert report["split_example"][0]["code"] == "100.300"
+    assert [link["code"] for link in report["split_example"][0]["links"]] == [
+        "01100.3000.00",
+        "01200.3000.00",
+    ]
+    assert report["merge_example"][0]["code"] == "01200.3000.00"
+    assert [link["code"] for link in report["merge_example"][0]["links"]] == ["100.300", "200.300"]
+
+
+def test_reading_example_uses_latest_exact_mch2_account_label():
+    for year, label in [(2024, "Ancien libellé"), (2025, "Entretien des routes - déneigement")]:
         AccountFactory(
             scheme=ChartScheme.MCH2,
             function="61500",
-            nature="3010",
-            sub_account=sub_account,
+            nature="3141",
+            sub_account="01",
             year=year,
             label=label,
         )
     AccountFactory(
         scheme=ChartScheme.MCH2,
         function="61500",
-        nature="3010",
-        sub_account="01",
+        nature="3141",
+        sub_account="02",
         year=2026,
         label="Autre subdivision",
     )
-    assert build_migration_report()["reading_example_label"] == "Salaire du personnel administratif"
+    assert build_migration_report()["reading_example_label"] == "Entretien des routes - déneigement"
 
 
 def test_unmapped_target_and_latest_label():

@@ -3,6 +3,7 @@
 {% load static i18n %}
 
 {% block title %}Migration MCH1 ↔ MCH2 — {{ config.commune_name }}{% endblock title %}
+{% block bodyclass %}migration-report-page{% endblock bodyclass %}
 {% block extra_style %}
   <link rel="stylesheet" href="{% static 'css/migration-report.css' %}" />
 {% endblock extra_style %}
@@ -15,7 +16,7 @@
       <p class="cover-commune">
         {% blocktrans with city=config.commune_name %}Municipality of {{ city }}{% endblocktrans %}
       </p>
-      <h1 class="cover-title">Rapport de migration MCH1 ↔ MCH2</h1>
+      <h1 class="cover-title">Migration MCH1 ↔ MCH2</h1>
       <p class="cover-subtitle">Repères de lecture et tableaux de correspondance</p>
       <p class="cover-date">{% now "d.m.Y" %}</p>
     </div>
@@ -24,8 +25,7 @@
     </div>
     <section class="migration-introduction migration-prose"
              aria-labelledby="titre-mch2">
-      <p class="migration-eyebrow">{{ config.commune_name }} · Rapport de migration · {% now "d.m.Y" %}</p>
-      <h1 id="titre-mch2">Du MCH1 au MCH2: les repères pour lire les comptes communaux</h1>
+      <h1 id="titre-mch2">De MCH1 à MCH2: les repères pour lire les comptes communaux</h1>
       <p>Le passage au modèle comptable harmonisé 2 (MCH2) modifie la structure des budgets et des comptes de la commune. Cette annexe donne les principaux repères pour lire les nouveaux numéros et retrouver les correspondances avec les anciens comptes MCH1. Elle accompagne les tableaux de conversion; pour les règles comptables détaillées, le manuel cantonal reste la référence.</p>
       <h2>Pourquoi les comptes ne se comparent-ils pas toujours directement?</h2>
       <p>La migration ne se limite pas à changer les numéros. Certaines opérations sont réparties autrement entre les domaines d’activité ou les catégories comptables. Un montant présenté sous un seul compte MCH1 peut ainsi se retrouver dans plusieurs comptes MCH2. À l’inverse, un compte MCH2 peut réunir des opérations auparavant enregistrées dans plusieurs comptes MCH1.</p>
@@ -66,12 +66,12 @@
       {% else %}
         <p class="migration-conclusion">Aucune correspondance complète n’est disponible. La synthèse sera calculée dès que la table de conversion sera renseignée.</p>
       {% endif %}
-      <p class="migration-method">Périmètre: codes distincts de la table de conversion et des comptes importés, toutes années et budgets/comptes confondus. Les relations et statistiques sont établies à partir de la table de conversion communale. «&nbsp;Avec correspondance&nbsp;» ne signifie pas «&nbsp;avec un montant non nul&nbsp;». Les libellés proviennent de la dernière année importée disponible. Aucune pondération des montants n’est enregistrée.</p>
+      <p class="migration-method">Les chiffres portent sur les comptes connus, toutes années confondues; une absence de correspondance ne signifie pas qu’un compte est abandonné.</p>
     </section>
     <section class="migration-reading-guide migration-prose">
       <h2>Comment lire un numéro de compte MCH2?</h2>
       <div class="migration-account-anatomy">
-        <h3>Un exemple pour commencer: 61500.3010.00</h3>
+        <h3>Un exemple pour commencer: 61500.3141.01</h3>
         <p>Les points séparent trois informations. Lisez le numéro de gauche à droite: l’activité, le type d’opération, puis le détail local.</p>
         <div class="migration-account-parts">
           <div class="migration-account-part">
@@ -80,20 +80,19 @@
             <p>Routes communales</p>
           </div>
           <div class="migration-account-part">
-            <div class="migration-account-segment nature"><strong>3010</strong><span>Nature</span></div>
+            <div class="migration-account-segment nature"><strong>3141</strong><span>Nature</span></div>
             <p class="migration-account-question">Quoi?</p>
-            <p>Salaires du personnel</p>
+            <p>Entretien des routes</p>
           </div>
           <div class="migration-account-part">
-            <div class="migration-account-segment subdivision"><strong>00</strong><span>Subdivision</span></div>
+            <div class="migration-account-segment subdivision"><strong>01</strong><span>Subdivision</span></div>
             <p class="migration-account-question">Quel détail?</p>
-            <p>Subdivision propre à la commune</p>
+            <p>Détail supplémentaire défini par la commune: déneigement</p>
           </div>
         </div>
-        <p><strong>En clair:</strong> ce numéro désigne des salaires liés aux routes communales. Le libellé du compte précise le détail local associé à la subdivision 00.</p>
+        <p><strong>En clair:</strong> ce numéro désigne l’entretien des routes communales, avec un détail local: le déneigement.</p>
         {% if report.reading_example_label %}
           <p><strong>Libellé du compte dans le plan communal:</strong> {{ report.reading_example_label }}</p>
-          <p class="migration-method">Libellé issu de la dernière année importée disponible pour ce compte MCH2. Cet exemple explique la structure du numéro; il ne représente pas une correspondance avec un ancien compte MCH1.</p>
         {% else %}
           <p class="migration-method">Exemple illustratif: ce numéro n’est pas présent dans les comptes MCH2 importés. Il ne représente pas une correspondance avec un ancien compte MCH1.</p>
         {% endif %}
@@ -121,20 +120,88 @@
       <p>Les chiffres suivants précisent le domaine: <strong>71</strong> pour l’eau, <strong>72</strong> pour les eaux usées, <strong>73</strong> pour les déchets et <strong>91</strong> pour les impôts. La fonction classe l’activité exercée, indépendamment du service communal qui s’en occupe.</p>
       <h3>La nature: quel type d’opération?</h3>
       <p>Dans le compte de résultats, les natures commençant par <strong>3</strong> désignent les charges et celles commençant par <strong>4</strong> les revenus. Dans le compte des investissements, <strong>5</strong> désigne les dépenses et <strong>6</strong> les recettes.</p>
-      <p>Quelques familles facilitent la lecture: <strong>30</strong> personnel; <strong>31</strong> biens, services et autres charges d’exploitation; <strong>33</strong> amortissements du patrimoine administratif; <strong>34</strong> charges financières; <strong>36</strong> charges de transfert; <strong>40</strong> revenus fiscaux; <strong>42</strong> taxes et redevances; <strong>44</strong> revenus financiers; <strong>46</strong> revenus de transfert.</p>
+      <table class="migration-reference-table">
+        <thead>
+          <tr>
+            <th scope="col">Famille</th>
+            <th scope="col">Type d’opération</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">30</th>
+            <td>Personnel</td>
+          </tr>
+          <tr>
+            <th scope="row">31</th>
+            <td>Biens, services et autres charges d’exploitation</td>
+          </tr>
+          <tr>
+            <th scope="row">33</th>
+            <td>Amortissements du patrimoine administratif</td>
+          </tr>
+          <tr>
+            <th scope="row">34</th>
+            <td>Charges financières</td>
+          </tr>
+          <tr>
+            <th scope="row">36</th>
+            <td>Charges de transfert</td>
+          </tr>
+          <tr>
+            <th scope="row">40</th>
+            <td>Revenus fiscaux</td>
+          </tr>
+          <tr>
+            <th scope="row">42</th>
+            <td>Taxes et redevances</td>
+          </tr>
+          <tr>
+            <th scope="row">44</th>
+            <td>Revenus financiers</td>
+          </tr>
+          <tr>
+            <th scope="row">46</th>
+            <td>Revenus de transfert</td>
+          </tr>
+        </tbody>
+      </table>
       <p>Attention: un même chiffre n’a pas le même sens selon qu’il appartient à la fonction ou à la nature.</p>
+    </section>
+    <section class="migration-finding-guide migration-prose">
       <h2>Comment utiliser les tableaux de correspondance?</h2>
       <p>Pour retrouver un ancien compte, consultez le tableau <strong>MCH1 → MCH2</strong>. Pour connaître les antécédents d’un nouveau compte, utilisez le tableau <strong>MCH2 → MCH1</strong>. Lisez l’ensemble des correspondances indiquées, leurs libellés et les éventuelles observations. Un compte MCH2 créé après la migration peut ne pas avoir d’antécédent MCH1.</p>
+      <h3>Deux exemples de la table de conversion</h3>
+      {% for example in report.split_example %}
+        <div class="migration-worked-example">
+          <h4>Ventilation: un ancien compte, plusieurs destinations</h4>
+          <p><strong>{{ example.code }}</strong> → {% for link in example.links %}<strong>{{ link.code }}</strong>{% if not forloop.last %} et {% endif %}{% endfor %}</p>
+          <p>Pour retrouver ce que couvrait l’ancien compte, examinez ensemble ses destinations MCH2.</p>
+        </div>
+      {% endfor %}
+      {% for example in report.merge_example %}
+        <div class="migration-worked-example">
+          <h4>Fusion: plusieurs origines, une même destination</h4>
+          <p>{% for link in example.links %}<strong>{{ link.code }}</strong>{% if not forloop.last %} et {% endif %}{% endfor %} → <strong>{{ example.code }}</strong></p>
+          <p>Pour comprendre ce compte MCH2, consultez ses origines MCH1. Chaque origine peut également alimenter d’autres destinations: vérifiez ses correspondances dans le premier répertoire.</p>
+        </div>
+      {% endfor %}
+      <h3>Correspondance et comparaison des montants</h3>
       <p><strong>Une correspondance indique où retrouver un compte; elle ne garantit pas à elle seule la comparabilité des montants.</strong> Même une relation directe doit être examinée en tenant compte du périmètre des opérations et des règles comptables applicables. Une différence entre deux exercices ne traduit donc pas nécessairement une hausse ou une baisse de l’activité: elle peut aussi résulter du changement de classification.</p>
+      <div class="migration-directory-links">
+        <p><strong>Accès direct aux répertoires</strong></p>
+        <p><a href="#mch1-mch2">MCH1 → MCH2 · Destination des comptes</a></p>
+        <p><a href="#mch2-mch1">MCH2 → MCH1 · Provenance des comptes</a></p>
+      </div>
       <p><small>Références: <a href="https://www.vd.ch/fileadmin/user_upload/themes/territoire/communes/finances_communales/fichiers_pdf/Manuel_MCH2_04.26.pdf">Manuel MCH2 des communes vaudoises, avril 2026, chapitre 1</a> et <a href="https://www.vd.ch/fileadmin/user_upload/themes/territoire/communes/finances_communales/fichiers_pdf/Plan_comptable_MCH2__PDF___04.26.pdf">plan comptable cantonal, avril 2026</a>.</small></p>
     </section>
-    <section class="migration-directory">
+    <section class="migration-directory migration-forward" id="mch1-mch2">
       <h2>MCH1 → MCH2 · Destination des comptes</h2>
       <p>Chaque ancien compte est suivi de toutes ses destinations connues.</p>
       {% include "accounting/reports/mapping_table.html" with rows=report.forward_rows source="Compte MCH1" destination="Compte(s) MCH2" %}
     </section>
     <hr class="migration-separator" />
-    <section class="migration-directory">
+    <section class="migration-directory migration-reverse" id="mch2-mch1">
       <h2>MCH2 → MCH1 · Provenance des comptes</h2>
       <p>Chaque nouveau compte est suivi de toutes ses origines connues. Une absence d’origine peut correspondre à un nouveau compte ou à une conversion encore non renseignée.</p>
       {% include "accounting/reports/mapping_table.html" with rows=report.reverse_rows source="Compte MCH2" destination="Compte(s) MCH1" %}

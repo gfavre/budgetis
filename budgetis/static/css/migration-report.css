@@ -1,40 +1,74 @@
-.migration-report { max-width: 1100px; margin: auto; padding: 2rem; background: white; color: #102847; }
+.migration-report {
+  --report-primary: var(--gradient-start, #173b64);
+  --report-secondary: var(--gradient-end, #007582);
+  --report-primary-light: color-mix(in srgb, var(--report-primary) 9%, white);
+  --report-secondary-light: color-mix(in srgb, var(--report-secondary) 9%, white);
+  --report-border: color-mix(in srgb, var(--report-primary) 30%, white);
+  --report-primary-dark: color-mix(in srgb, var(--report-primary) 55%, #102027);
+  --report-secondary-dark: color-mix(in srgb, var(--report-secondary) 55%, #102027);
+  --report-overlap: color-mix(in srgb, var(--report-primary-dark) 50%, var(--report-secondary-dark));
+  --report-ink: #102847;
+  max-width: 1100px; margin: auto; padding: 2rem; background: white; color: #102847;
+}
 .migration-actions { text-align: right; margin-bottom: 1rem; }
 .migration-cover { display: none; }
 .migration-eyebrow { font-size: .85rem; letter-spacing: .05em; }
 .migration-report h1 { font-size: 2.2rem; font-weight: 750; }
+.migration-introduction h1 { margin-bottom: 1rem; }
 .migration-lead { font-size: 1.25rem; }
 .migration-prose { line-height: 1.55; }
 .migration-prose h2 { margin-top: 1.7rem; font-size: 1.5rem; }
 .migration-prose h3 { margin-top: 1.2rem; font-size: 1.2rem; }
 .migration-prose li { margin-bottom: .25rem; }
-.migration-account-anatomy { border: 1px solid #b3bfcb; border-radius: .7rem; padding: 1rem; margin: 1rem 0 1.5rem; }
+.migration-account-anatomy { background: color-mix(in srgb, var(--report-primary) 3%, white); border: 1px solid var(--report-border); border-radius: .7rem; padding: 1rem; margin: 1rem 0 1.5rem; }
 .migration-account-anatomy h3 { margin-top: 0; }
 .migration-account-parts { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 1rem 0; }
 .migration-account-segment { text-align: center; border-radius: .4rem; padding: .6rem; }
 .migration-account-segment strong { display: block; font-size: 1.6rem; }
 .migration-account-segment span { display: block; }
-.migration-account-segment.function { background: #eaf1f3; }
-.migration-account-segment.nature { background: #f1ecf6; }
-.migration-account-segment.subdivision { background: #f4f1ed; }
+.migration-account-segment.function { background: var(--report-primary-light); }
+.migration-account-segment.nature { background: var(--report-secondary-light); }
+.migration-account-segment.subdivision { background: color-mix(in srgb, var(--report-primary-light) 50%, var(--report-secondary-light)); }
 .migration-account-question { font-size: .85rem; font-weight: 600; margin: .6rem 0 .2rem; }
 .migration-account-part p:last-child { margin-bottom: 0; }
 .migration-summary, .migration-reading-guide { margin-top: 3rem; }
-.migration-total { border: 2px solid #173b64; border-radius: .7rem; text-align: center; padding: .8rem; margin: 1.5rem 0 .8rem; }
+.migration-total { background: var(--report-primary-light); border-radius: .7rem; text-align: center; padding: .8rem; margin: 1.5rem 0 .8rem; }
 .migration-total strong, .migration-scope strong { font-size: 2.2rem; }
 .migration-scope { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; text-align: center; }
-.migration-scope > div { border: 1px solid #9daaba; padding: .8rem; border-radius: .7rem; }
-.migration-verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border: 1px solid #173b64; padding: 1rem; border-radius: .7rem; }
+.migration-scope > div { padding: .8rem; }
+.migration-verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem 0; }
 .migration-verdict p { margin: 0; }
-.migration-conclusion { background: #173b64; color: white; padding: 1rem; margin: 1rem 0; border-radius: .7rem; font-weight: 600; }
+.migration-conclusion { background: var(--report-primary-light); color: #102847; padding: 1rem; margin: 1rem 0; border-radius: .7rem; font-weight: 600; }
 .migration-method { font-size: .8rem; color: #526172; }
 .migration-directory { margin-top: 3rem; }
 .migration-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
 .migration-table th, .migration-table td { width: 50%; border: 1px solid #b3bfcb; padding: .5rem; vertical-align: top; }
-.migration-table th { background: #edf2f7; }
+.migration-table th { background: var(--report-primary-light); }
 .migration-table td > div + div { margin-top: .3rem; }
 .migration-separator { margin: 3rem 0; }
+.migration-finding-guide { margin-top: 3rem; }
+.migration-reference-table { border-collapse: collapse; width: 100%; margin: .8rem 0; }
+.migration-reference-table th, .migration-reference-table td { padding: .25rem .5rem; border-bottom: 1px solid var(--report-border); text-align: left; }
+.migration-reference-table thead { background: var(--report-primary-light); }
+.migration-reference-table th:first-child { width: 4rem; }
+.migration-worked-example { padding: .8rem 1rem; margin: 1rem 0; background: var(--report-primary-light); border-radius: .5rem; }
+.migration-directory-links { border-top: 1px solid var(--report-border); margin-top: 1.5rem; padding-top: .8rem; }
+@page {
+  @bottom-right { content: "Page " counter(page); font: 8pt Arial, sans-serif; color: #526172; }
+}
+@page :first { @bottom-right { content: none; } }
+@page migration-forward { @top-left { content: "MCH1 → MCH2 · Destination des comptes"; font: 8pt Arial, sans-serif; color: #526172; } }
+@page migration-reverse { @top-left { content: "MCH2 → MCH1 · Provenance des comptes"; font: 8pt Arial, sans-serif; color: #526172; } }
 @media print {
+  /* Remove screen spacing so the unbreakable cover fits on the first page. */
+  .migration-report-page .main-container {
+    padding: 0;
+    margin: 0;
+    max-width: none;
+    background: none;
+    border-radius: 0;
+  }
+  .migration-report-page > .mb-1 { display: none; }
   .migration-cover {
     display: flex;
     flex-direction: column;
@@ -54,30 +88,55 @@
   .migration-cover .cover-date { font-size: 10pt; margin-top: 10mm; }
   .migration-report { padding: 0; max-width: none; font-size: 9pt; }
   .migration-report h1 { font-size: 21pt; }
+  .migration-introduction h1 { font-size: 16pt; margin-bottom: 8pt; }
   .migration-summary { break-inside: avoid; }
-  .migration-summary, .migration-reading-guide { break-before: page; margin-top: 0; }
+  .migration-summary { margin-top: 12pt; }
+  .migration-reading-guide { break-before: page; margin-top: 0; }
+  .migration-finding-guide { break-before: page; margin-top: 0; }
   .migration-prose { line-height: 1.35; font-size: 10pt; }
   .migration-prose h2 { margin: 12pt 0 5pt; font-size: 14pt; }
   .migration-prose h3 { margin: 9pt 0 4pt; font-size: 12pt; }
   .migration-prose p { margin-bottom: 7pt; }
   .migration-prose li { margin-bottom: 2pt; }
   .migration-prose ul { padding-left: 16pt; }
+  .migration-reading-guide { font-size: 10pt; line-height: 1.3; }
+  .migration-reading-guide p { margin-bottom: 6pt; }
+  .migration-reading-guide li { margin-bottom: 2pt; }
+  .migration-reference-table { break-inside: avoid; font-size: 9pt; }
+  .migration-reference-table th, .migration-reference-table td { border: none; border-bottom: .5pt solid #b3bfcb; }
+  .migration-worked-example { break-inside: avoid; print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  .migration-finding-guide h4 { font-size: 11pt; }
+  .migration-forward { page: migration-forward; }
+  .migration-reverse { page: migration-reverse; }
   .migration-prose a[href^="http"]::after { content: none; }
-  .migration-account-anatomy { break-inside: avoid; padding: 8pt; margin: 10pt 0; }
-  .migration-account-parts { gap: 6pt; margin: 8pt 0; }
-  .migration-account-segment { border: .5pt solid #888; padding: 5pt; }
-  .migration-account-segment strong { font-size: 18pt; }
+  .migration-account-anatomy { break-inside: avoid; padding: 6pt; margin: 7pt 0; font-size: 9pt; }
+  .migration-account-anatomy p { margin-bottom: 4pt; }
+  .migration-account-anatomy h3 { margin: 0 0 4pt; }
+  .migration-account-parts { gap: 6pt; margin: 5pt 0; }
+  .migration-account-segment { border: .5pt solid #888; padding: 3pt; }
+  .migration-account-segment strong { font-size: 16pt; }
   .migration-account-question { font-size: 9pt; }
   .migration-reading-guide h3 { break-before: auto; }
-  .migration-reading-guide > h3:first-of-type { break-before: page; }
   .migration-report h2 { break-before: auto; page-break-before: auto; }
-  .migration-conclusion { background: none; color: black; border: 1pt solid black; }
+  .migration-conclusion { color: black; }
+  .migration-account-anatomy, .migration-account-segment, .migration-total,
+  .migration-scope > div, .migration-verdict, .migration-conclusion, .migration-table th {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
   .migration-directory { break-before: page; margin-top: 0; }
   .migration-table { break-inside: auto; font-size: 8pt; }
   .migration-table thead { display: table-header-group; }
   .migration-table tr { break-inside: avoid; }
   .migration-separator { display: none; }
 }
-.migration-diagram { display: block; width: 100%; height: auto; margin: 1rem 0; }
-@media print { .migration-diagram { break-inside: avoid; } }
+.migration-diagram { display: block; width: 85%; height: auto; margin: 1rem auto; }
+@media print {
+  .migration-diagram {
+    break-inside: avoid;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
 @media (max-width: 700px) { .migration-report { padding: 1rem; } }
+@media screen and (max-width: 700px) { .migration-diagram { width: 100%; } }

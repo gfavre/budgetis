@@ -47,9 +47,19 @@ def build_migration_report():
         ]
 
     return {
-        # The importer stores the all-zero MCH2 extension as an empty string.
-        "reading_example_label": known[ChartScheme.MCH2].get("61500.3010.00")
-        or known[ChartScheme.MCH2].get("61500.3010", ""),
+        "reading_example_label": known[ChartScheme.MCH2].get("61500.3141.01", ""),
+        "split_example": rows(
+            ["100.303"] if len(forward["100.303"]) > 1 else sorted(split)[:1],
+            forward,
+            ChartScheme.MCH1,
+            ChartScheme.MCH2,
+        ),
+        "merge_example": rows(
+            ["96900.3420"] if len(reverse["96900.3420"]) > 1 else sorted(merged_targets)[:1],
+            reverse,
+            ChartScheme.MCH2,
+            ChartScheme.MCH1,
+        ),
         "total": len(sources),
         "unmapped": len(sources - mapped),
         "mapped": len(mapped),
