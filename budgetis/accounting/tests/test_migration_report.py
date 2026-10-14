@@ -214,3 +214,33 @@ def test_zero_notes_use_latest_budget_and_actuals_and_never_net_amounts():
     assert rows["100.300"]["zero_notes"] == ["Budget 2026: à zéro", "Comptes 2025: à zéro"]
     assert rows["200.300"]["zero_notes"] == ["Budget 2026: à zéro"]
     assert rows["300.300"]["zero_notes"] == ["Budget 2026: à zéro"]
+
+
+def test_zero_notes_only_for_accounts_without_correspondence():
+    for function in ["100", "200"]:
+        AccountFactory(
+            scheme=ChartScheme.MCH1,
+            function=function,
+            nature="300",
+            sub_account="",
+            year=2026,
+            is_budget=True,
+            charges=0,
+            revenues=0,
+        )
+    AccountFactory(
+        scheme=ChartScheme.MCH2,
+        function="01100",
+        nature="3000",
+        sub_account="00",
+        year=2027,
+        is_budget=True,
+        charges=0,
+        revenues=0,
+    )
+    mapping("100", "01100")
+    report = build_migration_report()
+    rows = {row["code"]: row for row in report["forward_rows"]}
+    assert rows["100.300"]["zero_notes"] == []
+    assert rows["200.300"]["zero_notes"] == ["Budget 2026: à zéro"]
+    assert report["reverse_rows"][0]["zero_notes"] == []

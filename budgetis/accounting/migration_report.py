@@ -84,7 +84,7 @@ def build_migration_report():
             {
                 "code": code,
                 "label": known[scheme].get(code, ""),
-                "zero_notes": zero_notes(scheme, code),
+                "zero_notes": zero_notes(scheme, code) if not links[code] else [],
                 "links": [
                     {"code": other, "label": known[other_scheme].get(other, "")} for other in sorted(links[code])
                 ],
