@@ -106,6 +106,8 @@ volumes:
   letsencrypt:
   static_data:
   media_data:
+    external: true
+    name: budgetis_media_data
 
 networks:
   budgetis:

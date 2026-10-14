@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Existing production media volume**: Compose now explicitly uses the
+  external `budgetis_media_data` volume, avoiding the ownership warning and
+  keeping uploaded files outside Compose's volume lifecycle. The volume must
+  already exist before starting the production stack.
+
 ## [1.10.0] - 2026-10-14
 
 ### Added
