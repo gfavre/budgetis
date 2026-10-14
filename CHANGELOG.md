@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **MCH1 / MCH2 migration report**: the Reports menu includes a printable
+  explanation of splits, merges and one-to-one conversions, computed from
+  the account crosswalk. Two code directories list destinations and origins,
+  with available account labels and explicit missing correspondences.
+
 ## [1.9.1] - 2026-10-13
 
 ### Added

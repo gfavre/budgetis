@@ -19,6 +19,7 @@ from .views.explore import BudgetPartialView
 from .views.explore import BudgetStagedResultPartialView
 from .views.explore import BudgetStagedResultView
 from .views.history import account_history_modal
+from .views.reports import MigrationReportView
 from .views.settings import FunctionSplitSettingsView
 from .views.settings import FunctionSplitUpdateView
 from .views.settings import ResponsibilityCreateView
@@ -30,6 +31,7 @@ from .views.settings import ResponsibilityUpdateView
 app_name = "accounting"
 
 urlpatterns = [
+    path("reports/mch2-migration/", MigrationReportView.as_view(), name="mch2-migration-report"),
     path("settings/responsibilities/", ResponsibilitySettingsView.as_view(), name="responsibility-settings"),
     path("settings/responsibilities/add/", ResponsibilityCreateView.as_view(), name="responsibility-add"),
     path("settings/responsibilities/<int:pk>/edit/", ResponsibilityUpdateView.as_view(), name="responsibility-edit"),

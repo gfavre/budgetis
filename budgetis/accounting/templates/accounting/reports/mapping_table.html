@@ -1,0 +1,20 @@
+<table class="migration-table">
+  <thead>
+    <tr>
+      <th scope="col">{{ source }}</th>
+      <th scope="col">{{ destination }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+      <tr>
+        <td><b>{{ row.code }}</b>{% if row.label %}<br />{{ row.label }}{% endif %}</td>
+        <td>{% for link in row.links %}<div><b>{{ link.code }}</b>{% if link.label %} — {{ link.label }}{% endif %}</div>{% empty %}<em>Sans correspondance renseignée</em>{% endfor %}</td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="2">Aucun compte disponible.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

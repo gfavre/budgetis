@@ -1,0 +1,40 @@
+<svg class="migration-diagram"
+     viewBox="0 0 1000 310"
+     role="img"
+     aria-labelledby="mapping-diagram-title mapping-diagram-description">
+  <title id="mapping-diagram-title">Structure des correspondances MCH1 vers MCH2</title>
+  <desc id="mapping-diagram-description">{{ report.split }} comptes ventilés, {{ report.merged }} comptes fusionnés, dont {{ report.complex }} dans les deux catégories ; {{ report.simple }} transpositions exclusives un à un. Les cercles illustrent le chevauchement et ne sont pas proportionnels aux effectifs.</desc>
+  <defs><clipPath id="mapping-split-circle"><ellipse cx="235" cy="140" rx="215" ry="132" /></clipPath></defs>
+  <ellipse cx="235" cy="140" rx="215" ry="132" fill="#f0f8f8" stroke="#007582" stroke-width="2" />
+  <ellipse cx="475" cy="140" rx="215" ry="132" fill="#f6f0f9" stroke="#663383" stroke-width="2" />
+  <ellipse cx="475" cy="140" rx="215" ry="132" fill="#173b64" clip-path="url(#mapping-split-circle)" />
+  <g text-anchor="middle" font-family="Arial, sans-serif">
+  <g fill="#007582">
+  <text x="160" y="65" font-size="26" font-weight="bold">Ventilés</text>
+  <text x="160" y="100" font-size="17">1 MCH1 → plusieurs MCH2</text>
+  <text x="160" y="183" font-size="58" font-weight="bold">{{ report.split }}</text>
+  </g>
+  <g fill="white">
+  <text x="355" y="92" font-size="20" font-weight="bold">Cas</text>
+  <text x="355" y="118" font-size="20" font-weight="bold">complexes</text>
+  <text x="355" y="150" font-size="14">ventilés et fusionnés</text>
+  <text x="355" y="201" font-size="40" font-weight="bold">{{ report.complex }}</text>
+  </g>
+  <g fill="#663383">
+  <text x="550" y="65" font-size="26" font-weight="bold">Fusionnés</text>
+  <text x="550" y="100" font-size="17">Leur cible reçoit aussi</text>
+  <text x="550" y="125" font-size="17">d’autres comptes MCH1</text>
+  <text x="550" y="193" font-size="58" font-weight="bold">{{ report.merged }}</text>
+  </g>
+  <path d="M720 10 V270" stroke="#9daaba" stroke-dasharray="4 4" />
+  <g fill="#173b64">
+  <text x="860" y="65" font-size="26" font-weight="bold">Transposés 1:1</text>
+  <text x="860" y="100" font-size="17">1 origine, 1 destination</text>
+  <text x="860" y="125" font-size="17">exclusive</text>
+  <text x="860" y="193" font-size="58" font-weight="bold">{{ report.simple }}</text>
+  {% if report.example %}<text x="860" y="240" font-size="14">{{ report.example.0 }} → {{ report.example.1 }}</text>{% endif %}
+  </g>
+  <text x="475" y="300" fill="#526172" font-size="16">{{ report.merged }} comptes MCH1 vers {{ report.merged_targets }} cibles MCH2 partagées.</text>
+  </g>
+</svg>
+<p class="migration-method">Les cas complexes sont inclus dans les deux cercles. Leur taille n’est pas proportionnelle aux effectifs.</p>

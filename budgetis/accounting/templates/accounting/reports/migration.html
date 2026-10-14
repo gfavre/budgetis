@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% load static i18n %}
+
+{% block title %}Migration MCH1 ↔ MCH2 — {{ config.commune_name }}{% endblock title %}
+{% block extra_style %}
+  <link rel="stylesheet" href="{% static 'css/migration-report.css' %}" />
+{% endblock extra_style %}
+{% block content %}
+  <article class="migration-report">
+    <div class="no-print migration-actions">
+      <button type="button" class="btn btn-primary" onclick="window.print()"><i class="bi bi-printer me-1"></i> Imprimer le rapport</button>
+    </div>
+    <section class="migration-summary">
+      <p class="migration-eyebrow">{{ config.commune_name }} · Rapport de migration · {% now "d.m.Y" %}</p>
+      <h1>Comprendre le passage de MCH1 à MCH2</h1>
+      <p class="migration-lead">Un changement de structure, pas seulement un changement de numéros.</p>
+      <p>Les correspondances permettent de suivre les comptes dans les deux sens. Une ventilation demande de répartir un ancien compte ; une fusion réunit plusieurs anciens comptes. La conversion inverse pose donc les mêmes questions de répartition.</p>
+      <div class="migration-total"><strong>{{ report.total }}</strong> comptes MCH1 distincts connus</div>
+      <div class="migration-scope">
+        <div>
+          <strong>{{ report.unmapped }}</strong>
+          <br />
+          sans correspondance MCH2
+          <br />
+          <small>Leur statut ne peut pas être déduit de la table de conversion.</small>
+        </div>
+        <div>
+          <strong>{{ report.mapped }}</strong>
+          <br />
+          avec une correspondance MCH2
+        </div>
+      </div>
+      {% if report.mapped %}
+        {% include "accounting/reports/mapping_diagram.html" %}
+        <div class="migration-verdict">
+          <p><strong>{{ report.simple }} / {{ report.mapped }} ({{ report.simple_percent }} %)</strong> se transposent simplement.</p>
+          <p><strong>{{ report.recomposed }} / {{ report.mapped }} ({{ report.recomposed_percent }} %)</strong> nécessitent une recomposition ou une agrégation.</p>
+        </div>
+        <div class="migration-conclusion">{% if report.recomposed %}Un double rapport fidèle compte à compte demande des règles de répartition supplémentaires. Les correspondances seules ne permettent pas de convertir automatiquement les montants.{% else %}Les correspondances renseignées sont toutes de type 1:1. Les comptes sans correspondance restent à examiner.{% endif %}</div>
+      {% else %}
+        <p class="migration-conclusion">Aucune correspondance complète n’est disponible. La synthèse sera calculée dès que la table de conversion sera renseignée.</p>
+      {% endif %}
+      <p class="migration-method">Périmètre : codes distincts de la table de conversion et des comptes importés, toutes années et budgets/comptes confondus. Les relations et statistiques sont recalculées depuis AccountCodeMapping. « Avec correspondance » ne signifie pas « avec un montant non nul ». Les libellés proviennent de la dernière année importée disponible. Aucune pondération des montants n’est enregistrée.</p>
+    </section>
+    <section class="migration-directory">
+      <h2>MCH1 → MCH2 · Destination des comptes</h2>
+      <p>Chaque ancien compte est suivi de toutes ses destinations connues.</p>
+      {% include "accounting/reports/mapping_table.html" with rows=report.forward_rows source="Compte MCH1" destination="Compte(s) MCH2" %}
+    </section>
+    <hr class="migration-separator" />
+    <section class="migration-directory">
+      <h2>MCH2 → MCH1 · Provenance des comptes</h2>
+      <p>Chaque nouveau compte est suivi de toutes ses origines connues. Une absence d’origine peut correspondre à un nouveau compte ou à une conversion encore non renseignée.</p>
+      {% include "accounting/reports/mapping_table.html" with rows=report.reverse_rows source="Compte MCH2" destination="Compte(s) MCH1" %}
+    </section>
+  </article>
+{% endblock content %}

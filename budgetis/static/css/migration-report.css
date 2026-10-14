@@ -1,0 +1,34 @@
+.migration-report { max-width: 1100px; margin: auto; padding: 2rem; background: white; color: #102847; }
+.migration-actions { text-align: right; margin-bottom: 1rem; }
+.migration-eyebrow { font-size: .85rem; letter-spacing: .05em; }
+.migration-report h1 { font-size: 2.2rem; font-weight: 750; }
+.migration-lead { font-size: 1.25rem; }
+.migration-total { border: 2px solid #173b64; border-radius: .7rem; text-align: center; padding: .8rem; margin: 1.5rem 0 .8rem; }
+.migration-total strong, .migration-scope strong { font-size: 2.2rem; }
+.migration-scope { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; text-align: center; }
+.migration-scope > div { border: 1px solid #9daaba; padding: .8rem; border-radius: .7rem; }
+.migration-verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border: 1px solid #173b64; padding: 1rem; border-radius: .7rem; }
+.migration-verdict p { margin: 0; }
+.migration-conclusion { background: #173b64; color: white; padding: 1rem; margin: 1rem 0; border-radius: .7rem; font-weight: 600; }
+.migration-method { font-size: .8rem; color: #526172; }
+.migration-directory { margin-top: 3rem; }
+.migration-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.migration-table th, .migration-table td { width: 50%; border: 1px solid #b3bfcb; padding: .5rem; vertical-align: top; }
+.migration-table th { background: #edf2f7; }
+.migration-table td > div + div { margin-top: .3rem; }
+.migration-separator { margin: 3rem 0; }
+@media print {
+  .migration-report { padding: 0; max-width: none; font-size: 9pt; }
+  .migration-report h1 { font-size: 21pt; }
+  .migration-summary { break-inside: avoid; }
+  .migration-report h2 { break-before: auto; page-break-before: auto; }
+  .migration-conclusion { background: none; color: black; border: 1pt solid black; }
+  .migration-directory { break-before: page; margin-top: 0; }
+  .migration-table { break-inside: auto; font-size: 8pt; }
+  .migration-table thead { display: table-header-group; }
+  .migration-table tr { break-inside: avoid; }
+  .migration-separator { display: none; }
+}
+.migration-diagram { display: block; width: 100%; height: auto; margin: 1rem 0; }
+@media print { .migration-diagram { break-inside: avoid; } }
+@media (max-width: 700px) { .migration-report { padding: 1rem; } }
