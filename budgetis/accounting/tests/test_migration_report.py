@@ -123,3 +123,23 @@ def test_report_renders_both_directions(client, site_configuration_with_logo):
     assert "Destination des comptes" in content
     assert "Provenance des comptes" in content
     assert "window.print()" in content
+
+
+def test_balance_and_investments_excluded_from_report():
+    AccountFactory(scheme=ChartScheme.MCH1, function="3500", nature="301", sub_account="")
+    for function, nature in [("9100", "1"), ("9100", "300"), ("170", "503"), ("170", "661")]:
+        AccountFactory(scheme=ChartScheme.MCH1, function=function, nature=nature, sub_account="")
+    for nature in ["1000", "2000", "5010", "6010"]:
+        AccountFactory(scheme=ChartScheme.MCH2, function="61500", nature=nature, sub_account="")
+    mapping("170", "61500")
+    AccountCodeMapping.objects.create(
+        mch1_function="170",
+        mch1_nature="503",
+        mch2_function="61500",
+        mch2_nature="5010",
+    )
+    report = build_migration_report()
+    assert {row["code"] for row in report["forward_rows"]} == {"3500.301", "170.300"}
+    assert {row["code"] for row in report["reverse_rows"]} == {"61500.3000.00"}
+    assert report["total"] == 2
+    assert report["unmapped"] == 1

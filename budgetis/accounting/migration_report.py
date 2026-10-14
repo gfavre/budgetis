@@ -1,10 +1,22 @@
 """Describe the crosswalk without inferring amounts or allocation weights."""
 
 from collections import defaultdict
+from re import fullmatch
 
 from budgetis.accounting.models import Account
 from budgetis.accounting.models import AccountCodeMapping
 from budgetis.common.models import ChartScheme
+
+
+def is_operating_code(scheme, function, nature):
+    """Operating natures are 3xx/4xx in MCH1 and 3xxx/4xxx in MCH2.
+
+    Historical BDI balance codes use a 9xxx first segment; their second
+    segment is a subdivision, not an operating nature.
+    """
+    if scheme == ChartScheme.MCH1:
+        return bool(fullmatch(r"[34][0-9]{2}", nature)) and not fullmatch(r"9[0-9]{3}", function)
+    return scheme == ChartScheme.MCH2 and bool(fullmatch(r"[34][0-9]{3}", nature))
 
 
 def build_migration_report():
@@ -16,13 +28,17 @@ def build_migration_report():
         "scheme", "function", "nature", "sub_account", "label"
     )
     for scheme, function, nature, sub_account, label in accounts.iterator():
+        if not is_operating_code(scheme, function, nature):
+            continue
         code = f"{function}.{nature}" + (f".{sub_account}" if sub_account else "")
         known[scheme][code] = label
     for mapping in AccountCodeMapping.objects.all():
         source, target = mapping.mch1_code, mapping.mch2_code
-        if mapping.mch1_function and mapping.mch1_nature:
+        if mapping.mch1_function and is_operating_code(ChartScheme.MCH1, mapping.mch1_function, mapping.mch1_nature):
             forward[source]  # Keep sources even when their target is incomplete.
-            if mapping.mch2_function and mapping.mch2_nature:
+            if mapping.mch2_function and is_operating_code(
+                ChartScheme.MCH2, mapping.mch2_function, mapping.mch2_nature
+            ):
                 forward[source].add(target)
                 reverse[target].add(source)
     sources = set(forward) | set(known[ChartScheme.MCH1])
