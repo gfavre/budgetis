@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.0] - 2026-10-14
+
+### Changed
+
+- **Compact zero-amount notes**: budget and actuals zero indicators now share
+  a single non-wrapping line beneath the account label, keeping migration
+  directories compact when printed.
+
 ## [1.11.0] - 2026-10-14
 
 ### Added

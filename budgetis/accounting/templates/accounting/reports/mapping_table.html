@@ -10,7 +10,7 @@
       <tr>
         <td>
           <b>{{ row.code }}</b>{% if row.label %}<br />{{ row.label }}{% endif %}
-          {% for note in row.zero_notes %}<div class="migration-zero-note">{{ note }}</div>{% endfor %}
+          {% if row.zero_notes %}<div class="migration-zero-note">{{ row.zero_notes|join:" · " }}</div>{% endif %}
         </td>
         <td>{% for link in row.links %}<div><b>{{ link.code }}</b>{% if link.label %} — {{ link.label }}{% endif %}</div>{% empty %}<em>Sans correspondance renseignée</em>{% endfor %}</td>
       </tr>
