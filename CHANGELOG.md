@@ -7,7 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.0] - 2026-10-14
+
+### Added
+
+- **Zero-amount indicators in migration directories**: accounts with both
+  charges and revenues at zero are marked separately for the latest budget
+  and actuals, with the corresponding year. Missing records are not treated
+  as zero, and offsetting amounts are not marked as zero.
+
 ### Fixed
+
+- **Migration comparison scope**: statistics and MCH1 origins now use only
+  operating accounts from the latest MCH1 budget. Historical accounts absent
+  from that budget, balance accounts and investment accounts are excluded.
+  The guide identifies its reference budget year.
 
 - **Existing production media volume**: Compose now explicitly uses the
   external `budgetis_media_data` volume, avoiding the ownership warning and

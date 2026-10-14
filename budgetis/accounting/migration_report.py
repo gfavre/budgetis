@@ -19,21 +19,42 @@ def is_operating_code(scheme, function, nature):
     return scheme == ChartScheme.MCH2 and bool(fullmatch(r"[34][0-9]{3}", nature))
 
 
-def build_migration_report():
-    forward = defaultdict(set)
-    reverse = defaultdict(set)
+def _account_details(reference_year):
     known = {ChartScheme.MCH1: {}, ChartScheme.MCH2: {}}
+    snapshots = {}
+    reference_codes = set()
     # Latest imported label per code, independent of budget/actual duplicates.
     accounts = Account.objects.order_by("year", "is_budget", "pk").values_list(
-        "scheme", "function", "nature", "sub_account", "label"
+        "scheme", "function", "nature", "sub_account", "label", "year", "is_budget", "charges", "revenues"
     )
-    for scheme, function, nature, sub_account, label in accounts.iterator():
+    for scheme, function, nature, sub_account, label, year, is_budget, charges, revenues in accounts.iterator():
         if not is_operating_code(scheme, function, nature):
             continue
         code = f"{function}.{nature}" + (f".{sub_account}" if sub_account else "")
         known[scheme][code] = label
+        snapshot_key = (scheme, is_budget)
+        if snapshot_key not in snapshots or snapshots[snapshot_key][0] != year:
+            snapshots[snapshot_key] = (year, {})
+        snapshots[snapshot_key][1][code] = charges == 0 and revenues == 0
+        if scheme == ChartScheme.MCH1 and is_budget and year == reference_year:
+            reference_codes.add(code)
+    return known, reference_codes, snapshots
+
+
+def build_migration_report():
+    forward = defaultdict(set)
+    reverse = defaultdict(set)
+    reference_year = (
+        Account.objects.filter(scheme=ChartScheme.MCH1, is_budget=True)
+        .order_by("-year")
+        .values_list("year", flat=True)
+        .first()
+    )
+    known, reference_codes, snapshots = _account_details(reference_year)
     for mapping in AccountCodeMapping.objects.all():
         source, target = mapping.mch1_code, mapping.mch2_code
+        if reference_year is not None and source not in reference_codes:
+            continue
         if mapping.mch1_function and is_operating_code(ChartScheme.MCH1, mapping.mch1_function, mapping.mch1_nature):
             forward[source]  # Keep sources even when their target is incomplete.
             if mapping.mch2_function and is_operating_code(
@@ -41,7 +62,7 @@ def build_migration_report():
             ):
                 forward[source].add(target)
                 reverse[target].add(source)
-    sources = set(forward) | set(known[ChartScheme.MCH1])
+    sources = reference_codes if reference_year is not None else set(forward)
     targets = set(reverse) | set(known[ChartScheme.MCH2])
     mapped = {code for code in sources if forward[code]}
     split = {code for code in mapped if len(forward[code]) > 1}
@@ -50,11 +71,20 @@ def build_migration_report():
     complex_codes = split & merged
     simple = mapped - split - merged
 
+    def zero_notes(scheme, code):
+        notes = []
+        for is_budget, label in [(True, "Budget"), (False, "Comptes")]:
+            year, zero_codes = snapshots.get((scheme, is_budget), (None, {}))
+            if zero_codes.get(code, False):
+                notes.append(f"{label} {year}: à zéro")
+        return notes
+
     def rows(codes, links, scheme, other_scheme):
         return [
             {
                 "code": code,
                 "label": known[scheme].get(code, ""),
+                "zero_notes": zero_notes(scheme, code),
                 "links": [
                     {"code": other, "label": known[other_scheme].get(other, "")} for other in sorted(links[code])
                 ],
@@ -63,6 +93,7 @@ def build_migration_report():
         ]
 
     return {
+        "reference_year": reference_year,
         "reading_example_label": known[ChartScheme.MCH2].get("61500.3141.01", ""),
         "split_example": rows(
             ["100.303"] if len(forward["100.303"]) > 1 else sorted(split)[:1],

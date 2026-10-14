@@ -31,8 +31,14 @@ def test_split_merge_overlap_and_distinct_accounts():
     mapping("300", "03100")  # merge only
     mapping("400", "03100")  # complex
     mapping("400", "04100")
+    for source in ["100", "200", "300", "400"]:
+        AccountFactory(
+            function=source, nature="300", sub_account="", year=2025, scheme=ChartScheme.MCH1, is_budget=True
+        )
     for year in [2024, 2025]:
-        AccountFactory(function="900", nature="300", sub_account="", year=year, scheme=ChartScheme.MCH1)
+        AccountFactory(
+            function="900", nature="300", sub_account="", year=year, scheme=ChartScheme.MCH1, is_budget=True
+        )
     report = build_migration_report()
     assert report["total"] == 5
     assert report["mapped"] == 4
@@ -126,7 +132,8 @@ def test_report_renders_both_directions(client, site_configuration_with_logo):
 
 
 def test_balance_and_investments_excluded_from_report():
-    AccountFactory(scheme=ChartScheme.MCH1, function="3500", nature="301", sub_account="")
+    AccountFactory(scheme=ChartScheme.MCH1, function="3500", nature="301", sub_account="", is_budget=True)
+    AccountFactory(scheme=ChartScheme.MCH1, function="170", nature="300", sub_account="", is_budget=True)
     for function, nature in [("9100", "1"), ("9100", "300"), ("170", "503"), ("170", "661")]:
         AccountFactory(scheme=ChartScheme.MCH1, function=function, nature=nature, sub_account="")
     for nature in ["1000", "2000", "5010", "6010"]:
@@ -143,3 +150,67 @@ def test_balance_and_investments_excluded_from_report():
     assert {row["code"] for row in report["reverse_rows"]} == {"61500.3000.00"}
     assert report["total"] == 2
     assert report["unmapped"] == 1
+
+
+def test_only_latest_mch1_budget_sources_are_compared():
+    AccountFactory(scheme=ChartScheme.MCH1, function="100", nature="300", sub_account="", year=2025, is_budget=True)
+    AccountFactory(scheme=ChartScheme.MCH1, function="200", nature="300", sub_account="", year=2026, is_budget=True)
+    AccountFactory(scheme=ChartScheme.MCH1, function="300", nature="300", sub_account="", year=2027, is_budget=False)
+    AccountFactory(scheme=ChartScheme.MCH2, function="01100", nature="3000", year=2028, is_budget=True)
+    mapping("100", "01100")
+    mapping("200", "01100")
+    report = build_migration_report()
+    assert report["reference_year"] == 2026
+    assert report["total"] == report["mapped"] == report["simple"] == 1
+    assert report["unmapped"] == report["merged"] == 0
+    assert [row["code"] for row in report["forward_rows"]] == ["200.300"]
+    target = next(row for row in report["reverse_rows"] if row["code"] == "01100.3000.00")
+    assert [link["code"] for link in target["links"]] == ["200.300"]
+
+
+def test_zero_notes_use_latest_budget_and_actuals_and_never_net_amounts():
+    for function in ["100", "200", "300"]:
+        AccountFactory(
+            scheme=ChartScheme.MCH1,
+            function=function,
+            nature="300",
+            sub_account="",
+            year=2026,
+            is_budget=True,
+            charges=0,
+            revenues=0,
+        )
+    AccountFactory(
+        scheme=ChartScheme.MCH1,
+        function="100",
+        nature="300",
+        sub_account="",
+        year=2025,
+        is_budget=False,
+        charges=0,
+        revenues=0,
+    )
+    AccountFactory(
+        scheme=ChartScheme.MCH1,
+        function="200",
+        nature="300",
+        sub_account="",
+        year=2025,
+        is_budget=False,
+        charges=100,
+        revenues=100,
+    )
+    AccountFactory(
+        scheme=ChartScheme.MCH1,
+        function="300",
+        nature="300",
+        sub_account="",
+        year=2024,
+        is_budget=False,
+        charges=0,
+        revenues=0,
+    )
+    rows = {row["code"]: row for row in build_migration_report()["forward_rows"]}
+    assert rows["100.300"]["zero_notes"] == ["Budget 2026: à zéro", "Comptes 2025: à zéro"]
+    assert rows["200.300"]["zero_notes"] == ["Budget 2026: à zéro"]
+    assert rows["300.300"]["zero_notes"] == ["Budget 2026: à zéro"]

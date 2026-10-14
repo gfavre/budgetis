@@ -8,7 +8,10 @@
   <tbody>
     {% for row in rows %}
       <tr>
-        <td><b>{{ row.code }}</b>{% if row.label %}<br />{{ row.label }}{% endif %}</td>
+        <td>
+          <b>{{ row.code }}</b>{% if row.label %}<br />{{ row.label }}{% endif %}
+          {% for note in row.zero_notes %}<div class="migration-zero-note">{{ note }}</div>{% endfor %}
+        </td>
         <td>{% for link in row.links %}<div><b>{{ link.code }}</b>{% if link.label %} — {{ link.label }}{% endif %}</div>{% empty %}<em>Sans correspondance renseignée</em>{% endfor %}</td>
       </tr>
     {% empty %}

@@ -45,6 +45,7 @@
 .migration-table th, .migration-table td { width: 50%; border: 1px solid #b3bfcb; padding: .5rem; vertical-align: top; }
 .migration-table th { background: var(--report-primary-light); }
 .migration-table td > div + div { margin-top: .3rem; }
+.migration-zero-note { font-size: .85em; font-style: italic; color: #526172; }
 .migration-separator { margin: 3rem 0; }
 .migration-finding-guide { margin-top: 3rem; }
 .migration-reference-table { border-collapse: collapse; width: 100%; margin: .8rem 0; }
