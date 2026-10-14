@@ -223,6 +223,18 @@ input[type="checkbox"] {
   border-bottom-color: color-mix(in srgb, var(--brand-color-alt) 60%, white);
 }
 
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus,
+.navbar .dropdown-item.active,
+.navbar .dropdown-item:active {
+  color: #102847;
+  background-color: color-mix(in srgb, var(--brand-color-alt) 12%, white);
+}
+
+.navbar .dropdown-item.active {
+  font-weight: 600;
+}
+
 .table, .dataTable-table {
   border-color: color-mix(in srgb, var(--brand-color-alt) 20%, black 1%);
 }

@@ -179,10 +179,20 @@
                       {% trans "Reporting" %}
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item {% navactive 'finance:index' %}"
-   href="{% url 'finance:index' %}">Rapport financier</a></li>
-                      <li><a class="dropdown-item {% navactive 'accounting:mch2-migration-report' %}"
-   href="{% url 'accounting:mch2-migration-report' %}">Migration MCH1 ↔ MCH2</a></li>
+                      <li>
+                        <a class="dropdown-item {% navactive 'finance:index' %}"
+                           href="{% url 'finance:index' %}">
+                          <i class="bi bi-bar-chart-line me-1"></i>
+                          Rapport financier
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item {% navactive 'accounting:mch2-migration-report' %}"
+                           href="{% url 'accounting:mch2-migration-report' %}">
+                          <i class="bi bi-arrow-left-right me-1"></i>
+                          Migration MCH1 ↔ MCH2
+                        </a>
+                      </li>
                     </ul>
                   </li>
                   <li class="nav-item dropdown">
