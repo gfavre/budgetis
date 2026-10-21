@@ -34,13 +34,18 @@ make up
 Deploying to prod (run on the server, from the repo root):
 
 ```bash
-./scripts/deploy.sh
+./deploy.sh
 ```
 
 Pulls the latest `master` (fast-forward only), rebuilds the Docker images, and
 restarts the changed services. Migrations, `collectstatic`, `compilemessages`
 and `compress` already happen automatically (build time / container
 entrypoint) - see `docker/web.Dockerfile` and `docker/entrypoint.sh`.
+
+The production Compose file includes PostgreSQL (`db`) and Redis (`redis`).
+Application services wait for both services to be healthy before starting.
+Keep the same Compose project name when deploying so PostgreSQL continues to
+use the existing `postgres_data` volume.
 
 Run tests:
 

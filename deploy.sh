@@ -2,7 +2,7 @@
 set -e
 
 # Run this on the prod server, from the repo root, to ship the latest master:
-#   ./scripts/deploy.sh
+#   ./deploy.sh
 # Migrations, collectstatic, compilemessages and compress already happen
 # automatically (build time / container entrypoint) - see docker/web.Dockerfile
 # and docker/entrypoint.sh.
