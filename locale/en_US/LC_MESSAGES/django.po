@@ -1877,3 +1877,27 @@ msgstr ""
 
 msgid "Enable separate Budget and Actuals tables for each function. Labels alone do not enable the split."
 msgstr ""
+
+msgid "MCH1 account"
+msgstr ""
+
+msgid "Balance sheet account"
+msgstr ""
+
+msgid "Transfer to balance sheet"
+msgstr ""
+
+msgid "Transfers to balance sheet"
+msgstr ""
+
+msgid "Transfer to balance sheet - fully recharged"
+msgstr ""
+
+msgid "Balance sheet account to be specified"
+msgstr ""
+
+msgid "Transferred to the balance sheet"
+msgstr ""
+
+msgid "Fully recharged operations, without added value."
+msgstr ""

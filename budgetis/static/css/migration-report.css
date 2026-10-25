@@ -34,7 +34,7 @@
 .migration-summary, .migration-reading-guide { margin-top: 3rem; }
 .migration-total { background: var(--report-primary-light); border-radius: .7rem; text-align: center; padding: .8rem; margin: 1.5rem 0 .8rem; }
 .migration-total strong, .migration-scope strong { font-size: 2.2rem; }
-.migration-scope { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; text-align: center; }
+.migration-scope { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1rem; text-align: center; }
 .migration-scope > div { padding: .8rem; }
 .migration-verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem 0; }
 .migration-verdict p { margin: 0; }

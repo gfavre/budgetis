@@ -43,6 +43,15 @@
       <p>Le graphique applique les quatre situations décrites ci-dessus aux correspondances de la table de conversion communale.</p>
       <div class="migration-total"><strong>{{ report.total }}</strong> comptes MCH1 distincts connus</div>
       <div class="migration-scope">
+        {% if report.balance_transfers %}
+          <div>
+            <strong>{{ report.balance_transfers }}</strong>
+            <br />
+            {% trans "Transferred to the balance sheet" %}
+            <br />
+            <small>{% trans "Fully recharged operations, without added value." %}</small>
+          </div>
+        {% endif %}
         <div>
           <strong>{{ report.unmapped }}</strong>
           <br />

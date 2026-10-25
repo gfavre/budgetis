@@ -4,6 +4,7 @@ from collections import defaultdict
 from re import fullmatch
 
 from budgetis.accounting.models import Account
+from budgetis.accounting.models import AccountBalanceTransfer
 from budgetis.accounting.models import AccountCodeMapping
 from budgetis.common.models import ChartScheme
 
@@ -51,8 +52,11 @@ def build_migration_report():
         .first()
     )
     known, reference_codes, snapshots = _account_details(reference_year)
+    balance_transfers = dict(AccountBalanceTransfer.objects.values_list("mch1_code", "target_code"))
     for mapping in AccountCodeMapping.objects.all():
         source, target = mapping.mch1_code, mapping.mch2_code
+        if source in balance_transfers:
+            continue
         if reference_year is not None and source not in reference_codes:
             continue
         if mapping.mch1_function and is_operating_code(ChartScheme.MCH1, mapping.mch1_function, mapping.mch1_nature):
@@ -63,6 +67,7 @@ def build_migration_report():
                 forward[source].add(target)
                 reverse[target].add(source)
     sources = reference_codes if reference_year is not None else set(forward)
+    balance_codes = sources & balance_transfers.keys()
     targets = set(reverse) | set(known[ChartScheme.MCH2])
     mapped = {code for code in sources if forward[code]}
     split = {code for code in mapped if len(forward[code]) > 1}
@@ -84,6 +89,8 @@ def build_migration_report():
             {
                 "code": code,
                 "label": known[scheme].get(code, ""),
+                "balance_transfer": scheme == ChartScheme.MCH1 and code in balance_codes,
+                "balance_target": balance_transfers.get(code, "") if scheme == ChartScheme.MCH1 else "",
                 "zero_notes": zero_notes(scheme, code) if not links[code] else [],
                 "links": [
                     {"code": other, "label": known[other_scheme].get(other, "")} for other in sorted(links[code])
@@ -108,7 +115,8 @@ def build_migration_report():
             ChartScheme.MCH1,
         ),
         "total": len(sources),
-        "unmapped": len(sources - mapped),
+        "unmapped": len(sources - mapped - balance_codes),
+        "balance_transfers": len(balance_codes),
         "mapped": len(mapped),
         "split": len(split),
         "merged": len(merged),

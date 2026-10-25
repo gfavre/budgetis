@@ -259,6 +259,21 @@ class AccountCodeMapping(TimeStampedModel):
         return f"{self.mch1_code} -> {self.mch2_code}"
 
 
+class AccountBalanceTransfer(TimeStampedModel):
+    """Explicit MCH1 operating accounts moving to the MCH2 balance sheet."""
+
+    mch1_code = models.CharField(max_length=40, unique=True, verbose_name=_("MCH1 account"))
+    target_code = models.CharField(max_length=40, blank=True, verbose_name=_("Balance sheet account"))
+
+    class Meta:
+        ordering = ("mch1_code",)
+        verbose_name = _("Transfer to balance sheet")
+        verbose_name_plural = _("Transfers to balance sheet")
+
+    def __str__(self):
+        return self.mch1_code
+
+
 class Account(TimeStampedModel):
     """
     Represents a specific account based on its full code structure.

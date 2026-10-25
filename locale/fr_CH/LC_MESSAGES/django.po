@@ -1925,3 +1925,27 @@ msgstr "Libellés enregistrés. Le découpage est désactivé : cochez « Décou
 
 msgid "Enable separate Budget and Actuals tables for each function. Labels alone do not enable the split."
 msgstr "Active les tableaux Budget et Comptes distincts pour chaque fonction. Les libellés seuls n’activent pas le découpage."
+
+msgid "MCH1 account"
+msgstr "Compte MCH1"
+
+msgid "Balance sheet account"
+msgstr "Compte de bilan"
+
+msgid "Transfer to balance sheet"
+msgstr "Passage au bilan"
+
+msgid "Transfers to balance sheet"
+msgstr "Passages au bilan"
+
+msgid "Transfer to balance sheet - fully recharged"
+msgstr "Passage au bilan — intégralement refacturé"
+
+msgid "Balance sheet account to be specified"
+msgstr "Compte de bilan à préciser"
+
+msgid "Transferred to the balance sheet"
+msgstr "passés au bilan"
+
+msgid "Fully recharged operations, without added value."
+msgstr "Opérations intégralement refacturées, sans plus-value."

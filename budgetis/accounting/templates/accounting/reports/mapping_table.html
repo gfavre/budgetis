@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <table class="migration-table">
   <thead>
     <tr>
@@ -12,7 +14,18 @@
           <b>{{ row.code }}</b>{% if row.label %}<br />{{ row.label }}{% endif %}
           {% if row.zero_notes %}<div class="migration-zero-note">{{ row.zero_notes|join:" · " }}</div>{% endif %}
         </td>
-        <td>{% for link in row.links %}<div><b>{{ link.code }}</b>{% if link.label %} — {{ link.label }}{% endif %}</div>{% empty %}<em>Sans correspondance renseignée</em>{% endfor %}</td>
+        <td>
+          {% if row.balance_transfer %}
+            <strong>{% trans "Transfer to balance sheet - fully recharged" %}</strong>
+            {% if row.balance_target %}
+              <div>{{ row.balance_target }}</div>
+            {% else %}
+              <div>{% trans "Balance sheet account to be specified" %}</div>
+            {% endif %}
+          {% else %}
+            {% for link in row.links %}<div><b>{{ link.code }}</b>{% if link.label %} — {{ link.label }}{% endif %}</div>{% empty %}<em>Sans correspondance renseignée</em>{% endfor %}
+          {% endif %}
+        </td>
       </tr>
     {% empty %}
       <tr>

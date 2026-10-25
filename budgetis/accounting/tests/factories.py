@@ -4,6 +4,7 @@ import factory
 from factory.django import DjangoModelFactory
 
 from budgetis.accounting.models import Account
+from budgetis.accounting.models import AccountBalanceTransfer
 from budgetis.accounting.models import AccountCodeMapping
 from budgetis.accounting.models import AccountComment
 from budgetis.accounting.models import AccountGroup
@@ -108,6 +109,15 @@ class AccountCodeMappingFactory(DjangoModelFactory):
 
     class Meta:
         model = AccountCodeMapping
+
+
+class AccountBalanceTransferFactory(DjangoModelFactory):
+    mch1_code = factory.Sequence(lambda n: f"{700 + n}.300")
+    target_code = ""
+
+    class Meta:
+        model = AccountBalanceTransfer
+        django_get_or_create = ("mch1_code",)
 
 
 class AccountCommentFactory(DjangoModelFactory):

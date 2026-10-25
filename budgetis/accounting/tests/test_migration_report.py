@@ -6,12 +6,41 @@ from django.urls import reverse
 
 from budgetis.accounting.migration_report import build_migration_report
 from budgetis.accounting.models import AccountCodeMapping
+from budgetis.accounting.tests.factories import AccountBalanceTransferFactory
+from budgetis.accounting.tests.factories import AccountCodeMappingFactory
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.common.models import ChartScheme
 from budgetis.users.tests.factories import UserFactory
 
 
 pytestmark = pytest.mark.django_db
+
+
+def test_balance_transfer_is_explained_and_excluded_from_missing_and_mapping_counts():
+    AccountFactory(function="650", nature="317", sub_account="", is_budget=True)
+    AccountBalanceTransferFactory(mch1_code="650.317")
+    AccountCodeMappingFactory(mch1_function="650", mch1_nature="317", mch2_function="01100")
+    report = build_migration_report()
+    assert report["total"] == report["balance_transfers"] == 1
+    assert report["unmapped"] == report["mapped"] == 0
+    assert report["reverse_rows"] == []
+    assert report["forward_rows"][0]["balance_transfer"] is True
+    assert report["forward_rows"][0]["balance_target"] == ""
+    assert report["forward_rows"][0]["links"] == []
+
+
+def test_balance_transfer_renders_explanation_and_optional_target(client, site_configuration_with_logo):
+    AccountFactory(function="650", nature="317", sub_account="", is_budget=True)
+    transfer = AccountBalanceTransferFactory(mch1_code="650.317")
+    assert str(transfer) == "650.317"
+    client.force_login(UserFactory())
+    url = reverse("accounting:mch2-migration-report")
+    response = client.get(url)
+    assert response.status_code == HTTPStatus.OK
+    assert "Passage au bilan" in response.content.decode()
+    transfer.target_code = "2000.01"
+    transfer.save()
+    assert "2000.01" in client.get(url).content.decode()
 
 
 def mapping(source, target):
