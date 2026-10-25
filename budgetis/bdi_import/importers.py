@@ -22,6 +22,7 @@ MAX_PARTS = 3
 FUNCTION_PART = 0
 NATURE_PART = 1
 SUBACCOUNT_PART = 2
+MCH2_SUB_ACCOUNT_WIDTH = 2
 
 # How many offending codes are quoted in an import log's message.
 INVALID_CODE_EXAMPLES = 5
@@ -122,8 +123,7 @@ def build_source_account_map(source_year) -> dict:
 
 
 def _normalize_sub_account(value: str) -> str:
-    """An all-zero sub-account ("0", "00"...) means "no sub-account" - same
-    convention used everywhere else in this project (e.g. import_mch2_accounts)."""
+    """Parse the historical MCH1 convention; MCH2 is canonicalized per scheme later."""
     value = value.strip()
     return "" if value.isdigit() and int(value) == 0 else value
 
@@ -184,6 +184,8 @@ def process_account_row(row, column_map, derived_from_total, scheme=ChartScheme.
     if code is None:
         return None
     function, nature, sub_account = code
+    if scheme == ChartScheme.MCH2:
+        sub_account = sub_account.lstrip(".").zfill(MCH2_SUB_ACCOUNT_WIDTH)
 
     if not function or not function.isdigit():
         raw_code = f"{function}.{nature}"

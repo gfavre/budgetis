@@ -78,6 +78,7 @@ class Command(BaseCommand):
             function = self._normalize(row[COL_FUNCTION], FUNCTION_WIDTH)
             nature = self._normalize(row[COL_NATURE], NATURE_WIDTH)
             sub_account = self._normalize(row[COL_SUB_ACCOUNT], SUB_ACCOUNT_WIDTH)
+            sub_account = sub_account.lstrip(".").zfill(SUB_ACCOUNT_WIDTH)
             key = (function, nature, sub_account)
             if key in seen:
                 continue

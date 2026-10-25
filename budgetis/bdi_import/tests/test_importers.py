@@ -35,6 +35,54 @@ class TestNormalizeSubAccount:
 
 
 class TestExtractAccountCode:
+    @pytest.mark.parametrize("extension", [".00", ".01", ".05"])
+    def test_mch2_split_column_strips_extension_separator(self, extension):
+        rows = pd.DataFrame(
+            [{"Function": "01100", "Nature": "3000", "Extension": extension, "Label": "Test", "DR": "20"}]
+        )
+        import_accounts_from_dataframe(
+            rows,
+            year=2027,
+            is_budget=True,
+            scheme=ChartScheme.MCH2,
+            column_map={
+                "function": "Function",
+                "nature": "Nature",
+                "sub_account": "Extension",
+                "label": "Label",
+                "charges": "DR",
+            },
+        )
+        assert Account.objects.get().sub_account == extension.lstrip(".")
+
+    @pytest.mark.parametrize("extension", ["", ".0", ".00", ".000"])
+    @pytest.mark.parametrize("split_columns", [False, True])
+    def test_mch2_import_updates_canonical_account_without_recreating_blank(self, extension, split_columns):
+        account = AccountFactory(
+            scheme=ChartScheme.MCH2,
+            function="01100",
+            nature="3000",
+            sub_account="00",
+            year=2027,
+            is_budget=True,
+            charges=Decimal("10"),
+        )
+        row = {"Compte": f"01100.3000{extension}", "Label": "Commissions", "DR": "20"}
+        column_map = {"code": "Compte", "label": "Label", "charges": "DR"}
+        if split_columns:
+            row.update({"Function": "01100", "Nature": "3000", "Extension": extension.lstrip(".")})
+            column_map.pop("code")
+            column_map.update({"function": "Function", "nature": "Nature", "sub_account": "Extension"})
+
+        for _ in range(2):
+            import_accounts_from_dataframe(
+                pd.DataFrame([row]), year=2027, is_budget=True, scheme=ChartScheme.MCH2, column_map=column_map
+            )
+
+        account.refresh_from_db()
+        assert account.charges == Decimal("20")
+        assert Account.objects.filter(year=2027, function="01100", nature="3000", is_budget=True).count() == 1
+
     @pytest.mark.parametrize("extension", ["", ".0", ".00", ".000"])
     def test_combined_code_default_extension_updates_existing_account(self, extension):
         account = AccountFactory(

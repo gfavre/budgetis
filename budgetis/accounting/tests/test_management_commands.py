@@ -564,7 +564,7 @@ class TestImportMch2Accounts:
 
         assert "1 created, 0 already existed" in out
         account = Account.objects.get()
-        assert (account.function, account.nature, account.sub_account) == ("01100", "3010", "")
+        assert (account.function, account.nature, account.sub_account) == ("01100", "3010", "00")
         assert account.label == "Salaire"
         assert account.scheme == ChartScheme.MCH2
         assert account.is_budget is True
@@ -632,7 +632,7 @@ class TestImportMch2Accounts:
             year=2027,
             function="01100",
             nature="3010",
-            sub_account="",
+            sub_account="00",
             is_budget=True,
             label="Real imported data",
             charges=Decimal("5000.00"),
