@@ -5,14 +5,7 @@
   {% for rule in rules %}
     <tr>
       <td>{{ rule.pattern }}</td>
-      <td class="text-end">
-        <a href="#"
-           hx-get="{% url 'finance:sankey-rule-edit' 'label' rule.pk %}?scheme={{ scheme }}"
-           hx-target="#sankeyRuleModal .modal-content"
-           hx-swap="innerHTML"
-           data-bs-toggle="modal"
-           data-bs-target="#sankeyRuleModal"><i class="bi bi-pencil"></i></a>
-      </td>
+      <td class="text-end">{% include "finance/partials/rule_actions.html" with rule_type="label" %}</td>
     </tr>
   {% empty %}
     <tr>

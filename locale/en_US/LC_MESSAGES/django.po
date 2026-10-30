@@ -1901,3 +1901,16 @@ msgstr ""
 
 msgid "Fully recharged operations, without added value."
 msgstr ""
+
+msgid "Delete rule"
+msgstr ""
+
+msgid "Edit rule"
+msgstr ""
+
+#, python-format
+msgid "Remove this rule from %(scheme)s? Matching accounts may move to another category or disappear from the Sankey."
+msgstr ""
+
+msgid "This only removes the classification rule. Accounts and their amounts stay unchanged."
+msgstr ""

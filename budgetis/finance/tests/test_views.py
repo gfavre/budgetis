@@ -4,7 +4,9 @@ from typing import cast
 
 import pytest
 from django.contrib.auth.models import Permission
+from django.test import Client
 from django.urls import reverse
+from django.utils.translation import gettext
 
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AvailableYearFactory
@@ -16,6 +18,7 @@ from budgetis.finance.models import SankeyNatureRangeRule
 from budgetis.finance.tests.factories import SankeyAccountCodeRuleFactory
 from budgetis.finance.tests.factories import SankeyCategoryFactory
 from budgetis.finance.tests.factories import SankeyFunctionNatureRuleFactory
+from budgetis.finance.tests.factories import SankeyLabelRuleFactory
 from budgetis.finance.tests.factories import SankeyNatureRangeRuleFactory
 from budgetis.users.tests.factories import UserFactory
 
@@ -23,6 +26,18 @@ from budgetis.users.tests.factories import UserFactory
 pytestmark = pytest.mark.django_db
 
 LOGIN_URL = "/accounts/login/"
+RULE_FACTORIES = {
+    "nature-range": SankeyNatureRangeRuleFactory,
+    "function-nature": SankeyFunctionNatureRuleFactory,
+    "account-code": SankeyAccountCodeRuleFactory,
+    "label": SankeyLabelRuleFactory,
+}
+
+
+@pytest.fixture(params=[(kind, scheme) for kind in RULE_FACTORIES for scheme in ChartScheme.values])
+def sankey_rule_case(request):
+    kind, scheme = request.param
+    return kind, RULE_FACTORIES[kind](scheme=scheme)
 
 
 def _grant_view_sankey_category(user):
@@ -86,6 +101,28 @@ class TestSankeyView:
 
 
 class TestSankeyRulesView:
+    @pytest.mark.parametrize("can_change", [False, True])
+    def test_rule_actions_follow_edit_permission(
+        self, client, site_configuration_with_logo, sankey_rule_case, can_change
+    ):
+        kind, rule = sankey_rule_case
+        user = UserFactory()
+        _grant_view_sankey_category(user)
+        if can_change:
+            _grant_change_sankey_category(user)
+        client.force_login(user)
+
+        response = client.get(reverse("finance:sankey-rules"), {"scheme": rule.scheme})
+
+        html = response.content.decode()
+        for action in ("edit", "delete"):
+            url = reverse(f"finance:sankey-rule-{action}", args=[kind, rule.pk])
+            assert (url in html) == can_change
+        add_url = reverse("finance:sankey-rule-add", args=[kind, rule.category_id])
+        assert (add_url in html) == can_change
+        category_url = reverse("finance:sankey-category-edit", args=[rule.category_id])
+        assert (category_url in html) == can_change
+
     def test_login_required(self, client):
         response = client.get(reverse("finance:sankey-rules"))
         assert response.status_code == HTTPStatus.FOUND
@@ -138,6 +175,21 @@ class TestSankeyRulesView:
 
 
 class TestSankeyRuleCreateView:
+    def test_invalid_scheme_cannot_create_rule(self, client):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        category = _make_category()
+
+        response = client.post(
+            reverse("finance:sankey-rule-add", args=["nature-range", category.pk]),
+            {"nature_start": 9500, "nature_end": 9509, "priority": 100},
+            QUERY_STRING="scheme=invalid",
+        )
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
+        assert not SankeyNatureRangeRule.objects.filter(category=category).exists()
+
     def test_login_required(self, client):
         category = _make_category()
         response = client.get(reverse("finance:sankey-rule-add", args=["nature-range", category.pk]))
@@ -196,6 +248,29 @@ class TestSankeyRuleCreateView:
 
 
 class TestSankeyRuleUpdateView:
+    def test_login_required(self, client):
+        rule = _make_nature_range_rule()
+        response = client.get(reverse("finance:sankey-rule-edit", args=["nature-range", rule.pk]))
+        assert response.status_code == HTTPStatus.FOUND
+        assert LOGIN_URL in response.url
+
+    def test_wrong_scheme_cannot_update_rule(self, client):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        rule = _make_nature_range_rule(scheme=ChartScheme.MCH1)
+        original_nature_end = rule.nature_end
+
+        response = client.post(
+            reverse("finance:sankey-rule-edit", args=["nature-range", rule.pk]),
+            {"nature_start": 9000, "nature_end": 9099, "priority": 150},
+            QUERY_STRING=f"scheme={ChartScheme.MCH2}",
+        )
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
+        rule.refresh_from_db()
+        assert rule.nature_end == original_nature_end
+
     def test_view_only_permission_is_forbidden(self, client):
         user = UserFactory()
         _grant_view_sankey_category(user)
@@ -223,6 +298,118 @@ class TestSankeyRuleUpdateView:
         rule.refresh_from_db()
         assert rule.nature_end == new_nature_end
         assert rule.priority == new_priority
+        assert str(new_priority) in response.content.decode()
+
+
+class TestSankeyRuleDeleteView:
+    def test_login_required(self, client, sankey_rule_case):
+        kind, rule = sankey_rule_case
+        response = client.get(reverse("finance:sankey-rule-delete", args=[kind, rule.pk]))
+        assert response.status_code == HTTPStatus.FOUND
+        assert LOGIN_URL in response.url
+
+    @pytest.mark.parametrize("method", ["get", "post"])
+    def test_view_only_permission_is_forbidden(self, client, sankey_rule_case, method):
+        kind, rule = sankey_rule_case
+        user = UserFactory()
+        _grant_view_sankey_category(user)
+        client.force_login(user)
+
+        response = getattr(client, method)(reverse("finance:sankey-rule-delete", args=[kind, rule.pk]))
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        assert type(rule).objects.filter(pk=rule.pk).exists()
+
+    def test_get_confirms_without_deleting(self, client, sankey_rule_case):
+        kind, rule = sankey_rule_case
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+
+        response = client.get(reverse("finance:sankey-rule-delete", args=[kind, rule.pk]))
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["scheme"] == rule.scheme
+        assert gettext("Delete rule") in response.content.decode()
+        assert 'name="csrfmiddlewaretoken"' in response.content.decode()
+        assert type(rule).objects.filter(pk=rule.pk).exists()
+
+    def test_post_deletes_only_the_selected_rule_and_refreshes_empty_state(self, client, sankey_rule_case):
+        kind, rule = sankey_rule_case
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        other_scheme = ChartScheme.MCH2 if rule.scheme == ChartScheme.MCH1 else ChartScheme.MCH1
+        other = RULE_FACTORIES[kind](category=rule.category, scheme=other_scheme)
+        account = AccountFactory(charges=Decimal("123"), revenues=Decimal("45"))
+        before_account = type(account).objects.values().get(pk=account.pk)
+        category = rule.category
+        rule_pk = rule.pk
+
+        response = client.post(
+            reverse("finance:sankey-rule-delete", args=[kind, rule.pk]),
+            HTTP_HX_REQUEST="true",
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        assert response["HX-Trigger"] == "closeSankeyRuleModal"
+        assert not type(rule).objects.filter(pk=rule_pk).exists()
+        assert type(other).objects.filter(pk=other.pk).exists()
+        assert SankeyCategory.objects.filter(pk=category.pk).exists()
+        assert type(account).objects.values().get(pk=account.pk) == before_account
+        html = response.content.decode()
+        assert f'id="rules-{kind}-{category.pk}"' in html
+        assert 'hx-swap-oob="true"' in html
+        assert gettext("No rule for this scheme yet.") in html
+
+    def test_wrong_scheme_is_not_deleted(self, client, sankey_rule_case):
+        kind, rule = sankey_rule_case
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        other_scheme = ChartScheme.MCH2 if rule.scheme == ChartScheme.MCH1 else ChartScheme.MCH1
+
+        response = client.post(
+            reverse("finance:sankey-rule-delete", args=[kind, rule.pk]),
+            QUERY_STRING=f"scheme={other_scheme}",
+        )
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
+        assert type(rule).objects.filter(pk=rule.pk).exists()
+
+    def test_post_requires_csrf(self, sankey_rule_case):
+        kind, rule = sankey_rule_case
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client = Client(enforce_csrf_checks=True)
+        client.force_login(user)
+
+        response = client.post(reverse("finance:sankey-rule-delete", args=[kind, rule.pk]))
+
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        assert type(rule).objects.filter(pk=rule.pk).exists()
+
+    def test_plain_post_redirects_to_actual_scheme(self, client, sankey_rule_case):
+        kind, rule = sankey_rule_case
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+
+        response = client.post(reverse("finance:sankey-rule-delete", args=[kind, rule.pk]))
+
+        assert response.status_code == HTTPStatus.FOUND
+        assert response.url == (
+            f"{reverse('finance:sankey-rules')}?scheme={rule.scheme}#sankey-category-{rule.category_id}"
+        )
+
+    def test_unknown_rule_type_is_not_found(self, client):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+
+        response = client.post(reverse("finance:sankey-rule-delete", args=["invalid", 1]))
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 class TestSankeyCategoryEditView:

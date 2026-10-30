@@ -7,14 +7,7 @@
       <td>{{ rule.function_prefix }}*</td>
       <td>{{ rule.nature_start }}</td>
       <td>{{ rule.nature_end }}</td>
-      <td class="text-end">
-        <a href="#"
-           hx-get="{% url 'finance:sankey-rule-edit' 'function-nature' rule.pk %}?scheme={{ scheme }}"
-           hx-target="#sankeyRuleModal .modal-content"
-           hx-swap="innerHTML"
-           data-bs-toggle="modal"
-           data-bs-target="#sankeyRuleModal"><i class="bi bi-pencil"></i></a>
-      </td>
+      <td class="text-end">{% include "finance/partials/rule_actions.html" with rule_type="function-nature" %}</td>
     </tr>
   {% empty %}
     <tr>

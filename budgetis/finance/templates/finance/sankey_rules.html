@@ -57,14 +57,16 @@
           <div class="card mb-3" id="sankey-category-{{ category.pk }}">
             <div class="card-header d-flex justify-content-between align-items-center">
               {% include "finance/partials/category_header.html" with category=category oob=False %}
-              <a href="#"
-                 hx-get="{% url 'finance:sankey-category-edit' category.pk %}?scheme={{ scheme }}"
-                 hx-target="#sankeyRuleModal .modal-content"
-                 hx-swap="innerHTML"
-                 data-bs-toggle="modal"
-                 data-bs-target="#sankeyRuleModal"
-                 class="btn btn-sm btn-outline-primary"
-                 title="{% trans 'Edit category' %}"><i class="bi bi-pencil"></i></a>
+              {% if perms.finance.change_sankeycategory %}
+                <a href="#"
+                   hx-get="{% url 'finance:sankey-category-edit' category.pk %}?scheme={{ scheme }}"
+                   hx-target="#sankeyRuleModal .modal-content"
+                   hx-swap="innerHTML"
+                   data-bs-toggle="modal"
+                   data-bs-target="#sankeyRuleModal"
+                   class="btn btn-sm btn-outline-primary"
+                   title="{% trans 'Edit category' %}"><i class="bi bi-pencil"></i></a>
+              {% endif %}
             </div>
             <div class="card-body">
               <h6>{% trans "Nature ranges" %}</h6>
@@ -113,36 +115,38 @@
                 </thead>
                 {% include "finance/partials/rule_rows_label.html" with rules=category.label_rules_for_scheme category=category scheme=scheme oob=False %}
               </table>
-              <div class="mt-2 d-flex gap-3">
-                <a href="#"
-                   hx-get="{% url 'finance:sankey-rule-add' 'nature-range' category.pk %}?scheme={{ scheme }}"
-                   hx-target="#sankeyRuleModal .modal-content"
-                   hx-swap="innerHTML"
-                   data-bs-toggle="modal"
-                   data-bs-target="#sankeyRuleModal"
-                   class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Nature range" %}</a>
-                <a href="#"
-                   hx-get="{% url 'finance:sankey-rule-add' 'function-nature' category.pk %}?scheme={{ scheme }}"
-                   hx-target="#sankeyRuleModal .modal-content"
-                   hx-swap="innerHTML"
-                   data-bs-toggle="modal"
-                   data-bs-target="#sankeyRuleModal"
-                   class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Function + nature" %}</a>
-                <a href="#"
-                   hx-get="{% url 'finance:sankey-rule-add' 'account-code' category.pk %}?scheme={{ scheme }}"
-                   hx-target="#sankeyRuleModal .modal-content"
-                   hx-swap="innerHTML"
-                   data-bs-toggle="modal"
-                   data-bs-target="#sankeyRuleModal"
-                   class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Exact code" %}</a>
-                <a href="#"
-                   hx-get="{% url 'finance:sankey-rule-add' 'label' category.pk %}?scheme={{ scheme }}"
-                   hx-target="#sankeyRuleModal .modal-content"
-                   hx-swap="innerHTML"
-                   data-bs-toggle="modal"
-                   data-bs-target="#sankeyRuleModal"
-                   class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Label" %}</a>
-              </div>
+              {% if perms.finance.change_sankeycategory %}
+                <div class="mt-2 d-flex gap-3">
+                  <a href="#"
+                     hx-get="{% url 'finance:sankey-rule-add' 'nature-range' category.pk %}?scheme={{ scheme }}"
+                     hx-target="#sankeyRuleModal .modal-content"
+                     hx-swap="innerHTML"
+                     data-bs-toggle="modal"
+                     data-bs-target="#sankeyRuleModal"
+                     class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Nature range" %}</a>
+                  <a href="#"
+                     hx-get="{% url 'finance:sankey-rule-add' 'function-nature' category.pk %}?scheme={{ scheme }}"
+                     hx-target="#sankeyRuleModal .modal-content"
+                     hx-swap="innerHTML"
+                     data-bs-toggle="modal"
+                     data-bs-target="#sankeyRuleModal"
+                     class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Function + nature" %}</a>
+                  <a href="#"
+                     hx-get="{% url 'finance:sankey-rule-add' 'account-code' category.pk %}?scheme={{ scheme }}"
+                     hx-target="#sankeyRuleModal .modal-content"
+                     hx-swap="innerHTML"
+                     data-bs-toggle="modal"
+                     data-bs-target="#sankeyRuleModal"
+                     class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Exact code" %}</a>
+                  <a href="#"
+                     hx-get="{% url 'finance:sankey-rule-add' 'label' category.pk %}?scheme={{ scheme }}"
+                     hx-target="#sankeyRuleModal .modal-content"
+                     hx-swap="innerHTML"
+                     data-bs-toggle="modal"
+                     data-bs-target="#sankeyRuleModal"
+                     class="btn btn-sm btn-link p-0"><i class="bi bi-plus-lg me-1"></i>{% trans "Label" %}</a>
+                </div>
+              {% endif %}
             </div>
           </div>
         {% endfor %}
@@ -170,6 +174,7 @@
   <div class="modal fade"
        id="sankeyRuleModal"
        tabindex="-1"
+       aria-labelledby="sankeyRuleModalTitle"
        aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">

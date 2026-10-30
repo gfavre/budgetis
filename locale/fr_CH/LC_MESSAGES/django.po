@@ -1949,3 +1949,16 @@ msgstr "passés au bilan"
 
 msgid "Fully recharged operations, without added value."
 msgstr "Opérations intégralement refacturées, sans plus-value."
+
+msgid "Delete rule"
+msgstr "Supprimer la règle"
+
+msgid "Edit rule"
+msgstr "Modifier la règle"
+
+#, python-format
+msgid "Remove this rule from %(scheme)s? Matching accounts may move to another category or disappear from the Sankey."
+msgstr "Supprimer cette règle de %(scheme)s ? Les comptes concernés pourront changer de catégorie ou ne plus apparaître dans le Sankey."
+
+msgid "This only removes the classification rule. Accounts and their amounts stay unchanged."
+msgstr "Seule la règle de classement sera supprimée. Les comptes et leurs montants seront conservés."

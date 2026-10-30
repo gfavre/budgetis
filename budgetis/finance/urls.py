@@ -7,6 +7,7 @@ from .views import SankeyCategoryEditView
 from .views import SankeyDataView
 from .views import SankeyMaticExportView
 from .views import SankeyRuleCreateView
+from .views import SankeyRuleDeleteView
 from .views import SankeyRulesView
 from .views import SankeyRuleUpdateView
 from .views import SankeyView
@@ -32,6 +33,11 @@ urlpatterns = [
         "sankey/rules/<str:rule_type>/<int:pk>/edit/",
         SankeyRuleUpdateView.as_view(),
         name="sankey-rule-edit",
+    ),
+    path(
+        "sankey/rules/<str:rule_type>/<int:pk>/delete/",
+        SankeyRuleDeleteView.as_view(),
+        name="sankey-rule-delete",
     ),
     path("data/", SankeyDataView.as_view(), name="data_buckets"),
     path("sankeymatic/", SankeyMaticExportView.as_view(), name="sankeymatic_export"),

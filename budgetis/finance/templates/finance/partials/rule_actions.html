@@ -1,0 +1,24 @@
+{% load i18n %}
+
+{% if perms.finance.change_sankeycategory %}
+  <div class="d-inline-flex gap-2">
+    <a href="{% url 'finance:sankey-rule-edit' rule_type rule.pk %}?scheme={{ scheme }}"
+       hx-get="{% url 'finance:sankey-rule-edit' rule_type rule.pk %}?scheme={{ scheme }}"
+       hx-target="#sankeyRuleModal .modal-content"
+       hx-swap="innerHTML"
+       data-bs-toggle="modal"
+       data-bs-target="#sankeyRuleModal"
+       class="btn btn-sm btn-outline-primary"
+       aria-label="{% trans 'Edit rule' %} : {{ rule }}"
+       title="{% trans 'Edit rule' %}"><i class="bi bi-pencil" aria-hidden="true"></i></a>
+    <a href="{% url 'finance:sankey-rule-delete' rule_type rule.pk %}?scheme={{ scheme }}"
+       hx-get="{% url 'finance:sankey-rule-delete' rule_type rule.pk %}?scheme={{ scheme }}"
+       hx-target="#sankeyRuleModal .modal-content"
+       hx-swap="innerHTML"
+       data-bs-toggle="modal"
+       data-bs-target="#sankeyRuleModal"
+       class="btn btn-sm btn-outline-danger"
+       aria-label="{% trans 'Delete rule' %} : {{ rule }}"
+       title="{% trans 'Delete rule' %}"><i class="bi bi-trash" aria-hidden="true"></i></a>
+  </div>
+{% endif %}

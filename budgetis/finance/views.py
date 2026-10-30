@@ -17,6 +17,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import CreateView
+from django.views.generic import DeleteView
 from django.views.generic import TemplateView
 from django.views.generic import UpdateView
 
@@ -250,6 +251,21 @@ def _rule_type_config(rule_type: str) -> dict[str, Any]:
     return config
 
 
+def _rule_scheme(request) -> str:
+    scheme = request.GET.get("scheme", _default_scheme())
+    if scheme not in ChartScheme.values:
+        message = "Unknown chart scheme."
+        raise Http404(message)
+    return scheme
+
+
+def _rule_queryset(request, rule_type: str):
+    queryset = _rule_type_config(rule_type)["model"].objects.select_related("category")
+    if "scheme" in request.GET:
+        queryset = queryset.filter(scheme=_rule_scheme(request))
+    return queryset
+
+
 def _render_rule_rows_oob(request, rule_type: str, category: SankeyCategory, scheme: str) -> HttpResponse:
     """
     Full refresh of one rule-type's table body for one category, as an
@@ -295,14 +311,14 @@ class SankeyRuleCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["rule_type"] = self.kwargs["rule_type"]
-        context["scheme"] = self.request.GET.get("scheme", "")
+        context["scheme"] = _rule_scheme(self.request)
         context["category"] = get_object_or_404(SankeyCategory, pk=self.kwargs["category_id"])
         context["is_create"] = True
         return context
 
     def form_valid(self, form):
         category = get_object_or_404(SankeyCategory, pk=self.kwargs["category_id"])
-        scheme = self.request.GET.get("scheme", "")
+        scheme = _rule_scheme(self.request)
         form.instance.category = category
         form.instance.scheme = scheme
         form.save()
@@ -325,20 +341,45 @@ class SankeyRuleUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
         return _bootstrap_styled(super().get_form(form_class))
 
     def get_queryset(self):
-        return _rule_type_config(self.kwargs["rule_type"])["model"].objects.all()
+        return _rule_queryset(self.request, self.kwargs["rule_type"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["rule_type"] = self.kwargs["rule_type"]
-        context["scheme"] = self.request.GET.get("scheme", "")
+        context["scheme"] = self.object.scheme
         context["category"] = self.object.category
         context["is_create"] = False
         return context
 
     def form_valid(self, form):
         rule = form.save()
-        scheme = self.request.GET.get("scheme", "")
-        return _render_rule_rows_oob(self.request, self.kwargs["rule_type"], rule.category, scheme)
+        return _render_rule_rows_oob(self.request, self.kwargs["rule_type"], rule.category, rule.scheme)
+
+
+class SankeyRuleDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    """Confirm removal of any rule type, then refresh its scheme/category table."""
+
+    template_name = "finance/partials/sankey_rule_confirm_delete.html"
+    permission_required = "finance.change_sankeycategory"
+    http_method_names = ["get", "post", "head", "options"]
+
+    def get_queryset(self):
+        return _rule_queryset(self.request, self.kwargs["rule_type"])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["scheme"] = self.object.scheme
+        return context
+
+    def form_valid(self, form):
+        category = self.object.category
+        scheme = self.object.scheme
+        self.object.delete()
+        if self.request.headers.get("HX-Request") == "true":
+            return _render_rule_rows_oob(self.request, self.kwargs["rule_type"], category, scheme)
+        return redirect(
+            f"{reverse('finance:sankey-rules')}?{urlencode({'scheme': scheme})}#sankey-category-{category.pk}"
+        )
 
 
 class SankeyCategoryCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):

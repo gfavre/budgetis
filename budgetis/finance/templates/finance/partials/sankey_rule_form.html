@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <div class="modal-header">
-  <h5 class="modal-title">
+  <h5 class="modal-title" id="sankeyRuleModalTitle">
     {% if is_create %}
       {% trans "Add" %}
     {% else %}
@@ -13,7 +13,10 @@
       – {{ category.name }}
     {% endif %}
   </h5>
-  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+  <button type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="{% trans 'Close' %}"></button>
 </div>
 <div class="modal-body">
   {% if is_create and is_category %}
