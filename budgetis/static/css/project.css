@@ -148,6 +148,21 @@ input[type="checkbox"] {
   overflow-y: auto;
 }
 
+.sankey-rule-card {
+  /* Keep each card's hit area inside its own bounds, including its toolbar. */
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.sankey-rule-toolbar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  flex-shrink: 0;
+}
+
 [id^="sankey-flow-"],
 [id^="sankey-category-"] {
   scroll-margin-top: 1rem;
