@@ -1969,3 +1969,10 @@ msgstr "Le code exact %(code)s existe déjà dans « %(category)s » (%(scheme)s
 
 msgid "View existing rule"
 msgstr "Voir la règle existante"
+
+#, python-format
+msgid "Category %(name)s already exists in %(group)s. Categories are shared by MCH1 and MCH2."
+msgstr "La catégorie « %(name)s » existe déjà dans « %(group)s ». Les catégories sont communes à MCH1 et MCH2."
+
+msgid "View existing category"
+msgstr "Voir la catégorie existante"

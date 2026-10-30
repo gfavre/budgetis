@@ -30,6 +30,8 @@ from budgetis.common.models import ChartScheme
 from .builders import build_income_budget_canton_intercos_commune
 from .builders import build_sankeymatic_export
 from .forms import SankeyAccountCodeRuleForm
+from .forms import SankeyCategoryEditForm
+from .forms import SankeyCategoryForm
 from .models import AvailableYear
 from .models import SankeyAccountCodeRule
 from .models import SankeyCategory
@@ -282,14 +284,14 @@ def _rule_form_class(rule_type: str):
     )
 
 
-def _save_rule_form(form) -> bool:
+def _save_sankey_form(form) -> bool:
     try:
         # A savepoint lets us query the winning rule after a concurrent insert
         # without leaving ATOMIC_REQUESTS/the surrounding transaction broken.
         with transaction.atomic():
             form.save()
     except IntegrityError:
-        if isinstance(form, SankeyAccountCodeRuleForm) and form.add_duplicate_error():
+        if isinstance(form, (SankeyAccountCodeRuleForm, SankeyCategoryForm)) and form.add_duplicate_error():
             return False
         raise
     return True
@@ -349,7 +351,7 @@ class SankeyRuleCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
         scheme = _rule_scheme(self.request)
         form.instance.category = category
         form.instance.scheme = scheme
-        if not _save_rule_form(form):
+        if not _save_sankey_form(form):
             return self.form_invalid(form)
         return _render_rule_rows_oob(self.request, self.kwargs["rule_type"], category, scheme)
 
@@ -378,7 +380,7 @@ class SankeyRuleUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
         return context
 
     def form_valid(self, form):
-        if not _save_rule_form(form):
+        if not _save_sankey_form(form):
             return self.form_invalid(form)
         rule = form.instance
         return _render_rule_rows_oob(self.request, self.kwargs["rule_type"], rule.category, rule.scheme)
@@ -414,7 +416,7 @@ class SankeyCategoryCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
     """Create a shared category from the configuration page, then return to its rule editor."""
 
     model = SankeyCategory
-    fields = ["name", "flow", "color", "order"]
+    form_class = SankeyCategoryForm
     template_name = "finance/partials/sankey_rule_form.html"
     permission_required = "finance.change_sankeycategory"
 
@@ -449,12 +451,16 @@ class SankeyCategoryCreateView(LoginRequiredMixin, PermissionRequiredMixin, Crea
         return context
 
     def form_valid(self, form):
-        category = form.save()
+        if not _save_sankey_form(form):
+            return self.form_invalid(form)
+        category = form.instance
         url = (
             f"{reverse('finance:sankey-rules')}?{urlencode({'scheme': self._scheme()})}#sankey-category-{category.pk}"
         )
         if self.request.headers.get("HX-Request") == "true":
-            return HttpResponse(headers={"HX-Redirect": url})
+            # Only the fragment may change. Assigning location.href alone then
+            # leaves the old DOM/modal in place; force the new category to load.
+            return HttpResponse(headers={"HX-Redirect": url, "HX-Refresh": "true"})
         return redirect(url)
 
 
@@ -467,7 +473,7 @@ class SankeyCategoryEditView(LoginRequiredMixin, PermissionRequiredMixin, Update
     """
 
     model = SankeyCategory
-    fields = ["name", "color", "order"]
+    form_class = SankeyCategoryEditForm
     template_name = "finance/partials/sankey_rule_form.html"
     permission_required = "finance.change_sankeycategory"
 
@@ -481,13 +487,16 @@ class SankeyCategoryEditView(LoginRequiredMixin, PermissionRequiredMixin, Update
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["scheme"] = self.request.GET.get("scheme", "")
+        context["scheme"] = self.request.GET.get("scheme") or _default_scheme()
+        context["category"] = self.object
         context["is_create"] = False
         context["is_category"] = True
         return context
 
     def form_valid(self, form):
-        category = form.save()
+        if not _save_sankey_form(form):
+            return self.form_invalid(form)
+        category = form.instance
         scheme = self.request.GET.get("scheme", "")
         html = render(
             self.request,

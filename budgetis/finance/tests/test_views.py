@@ -12,8 +12,10 @@ from django.utils.translation import gettext
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AvailableYearFactory
 from budgetis.common.models import ChartScheme
+from budgetis.finance.forms import DUPLICATE_CATEGORY_ERROR
 from budgetis.finance.forms import DUPLICATE_EXACT_CODE_ERROR
 from budgetis.finance.forms import SankeyAccountCodeRuleForm
+from budgetis.finance.forms import SankeyCategoryForm
 from budgetis.finance.models import AvailableYear
 from budgetis.finance.models import SankeyAccountCodeRule
 from budgetis.finance.models import SankeyCategory
@@ -31,6 +33,7 @@ pytestmark = pytest.mark.django_db
 
 LOGIN_URL = "/accounts/login/"
 EXACT_CODE_INPUT = {"function": "02904", "nature": "4472", "sub_account": "01"}
+DUPLICATE_CATEGORY_NAME = "Prélèvement réserve de politique budgétaire"
 RULE_FACTORIES = {
     "nature-range": SankeyNatureRangeRuleFactory,
     "function-nature": SankeyFunctionNatureRuleFactory,
@@ -585,6 +588,50 @@ class TestSankeyRuleDeleteView:
 
 
 class TestSankeyCategoryEditView:
+    def test_duplicate_name_identifies_existing_group_and_preserves_both_categories(self, client):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        existing = _make_category(name=DUPLICATE_CATEGORY_NAME, flow=SankeyFlow.REVENUE)
+        category = _make_category(name="Other category", flow=SankeyFlow.COMMUNE)
+        original_name = category.name
+
+        response = client.post(
+            reverse("finance:sankey-category-edit", args=[category.pk]),
+            {"name": existing.name, "color": "#224466", "order": 0},
+            QUERY_STRING=f"scheme={ChartScheme.MCH2}",
+            HTTP_HX_REQUEST="true",
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        form = response.context["form"]
+        assert form.conflicting_category == existing
+        assert form.errors.as_data()["name"][0].code == DUPLICATE_CATEGORY_ERROR
+        assert existing.get_flow_display() in response.content.decode()
+        assert "HX-Trigger" not in response
+        category.refresh_from_db()
+        assert category.name == original_name
+
+    def test_concurrent_duplicate_name_during_edit_rolls_back(self, client, monkeypatch):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        existing = _make_category(name=DUPLICATE_CATEGORY_NAME)
+        category = _make_category(name="Other category")
+        original_name = category.name
+        lookups = iter([None, existing])
+        monkeypatch.setattr(SankeyCategoryForm, "find_conflicting_category", lambda self: next(lookups))
+
+        response = client.post(
+            reverse("finance:sankey-category-edit", args=[category.pk]),
+            {"name": existing.name, "color": "#224466", "order": 0},
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["form"].conflicting_category == existing
+        category.refresh_from_db()
+        assert category.name == original_name
+
     def test_view_only_permission_is_forbidden(self, client):
         user = UserFactory()
         _grant_view_sankey_category(user)
@@ -668,6 +715,58 @@ class TestSankeyMaticExportView:
 
 
 class TestSankeyCategoryCreateView:
+    @pytest.mark.parametrize("scheme", ChartScheme.values)
+    @pytest.mark.parametrize("flow", SankeyFlow.values)
+    def test_duplicate_name_identifies_shared_category_even_without_rules(self, client, scheme, flow):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        existing = _make_category(name=DUPLICATE_CATEGORY_NAME, flow=flow)
+        before = SankeyCategory.objects.values().get(pk=existing.pk)
+        target_flow = SankeyFlow.COMMUNE if flow == SankeyFlow.REVENUE else SankeyFlow.REVENUE
+
+        response = client.post(
+            reverse("finance:sankey-category-add"),
+            {"name": existing.name, "flow": target_flow, "color": "#224466", "order": 0},
+            QUERY_STRING=f"scheme={scheme}",
+            HTTP_HX_REQUEST="true",
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        form = response.context["form"]
+        assert form.conflicting_category == existing
+        assert form.errors.as_data()["name"][0].code == DUPLICATE_CATEGORY_ERROR
+        assert form["name"].value() == existing.name
+        html = response.content.decode()
+        assert existing.get_flow_display() in html
+        assert "MCH1" in html
+        assert "MCH2" in html
+        assert reverse("finance:sankey-category-edit", args=[existing.pk]) in html
+        assert "HX-Redirect" not in response
+        assert "HX-Refresh" not in response
+        assert SankeyCategory.objects.values().get(pk=existing.pk) == before
+        assert SankeyCategory.objects.filter(name=existing.name).count() == 1
+
+    def test_concurrent_duplicate_category_returns_the_existing_location(self, client, monkeypatch):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        existing = _make_category(name=DUPLICATE_CATEGORY_NAME, flow=SankeyFlow.REVENUE)
+        lookups = iter([None, existing])
+        monkeypatch.setattr(SankeyCategoryForm, "find_conflicting_category", lambda self: next(lookups))
+
+        response = client.post(
+            reverse("finance:sankey-category-add"),
+            {"name": existing.name, "flow": SankeyFlow.COMMUNE, "color": "#224466", "order": 0},
+            QUERY_STRING=f"scheme={ChartScheme.MCH2}",
+            HTTP_HX_REQUEST="true",
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["form"].conflicting_category == existing
+        assert "HX-Redirect" not in response
+        assert SankeyCategory.objects.filter(name=existing.name).count() == 1
+
     def test_login_required(self, client):
         response = client.get(reverse("finance:sankey-category-add"))
         assert response.status_code == HTTPStatus.FOUND
@@ -708,6 +807,7 @@ class TestSankeyCategoryCreateView:
         assert response["HX-Redirect"] == (
             f"{reverse('finance:sankey-rules')}?scheme={ChartScheme.MCH2}#sankey-category-{category.pk}"
         )
+        assert response["HX-Refresh"] == "true"
         response = client.get(response["HX-Redirect"])
         assert f'id="sankey-category-{category.pk}"' in response.content.decode()
         assert f'id="category-nav-{category.pk}"' in response.content.decode()

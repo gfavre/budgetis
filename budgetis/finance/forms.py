@@ -3,10 +3,50 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from .models import SankeyAccountCodeRule
+from .models import SankeyCategory
 
 
 EXACT_CODE_FIELDS = ("function", "nature", "sub_account")
 DUPLICATE_EXACT_CODE_ERROR = "duplicate_exact_code"
+DUPLICATE_CATEGORY_ERROR = "duplicate_category"
+
+
+class SankeyCategoryForm(forms.ModelForm):
+    conflicting_category = None
+
+    class Meta:
+        model = SankeyCategory
+        fields = ("name", "flow", "color", "order")
+
+    def find_conflicting_category(self):
+        if "name" not in self.cleaned_data:
+            return None
+        return SankeyCategory.objects.filter(name=self.cleaned_data["name"]).exclude(pk=self.instance.pk).first()
+
+    def add_duplicate_error(self) -> bool:
+        category = self.find_conflicting_category()
+        if category is None:
+            return False
+        self.conflicting_category = category
+        self.add_error(
+            "name",
+            ValidationError(
+                _("Category %(name)s already exists in %(group)s. Categories are shared by MCH1 and MCH2."),
+                code=DUPLICATE_CATEGORY_ERROR,
+                params={"name": category.name, "group": category.get_flow_display()},
+            ),
+        )
+        return True
+
+    def validate_unique(self):
+        # Name is the category's only unique editable field. Report its actual
+        # location instead of Django's generic model/field uniqueness message.
+        self.add_duplicate_error()
+
+
+class SankeyCategoryEditForm(SankeyCategoryForm):
+    class Meta(SankeyCategoryForm.Meta):
+        fields = ("name", "color", "order")
 
 
 class SankeyAccountCodeRuleForm(forms.ModelForm):

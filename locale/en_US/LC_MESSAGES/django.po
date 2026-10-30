@@ -1921,3 +1921,10 @@ msgstr ""
 
 msgid "View existing rule"
 msgstr ""
+
+#, python-format
+msgid "Category %(name)s already exists in %(group)s. Categories are shared by MCH1 and MCH2."
+msgstr ""
+
+msgid "View existing category"
+msgstr ""
