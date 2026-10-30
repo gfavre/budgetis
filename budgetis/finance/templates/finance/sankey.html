@@ -5,6 +5,7 @@
 {% block javascript %}
   {{ block.super }}
   <script src="https://cdn.plot.ly/plotly-3.5.0.min.js" defer></script>
+  <script type="module" src="{% static 'js/sankeymatic-export.js' %}"></script>
 {% endblock javascript %}
 {% block content %}
   <div class="d-flex gap-3">
@@ -26,6 +27,23 @@
       <a id="sm-export" href="#" class="btn btn-sm btn-outline-primary">
         <i class="bi bi-download me-1"></i>SankeyMATIC
       </a>
+      <div>
+        <button id="sm-export-png"
+                type="button"
+                class="btn btn-sm btn-outline-primary w-100"
+                data-export-url="{% url 'finance:sankeymatic_export' %}"
+                data-renderer-url="{% static 'vendor/sankeymatic/index.html' %}"
+                data-loading="{% trans 'Preparing image…' %}"
+                data-error="{% trans 'The image could not be created. Try again or download the SankeyMATIC file.' %}"
+                data-no-data="{% trans 'No data for this selection.' %}"
+                title="{% trans 'Download the SankeyMATIC image in Huge (6×) resolution' %}">
+          <i class="bi bi-image me-1" aria-hidden="true"></i><span>PNG 6×</span>
+        </button>
+        <div id="sm-export-status"
+             class="small mt-2"
+             role="status"
+             aria-live="polite"></div>
+      </div>
       {% if perms.finance.view_sankeycategory %}
         <a id="sankey-config-link"
            href="{% url 'finance:sankey-rules' %}"

@@ -98,6 +98,19 @@ class TestSankeyView:
 
         assert reverse("finance:sankey-rules") not in response.content.decode()
 
+    def test_png_button_keeps_text_download_and_uses_the_same_export(self, client, site_configuration_with_logo):
+        client.force_login(UserFactory())
+
+        response = client.get(reverse("finance:index"))
+
+        html = response.content.decode()
+        assert 'id="sm-export"' in html
+        assert 'id="sm-export-png"' in html
+        assert f'data-export-url="{reverse("finance:sankeymatic_export")}"' in html
+        assert "vendor/sankeymatic/index.html" in html
+        assert "js/sankeymatic-export.js" in html
+        assert "PNG 6\u00d7" in html
+
     def test_user_with_permission_sees_the_settings_link(self, client, site_configuration_with_logo):
         user = UserFactory()
         _grant_view_sankey_category(user)
@@ -712,6 +725,31 @@ class TestSankeyMaticExportView:
         assert response.status_code == HTTPStatus.OK
         assert response["Content-Type"] == "text/plain; charset=utf-8"
         assert "attachment" in response["Content-Disposition"]
+
+    @pytest.mark.parametrize("is_budget", [False, True])
+    def test_export_respects_selected_year_and_budget(self, client, is_budget):
+        client.force_login(UserFactory())
+        category = SankeyCategoryFactory(name="Selected revenue", flow=SankeyFlow.REVENUE)
+        SankeyAccountCodeRuleFactory(scheme=ChartScheme.MCH2, function="9100", nature="4000", category=category)
+        for budget, year, amount in [(False, 2027, "100000"), (True, 2027, "200000"), (True, 2026, "900000")]:
+            AccountFactory(
+                function="9100",
+                nature="4000",
+                charges=Decimal("0"),
+                revenues=Decimal(amount),
+                scheme=ChartScheme.MCH2,
+                year=year,
+                is_budget=budget,
+            )
+
+        response = client.get(reverse("finance:sankeymatic_export"), {"year": 2027, "budget": str(is_budget).lower()})
+
+        assert response.status_code == HTTPStatus.OK
+        expected = 200 if is_budget else 100
+        assert f"Selected revenue [{expected}]" in response.content.decode()
+        assert "[900]" not in response.content.decode()
+        kind = "budget" if is_budget else "comptes"
+        assert f"sankeymatic_{kind}_2027.txt" in response["Content-Disposition"]
 
 
 class TestSankeyCategoryCreateView:

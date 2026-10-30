@@ -1928,3 +1928,19 @@ msgstr ""
 
 msgid "View existing category"
 msgstr ""
+
+#: budgetis/finance/templates/finance/sankey.html
+msgid "Preparing image…"
+msgstr ""
+
+#: budgetis/finance/templates/finance/sankey.html
+msgid "The image could not be created. Try again or download the SankeyMATIC file."
+msgstr ""
+
+#: budgetis/finance/templates/finance/sankey.html
+msgid "No data for this selection."
+msgstr ""
+
+#: budgetis/finance/templates/finance/sankey.html
+msgid "Download the SankeyMATIC image in Huge (6×) resolution"
+msgstr ""

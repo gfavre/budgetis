@@ -1976,3 +1976,19 @@ msgstr "La catégorie « %(name)s » existe déjà dans « %(group)s ». Les cat
 
 msgid "View existing category"
 msgstr "Voir la catégorie existante"
+
+#: budgetis/finance/templates/finance/sankey.html
+msgid "Preparing image…"
+msgstr "Préparation de l’image…"
+
+#: budgetis/finance/templates/finance/sankey.html
+msgid "The image could not be created. Try again or download the SankeyMATIC file."
+msgstr "Impossible de créer l’image. Réessayez ou téléchargez le fichier SankeyMATIC."
+
+#: budgetis/finance/templates/finance/sankey.html
+msgid "No data for this selection."
+msgstr "Aucune donnée pour cette sélection."
+
+#: budgetis/finance/templates/finance/sankey.html
+msgid "Download the SankeyMATIC image in Huge (6×) resolution"
+msgstr "Télécharger l’image SankeyMATIC en résolution Huge (6×)"
