@@ -1962,3 +1962,10 @@ msgstr "Supprimer cette règle de %(scheme)s ? Les comptes concernés pourront c
 
 msgid "This only removes the classification rule. Accounts and their amounts stay unchanged."
 msgstr "Seule la règle de classement sera supprimée. Les comptes et leurs montants seront conservés."
+
+#, python-format
+msgid "Exact code %(code)s already exists in %(category)s (%(scheme)s)."
+msgstr "Le code exact %(code)s existe déjà dans « %(category)s » (%(scheme)s)."
+
+msgid "View existing rule"
+msgstr "Voir la règle existante"

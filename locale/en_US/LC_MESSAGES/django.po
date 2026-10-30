@@ -1914,3 +1914,10 @@ msgstr ""
 
 msgid "This only removes the classification rule. Accounts and their amounts stay unchanged."
 msgstr ""
+
+#, python-format
+msgid "Exact code %(code)s already exists in %(category)s (%(scheme)s)."
+msgstr ""
+
+msgid "View existing rule"
+msgstr ""

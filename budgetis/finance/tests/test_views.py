@@ -4,6 +4,7 @@ from typing import cast
 
 import pytest
 from django.contrib.auth.models import Permission
+from django.db import IntegrityError
 from django.test import Client
 from django.urls import reverse
 from django.utils.translation import gettext
@@ -11,7 +12,10 @@ from django.utils.translation import gettext
 from budgetis.accounting.tests.factories import AccountFactory
 from budgetis.accounting.tests.factories import AvailableYearFactory
 from budgetis.common.models import ChartScheme
+from budgetis.finance.forms import DUPLICATE_EXACT_CODE_ERROR
+from budgetis.finance.forms import SankeyAccountCodeRuleForm
 from budgetis.finance.models import AvailableYear
+from budgetis.finance.models import SankeyAccountCodeRule
 from budgetis.finance.models import SankeyCategory
 from budgetis.finance.models import SankeyFlow
 from budgetis.finance.models import SankeyNatureRangeRule
@@ -26,6 +30,7 @@ from budgetis.users.tests.factories import UserFactory
 pytestmark = pytest.mark.django_db
 
 LOGIN_URL = "/accounts/login/"
+EXACT_CODE_INPUT = {"function": "02904", "nature": "4472", "sub_account": "01"}
 RULE_FACTORIES = {
     "nature-range": SankeyNatureRangeRuleFactory,
     "function-nature": SankeyFunctionNatureRuleFactory,
@@ -175,6 +180,117 @@ class TestSankeyRulesView:
 
 
 class TestSankeyRuleCreateView:
+    @pytest.mark.parametrize("scheme", ChartScheme.values)
+    @pytest.mark.parametrize("sub_account", ["", "01"])
+    @pytest.mark.parametrize("same_category", [False, True])
+    def test_duplicate_exact_code_returns_its_category_and_preserves_input(
+        self, client, scheme, sub_account, same_category
+    ):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        existing_category = _make_category(name="Existing category")
+        data = {**EXACT_CODE_INPUT, "sub_account": sub_account}
+        existing = SankeyAccountCodeRuleFactory(scheme=scheme, category=existing_category, **data)
+        target = existing_category if same_category else _make_category()
+
+        response = client.post(
+            reverse("finance:sankey-rule-add", args=["account-code", target.pk]),
+            data,
+            QUERY_STRING=f"scheme={scheme}",
+            HTTP_HX_REQUEST="true",
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        assert "HX-Trigger" not in response
+        form = response.context["form"]
+        assert form.non_field_errors().as_data()[0].code == DUPLICATE_EXACT_CODE_ERROR
+        assert form.conflicting_rule == existing
+        assert {field: form[field].value() for field in data} == data
+        html = response.content.decode()
+        assert existing_category.name in html
+        assert scheme.upper() in html
+        assert reverse("finance:sankey-rule-edit", args=["account-code", existing.pk]) in html
+        assert SankeyAccountCodeRule.objects.filter(scheme=scheme, **data).count() == 1
+        existing.refresh_from_db()
+        assert existing.category_id == existing_category.pk
+
+    def test_exact_code_in_another_scheme_is_allowed(self, client):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        SankeyAccountCodeRuleFactory(scheme=ChartScheme.MCH1, **EXACT_CODE_INPUT)
+        category = _make_category()
+
+        response = client.post(
+            reverse("finance:sankey-rule-add", args=["account-code", category.pk]),
+            EXACT_CODE_INPUT,
+            QUERY_STRING=f"scheme={ChartScheme.MCH2}",
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        assert response["HX-Trigger"] == "closeSankeyRuleModal"
+        assert (
+            SankeyAccountCodeRule.objects.get(scheme=ChartScheme.MCH2, **EXACT_CODE_INPUT).category_id == category.pk
+        )
+
+    def test_missing_fields_do_not_trigger_duplicate_lookup(self, client):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        category = _make_category()
+
+        response = client.post(
+            reverse("finance:sankey-rule-add", args=["account-code", category.pk]),
+            {"nature": "4472"},
+            QUERY_STRING=f"scheme={ChartScheme.MCH2}",
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        assert "function" in response.context["form"].errors
+        assert not response.context["form"].non_field_errors()
+
+    def test_concurrent_duplicate_is_reported_after_savepoint_rollback(self, client, monkeypatch):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        existing = SankeyAccountCodeRuleFactory(scheme=ChartScheme.MCH2, **EXACT_CODE_INPUT)
+        category = _make_category()
+        # The initial validation misses the other transaction's insert. The
+        # database really raises IntegrityError when this request tries to save.
+        lookups = iter([None, existing])
+        monkeypatch.setattr(SankeyAccountCodeRuleForm, "find_conflicting_rule", lambda self: next(lookups))
+
+        response = client.post(
+            reverse("finance:sankey-rule-add", args=["account-code", category.pk]),
+            EXACT_CODE_INPUT,
+            QUERY_STRING=f"scheme={ChartScheme.MCH2}",
+            HTTP_HX_REQUEST="true",
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["form"].conflicting_rule == existing
+        assert "HX-Trigger" not in response
+        assert SankeyAccountCodeRule.objects.filter(scheme=ChartScheme.MCH2, **EXACT_CODE_INPUT).count() == 1
+
+    def test_unrelated_integrity_error_is_not_swallowed(self, client, monkeypatch):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        category = _make_category()
+
+        def fail_save(self):
+            message = "Unrelated failure"
+            raise IntegrityError(message)
+
+        monkeypatch.setattr(SankeyAccountCodeRuleForm, "save", fail_save)
+        with pytest.raises(IntegrityError, match="Unrelated failure"):
+            client.post(
+                reverse("finance:sankey-rule-add", args=["account-code", category.pk]),
+                EXACT_CODE_INPUT,
+                QUERY_STRING=f"scheme={ChartScheme.MCH2}",
+            )
+
     def test_invalid_scheme_cannot_create_rule(self, client):
         user = UserFactory()
         _grant_change_sankey_category(user)
@@ -248,6 +364,62 @@ class TestSankeyRuleCreateView:
 
 
 class TestSankeyRuleUpdateView:
+    @pytest.mark.parametrize("scheme", ChartScheme.values)
+    def test_duplicate_exact_code_is_reported_without_changing_either_rule(self, client, scheme):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        existing = SankeyAccountCodeRuleFactory(scheme=scheme, **EXACT_CODE_INPUT)
+        rule = SankeyAccountCodeRuleFactory(scheme=scheme, **{**EXACT_CODE_INPUT, "function": "02905"})
+        original_function = rule.function
+
+        response = client.post(
+            reverse("finance:sankey-rule-edit", args=["account-code", rule.pk]),
+            EXACT_CODE_INPUT,
+            HTTP_HX_REQUEST="true",
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["form"].conflicting_rule == existing
+        assert "HX-Trigger" not in response
+        rule.refresh_from_db()
+        assert rule.function == original_function
+        assert SankeyAccountCodeRule.objects.filter(scheme=scheme, **EXACT_CODE_INPUT).count() == 1
+
+    def test_unchanged_exact_code_does_not_conflict_with_itself(self, client):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        rule = SankeyAccountCodeRuleFactory(scheme=ChartScheme.MCH2, **EXACT_CODE_INPUT)
+
+        response = client.post(
+            reverse("finance:sankey-rule-edit", args=["account-code", rule.pk]),
+            EXACT_CODE_INPUT,
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        assert response["HX-Trigger"] == "closeSankeyRuleModal"
+
+    def test_concurrent_duplicate_during_edit_preserves_original_rule(self, client, monkeypatch):
+        user = UserFactory()
+        _grant_change_sankey_category(user)
+        client.force_login(user)
+        existing = SankeyAccountCodeRuleFactory(scheme=ChartScheme.MCH2, **EXACT_CODE_INPUT)
+        rule = SankeyAccountCodeRuleFactory(scheme=ChartScheme.MCH2, **{**EXACT_CODE_INPUT, "function": "02905"})
+        original_function = rule.function
+        lookups = iter([None, existing])
+        monkeypatch.setattr(SankeyAccountCodeRuleForm, "find_conflicting_rule", lambda self: next(lookups))
+
+        response = client.post(
+            reverse("finance:sankey-rule-edit", args=["account-code", rule.pk]),
+            EXACT_CODE_INPUT,
+        )
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.context["form"].conflicting_rule == existing
+        rule.refresh_from_db()
+        assert rule.function == original_function
+
     def test_login_required(self, client):
         rule = _make_nature_range_rule()
         response = client.get(reverse("finance:sankey-rule-edit", args=["nature-range", rule.pk]))

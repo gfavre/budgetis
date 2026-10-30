@@ -5,7 +5,10 @@ from urllib.parse import urlencode
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db import IntegrityError
+from django.db import transaction
 from django.db.models import Prefetch
+from django.forms import ModelForm
 from django.forms import modelform_factory
 from django.http import Http404
 from django.http import HttpResponse
@@ -26,6 +29,7 @@ from budgetis.common.models import ChartScheme
 
 from .builders import build_income_budget_canton_intercos_commune
 from .builders import build_sankeymatic_export
+from .forms import SankeyAccountCodeRuleForm
 from .models import AvailableYear
 from .models import SankeyAccountCodeRule
 from .models import SankeyCategory
@@ -266,6 +270,31 @@ def _rule_queryset(request, rule_type: str):
     return queryset
 
 
+def _rule_form_class(rule_type: str):
+    config = _rule_type_config(rule_type)
+    base_form = SankeyAccountCodeRuleForm if config["model"] is SankeyAccountCodeRule else ModelForm
+    return modelform_factory(
+        config["model"],
+        form=base_form,
+        fields=config["fields"],
+        labels=config.get("labels"),
+        help_texts=config.get("help_texts"),
+    )
+
+
+def _save_rule_form(form) -> bool:
+    try:
+        # A savepoint lets us query the winning rule after a concurrent insert
+        # without leaving ATOMIC_REQUESTS/the surrounding transaction broken.
+        with transaction.atomic():
+            form.save()
+    except IntegrityError:
+        if isinstance(form, SankeyAccountCodeRuleForm) and form.add_duplicate_error():
+            return False
+        raise
+    return True
+
+
 def _render_rule_rows_oob(request, rule_type: str, category: SankeyCategory, scheme: str) -> HttpResponse:
     """
     Full refresh of one rule-type's table body for one category, as an
@@ -300,13 +329,12 @@ class SankeyRuleCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
     permission_required = "finance.change_sankeycategory"
 
     def get_form_class(self):
-        config = _rule_type_config(self.kwargs["rule_type"])
-        return modelform_factory(
-            config["model"], fields=config["fields"], labels=config.get("labels"), help_texts=config.get("help_texts")
-        )
+        return _rule_form_class(self.kwargs["rule_type"])
 
     def get_form(self, form_class=None):
-        return _bootstrap_styled(super().get_form(form_class))
+        form = super().get_form(form_class)
+        form.instance.scheme = _rule_scheme(self.request)
+        return _bootstrap_styled(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -321,7 +349,8 @@ class SankeyRuleCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
         scheme = _rule_scheme(self.request)
         form.instance.category = category
         form.instance.scheme = scheme
-        form.save()
+        if not _save_rule_form(form):
+            return self.form_invalid(form)
         return _render_rule_rows_oob(self.request, self.kwargs["rule_type"], category, scheme)
 
 
@@ -332,10 +361,7 @@ class SankeyRuleUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
     permission_required = "finance.change_sankeycategory"
 
     def get_form_class(self):
-        config = _rule_type_config(self.kwargs["rule_type"])
-        return modelform_factory(
-            config["model"], fields=config["fields"], labels=config.get("labels"), help_texts=config.get("help_texts")
-        )
+        return _rule_form_class(self.kwargs["rule_type"])
 
     def get_form(self, form_class=None):
         return _bootstrap_styled(super().get_form(form_class))
@@ -352,7 +378,9 @@ class SankeyRuleUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateVi
         return context
 
     def form_valid(self, form):
-        rule = form.save()
+        if not _save_rule_form(form):
+            return self.form_invalid(form)
+        rule = form.instance
         return _render_rule_rows_oob(self.request, self.kwargs["rule_type"], rule.category, rule.scheme)
 
 
