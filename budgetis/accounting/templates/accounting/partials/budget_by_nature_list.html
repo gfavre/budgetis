@@ -88,6 +88,7 @@
           {% endfor %}
         {% endfor %}
       </tbody>
+      {% include "accounting/partials/nature_totals.html" %}
     </table>
   {% else %}
     <table class="table table-bordered recap global-summary">
@@ -154,72 +155,7 @@
           </tr>
         {% endfor %}
       </tbody>
-      <tfoot class="table-primary fw-bold">
-        <tr>
-          <td colspan="2" class="text-end"></td>
-          <td class="text-end">{{ global_summary.totals.col1_charges|format_money }}</td>
-          <td class="text-end">{{ global_summary.totals.col1_revenues|format_money }}</td>
-          {% if show_col2 %}
-            <td class="text-end">{{ global_summary.totals.col2_charges|format_money }}</td>
-            <td class="text-end">{{ global_summary.totals.col2_revenues|format_money }}</td>
-          {% endif %}
-          {% if show_col3 %}
-            <td class="text-end">{{ global_summary.totals.col3_charges|format_money }}</td>
-            <td class="text-end">{{ global_summary.totals.col3_revenues|format_money }}</td>
-          {% endif %}
-        </tr>
-        <tr>
-          <td colspan="2" class="text-end">{% trans "Revenue surplus" %}</td>
-          <td class="text-end">
-            {% if global_summary.totals.col1_diff > 0 %}{{ global_summary.totals.col1_diff|format_money_abs }}{% endif %}
-          </td>
-          <td></td>
-          {% if show_col2 %}
-            <td class="text-end">
-              {% if global_summary.totals.col2_diff > 0 %}{{ global_summary.totals.col2_diff|format_money_abs }}{% endif %}
-            </td>
-            <td></td>
-          {% endif %}
-          {% if show_col3 %}
-            <td class="text-end">
-              {% if global_summary.totals.col3_diff > 0 %}{{ global_summary.totals.col3_diff|format_money_abs }}{% endif %}
-            </td>
-            <td></td>
-          {% endif %}
-        </tr>
-        <tr>
-          <td colspan="2" class="text-end">{% trans "Excess expense" %}</td>
-          <td></td>
-          <td class="text-end">
-            {% if global_summary.totals.col1_diff < 0 %}{{ global_summary.totals.col1_diff|format_money_abs }}{% endif %}
-          </td>
-          {% if show_col2 %}
-            <td></td>
-            <td class="text-end">
-              {% if global_summary.totals.col2_diff < 0 %}{{ global_summary.totals.col2_diff|format_money_abs }}{% endif %}
-            </td>
-          {% endif %}
-          {% if show_col3 %}
-            <td></td>
-            <td class="text-end">
-              {% if global_summary.totals.col3_diff < 0 %}{{ global_summary.totals.col3_diff|format_money_abs }}{% endif %}
-            </td>
-          {% endif %}
-        </tr>
-        <tr class="table-secondary">
-          <td colspan="2" class="text-end"></td>
-          <td class="text-end">{{ global_summary.totals.balanced_col1|format_money_abs }}</td>
-          <td class="text-end">{{ global_summary.totals.balanced_col1|format_money_abs }}</td>
-          {% if show_col2 %}
-            <td class="text-end">{{ global_summary.totals.balanced_col2|format_money_abs }}</td>
-            <td class="text-end">{{ global_summary.totals.balanced_col2|format_money_abs }}</td>
-          {% endif %}
-          {% if show_col3 %}
-            <td class="text-end">{{ global_summary.totals.balanced_col3|format_money_abs }}</td>
-            <td class="text-end">{{ global_summary.totals.balanced_col3|format_money_abs }}</td>
-          {% endif %}
-        </tr>
-      </tfoot>
+      {% include "accounting/partials/nature_totals.html" %}
     </table>
   {% endif %}
 </div>

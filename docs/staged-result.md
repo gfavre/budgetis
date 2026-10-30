@@ -96,3 +96,7 @@ Actuals: same-year budget and previous-year actuals.
 The report queries each year's accounts directly rather than joining individual
 account codes across years. Each visible comparison therefore carries its own
 nature-group totals.
+
+The account scope matches the explorers: only accounts marked visible and
+assigned to a functional group are included. Imported accounts without a group
+are excluded from both presentations, so they cannot inflate the staged result.

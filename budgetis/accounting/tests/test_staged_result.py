@@ -16,6 +16,18 @@ def _by_key(lines, key):
 
 
 class TestBuildStagedResult:
+    @pytest.mark.parametrize("is_budget", [True, False])
+    def test_excludes_accounts_outside_report_scope(self, is_budget):
+        AccountFactory(year=2027, is_budget=is_budget, nature="3612", charges=Decimal("100"))
+        AccountFactory(year=2027, is_budget=is_budget, nature="3612", group=None, charges=Decimal("93577"))
+        AccountFactory(year=2027, is_budget=is_budget, nature="3612", visible_in_report=False, charges=Decimal("200"))
+        AccountFactory(year=2027, is_budget=is_budget, nature="4612", charges=Decimal(0), revenues=Decimal("50"))
+
+        lines = build_staged_result([(2027, is_budget)])
+
+        assert _by_key(lines, "detail-36").col1_charges == Decimal("100")
+        assert _by_key(lines, "total-result").col1_result == Decimal("-50")
+
     def test_detail_row_per_nature_group(self):
         AccountFactory(year=2027, is_budget=True, nature="3010", charges=Decimal("100.00"), revenues=Decimal("0.00"))
         AccountFactory(year=2027, is_budget=True, nature="4010", charges=Decimal("0.00"), revenues=Decimal("150.00"))

@@ -190,3 +190,59 @@ class TestAggregateByCategory:
         totals = aggregate_by_category(accounts, ChartScheme.MCH1)
 
         assert totals == {}
+
+
+class TestMch2SankeySettings:
+    @pytest.mark.parametrize(
+        ("function", "nature", "sub_account", "expected_category"),
+        [
+            ("02100", "3910", "00", None),
+            ("02210", "3910", "00", None),
+            ("02100", "4910", "00", None),
+            ("82000", "3612", "06", "Autres intercommunalités"),
+            ("82000", "3612", "07", "Autres intercommunalités"),
+            ("82000", "3612", "55", "Biens et services"),
+            ("82000", "4250", "55", "Biens et services"),
+            ("96309", "3431", "00", "Biens et services"),
+            ("96309", "3439", "03", "Biens et services"),
+            ("96100", "3401", "00", "Intérêts (charges)"),
+            ("71000", "4240", "02", "Taxes (usage)"),
+        ],
+    )
+    def test_corrected_category(self, function, nature, sub_account, expected_category):
+        account = AccountFactory.build(
+            scheme=ChartScheme.MCH2, function=function, nature=nature, sub_account=sub_account, label=""
+        )
+
+        category = SankeyRuleResolver(ChartScheme.MCH2).category_for(account)
+
+        assert (category.name if category else None) == expected_category
+
+    def test_acp_purchase_and_sale_cancel_within_the_same_category(self):
+        accounts = [
+            AccountFactory.build(
+                scheme=ChartScheme.MCH2,
+                function="82000",
+                nature="3612",
+                sub_account="55",
+                charges=Decimal("199000"),
+                revenues=Decimal(0),
+                label="ACP Plaquettes",
+            ),
+            AccountFactory.build(
+                scheme=ChartScheme.MCH2,
+                function="82000",
+                nature="4250",
+                sub_account="55",
+                charges=Decimal(0),
+                revenues=Decimal("199000"),
+                label="ACP Plaquettes",
+            ),
+        ]
+
+        totals = aggregate_by_category(accounts, ChartScheme.MCH2)
+
+        assert len(totals) == 1
+        category, amounts = next(iter(totals.items()))
+        assert category.flow == SankeyFlow.COMMUNE
+        assert amounts["charges"] - amounts["revenues"] == Decimal(0)

@@ -8,7 +8,9 @@ from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
 from django.urls import reverse
+from django.utils.translation import gettext
 
+from budgetis.accounting.templatetags.money import format_money
 from budgetis.accounting.tests.factories import AccountCodeMappingFactory
 from budgetis.accounting.tests.factories import AccountCommentFactory
 from budgetis.accounting.tests.factories import AccountFactory
@@ -499,6 +501,59 @@ class TestBudgetByNaturePartialView:
         response = client.post(reverse("accounting:budget-nature-partial"), {"year": 2027, "detail": "on"})
 
         assert "Autorités et commissions" in response.content.decode()
+
+
+@pytest.mark.parametrize("is_budget", [True, False])
+@pytest.mark.parametrize("partial", [True, False])
+@pytest.mark.parametrize("revenues", [Decimal("150"), Decimal("50"), Decimal("80")])
+def test_nature_report_balances_displayed_tree_totals(client, is_budget, partial, revenues):
+    client.force_login(UserFactory())
+    AvailableYearFactory(year=2027, scheme=ChartScheme.MCH2)
+    charges_root = NatureGroupFactory(level=1, code="3", label="Charges")
+    NatureGroupFactory(level=2, code="30", parent=charges_root)
+    revenues_root = NatureGroupFactory(level=1, code="4", label="Revenus")
+    NatureGroupFactory(level=2, code="40", parent=revenues_root)
+    AccountFactory(
+        year=2027,
+        is_budget=is_budget,
+        scheme=ChartScheme.MCH2,
+        nature="3000",
+        charges=Decimal("100"),
+        revenues=Decimal("20"),
+    )
+    AccountFactory(
+        year=2027,
+        is_budget=is_budget,
+        scheme=ChartScheme.MCH2,
+        nature="4000",
+        charges=Decimal(0),
+        revenues=revenues,
+    )
+    route = "budget-nature" if is_budget else "accounts-nature"
+    if partial:
+        response = client.post(reverse(f"accounting:{route}-partial"), {"year": 2027})
+    else:
+        route = "budget-nature-explorer" if is_budget else "natures"
+        response = client.get(reverse(f"accounting:{route}"), {"year": 2027})
+
+    assert response.status_code == HTTPStatus.OK
+    totals = response.context["global_summary"]["totals"]
+    assert totals["col1_charges"] == Decimal("100")
+    assert totals["col1_revenues"] == revenues + Decimal("20")
+    html = response.content.decode()
+    footer = re.search(r"<tfoot.*?</tfoot>", html, re.DOTALL).group()
+    rows = re.findall(r"<tr.*?</tr>", footer, re.DOTALL)
+    surplus_cells = re.findall(r"<td[^>]*>(.*?)</td>", rows[1], re.DOTALL)
+    deficit_cells = re.findall(r"<td[^>]*>(.*?)</td>", rows[2], re.DOTALL)
+    difference = revenues + Decimal("20") - Decimal("100")
+    assert gettext("Revenue surplus") in surplus_cells[0]
+    assert gettext("Excess expense") in deficit_cells[0]
+    assert surplus_cells[1].strip() == (format_money(abs(difference)) if difference > 0 else "")
+    assert surplus_cells[2].strip() == ""
+    assert deficit_cells[1].strip() == ""
+    assert deficit_cells[2].strip() == (format_money(abs(difference)) if difference < 0 else "")
+    balanced_cells = re.findall(r"<td[^>]*>(.*?)</td>", rows[3], re.DOTALL)
+    assert balanced_cells[1] == balanced_cells[2] == format_money(max(Decimal("100"), revenues + Decimal("20")))
 
 
 class TestBudgetStagedResultPartialView:

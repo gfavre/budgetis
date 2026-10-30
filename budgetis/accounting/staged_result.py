@@ -108,6 +108,9 @@ def _nature_group_totals(year: int, *, is_budget: bool) -> dict[int, dict]:
     needs a year's own totals per nature group, not a per-account join, so
     it sidesteps that mismatch entirely.
 
+    Like the explorers, only visible accounts assigned to a functional group
+    belong to the report. Imported accounts awaiting classification are excluded.
+
     Amounts are netted onto the group's own side: a credit on a charge
     account (e.g. 3010.99 "remboursements d'assurances") reduces that charge
     group, and a debit on a revenue account reduces that revenue group -
@@ -115,9 +118,8 @@ def _nature_group_totals(year: int, *, is_budget: bool) -> dict[int, dict]:
     silently dropped, since each group is only ever read on its own side.
     """
     totals: dict[int, dict] = {}
-    for nature, raw_charges, raw_revenues in Account.objects.filter(year=year, is_budget=is_budget).values_list(
-        "nature", "charges", "revenues"
-    ):
+    accounts = Account.objects.filter(year=year, is_budget=is_budget, group__isnull=False, visible_in_report=True)
+    for nature, raw_charges, raw_revenues in accounts.values_list("nature", "charges", "revenues"):
         group = _nature_group(nature)
         if group is None:
             continue

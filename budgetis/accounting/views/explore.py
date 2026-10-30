@@ -213,11 +213,12 @@ class BudgetByNatureView(BaseExplorerView):
     def _build(self, year: int, user, *, only_responsible: bool, detail: bool = False) -> dict[str, Any]:
         rows = self.loader_class().load(year, user, only_responsible=False)
         grouped = build_nature_grouped(rows)
+        nature_tree = build_nature_tree(rows)
         return {
             "grouped": grouped,
-            "nature_tree": build_nature_tree(rows),
+            "nature_tree": nature_tree,
             "detail": detail,
-            "global_summary": build_summary(grouped),
+            "global_summary": build_summary(nature_tree if nature_tree is not None else grouped),
             "last_import_text": get_last_import_info(year),
         }
 
@@ -230,13 +231,14 @@ class BudgetByNaturePartialView(LoginRequiredMixin, FormView):
         year = int(form.cleaned_data["year"])
         rows = BudgetLoader().load(year, self.request.user, only_responsible=False)
         grouped = build_nature_grouped(rows)
+        nature_tree = build_nature_tree(rows)
         return self.render_to_response(
             self.get_context_data(
                 form=form,
                 grouped=grouped,
-                nature_tree=build_nature_tree(rows),
+                nature_tree=nature_tree,
                 detail=bool(form.cleaned_data.get("detail")),
-                global_summary=build_summary(grouped),
+                global_summary=build_summary(nature_tree if nature_tree is not None else grouped),
                 year=year,
                 previous_year=year - 1,
                 actuals_year=year - 2,
@@ -259,11 +261,12 @@ class AccountByNatureView(BaseExplorerView):
     def _build(self, year: int, user, *, only_responsible: bool, detail: bool = False) -> dict[str, Any]:
         rows = self.loader_class().load(year, user, only_responsible=False)
         grouped = build_nature_grouped(rows)
+        nature_tree = build_nature_tree(rows)
         return {
             "grouped": grouped,
-            "nature_tree": build_nature_tree(rows),
+            "nature_tree": nature_tree,
             "detail": detail,
-            "global_summary": build_summary(grouped),
+            "global_summary": build_summary(nature_tree if nature_tree is not None else grouped),
             "last_import_text": get_last_import_info(year),
         }
 
@@ -276,13 +279,14 @@ class AccountByNaturePartialView(LoginRequiredMixin, FormView):
         year = int(form.cleaned_data["year"])
         rows = ActualsLoader().load(year, self.request.user, only_responsible=False)
         grouped = build_nature_grouped(rows)
+        nature_tree = build_nature_tree(rows)
         return self.render_to_response(
             self.get_context_data(
                 form=form,
                 grouped=grouped,
-                nature_tree=build_nature_tree(rows),
+                nature_tree=nature_tree,
                 detail=bool(form.cleaned_data.get("detail")),
-                global_summary=build_summary(grouped),
+                global_summary=build_summary(nature_tree if nature_tree is not None else grouped),
                 year=year,
                 prev_year=year - 1,
                 last_import_text=get_last_import_info(year),
