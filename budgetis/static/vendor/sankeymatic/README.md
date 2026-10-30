@@ -7,6 +7,8 @@ SankeyMATIC is Copyright Steve Bogart, distributed under the included ISC licens
 The build files are copied verbatim except for `index.html`: D3 and Canvg script
 URLs point to local, pinned copies; unused images are removed; and the Budgetis
 adapter `../../js/sankeymatic-renderer.js` is loaded after the engine.
+The Canvg bundle's reference to its unpublished source map is removed so Django's
+static-file manifest can process the bundle without a missing-file error.
 
 Dependencies: D3 7.9.0 (ISC), Canvg 3.0.9 (MIT), and upstream's bundled LZ-String
 (MIT). Their licenses are included alongside the files. The Canvg bundle includes
