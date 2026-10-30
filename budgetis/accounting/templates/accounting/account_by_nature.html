@@ -5,63 +5,7 @@
 {% block title %}
   {% trans "Actuals" %} | {{ block.super }}
 {% endblock title %}
-{% block extra_style %}
-  <style>
-h2 {
-  background: color-mix(in srgb, var(--brand-color-alt) 20%, white);
-  border-left: 5px solid var(--brand-color-alt);
-  padding: 0.6rem 0.6rem;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
-
-h3 {
-  margin: 1.5rem 0 1rem;
-  color: var(--brand-color-alt);
-}
-
-@media print {
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0 0;
-    table-layout: auto;
-  }
-
-  th,
-  td {
-    padding: 2pt 3pt;
-    vertical-align: top;
-  }
-
-  th,
-  td {
-    border: 0.5pt solid #000 !important;
-  }
-
-  table th:first-child,
-  table td:first-child {
-    white-space: nowrap;
-    width: 1%;
-  }
-
-  table th:nth-child(2),
-  table td:nth-child(2) {
-    width: auto;
-  }
-
-  table th:nth-child(n+3),
-  table td:nth-child(n+3) {
-    text-align: right;
-    width: 10.5%;
-  }
-
-  td small {
-    display: none;
-  }
-}
-  </style>
-{% endblock extra_style %}
+{% block bodyclass %}financial-report-page{% endblock bodyclass %}
 {% block content %}
   <div class="no-print">
     <h1>{% trans "Actuals explorer" %}</h1>
@@ -80,7 +24,5 @@ h3 {
     </span>
     <hr />
   </div>
-  <div id="account-list">
-    {% include "accounting/partials/account_by_nature_list.html" with grouped=grouped year=year prev_year=prev_year %}
-  </div>
+  {% include "accounting/partials/account_by_nature_list.html" with grouped=grouped year=year prev_year=prev_year %}
 {% endblock content %}

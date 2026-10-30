@@ -33,6 +33,43 @@ pytestmark = pytest.mark.django_db
 LOGIN_URL = "/accounts/login/"
 
 
+@pytest.mark.parametrize("partial", [False, True])
+@pytest.mark.parametrize(
+    "report_case",
+    [
+        ("budget-staged-result", "budget-staged-partial", True, "Staged result", "staged-result"),
+        ("account-staged-result", "account-staged-partial", False, "Staged result", "staged-result"),
+        ("budget-nature-explorer", "budget-nature-partial", True, "Budget by nature", "budget-list"),
+        ("natures", "accounts-nature-partial", False, "Actuals by nature", "account-list"),
+    ],
+)
+def test_print_heading_follows_selected_report_after_filter_change(
+    client, site_configuration_with_logo, partial, report_case
+):
+    full_route, partial_route, is_budget, title, root_id = report_case
+    client.force_login(UserFactory())
+    AvailableYearFactory(
+        year=2030,
+        type=AvailableYear.YearType.BUDGET if is_budget else AvailableYear.YearType.ACTUAL,
+        scheme=ChartScheme.MCH2,
+    )
+    AccountFactory(year=2030, is_budget=is_budget, scheme=ChartScheme.MCH2)
+    route = partial_route if partial else full_route
+    request = client.post if partial else client.get
+
+    response = request(reverse(f"accounting:{route}"), {"year": 2030})
+
+    assert response.status_code == HTTPStatus.OK
+    html = response.content.decode()
+    heading = html.split('class="financial-report-heading', 1)[1].split("</div>", 1)[0]
+    assert gettext(title) in heading
+    assert f"{gettext('Budget') if is_budget else gettext('Actuals')} 2030" in heading
+    assert gettext("Amounts in CHF") in heading
+    assert html.count(f'id="{root_id}"') == 1
+    if not partial:
+        assert 'class="financial-report-page"' in html
+
+
 # ── Explorer views ──────────────────────────────────────────────────────────
 
 
@@ -589,6 +626,7 @@ class TestBudgetStagedResultPartialView:
         assert any(line.key == "detail-49" for line in lines) == included
         result = next(line for line in lines if line.key == "total-result")
         assert result.col1_result == (Decimal("-20") if included else Decimal(0))
+        assert response.context["include_internal_allocations"] is included
 
     def test_login_required(self, client):
         response = client.post(reverse("accounting:budget-staged-partial"), {"year": 2024})
@@ -637,6 +675,7 @@ class TestAccountStagedResultPartialView:
         assert any(line.key == "detail-49" for line in lines) == included
         result = next(line for line in lines if line.key == "total-result")
         assert result.col1_result == (Decimal("-20") if included else Decimal(0))
+        assert response.context["include_internal_allocations"] is included
 
     def test_login_required(self, client):
         response = client.post(reverse("accounting:account-staged-partial"), {"year": 2024})

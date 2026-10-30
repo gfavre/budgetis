@@ -1944,3 +1944,49 @@ msgstr ""
 #: budgetis/finance/templates/finance/sankey.html
 msgid "Download the SankeyMATIC image in Huge (6×) resolution"
 msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/financial_report_heading.html
+msgid "Amounts in CHF"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Internal allocations included"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Internal allocations excluded"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html
+#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html
+msgid "Detailed by nature"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html
+#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html
+msgid "Summary by nature"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Operating activities"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Financing"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Extraordinary items"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Result: revenues minus charges"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/nature_totals.html
+msgid "Total charges and revenues"
+msgstr ""
+
+#: budgetis/accounting/templates/accounting/partials/nature_totals.html
+msgid "Balanced totals"
+msgstr ""

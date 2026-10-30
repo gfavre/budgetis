@@ -5,6 +5,7 @@
 {% block title %}
   {% trans "Staged result" %} | {{ block.super }}
 {% endblock title %}
+{% block bodyclass %}financial-report-page{% endblock bodyclass %}
 {% block content %}
   <div class="no-print">
     <h1>{% trans "Actuals - staged result" %}</h1>
@@ -23,7 +24,5 @@
     </span>
     <hr />
   </div>
-  <div id="staged-result">
-    {% include "accounting/partials/staged_result_list.html" with tiers=tiers show_col2=show_col2 show_col3=show_col3 last_import_text=last_import_text is_budget_view=False col1_year=year col2_year=year col3_year=prev_year %}
-  </div>
+  {% include "accounting/partials/staged_result_list.html" with tiers=tiers show_col2=show_col2 show_col3=show_col3 last_import_text=last_import_text is_budget_view=False col1_year=year col2_year=year col3_year=prev_year %}
 {% endblock content %}

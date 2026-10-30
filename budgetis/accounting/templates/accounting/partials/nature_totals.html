@@ -2,7 +2,7 @@
 
 <tfoot class="table-primary fw-bold">
   <tr>
-    <td colspan="2" class="text-end"></td>
+    <td colspan="2" class="text-end"><span class="d-none d-print-inline">{% trans "Total charges and revenues" %}</span></td>
     <td class="text-end">{{ global_summary.totals.col1_charges|format_money }}</td>
     <td class="text-end">{{ global_summary.totals.col1_revenues|format_money }}</td>
     {% if show_col2 %}
@@ -52,8 +52,8 @@
       </td>
     {% endif %}
   </tr>
-  <tr class="table-secondary">
-    <td colspan="2" class="text-end"></td>
+  <tr class="table-secondary report-balanced-total">
+    <td colspan="2" class="text-end"><span class="d-none d-print-inline">{% trans "Balanced totals" %}</span></td>
     <td class="text-end">{{ global_summary.totals.balanced_col1|format_money_abs }}</td>
     <td class="text-end">{{ global_summary.totals.balanced_col1|format_money_abs }}</td>
     {% if show_col2 %}

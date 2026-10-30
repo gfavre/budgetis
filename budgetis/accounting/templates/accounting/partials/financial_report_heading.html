@@ -1,0 +1,8 @@
+{% load i18n %}
+
+<div class="financial-report-heading d-none d-print-block">
+  {% if config.commune_name %}<p class="report-commune">{{ config.commune_name }}</p>{% endif %}
+  <h1>{{ report_title }}</h1>
+  <p class="report-period">{{ report_type }} {{ report_year }} <span>· {% trans "Amounts in CHF" %}</span></p>
+  {% if report_note %}<p class="report-note">{{ report_note }}</p>{% endif %}
+</div>

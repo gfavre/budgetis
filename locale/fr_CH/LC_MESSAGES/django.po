@@ -1992,3 +1992,49 @@ msgstr "Aucune donnée pour cette sélection."
 #: budgetis/finance/templates/finance/sankey.html
 msgid "Download the SankeyMATIC image in Huge (6×) resolution"
 msgstr "Télécharger l’image SankeyMATIC en résolution Huge (6×)"
+
+#: budgetis/accounting/templates/accounting/partials/financial_report_heading.html
+msgid "Amounts in CHF"
+msgstr "Montants en CHF"
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Internal allocations included"
+msgstr "Imputations internes comprises"
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Internal allocations excluded"
+msgstr "Imputations internes exclues"
+
+#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html
+#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html
+msgid "Detailed by nature"
+msgstr "Détail par nature"
+
+#: budgetis/accounting/templates/accounting/partials/account_by_nature_list.html
+#: budgetis/accounting/templates/accounting/partials/budget_by_nature_list.html
+msgid "Summary by nature"
+msgstr "Synthèse par nature"
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Operating activities"
+msgstr "Exploitation"
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Financing"
+msgstr "Financement"
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Extraordinary items"
+msgstr "Éléments extraordinaires"
+
+#: budgetis/accounting/templates/accounting/partials/staged_result_list.html
+msgid "Result: revenues minus charges"
+msgstr "Résultat : revenus moins charges"
+
+#: budgetis/accounting/templates/accounting/partials/nature_totals.html
+msgid "Total charges and revenues"
+msgstr "Total des charges et des revenus"
+
+#: budgetis/accounting/templates/accounting/partials/nature_totals.html
+msgid "Balanced totals"
+msgstr "Totaux équilibrés"

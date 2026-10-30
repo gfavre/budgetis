@@ -320,8 +320,10 @@ class BudgetStagedResultView(StagedResultFilterMixin, BaseExplorerView):
 
     def _build(self, year: int, user, *, only_responsible: bool, detail: bool = False) -> dict[str, Any]:
         columns = [(year, True), (year - 1, True), (year - 2, False)]
+        include_internal_allocations = self._include_internal_allocations()
         return {
-            "tiers": build_staged_result(columns, include_internal_allocations=self._include_internal_allocations()),
+            "tiers": build_staged_result(columns, include_internal_allocations=include_internal_allocations),
+            "include_internal_allocations": include_internal_allocations,
             "last_import_text": get_last_import_info(year),
         }
 
@@ -340,6 +342,7 @@ class BudgetStagedResultPartialView(LoginRequiredMixin, FormView):
                 ),
                 last_import_text=get_last_import_info(year),
                 is_budget_view=True,
+                include_internal_allocations=form.cleaned_data["include_internal_allocations"],
                 col1_year=year,
                 col2_year=year - 1,
                 col3_year=year - 2,
@@ -359,8 +362,10 @@ class AccountStagedResultView(StagedResultFilterMixin, BaseExplorerView):
 
     def _build(self, year: int, user, *, only_responsible: bool, detail: bool = False) -> dict[str, Any]:
         columns = [(year, False), (year, True), (year - 1, False)]
+        include_internal_allocations = self._include_internal_allocations()
         return {
-            "tiers": build_staged_result(columns, include_internal_allocations=self._include_internal_allocations()),
+            "tiers": build_staged_result(columns, include_internal_allocations=include_internal_allocations),
+            "include_internal_allocations": include_internal_allocations,
             "last_import_text": get_last_import_info(year),
         }
 
@@ -379,6 +384,7 @@ class AccountStagedResultPartialView(LoginRequiredMixin, FormView):
                 ),
                 last_import_text=get_last_import_info(year),
                 is_budget_view=False,
+                include_internal_allocations=form.cleaned_data["include_internal_allocations"],
                 col1_year=year,
                 col2_year=year,
                 col3_year=year - 1,
