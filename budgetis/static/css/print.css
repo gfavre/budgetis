@@ -191,6 +191,67 @@ dl.comments dd {
   margin: 0;
 }
 
+@media print {
+  .budget-function-block {
+    --budget-code-width: 21mm;
+  }
+
+  .budget-function-block[data-scheme="mch2"] {
+    --budget-code-width: 26mm;
+  }
+
+  /* Use one code-column width for the account table and its live comments.
+     The shorter MCH1 codes must not determine the space reserved for MCH2. */
+  .budget-account-table col.col-num,
+  .budget-account-table > thead:first-of-type > tr:first-child > th:first-child,
+  .budget-account-table > thead > tr > td:first-child,
+  .budget-account-table > tbody > tr > td:first-child {
+    width: var(--budget-code-width) !important;
+  }
+
+  /* Bootstrap's negative row gutters and 8/4 split are screen layout only. */
+  .budget-group-notes {
+    display: block;
+    margin: 4pt 0 10pt !important;
+  }
+
+  .budget-group-notes > [class*="col-"] {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .budget-group-notes dl.comments {
+    display: grid;
+    grid-template-columns: var(--budget-code-width) minmax(0, 1fr);
+    gap: 2pt 0;
+    width: 100%;
+    margin: 0;
+  }
+
+  .budget-group-notes dl.comments dt,
+  .budget-group-notes dl.comments dd {
+    margin: 0 !important;
+    padding: 2pt 3pt;
+    min-width: 0;
+  }
+
+  .budget-group-notes dl.comments dt {
+    white-space: nowrap;
+    break-after: avoid;
+  }
+
+  .budget-group-notes dl.comments dd {
+    overflow-wrap: anywhere;
+    break-before: avoid;
+  }
+
+  .budget-group-notes .budget-group-responsible {
+    margin-top: 3pt;
+    padding: 0 3pt;
+  }
+}
+
 /* The compact financial summaries use their own layout. Keep these rules
    scoped so the existing functional account/budget reports stay unchanged. */
 @page financial-report {

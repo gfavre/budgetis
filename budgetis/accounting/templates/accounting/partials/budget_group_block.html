@@ -1,15 +1,18 @@
 {% load i18n %}
 
-{% include "accounting/partials/budget_table.html" with accounts=data.accounts code=code label=label data=data %}
-<div class="row mb-5 mt-2">
-  <div class="col-md-8" id="comments-group-{{ code }}">
-    {% include "accounting/partials/budget_comments.html" with accounts=data.accounts code=code label=label data=data %}
-  </div>
-  <div class="col-md-4 text-end">
-    {% if data.responsible_is_mixed %}
-      <small class="text-muted">{% trans "Responsible: see each row" %}</small>
-    {% else %}
-      {% trans "Responsible" %} : <strong>{{ data.responsible.trigram|default:"N/A" }}</strong>
-    {% endif %}
+<div class="budget-function-block"
+     data-scheme="{{ data.accounts.0.account.scheme }}">
+  {% include "accounting/partials/budget_table.html" with accounts=data.accounts code=code label=label data=data %}
+  <div class="row mb-5 mt-2 budget-group-notes">
+    <div class="col-md-8" id="comments-group-{{ code }}">
+      {% include "accounting/partials/budget_comments.html" with accounts=data.accounts code=code label=label data=data %}
+    </div>
+    <div class="col-md-4 text-end budget-group-responsible">
+      {% if data.responsible_is_mixed %}
+        <small class="text-muted">{% trans "Responsible: see each row" %}</small>
+      {% else %}
+        {% trans "Responsible" %}: <strong>{{ data.responsible.trigram|default:"N/A" }}</strong>
+      {% endif %}
+    </div>
   </div>
 </div>
